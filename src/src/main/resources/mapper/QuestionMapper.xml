@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rich.richInterview.mapper.QuestionMapper">
+
+    <resultMap id="BaseResultMap" type="com.rich.richInterview.model.entity.Question">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="title" column="title" jdbcType="VARCHAR"/>
+            <result property="content" column="content" jdbcType="VARCHAR"/>
+            <result property="tags" column="tags" jdbcType="VARCHAR"/>
+            <result property="answer" column="answer" jdbcType="VARCHAR"/>
+            <result property="userId" column="userId" jdbcType="BIGINT"/>
+            <result property="editTime" column="editTime" jdbcType="TIMESTAMP"/>
+            <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
+            <result property="isDelete" column="isDelete" jdbcType="TINYINT"/>
+            <result property="reviewStatus" column="reviewStatus" jdbcType="INTEGER"/>
+            <result property="reviewMessage" column="reviewMessage" jdbcType="VARCHAR"/>
+            <result property="reviewerId" column="reviewerId" jdbcType="BIGINT"/>
+            <result property="reviewTime" column="reviewTime" jdbcType="TIMESTAMP"/>
+            <result property="viewNum" column="viewNum" jdbcType="INTEGER"/>
+            <result property="thumbNum" column="thumbNum" jdbcType="INTEGER"/>
+            <result property="favourNum" column="favourNum" jdbcType="INTEGER"/>
+            <result property="priority" column="priority" jdbcType="INTEGER"/>
+            <result property="source" column="source" jdbcType="VARCHAR"/>
+            <result property="needVip" column="needVip" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,title,content,
+        tags,answer,userId,
+        editTime,createTime,updateTime,
+        isDelete,reviewStatus,reviewMessage,
+        reviewerId,reviewTime,viewNum,
+        thumbNum,favourNum,priority,
+        source,needVip
+    </sql>
+</mapper>
