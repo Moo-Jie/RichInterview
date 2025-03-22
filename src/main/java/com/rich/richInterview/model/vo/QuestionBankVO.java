@@ -1,11 +1,14 @@
 package com.rich.richInterview.model.vo;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.rich.richInterview.model.entity.Question;
 import com.rich.richInterview.model.entity.QuestionBank;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 题库视图
@@ -55,6 +58,11 @@ public class QuestionBankVO implements Serializable {
      * 创建用户信息
      */
     private UserVO user;
+
+    /**
+     * 题库关联题目分页列表
+     */
+    private Page<Question> questionsPage;
 
     /**
      * 封装类转对象

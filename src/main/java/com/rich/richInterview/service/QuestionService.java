@@ -4,10 +4,12 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.rich.richInterview.model.dto.question.QuestionQueryRequest;
+import com.rich.richInterview.model.dto.questionBank.QuestionBankQueryRequest;
 import com.rich.richInterview.model.entity.Question;
 import com.rich.richInterview.model.vo.QuestionVO;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * 题目服务
@@ -48,4 +50,13 @@ public interface QuestionService extends IService<Question> {
      * @return
      */
     Page<QuestionVO> getQuestionVOPage(Page<Question> questionPage, HttpServletRequest request);
+
+    /**
+     * 根据题库id获取题目列表
+     *
+     * @return void
+     * @author DuRuiChi
+     * @create 2025/3/22
+     **/
+    Page<Question> getQuestionPage(QuestionQueryRequest questionQueryRequest);
 }
