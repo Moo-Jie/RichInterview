@@ -1,5 +1,6 @@
 package com.rich.richInterview.controller;
 
+import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.rich.richInterview.annotation.AuthCheck;
 import com.rich.richInterview.common.BaseResponse;
@@ -9,14 +10,18 @@ import com.rich.richInterview.common.ResultUtils;
 import com.rich.richInterview.constant.UserConstant;
 import com.rich.richInterview.exception.BusinessException;
 import com.rich.richInterview.exception.ThrowUtils;
+import com.rich.richInterview.model.dto.question.QuestionQueryRequest;
 import com.rich.richInterview.model.dto.questionBank.QuestionBankAddRequest;
 import com.rich.richInterview.model.dto.questionBank.QuestionBankEditRequest;
 import com.rich.richInterview.model.dto.questionBank.QuestionBankQueryRequest;
 import com.rich.richInterview.model.dto.questionBank.QuestionBankUpdateRequest;
+import com.rich.richInterview.model.entity.Question;
 import com.rich.richInterview.model.entity.QuestionBank;
 import com.rich.richInterview.model.entity.User;
 import com.rich.richInterview.model.vo.QuestionBankVO;
+import com.rich.richInterview.model.vo.QuestionVO;
 import com.rich.richInterview.service.QuestionBankService;
+import com.rich.richInterview.service.QuestionService;
 import com.rich.richInterview.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -24,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * 题库接口
@@ -38,6 +44,9 @@ public class QuestionBankController {
 
     @Resource
     private UserService userService;
+
+    @Resource
+    private QuestionService questionService;
 
 
     /**
@@ -127,19 +136,32 @@ public class QuestionBankController {
     }
 
     /**
-     * 根据 id 获取题库（封装类）
-     *
-     * @param id
+     * 根据 id 获取题库详情（封装类）
+     * @param questionBankQueryRequest
+     * @param request
      * @return
      */
     @GetMapping("/get/vo")
-    public BaseResponse<QuestionBankVO> getQuestionBankVOById(long id, HttpServletRequest request) {
+    public BaseResponse<QuestionBankVO> getQuestionBankVOById(QuestionBankQueryRequest questionBankQueryRequest, HttpServletRequest request) {
+        ThrowUtils.throwIf(questionBankQueryRequest == null, ErrorCode.PARAMS_ERROR);
+        Long id = questionBankQueryRequest.getId();
+        Boolean queryQuestionsFlag = questionBankQueryRequest.getQueryQuestionsFlag();
         ThrowUtils.throwIf(id <= 0, ErrorCode.PARAMS_ERROR);
         // 查询数据库
         QuestionBank questionBank = questionBankService.getById(id);
         ThrowUtils.throwIf(questionBank == null, ErrorCode.NOT_FOUND_ERROR);
+        QuestionBankVO questionBankVO = questionBankService.getQuestionBankVO(questionBank, request);
+        // 查询关联题目并分页
+        if (queryQuestionsFlag) {
+            QuestionQueryRequest questionQueryRequest = new QuestionQueryRequest();
+            questionQueryRequest.setQuestionBankId(id);
+            questionQueryRequest.setPageSize(questionBankQueryRequest.getQuestionsPageSize());
+            questionQueryRequest.setCurrent(questionBankQueryRequest.getQuestionsCurrent());
+            Page<Question> questionVOPage = questionService.getQuestionPage(questionQueryRequest);
+            questionBankVO.setQuestionsPage(questionVOPage);
+        }
         // 获取封装类
-        return ResultUtils.success(questionBankService.getQuestionBankVO(questionBank, request));
+        return ResultUtils.success(questionBankVO);
     }
 
     /**
