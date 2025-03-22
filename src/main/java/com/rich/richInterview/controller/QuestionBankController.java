@@ -39,15 +39,14 @@ public class QuestionBankController {
     @Resource
     private UserService userService;
 
-    // region 增删改查
 
     /**
-     * 创建题库
-     *
+     * 创建题库(仅管理员权限)
      * @param questionBankAddRequest
      * @param request
      * @return
      */
+    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     @PostMapping("/add")
     public BaseResponse<Long> addQuestionBank(@RequestBody QuestionBankAddRequest questionBankAddRequest, HttpServletRequest request) {
         ThrowUtils.throwIf(questionBankAddRequest == null, ErrorCode.PARAMS_ERROR);
@@ -59,6 +58,11 @@ public class QuestionBankController {
         // todo 填充默认值
         User loginUser = userService.getLoginUser(request);
         questionBank.setUserId(loginUser.getId());
+        String picture = questionBank.getPicture();
+        if (picture == null || picture.isEmpty()) {
+            questionBank.setPicture(UserConstant.DEFAULT_QUESTION_BANK_PICTURE);
+        }
+
         // 写入数据库
         boolean result = questionBankService.save(questionBank);
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
@@ -68,12 +72,13 @@ public class QuestionBankController {
     }
 
     /**
-     * 删除题库
+     * 删除题库(仅管理员权限)
      *
      * @param deleteRequest
      * @param request
      * @return
      */
+    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     @PostMapping("/delete")
     public BaseResponse<Boolean> deleteQuestionBank(@RequestBody DeleteRequest deleteRequest, HttpServletRequest request) {
         if (deleteRequest == null || deleteRequest.getId() <= 0) {
@@ -95,7 +100,7 @@ public class QuestionBankController {
     }
 
     /**
-     * 更新题库（仅管理员可用）
+     * 更新题库(仅管理员权限)
      *
      * @param questionBankUpdateRequest
      * @return
@@ -143,8 +148,8 @@ public class QuestionBankController {
      * @param questionBankQueryRequest
      * @return
      */
-    @PostMapping("/list/page")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    @PostMapping("/list/page")
     public BaseResponse<Page<QuestionBank>> listQuestionBankByPage(@RequestBody QuestionBankQueryRequest questionBankQueryRequest) {
         long current = questionBankQueryRequest.getCurrent();
         long size = questionBankQueryRequest.getPageSize();
@@ -232,5 +237,5 @@ public class QuestionBankController {
         return ResultUtils.success(true);
     }
 
-    // endregion
+     
 }

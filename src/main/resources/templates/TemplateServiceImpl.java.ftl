@@ -126,7 +126,7 @@ public class ${upperDataKey}ServiceImpl extends ServiceImpl<${upperDataKey}Mappe
         ${upperDataKey}VO ${dataKey}VO = ${upperDataKey}VO.objToVo(${dataKey});
 
         // todo 可以根据需要为封装对象补充值，不需要的内容可以删除
-        // region 可选
+
         // 1. 关联查询用户信息
         Long userId = ${dataKey}.getUserId();
         User user = null;
@@ -152,7 +152,7 @@ public class ${upperDataKey}ServiceImpl extends ServiceImpl<${upperDataKey}Mappe
             ${upperDataKey}Favour ${dataKey}Favour = ${dataKey}FavourMapper.selectOne(${dataKey}FavourQueryWrapper);
             ${dataKey}VO.setHasFavour(${dataKey}Favour != null);
         }
-        // endregion
+
 
         return ${dataKey}VO;
     }
@@ -177,7 +177,7 @@ public class ${upperDataKey}ServiceImpl extends ServiceImpl<${upperDataKey}Mappe
         }).collect(Collectors.toList());
 
         // todo 可以根据需要为封装对象补充值，不需要的内容可以删除
-        // region 可选
+
         // 1. 关联查询用户信息
         Set<Long> userIdSet = ${dataKey}List.stream().map(${upperDataKey}::getUserId).collect(Collectors.toSet());
         Map<Long, List<User>> userIdUserListMap = userService.listByIds(userIdSet).stream()
@@ -213,7 +213,7 @@ public class ${upperDataKey}ServiceImpl extends ServiceImpl<${upperDataKey}Mappe
             ${dataKey}VO.setHasThumb(${dataKey}IdHasThumbMap.getOrDefault(${dataKey}VO.getId(), false));
             ${dataKey}VO.setHasFavour(${dataKey}IdHasFavourMap.getOrDefault(${dataKey}VO.getId(), false));
         });
-        // endregion
+
 
         ${dataKey}VOPage.setRecords(${dataKey}VOList);
         return ${dataKey}VOPage;

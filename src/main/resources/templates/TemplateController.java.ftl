@@ -40,7 +40,7 @@ public class ${upperDataKey}Controller {
     @Resource
     private UserService userService;
 
-    // region 增删改查
+
 
     /**
      * 创建${dataName}
@@ -233,5 +233,5 @@ public class ${upperDataKey}Controller {
         return ResultUtils.success(true);
     }
 
-    // endregion
+
 }
