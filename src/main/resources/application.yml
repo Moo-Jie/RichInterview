@@ -85,10 +85,10 @@ wx:
 # todo 需替换配置
 cos:
   client:
-    accessKey: xxx
-    secretKey: xxx
-    region: xxx
-    bucket: xxx
+    accessKey: LTAI5tRo46K5EqR1rBooSEkF
+    secretKey: m4r4YibdVkH6NiLEwAiv8a3Gbsyh3X
+    region: https://rich-tams.oss-cn-beijing.aliyuncs.com/
+    bucket: rich-tams
 # 接口文档配置
 knife4j:
   enable: true

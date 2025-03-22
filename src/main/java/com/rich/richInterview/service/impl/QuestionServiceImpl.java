@@ -1,7 +1,9 @@
 package com.rich.richInterview.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.rich.richInterview.common.ErrorCode;
@@ -10,9 +12,11 @@ import com.rich.richInterview.exception.ThrowUtils;
 import com.rich.richInterview.mapper.QuestionMapper;
 import com.rich.richInterview.model.dto.question.QuestionQueryRequest;
 import com.rich.richInterview.model.entity.Question;
+import com.rich.richInterview.model.entity.QuestionBankQuestion;
 import com.rich.richInterview.model.entity.User;
 import com.rich.richInterview.model.vo.QuestionVO;
 import com.rich.richInterview.model.vo.UserVO;
+import com.rich.richInterview.service.QuestionBankQuestionService;
 import com.rich.richInterview.service.QuestionService;
 import com.rich.richInterview.service.UserService;
 import com.rich.richInterview.utils.SqlUtils;
@@ -23,10 +27,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -39,12 +40,14 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
 
     @Resource
     private UserService userService;
+    @Resource
+    private QuestionBankQuestionService questionBankQuestionService;
 
     /**
      * 校验数据
      *
      * @param question
-     * @param add      对创建的数据进行校验
+     * @param add 对创建的数据进行校验
      */
     @Override
     public void validQuestion(Question question, boolean add) {
@@ -52,10 +55,16 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         // todo 从对象中取值
         String title = question.getTitle();
         String content = question.getContent();
+        String tags = question.getTags();
+        String answer = question.getAnswer();
+
         // 创建数据时，参数不能为空
         if (add) {
             // todo 补充校验规则
             ThrowUtils.throwIf(StringUtils.isBlank(title), ErrorCode.PARAMS_ERROR);
+            ThrowUtils.throwIf(StringUtils.isBlank(content), ErrorCode.PARAMS_ERROR);
+            ThrowUtils.throwIf(StringUtils.isBlank(tags), ErrorCode.PARAMS_ERROR);
+            ThrowUtils.throwIf(StringUtils.isBlank(answer), ErrorCode.PARAMS_ERROR);
         }
         // 修改数据时，有参数则校验
         // todo 补充校验规则
@@ -64,6 +73,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         }
         if (StringUtils.isNotBlank(content)) {
             ThrowUtils.throwIf(title.length() > 10240, ErrorCode.PARAMS_ERROR, "题目内容过长");
+            ThrowUtils.throwIf(answer.length() > 10240, ErrorCode.PARAMS_ERROR, "答案过长");
         }
     }
 
@@ -89,15 +99,19 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         String sortOrder = questionQueryRequest.getSortOrder();
         List<String> tagList = questionQueryRequest.getTags();
         Long userId = questionQueryRequest.getUserId();
+        String answer = questionQueryRequest.getAnswer();
+        Long questionBankId = questionQueryRequest.getQuestionBankId();
+
         // todo 补充需要的查询条件
         // 从多字段中搜索
         if (StringUtils.isNotBlank(searchText)) {
             // 需要拼接查询条件
-            queryWrapper.and(qw -> qw.like("title", searchText).or().like("content", searchText));
+            queryWrapper.and(qw -> qw.like("title", searchText).or().like("content", searchText).or().like("answer", searchText));
         }
         // 模糊查询
         queryWrapper.like(StringUtils.isNotBlank(title), "title", title);
         queryWrapper.like(StringUtils.isNotBlank(content), "content", content);
+        queryWrapper.like(StringUtils.isNotBlank(answer), "answer", answer);
         // JSON 数组查询
         if (CollUtil.isNotEmpty(tagList)) {
             for (String tag : tagList) {
@@ -112,6 +126,21 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         queryWrapper.orderBy(SqlUtils.validSortField(sortField),
                 sortOrder.equals(CommonConstant.SORT_ORDER_ASC),
                 sortField);
+        // 按所属题库过滤
+            if (questionBankId != null) {
+                // 查询题库关联的题目，取出题目id并过滤
+                LambdaQueryWrapper<QuestionBankQuestion> lambdaQueryWrapper = Wrappers.lambdaQuery(QuestionBankQuestion.class)
+                        //仅映射题目id字段的值
+                        .select(QuestionBankQuestion::getQuestionId)
+                        .eq(QuestionBankQuestion::getQuestionBankId, questionBankId);
+                Set<Long> questionIds = questionBankQuestionService.list(lambdaQueryWrapper)
+                        .stream()
+                        .map(QuestionBankQuestion::getQuestionId)
+                        .collect(Collectors.toSet());
+                if( CollUtil.isNotEmpty(questionIds)){
+                    queryWrapper.in("id",questionIds);
+                }
+            }
         return queryWrapper;
     }
 
@@ -128,7 +157,6 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         QuestionVO questionVO = QuestionVO.objToVo(question);
 
         // todo 可以根据需要为封装对象补充值，不需要的内容可以删除
-        // region 可选
         // 关联查询用户信息
         Long userId = question.getUserId();
         User user = null;
@@ -160,7 +188,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         }).collect(Collectors.toList());
 
         // todo 可以根据需要为封装对象补充值，不需要的内容可以删除
-        // region 可选
+         
         // 1. 关联查询用户信息
         Set<Long> userIdSet = questionList.stream().map(Question::getUserId).collect(Collectors.toSet());
         Map<Long, List<User>> userIdUserListMap = userService.listByIds(userIdSet).stream()
