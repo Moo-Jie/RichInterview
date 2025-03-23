@@ -6,9 +6,10 @@ import com.rich.richInterview.model.dto.user.UserQueryRequest;
 import com.rich.richInterview.model.entity.User;
 import com.rich.richInterview.model.vo.LoginUserVO;
 import com.rich.richInterview.model.vo.UserVO;
-import java.util.List;
-import javax.servlet.http.HttpServletRequest;
 import me.chanjar.weixin.common.bean.WxOAuth2UserInfo;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * 用户服务

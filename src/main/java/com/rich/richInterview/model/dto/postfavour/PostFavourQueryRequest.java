@@ -2,9 +2,10 @@ package com.rich.richInterview.model.dto.postfavour;
 
 import com.rich.richInterview.common.PageRequest;
 import com.rich.richInterview.model.dto.post.PostQueryRequest;
-import java.io.Serializable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.io.Serializable;
 
 /**
  * 帖子收藏查询请求

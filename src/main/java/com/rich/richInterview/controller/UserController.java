@@ -10,22 +10,11 @@ import com.rich.richInterview.config.WxOpenConfig;
 import com.rich.richInterview.constant.UserConstant;
 import com.rich.richInterview.exception.BusinessException;
 import com.rich.richInterview.exception.ThrowUtils;
-import com.rich.richInterview.model.dto.user.UserAddRequest;
-import com.rich.richInterview.model.dto.user.UserLoginRequest;
-import com.rich.richInterview.model.dto.user.UserQueryRequest;
-import com.rich.richInterview.model.dto.user.UserRegisterRequest;
-import com.rich.richInterview.model.dto.user.UserUpdateMyRequest;
-import com.rich.richInterview.model.dto.user.UserUpdateRequest;
+import com.rich.richInterview.model.dto.user.*;
 import com.rich.richInterview.model.entity.User;
 import com.rich.richInterview.model.vo.LoginUserVO;
 import com.rich.richInterview.model.vo.UserVO;
 import com.rich.richInterview.service.UserService;
-
-import java.util.List;
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.bean.WxOAuth2UserInfo;
 import me.chanjar.weixin.common.bean.oauth2.WxOAuth2AccessToken;
@@ -33,12 +22,12 @@ import me.chanjar.weixin.mp.api.WxMpService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.DigestUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 import static com.rich.richInterview.service.impl.UserServiceImpl.SALT;
 

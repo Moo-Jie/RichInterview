@@ -1,7 +1,7 @@
 package com.rich.richInterview.service;
 
-import com.rich.richInterview.model.entity.PostThumb;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.rich.richInterview.model.entity.PostThumb;
 import com.rich.richInterview.model.entity.User;
 
 /**

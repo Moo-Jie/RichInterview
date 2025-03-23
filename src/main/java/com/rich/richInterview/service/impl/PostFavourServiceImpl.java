@@ -13,10 +13,11 @@ import com.rich.richInterview.model.entity.PostFavour;
 import com.rich.richInterview.model.entity.User;
 import com.rich.richInterview.service.PostFavourService;
 import com.rich.richInterview.service.PostService;
-import javax.annotation.Resource;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
 
 /**
  * 帖子收藏服务实现

@@ -6,14 +6,16 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.rich.richInterview.common.BaseResponse;
+import com.rich.richInterview.common.DeleteRequest;
 import com.rich.richInterview.common.ErrorCode;
-import com.rich.richInterview.common.ResultUtils;
 import com.rich.richInterview.constant.CommonConstant;
+import com.rich.richInterview.exception.BusinessException;
 import com.rich.richInterview.exception.ThrowUtils;
 import com.rich.richInterview.mapper.QuestionBankQuestionMapper;
+import com.rich.richInterview.model.dto.questionBankQuestion.QuestionBankQuestionAddRequest;
 import com.rich.richInterview.model.dto.questionBankQuestion.QuestionBankQuestionQueryRequest;
 import com.rich.richInterview.model.dto.questionBankQuestion.QuestionBankQuestionRemoveRequest;
+import com.rich.richInterview.model.dto.questionBankQuestion.QuestionBankQuestionUpdateRequest;
 import com.rich.richInterview.model.entity.Question;
 import com.rich.richInterview.model.entity.QuestionBank;
 import com.rich.richInterview.model.entity.QuestionBankQuestion;
@@ -27,13 +29,15 @@ import com.rich.richInterview.service.UserService;
 import com.rich.richInterview.utils.SqlUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -48,13 +52,11 @@ public class QuestionBankQuestionServiceImpl extends ServiceImpl<QuestionBankQue
     private UserService userService;
 
     @Resource
-    private QuestionBankQuestionService questionBankQuestionService;
-
-    @Resource
     @Lazy
     private QuestionService questionService;
 
     @Resource
+    @Lazy
     private QuestionBankService questionBankService;
 
     /**
@@ -126,7 +128,7 @@ public class QuestionBankQuestionServiceImpl extends ServiceImpl<QuestionBankQue
         // 对象转封装类
         QuestionBankQuestionVO questionBankQuestionVO = QuestionBankQuestionVO.objToVo(questionBankQuestion);
 
-        // todo 可以根据需要为封装对象补充值，不需要的内容可以删除
+        // todo 根据需要为封装对象补充值
          
         // 1. 关联查询用户信息
         Long userId = questionBankQuestion.getUserId();
@@ -149,30 +151,25 @@ public class QuestionBankQuestionServiceImpl extends ServiceImpl<QuestionBankQue
     @Override
     public Page<QuestionBankQuestionVO> getQuestionBankQuestionVOPage(Page<QuestionBankQuestion> questionBankQuestionPage, HttpServletRequest request) {
         List<QuestionBankQuestion> questionBankQuestionList = questionBankQuestionPage.getRecords();
-        Page<QuestionBankQuestionVO> questionBankQuestionVOPage = new Page<>(questionBankQuestionPage.getCurrent(), questionBankQuestionPage.getSize(), questionBankQuestionPage.getTotal());
+        Page<QuestionBankQuestionVO> questionBankQuestionVOPage = new Page<>(questionBankQuestionPage.getCurrent(),
+                questionBankQuestionPage.getSize(), 
+                questionBankQuestionPage.getTotal());
         if (CollUtil.isEmpty(questionBankQuestionList)) {
             return questionBankQuestionVOPage;
         }
         // 对象列表 => 封装对象列表
-        List<QuestionBankQuestionVO> questionBankQuestionVOList = questionBankQuestionList.stream().map(questionBankQuestion -> {
-            return QuestionBankQuestionVO.objToVo(questionBankQuestion);
-        }).collect(Collectors.toList());
+        List<QuestionBankQuestionVO> questionBankQuestionVOList = questionBankQuestionList.stream()
+                .map(QuestionBankQuestionVO::objToVo)
+                .collect(Collectors.toList());
 
-        // todo 可以根据需要为封装对象补充值，不需要的内容可以删除
-         
-        // 1. 关联查询用户信息
-        Set<Long> userIdSet = questionBankQuestionList.stream().map(QuestionBankQuestion::getUserId).collect(Collectors.toSet());
+        // todo 根据需要为封装对象补充值
+
+        // 1.关联查询用户信息
+        Set<Long> userIdSet = questionBankQuestionList.stream()
+                .map(QuestionBankQuestion::getUserId)
+                .collect(Collectors.toSet());
         Map<Long, List<User>> userIdUserListMap = userService.listByIds(userIdSet).stream()
                 .collect(Collectors.groupingBy(User::getId));
-        // 2. 已登录，获取用户点赞、收藏状态
-        Map<Long, Boolean> questionBankQuestionIdHasThumbMap = new HashMap<>();
-        Map<Long, Boolean> questionBankQuestionIdHasFavourMap = new HashMap<>();
-        User loginUser = userService.getLoginUserPermitNull(request);
-        if (loginUser != null) {
-            Set<Long> questionBankQuestionIdSet = questionBankQuestionList.stream().map(QuestionBankQuestion::getId).collect(Collectors.toSet());
-            loginUser = userService.getLoginUser(request);
-        }
-        // 填充信息
         questionBankQuestionVOList.forEach(questionBankQuestionVO -> {
             Long userId = questionBankQuestionVO.getUserId();
             User user = null;
@@ -180,28 +177,123 @@ public class QuestionBankQuestionServiceImpl extends ServiceImpl<QuestionBankQue
                 user = userIdUserListMap.get(userId).get(0);
             }
             questionBankQuestionVO.setUser(userService.getUserVO(user));
-            });
-         
+        });
+        // 2.已登录，获取用户点赞、收藏状态(待完善)
+//        Map<Long, Boolean> questionBankQuestionIdHasThumbMap = new HashMap<>();
+//        Map<Long, Boolean> questionBankQuestionIdHasFavourMap = new HashMap<>();
+//        User loginUser = userService.getLoginUserPermitNull(request);
+//        if (loginUser != null) {
+//            Set<Long> questionBankQuestionIdSet = questionBankQuestionList.stream().map(QuestionBankQuestion::getId).collect(Collectors.toSet());
+//            loginUser = userService.getLoginUser(request);
+//        }
 
         questionBankQuestionVOPage.setRecords(questionBankQuestionVOList);
         return questionBankQuestionVOPage;
     }
 
+    /**
+     * (题库ID、题目ID删除)
+     * @param questionBankQuestionRemoveRequest
+     * @param request
+     * @return java.lang.Boolean
+     * @author DuRuiChi
+     * @create 2025/3/23
+     **/
     @Override
-    public BaseResponse<Boolean> removeQuestionBankQuestion(QuestionBankQuestionRemoveRequest questionBankQuestionRemoveRequest, HttpServletRequest request) {
+    public Boolean removeQuestionBankQuestion(QuestionBankQuestionRemoveRequest questionBankQuestionRemoveRequest, HttpServletRequest request) {
         // 校验参数
         ThrowUtils.throwIf(questionBankQuestionRemoveRequest == null, ErrorCode.PARAMS_ERROR);
         Long questionBankId = questionBankQuestionRemoveRequest.getQuestionBankId();
         Long questionId = questionBankQuestionRemoveRequest.getQuestionId();
         ThrowUtils.throwIf(questionId == null, ErrorCode.PARAMS_ERROR);
         ThrowUtils.throwIf(questionBankId == null, ErrorCode.PARAMS_ERROR);
-
         // 删除
         LambdaQueryWrapper<QuestionBankQuestion> lambdaQueryWrapper = Wrappers.lambdaQuery(QuestionBankQuestion.class)
                 .eq(QuestionBankQuestion::getQuestionBankId, questionBankId)
                 .eq(QuestionBankQuestion::getQuestionId, questionId);
-        boolean isRemove = questionBankQuestionService.remove(lambdaQueryWrapper);
-        return ResultUtils.success(isRemove);
+        return this.remove(lambdaQueryWrapper);
+    }
+
+    /**
+     * 创建题库题目关系
+     * @param questionBankQuestionAddRequest
+     * @param request
+     * @return java.lang.Long
+     * @author DuRuiChi
+     * @create 2025/3/23
+     **/
+    @Override
+    public Long addQuestionBankQuestion(QuestionBankQuestionAddRequest questionBankQuestionAddRequest, HttpServletRequest request) {
+        ThrowUtils.throwIf(questionBankQuestionAddRequest == null, ErrorCode.PARAMS_ERROR);
+        // todo 在此处将实体类和 DTO 进行转换
+        QuestionBankQuestion questionBankQuestion = new QuestionBankQuestion();
+        BeanUtils.copyProperties(questionBankQuestionAddRequest, questionBankQuestion);
+        // 数据校验
+        this.validQuestionBankQuestion(questionBankQuestion, true);
+        // todo 填充默认值
+        User loginUser = userService.getLoginUser(request);
+        questionBankQuestion.setUserId(loginUser.getId());
+        // 写入数据库
+        boolean result = this.save(questionBankQuestion);
+        ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
+        // 返回新写入的数据 id
+        long newQuestionBankQuestionId = questionBankQuestion.getId();
+        return newQuestionBankQuestionId;
+    }
+
+    /**
+     * 删除题库题目关系(按照ID删除，仅管理员可用)
+     * @param deleteRequest
+     * @param request
+     * @return java.lang.Boolean
+     * @author DuRuiChi
+     * @create 2025/3/23
+     **/
+    @Override
+    public Boolean deleteQuestionBankQuestion(DeleteRequest deleteRequest, HttpServletRequest request) {
+        if (deleteRequest == null || deleteRequest.getId() <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        User user = userService.getLoginUser(request);
+        long id = deleteRequest.getId();
+        // 判断是否存在
+        QuestionBankQuestion oldQuestionBankQuestion = this.getById(id);
+        ThrowUtils.throwIf(oldQuestionBankQuestion == null, ErrorCode.NOT_FOUND_ERROR);
+        // 仅本人或管理员可删除
+        if (!oldQuestionBankQuestion.getUserId().equals(user.getId()) && !userService.isAdmin(request)) {
+            throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
+        }
+        // 操作数据库
+        boolean result = this.removeById(id);
+        ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
+        return true;
+    }
+
+    /**
+     * 更新题库题目关系（仅管理员可用）
+     * @param questionBankQuestionUpdateRequest
+     * @return java.lang.Boolean
+     * @author DuRuiChi
+     * @create 2025/3/23
+     **/
+    @Override
+    public Boolean updateQuestionBankQuestion(QuestionBankQuestionUpdateRequest questionBankQuestionUpdateRequest) {
+        if (questionBankQuestionUpdateRequest == null || questionBankQuestionUpdateRequest.getId() <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        // todo 在此处将实体类和 DTO 进行转换
+        QuestionBankQuestion questionBankQuestion = new QuestionBankQuestion();
+        BeanUtils.copyProperties(questionBankQuestionUpdateRequest, questionBankQuestion);
+        // 数据校验
+        this.validQuestionBankQuestion(questionBankQuestion, false);
+        // 判断是否存在
+        long id = questionBankQuestionUpdateRequest.getId();
+        QuestionBankQuestion oldQuestionBankQuestion = this.getById(id);
+        ThrowUtils.throwIf(oldQuestionBankQuestion == null, ErrorCode.NOT_FOUND_ERROR);
+        // 操作数据库
+        boolean result = this.updateById(questionBankQuestion);
+        ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
+        return true;
     }
 
 }

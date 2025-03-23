@@ -125,7 +125,7 @@ public class ${upperDataKey}ServiceImpl extends ServiceImpl<${upperDataKey}Mappe
         // 对象转封装类
         ${upperDataKey}VO ${dataKey}VO = ${upperDataKey}VO.objToVo(${dataKey});
 
-        // todo 可以根据需要为封装对象补充值，不需要的内容可以删除
+        // todo 根据需要为封装对象补充值
 
         // 1. 关联查询用户信息
         Long userId = ${dataKey}.getUserId();
@@ -176,7 +176,7 @@ public class ${upperDataKey}ServiceImpl extends ServiceImpl<${upperDataKey}Mappe
             return ${upperDataKey}VO.objToVo(${dataKey});
         }).collect(Collectors.toList());
 
-        // todo 可以根据需要为封装对象补充值，不需要的内容可以删除
+        // todo 根据需要为封装对象补充值
 
         // 1. 关联查询用户信息
         Set<Long> userIdSet = ${dataKey}List.stream().map(${upperDataKey}::getUserId).collect(Collectors.toSet());

@@ -1,10 +1,11 @@
 package com.rich.richInterview.model.dto.post;
 
 import com.rich.richInterview.common.PageRequest;
-import java.io.Serializable;
-import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.io.Serializable;
+import java.util.List;
 
 /**
  * 查询请求

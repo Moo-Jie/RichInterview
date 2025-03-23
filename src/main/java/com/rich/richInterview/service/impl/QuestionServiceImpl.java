@@ -1,17 +1,22 @@
 package com.rich.richInterview.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.rich.richInterview.common.DeleteRequest;
 import com.rich.richInterview.common.ErrorCode;
 import com.rich.richInterview.constant.CommonConstant;
+import com.rich.richInterview.exception.BusinessException;
 import com.rich.richInterview.exception.ThrowUtils;
 import com.rich.richInterview.mapper.QuestionMapper;
+import com.rich.richInterview.model.dto.question.QuestionAddRequest;
+import com.rich.richInterview.model.dto.question.QuestionEditRequest;
 import com.rich.richInterview.model.dto.question.QuestionQueryRequest;
-import com.rich.richInterview.model.dto.questionBank.QuestionBankQueryRequest;
+import com.rich.richInterview.model.dto.question.QuestionUpdateRequest;
 import com.rich.richInterview.model.entity.Question;
 import com.rich.richInterview.model.entity.QuestionBankQuestion;
 import com.rich.richInterview.model.entity.User;
@@ -24,11 +29,15 @@ import com.rich.richInterview.utils.SqlUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -41,6 +50,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
 
     @Resource
     private UserService userService;
+
     @Resource
     private QuestionBankQuestionService questionBankQuestionService;
 
@@ -146,7 +156,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
     }
 
     /**
-     * 获取题目封装
+     * 获取题目封装类
      *
      * @param question
      * @param request
@@ -157,7 +167,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         // 对象转封装类
         QuestionVO questionVO = QuestionVO.objToVo(question);
 
-        // todo 可以根据需要为封装对象补充值，不需要的内容可以删除
+        // todo 根据需要为封装对象补充值
         // 关联查询用户信息
         Long userId = question.getUserId();
         User user = null;
@@ -188,7 +198,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
             return QuestionVO.objToVo(question);
         }).collect(Collectors.toList());
 
-        // todo 可以根据需要为封装对象补充值，不需要的内容可以删除
+        // todo 根据需要为封装对象补充值
          
         // 1. 关联查询用户信息
         Set<Long> userIdSet = questionList.stream().map(Question::getUserId).collect(Collectors.toSet());
@@ -216,6 +226,14 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         return questionVOPage;
     }
 
+    /**
+     *
+     * 分页获取题目列表（仅管理员可用）
+     * @param questionQueryRequest
+     * @return com.baomidou.mybatisplus.extension.plugins.pagination.Page<com.rich.richInterview.model.entity.Question>
+     * @author DuRuiChi
+     * @create 2025/3/22
+     **/
     @Override
     public Page<Question> getQuestionPage(QuestionQueryRequest questionQueryRequest) {
         long current = questionQueryRequest.getCurrent();
@@ -225,6 +243,152 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         // 查询数据库
         Page<Question> questionPage = this.page(new Page<>(current, size), queryWrapper);
         return questionPage;
+    }
+
+    /**
+     *
+     * 创建题目
+     * @param questionAddRequest
+     * @param request
+     * @return java.lang.Long
+     * @author DuRuiChi
+     * @create 2025/3/23
+     **/
+    @Override
+    public Long addQuestion(QuestionAddRequest questionAddRequest, HttpServletRequest request) {
+        ThrowUtils.throwIf(questionAddRequest == null, ErrorCode.PARAMS_ERROR);
+        // todo 在此处将实体类和 DTO 进行转换
+        Question question = new Question();
+        BeanUtils.copyProperties(questionAddRequest, question);
+        // 数据校验
+        this.validQuestion(question, true);
+        // todo 填充默认值
+        User loginUser = userService.getLoginUser(request);
+        question.setUserId(loginUser.getId());
+        // 写入数据库
+        boolean result = this.save(question);
+        ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
+        // 返回新写入的数据 id
+        return question.getId();
+    }
+
+    /**
+     *
+     * 删除题目
+     * @param deleteRequest
+     * @param request
+     * @return java.lang.Boolean
+     * @author DuRuiChi
+     * @create 2025/3/23
+     **/
+    @Override
+    public Boolean deleteQuestion(DeleteRequest deleteRequest, HttpServletRequest request) {
+        if (deleteRequest == null || deleteRequest.getId() <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        User user = userService.getLoginUser(request);
+        long id = deleteRequest.getId();
+        // 判断是否存在
+        Question oldQuestion = this.getById(id);
+        ThrowUtils.throwIf(oldQuestion == null, ErrorCode.NOT_FOUND_ERROR);
+        // 仅本人或管理员可删除
+        if (!oldQuestion.getUserId().equals(user.getId()) && !userService.isAdmin(request)) {
+            throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
+        }
+        // 操作数据库
+        boolean result = this.removeById(id);
+        ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
+        return true;
+    }
+
+    /**
+     *
+     * 更新题目（仅管理员可用）
+     * @param questionUpdateRequest
+     * @return java.lang.Boolean
+     * @author DuRuiChi
+     * @create 2025/3/23
+     **/
+    @Override
+    public Boolean updateQuestion(QuestionUpdateRequest questionUpdateRequest) {
+        if (questionUpdateRequest == null || questionUpdateRequest.getId() <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        // todo 在此处将实体类和 DTO 进行转换
+        Question question = new Question();
+        BeanUtils.copyProperties(questionUpdateRequest, question);
+        // 数据校验
+        this.validQuestion(question, false);
+        // 判断是否存在
+        long id = questionUpdateRequest.getId();
+        Question oldQuestion = this.getById(id);
+        ThrowUtils.throwIf(oldQuestion == null, ErrorCode.NOT_FOUND_ERROR);
+        // 操作数据库
+        boolean result = this.updateById(question);
+        ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
+        return true;
+    }
+
+    /**
+     * 分页获取当前登录用户创建的题目列表
+     * @param questionQueryRequest
+     * @param request
+     * @return com.baomidou.mybatisplus.extension.plugins.pagination.Page<com.rich.richInterview.model.vo.QuestionVO>
+     * @author DuRuiChi
+     * @create 2025/3/23
+     **/
+    @Override
+    public Page<QuestionVO> listMyQuestionVOByPage(QuestionQueryRequest questionQueryRequest, HttpServletRequest request) {
+        ThrowUtils.throwIf(questionQueryRequest == null, ErrorCode.PARAMS_ERROR);
+        // 补充查询条件，只查询当前登录用户的数据
+        User loginUser = userService.getLoginUser(request);
+        questionQueryRequest.setUserId(loginUser.getId());
+        long current = questionQueryRequest.getCurrent();
+        long size = questionQueryRequest.getPageSize();
+        // 限制爬虫
+        ThrowUtils.throwIf(size > 20, ErrorCode.PARAMS_ERROR);
+        // 查询数据库
+        Page<Question> questionPage = this.page(new Page<>(current, size),
+                this.getQueryWrapper(questionQueryRequest));
+        // 获取封装类
+        return this.getQuestionVOPage(questionPage, request);
+    }
+
+    /**
+     * 编辑题目（给用户使用）
+     * @param questionEditRequest
+     * @param request
+     * @return java.lang.Boolean
+     * @author DuRuiChi
+     * @create 2025/3/23
+     **/
+    @Override
+    public Boolean editQuestion(QuestionEditRequest questionEditRequest, HttpServletRequest request) {
+        if (questionEditRequest == null || questionEditRequest.getId() <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        // todo 在此处将实体类和 DTO 进行转换
+        Question question = new Question();
+        BeanUtils.copyProperties(questionEditRequest, question);
+        List<String> tags = questionEditRequest.getTags();
+        if (tags != null) {
+            question.setTags(JSONUtil.toJsonStr(tags));
+        }
+        // 数据校验
+        this.validQuestion(question, false);
+        User loginUser = userService.getLoginUser(request);
+        // 判断是否存在
+        long id = questionEditRequest.getId();
+        Question oldQuestion = this.getById(id);
+        ThrowUtils.throwIf(oldQuestion == null, ErrorCode.NOT_FOUND_ERROR);
+        // 仅本人或管理员可编辑
+        if (!oldQuestion.getUserId().equals(loginUser.getId()) && !userService.isAdmin(loginUser)) {
+            throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
+        }
+        // 操作数据库
+        boolean result = this.updateById(question);
+        ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
+        return true;
     }
 
 }

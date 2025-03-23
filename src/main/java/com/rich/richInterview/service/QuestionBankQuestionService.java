@@ -3,9 +3,11 @@ package com.rich.richInterview.service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.rich.richInterview.common.BaseResponse;
+import com.rich.richInterview.common.DeleteRequest;
+import com.rich.richInterview.model.dto.questionBankQuestion.QuestionBankQuestionAddRequest;
 import com.rich.richInterview.model.dto.questionBankQuestion.QuestionBankQuestionQueryRequest;
 import com.rich.richInterview.model.dto.questionBankQuestion.QuestionBankQuestionRemoveRequest;
+import com.rich.richInterview.model.dto.questionBankQuestion.QuestionBankQuestionUpdateRequest;
 import com.rich.richInterview.model.entity.QuestionBankQuestion;
 import com.rich.richInterview.model.vo.QuestionBankQuestionVO;
 
@@ -51,5 +53,43 @@ public interface QuestionBankQuestionService extends IService<QuestionBankQuesti
      */
     Page<QuestionBankQuestionVO> getQuestionBankQuestionVOPage(Page<QuestionBankQuestion> questionBankQuestionPage, HttpServletRequest request);
 
-    BaseResponse<Boolean> removeQuestionBankQuestion(QuestionBankQuestionRemoveRequest questionBankQuestionRemoveRequest, HttpServletRequest request);
+    /**
+     * (题库ID、题目ID删除)
+     * @param questionBankQuestionRemoveRequest
+     * @param request
+     * @return java.lang.Boolean
+     * @author DuRuiChi
+     * @create 2025/3/23
+     **/
+    Boolean removeQuestionBankQuestion(QuestionBankQuestionRemoveRequest questionBankQuestionRemoveRequest, HttpServletRequest request);
+
+    /**
+     * 
+     * 创建题库题目关系
+     * @param questionBankQuestionAddRequest
+     * @param request
+     * @return java.lang.Long
+     * @author DuRuiChi
+     * @create 2025/3/23
+     **/
+    Long addQuestionBankQuestion(QuestionBankQuestionAddRequest questionBankQuestionAddRequest, HttpServletRequest request);
+
+    /**
+     * 删除题库题目关系(按照ID删除，仅管理员可用)
+     * @param deleteRequest
+     * @param request
+     * @return java.lang.Boolean
+     * @author DuRuiChi
+     * @create 2025/3/23
+     **/
+    Boolean deleteQuestionBankQuestion(DeleteRequest deleteRequest, HttpServletRequest request);
+
+    /**
+     * 更新题库题目关系（仅管理员可用）
+     * @param questionBankQuestionUpdateRequest
+     * @return java.lang.Boolean
+     * @author DuRuiChi
+     * @create 2025/3/23
+     **/
+    Boolean updateQuestionBankQuestion(QuestionBankQuestionUpdateRequest questionBankQuestionUpdateRequest);
 }
