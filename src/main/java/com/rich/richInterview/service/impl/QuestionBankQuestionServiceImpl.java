@@ -1,30 +1,39 @@
 package com.rich.richInterview.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.rich.richInterview.common.BaseResponse;
+import com.rich.richInterview.common.ErrorCode;
+import com.rich.richInterview.common.ResultUtils;
 import com.rich.richInterview.constant.CommonConstant;
+import com.rich.richInterview.exception.ThrowUtils;
 import com.rich.richInterview.mapper.QuestionBankQuestionMapper;
 import com.rich.richInterview.model.dto.questionBankQuestion.QuestionBankQuestionQueryRequest;
+import com.rich.richInterview.model.dto.questionBankQuestion.QuestionBankQuestionRemoveRequest;
+import com.rich.richInterview.model.entity.Question;
+import com.rich.richInterview.model.entity.QuestionBank;
 import com.rich.richInterview.model.entity.QuestionBankQuestion;
 import com.rich.richInterview.model.entity.User;
 import com.rich.richInterview.model.vo.QuestionBankQuestionVO;
 import com.rich.richInterview.model.vo.UserVO;
 import com.rich.richInterview.service.QuestionBankQuestionService;
+import com.rich.richInterview.service.QuestionBankService;
+import com.rich.richInterview.service.QuestionService;
 import com.rich.richInterview.service.UserService;
 import com.rich.richInterview.utils.SqlUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -38,28 +47,37 @@ public class QuestionBankQuestionServiceImpl extends ServiceImpl<QuestionBankQue
     @Resource
     private UserService userService;
 
+    @Resource
+    private QuestionBankQuestionService questionBankQuestionService;
+
+    @Resource
+    @Lazy
+    private QuestionService questionService;
+
+    @Resource
+    private QuestionBankService questionBankService;
+
     /**
-     * 校验数据
+     * 校验题目与题库数据
      *
      * @param questionBankQuestion
      * @param add      对创建的数据进行校验
      */
     @Override
     public void validQuestionBankQuestion(QuestionBankQuestion questionBankQuestion, boolean add) {
-//        ThrowUtils.throwIf(questionBankQuestion == null, ErrorCode.PARAMS_ERROR);
-//        // todo 从对象中取值
-//        String title = questionBankQuestion.getTitle();
-//        // 创建数据时，参数不能为空
-//        if (add) {
-//            // todo 补充校验规则
-//            ThrowUtils.throwIf(StringUtils.isBlank(title), ErrorCode.PARAMS_ERROR);
-//        }
-//        // 修改数据时，有参数则校验
-//        // todo 补充校验规则
-//        if (StringUtils.isNotBlank(title)) {
-//            ThrowUtils.throwIf(title.length() > 80, ErrorCode.PARAMS_ERROR, "标题过长");
-//        }
+        ThrowUtils.throwIf(questionBankQuestion == null, ErrorCode.PARAMS_ERROR);
+        // 校验题目
+        Long questionId = questionBankQuestion.getQuestionId();
+        ThrowUtils.throwIf(questionId == null, ErrorCode.PARAMS_ERROR, "请填写要关联的题目");
+        Question question = questionService.getById(questionId);
+        ThrowUtils.throwIf(question == null, ErrorCode.NOT_FOUND_ERROR, "题目不存在");
+        // 校验题库
+        Long questionBankId = questionBankQuestion.getQuestionBankId();
+        ThrowUtils.throwIf(questionBankId == null, ErrorCode.PARAMS_ERROR, "请填写要关联的题库");
+        QuestionBank questionBank = questionBankService.getById(questionBankId);
+        ThrowUtils.throwIf(questionBank == null, ErrorCode.NOT_FOUND_ERROR, "题库不存在");
     }
+
 
     /**
      * 获取查询条件
@@ -167,6 +185,23 @@ public class QuestionBankQuestionServiceImpl extends ServiceImpl<QuestionBankQue
 
         questionBankQuestionVOPage.setRecords(questionBankQuestionVOList);
         return questionBankQuestionVOPage;
+    }
+
+    @Override
+    public BaseResponse<Boolean> removeQuestionBankQuestion(QuestionBankQuestionRemoveRequest questionBankQuestionRemoveRequest, HttpServletRequest request) {
+        // 校验参数
+        ThrowUtils.throwIf(questionBankQuestionRemoveRequest == null, ErrorCode.PARAMS_ERROR);
+        Long questionBankId = questionBankQuestionRemoveRequest.getQuestionBankId();
+        Long questionId = questionBankQuestionRemoveRequest.getQuestionId();
+        ThrowUtils.throwIf(questionId == null, ErrorCode.PARAMS_ERROR);
+        ThrowUtils.throwIf(questionBankId == null, ErrorCode.PARAMS_ERROR);
+
+        // 删除
+        LambdaQueryWrapper<QuestionBankQuestion> lambdaQueryWrapper = Wrappers.lambdaQuery(QuestionBankQuestion.class)
+                .eq(QuestionBankQuestion::getQuestionBankId, questionBankId)
+                .eq(QuestionBankQuestion::getQuestionId, questionId);
+        boolean isRemove = questionBankQuestionService.remove(lambdaQueryWrapper);
+        return ResultUtils.success(isRemove);
     }
 
 }

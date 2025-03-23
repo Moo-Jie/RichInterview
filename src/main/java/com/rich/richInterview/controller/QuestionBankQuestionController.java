@@ -1,5 +1,7 @@
 package com.rich.richInterview.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.rich.richInterview.annotation.AuthCheck;
 import com.rich.richInterview.common.BaseResponse;
@@ -11,6 +13,7 @@ import com.rich.richInterview.exception.BusinessException;
 import com.rich.richInterview.exception.ThrowUtils;
 import com.rich.richInterview.model.dto.questionBankQuestion.QuestionBankQuestionAddRequest;
 import com.rich.richInterview.model.dto.questionBankQuestion.QuestionBankQuestionQueryRequest;
+import com.rich.richInterview.model.dto.questionBankQuestion.QuestionBankQuestionRemoveRequest;
 import com.rich.richInterview.model.dto.questionBankQuestion.QuestionBankQuestionUpdateRequest;
 import com.rich.richInterview.model.entity.QuestionBankQuestion;
 import com.rich.richInterview.model.entity.User;
@@ -47,6 +50,7 @@ public class QuestionBankQuestionController {
      * @return
      */
     @PostMapping("/add")
+    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Long> addQuestionBankQuestion(@RequestBody QuestionBankQuestionAddRequest questionBankQuestionAddRequest, HttpServletRequest request) {
         ThrowUtils.throwIf(questionBankQuestionAddRequest == null, ErrorCode.PARAMS_ERROR);
         // todo 在此处将实体类和 DTO 进行转换
@@ -66,13 +70,27 @@ public class QuestionBankQuestionController {
     }
 
     /**
-     * 删除题库题目关系
+     * 移除题库题目关系,题库ID、题目ID删除
+     *
+     * @param questionBankQuestionRemoveRequest
+     * @param request
+     * @return
+     */
+    @PostMapping("/remove")
+    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    public BaseResponse<Boolean> removeQuestionBankQuestion(@RequestBody QuestionBankQuestionRemoveRequest questionBankQuestionRemoveRequest, HttpServletRequest request) {
+        return questionBankQuestionService.removeQuestionBankQuestion(questionBankQuestionRemoveRequest, request);
+    }
+
+    /**
+     * 删除题库题目关系,ID删除
      *
      * @param deleteRequest
      * @param request
      * @return
      */
     @PostMapping("/delete")
+    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Boolean> deleteQuestionBankQuestion(@RequestBody DeleteRequest deleteRequest, HttpServletRequest request) {
         if (deleteRequest == null || deleteRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);

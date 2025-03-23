@@ -3,7 +3,9 @@ package com.rich.richInterview.service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.rich.richInterview.common.BaseResponse;
 import com.rich.richInterview.model.dto.questionBankQuestion.QuestionBankQuestionQueryRequest;
+import com.rich.richInterview.model.dto.questionBankQuestion.QuestionBankQuestionRemoveRequest;
 import com.rich.richInterview.model.entity.QuestionBankQuestion;
 import com.rich.richInterview.model.vo.QuestionBankQuestionVO;
 
@@ -48,4 +50,6 @@ public interface QuestionBankQuestionService extends IService<QuestionBankQuesti
      * @return
      */
     Page<QuestionBankQuestionVO> getQuestionBankQuestionVOPage(Page<QuestionBankQuestion> questionBankQuestionPage, HttpServletRequest request);
+
+    BaseResponse<Boolean> removeQuestionBankQuestion(QuestionBankQuestionRemoveRequest questionBankQuestionRemoveRequest, HttpServletRequest request);
 }
