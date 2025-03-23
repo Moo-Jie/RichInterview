@@ -1,6 +1,5 @@
 package com.rich.richInterview.controller;
 
-import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.rich.richInterview.annotation.AuthCheck;
 import com.rich.richInterview.common.BaseResponse;
@@ -8,24 +7,19 @@ import com.rich.richInterview.common.DeleteRequest;
 import com.rich.richInterview.common.ErrorCode;
 import com.rich.richInterview.common.ResultUtils;
 import com.rich.richInterview.constant.UserConstant;
-import com.rich.richInterview.exception.BusinessException;
 import com.rich.richInterview.exception.ThrowUtils;
 import com.rich.richInterview.model.dto.question.QuestionAddRequest;
 import com.rich.richInterview.model.dto.question.QuestionEditRequest;
 import com.rich.richInterview.model.dto.question.QuestionQueryRequest;
 import com.rich.richInterview.model.dto.question.QuestionUpdateRequest;
 import com.rich.richInterview.model.entity.Question;
-import com.rich.richInterview.model.entity.User;
 import com.rich.richInterview.model.vo.QuestionVO;
 import com.rich.richInterview.service.QuestionService;
-import com.rich.richInterview.service.UserService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 /**
  * 题目接口
@@ -39,10 +33,6 @@ public class QuestionController {
     @Resource
     private QuestionService questionService;
 
-    @Resource
-    private UserService userService;
-
-
     /**
      * 创建题目
      *
@@ -53,21 +43,7 @@ public class QuestionController {
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     @PostMapping("/add")
     public BaseResponse<Long> addQuestion(@RequestBody QuestionAddRequest questionAddRequest, HttpServletRequest request) {
-        ThrowUtils.throwIf(questionAddRequest == null, ErrorCode.PARAMS_ERROR);
-        // todo 在此处将实体类和 DTO 进行转换
-        Question question = new Question();
-        BeanUtils.copyProperties(questionAddRequest, question);
-        // 数据校验
-        questionService.validQuestion(question, true);
-        // todo 填充默认值
-        User loginUser = userService.getLoginUser(request);
-        question.setUserId(loginUser.getId());
-        // 写入数据库
-        boolean result = questionService.save(question);
-        ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
-        // 返回新写入的数据 id
-        long newQuestionId = question.getId();
-        return ResultUtils.success(newQuestionId);
+        return ResultUtils.success(questionService.addQuestion(questionAddRequest, request));
     }
 
     /**
@@ -80,22 +56,7 @@ public class QuestionController {
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     @PostMapping("/delete")
     public BaseResponse<Boolean> deleteQuestion(@RequestBody DeleteRequest deleteRequest, HttpServletRequest request) {
-        if (deleteRequest == null || deleteRequest.getId() <= 0) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR);
-        }
-        User user = userService.getLoginUser(request);
-        long id = deleteRequest.getId();
-        // 判断是否存在
-        Question oldQuestion = questionService.getById(id);
-        ThrowUtils.throwIf(oldQuestion == null, ErrorCode.NOT_FOUND_ERROR);
-        // 仅本人或管理员可删除
-        if (!oldQuestion.getUserId().equals(user.getId()) && !userService.isAdmin(request)) {
-            throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
-        }
-        // 操作数据库
-        boolean result = questionService.removeById(id);
-        ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
-        return ResultUtils.success(true);
+        return ResultUtils.success(questionService.deleteQuestion(deleteRequest, request));
     }
 
     /**
@@ -107,22 +68,7 @@ public class QuestionController {
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     @PostMapping("/update")
     public BaseResponse<Boolean> updateQuestion(@RequestBody QuestionUpdateRequest questionUpdateRequest) {
-        if (questionUpdateRequest == null || questionUpdateRequest.getId() <= 0) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR);
-        }
-        // todo 在此处将实体类和 DTO 进行转换
-        Question question = new Question();
-        BeanUtils.copyProperties(questionUpdateRequest, question);
-        // 数据校验
-        questionService.validQuestion(question, false);
-        // 判断是否存在
-        long id = questionUpdateRequest.getId();
-        Question oldQuestion = questionService.getById(id);
-        ThrowUtils.throwIf(oldQuestion == null, ErrorCode.NOT_FOUND_ERROR);
-        // 操作数据库
-        boolean result = questionService.updateById(question);
-        ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
-        return ResultUtils.success(true);
+        return ResultUtils.success(questionService.updateQuestion(questionUpdateRequest));
     }
 
     /**
@@ -144,7 +90,6 @@ public class QuestionController {
 
     /**
      * 分页获取题目列表（仅管理员可用）
-     *
      * @param questionQueryRequest
      * @return
      */
@@ -186,55 +131,18 @@ public class QuestionController {
     @PostMapping("/my/list/page/vo")
     public BaseResponse<Page<QuestionVO>> listMyQuestionVOByPage(@RequestBody QuestionQueryRequest questionQueryRequest,
                                                                  HttpServletRequest request) {
-        ThrowUtils.throwIf(questionQueryRequest == null, ErrorCode.PARAMS_ERROR);
-        // 补充查询条件，只查询当前登录用户的数据
-        User loginUser = userService.getLoginUser(request);
-        questionQueryRequest.setUserId(loginUser.getId());
-        long current = questionQueryRequest.getCurrent();
-        long size = questionQueryRequest.getPageSize();
-        // 限制爬虫
-        ThrowUtils.throwIf(size > 20, ErrorCode.PARAMS_ERROR);
-        // 查询数据库
-        Page<Question> questionPage = questionService.page(new Page<>(current, size),
-                questionService.getQueryWrapper(questionQueryRequest));
-        // 获取封装类
-        return ResultUtils.success(questionService.getQuestionVOPage(questionPage, request));
+        return ResultUtils.success(questionService.listMyQuestionVOByPage(questionQueryRequest, request));
     }
 
     /**
      * 编辑题目（给用户使用）
-     *
      * @param questionEditRequest
      * @param request
      * @return
      */
     @PostMapping("/edit")
     public BaseResponse<Boolean> editQuestion(@RequestBody QuestionEditRequest questionEditRequest, HttpServletRequest request) {
-        if (questionEditRequest == null || questionEditRequest.getId() <= 0) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR);
-        }
-        // todo 在此处将实体类和 DTO 进行转换
-        Question question = new Question();
-        BeanUtils.copyProperties(questionEditRequest, question);
-        List<String> tags = questionEditRequest.getTags();
-        if (tags != null) {
-            question.setTags(JSONUtil.toJsonStr(tags));
-        }
-        // 数据校验
-        questionService.validQuestion(question, false);
-        User loginUser = userService.getLoginUser(request);
-        // 判断是否存在
-        long id = questionEditRequest.getId();
-        Question oldQuestion = questionService.getById(id);
-        ThrowUtils.throwIf(oldQuestion == null, ErrorCode.NOT_FOUND_ERROR);
-        // 仅本人或管理员可编辑
-        if (!oldQuestion.getUserId().equals(loginUser.getId()) && !userService.isAdmin(loginUser)) {
-            throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
-        }
-        // 操作数据库
-        boolean result = questionService.updateById(question);
-        ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
-        return ResultUtils.success(true);
+        return ResultUtils.success(questionService.editQuestion(questionEditRequest, request));
     }
 
 

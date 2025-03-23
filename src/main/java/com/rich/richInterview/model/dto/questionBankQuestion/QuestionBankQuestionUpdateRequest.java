@@ -3,7 +3,6 @@ package com.rich.richInterview.model.dto.questionBankQuestion;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * 更新题库题目关系请求

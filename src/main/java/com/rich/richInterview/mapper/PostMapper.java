@@ -2,6 +2,7 @@ package com.rich.richInterview.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.rich.richInterview.model.entity.Post;
+
 import java.util.Date;
 import java.util.List;
 

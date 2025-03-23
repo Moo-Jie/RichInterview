@@ -6,11 +6,11 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
-import java.io.FileWriter;
-import java.io.Writer;
 
 /**
  * 代码生成器

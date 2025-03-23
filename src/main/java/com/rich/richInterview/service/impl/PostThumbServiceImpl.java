@@ -10,10 +10,11 @@ import com.rich.richInterview.model.entity.PostThumb;
 import com.rich.richInterview.model.entity.User;
 import com.rich.richInterview.service.PostService;
 import com.rich.richInterview.service.PostThumbService;
-import javax.annotation.Resource;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
 
 /**
  * 帖子点赞服务实现

@@ -1,7 +1,7 @@
 package com.rich.richInterview.mapper;
 
-import com.rich.richInterview.model.entity.Question;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.rich.richInterview.model.entity.Question;
 
 /**
 * @author duruichi
