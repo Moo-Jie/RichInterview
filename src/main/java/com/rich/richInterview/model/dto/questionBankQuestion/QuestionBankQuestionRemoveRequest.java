@@ -9,8 +9,7 @@ import java.io.Serializable;
  *
  */
 @Data
-public class QuestionBankQuestionAddRequest implements Serializable {
-
+public class QuestionBankQuestionRemoveRequest implements Serializable {
     /**
      * 题库 id
      */
