@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "openapi": "ts-node openapi.config.ts"
   },
   "dependencies": {
     "react": "^19.0.0",
