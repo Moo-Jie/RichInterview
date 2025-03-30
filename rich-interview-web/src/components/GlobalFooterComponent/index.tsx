@@ -1,5 +1,6 @@
 import React from "react";
 import "./index.css";
+import {ConstantMsg} from "../../../public/constant/ConstantMsg";
 
 /**
  * 全局底部页脚组件
@@ -10,14 +11,11 @@ export default function GlobalFooter() {
 
   return (
     <div className="global-footer">
+      <div>© {currentYear} {ConstantMsg.PROJECT_CHINESE_NAME}</div>
       <div>
-        <a href="https://github.com/Moo-Jie/RichInterview.git" target="_blank">
-          © {currentYear} Rich面试刷题平台
-        </a>
-      </div>
-      <div>
+        关注我：
         <a href="https://github.com/Moo-Jie" target="_blank">
-          关注我： 莫桀
+          莫桀
         </a>
       </div>
     </div>
