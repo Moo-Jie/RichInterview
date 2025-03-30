@@ -21,6 +21,7 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import GlobalFooter from "@/components/GlobalFooterComponent";
 import { sysMenus } from "../../../config/menu";
+import { ConstantMsg } from "../../../public/constant/ConstantMsg";
 
 /**
  * 搜索输入框组件，包含搜索功能和快捷创建按钮
@@ -83,31 +84,32 @@ export default function MainLayout({ children }: Props) {
       <ProLayout
         // 基础布局配置
         layout="top"
-        title="Rich面试刷题平台"
+        title={ConstantMsg.PROJECT_CHINESE_NAME}
         logo={
           <Image
             src="/assets/pictures/logo.png"
-            alt="Rich面试刷题平台"
-            width={38}
-            height={38}
+            alt={ConstantMsg.PROJECT_NAME}
+            width={35}
+            height={35}
           />
         }
         location={{
           pathname,
         }}
         avatarProps={{
-          src: "https://gw.alipayobjects.com/zos/antfincdn/efFD%24IOql2/weixintupian_20170331104822.jpg",
+          src: "https://rich-tams.oss-cn-beijing.aliyuncs.com/DKD_RichDu/2025/03/09/67cd64943c851694f2a087e7.png",
           size: "small",
           title: "莫桀",
           render: (props, dom) => {
             return (
               <Dropdown
+                autoAdjustOverflow={true}
                 menu={{
                   items: [
                     {
                       key: "logout",
                       icon: <LogoutOutlined />,
-                      label: "退出登录",
+                      label: "退出",
                     },
                   ],
                 }}
@@ -124,19 +126,16 @@ export default function MainLayout({ children }: Props) {
             <SearchInput key="search" />,
             <InfoCircleFilled key="InfoCircleFilled" />,
             <QuestionCircleFilled key="QuestionCircleFilled" />,
-            <a
-              href="https://github.com/Moo-Jie/RichInterview.git"
-              key="github"
-              target="_blank"
-            >
+            <a href={ConstantMsg.REPO_URL} key="github" target="_blank">
               <GithubFilled key="GithubFilled" />
             </a>,
           ];
         }}
         // 头部标题渲染逻辑（响应式适配）
+        // 标题渲染
         headerTitleRender={(logo, title, _) => {
           return (
-            <a>
+            <a href={ConstantMsg.HOME_URL} target="_blank">
               {logo}
               {title}
             </a>
@@ -154,7 +153,9 @@ export default function MainLayout({ children }: Props) {
         }}
         // 菜单渲染
         menuItemRender={(item, dom) => (
-          <Link href={item.path || "/"}>{dom}</Link>
+          <Link href={item.path || "/"} target={item.target}>
+            {dom}
+          </Link>
         )}
       >
         {
