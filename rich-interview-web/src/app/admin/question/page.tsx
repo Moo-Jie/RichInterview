@@ -4,7 +4,7 @@ export default function Home() {
   return (
     <div className={styles.page}>
       <main className={styles.main}>
-        <button type="button">这个页面是_主页_测试页面</button>
+        <button type="button">这个页面是_题目管理_测试页面</button>
       </main>
       <footer className={styles.footer}></footer>
     </div>
