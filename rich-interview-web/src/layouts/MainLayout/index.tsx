@@ -1,3 +1,4 @@
+"use client";
 /**
  * @Date: 2025/3/30 13:47
  * @Author: duRuiChi
@@ -5,7 +6,7 @@
  *  TODO 动态数据实现
  *  TODO 通用组件进一步抽取
  */
-"use client";
+
 import {
   GithubFilled,
   InfoCircleFilled,
@@ -15,7 +16,7 @@ import {
 } from "@ant-design/icons";
 import { ProLayout } from "@ant-design/pro-components";
 import { Dropdown, Input } from "antd";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
@@ -70,8 +71,22 @@ interface Props {
  * - 全局状态管理（路由跟踪、用户偏好设置存储）
  */
 export default function MainLayout({ children }: Props) {
-  // 当前路由路径，用于菜单高亮和页面跳转
+  // 使用 Next.js 的导航钩子获取当前路由路径，用于菜单项的高亮状态和页面跳转逻辑
   const pathname = usePathname();
+
+  // 客户端渲染状态控制，组件没有挂载，故初始化 mounted 状态为 false
+  const [mounted, setMounted] = useState(false);
+
+  // 使用 useEffect 在组件挂载后更新状态，空依赖数组表示该 effect 仅在组件初次渲染时执行
+  useEffect(() => {
+    // 将 mounted 状态设为 true，表示客户端已完成挂载
+    // 这个状态切换用于区分服务端渲染和客户端渲染
+    setMounted(true);
+  }, []);
+
+  // 进行条件渲染控制，在服务端渲染阶段返回null：避免服务端与客户端初始渲染内容不一致导致的 hydration 错误
+  // 当 mounted 为 false 时（服务端渲染阶段），返回空内容
+  if (!mounted) return null;
 
   return (
     <div
