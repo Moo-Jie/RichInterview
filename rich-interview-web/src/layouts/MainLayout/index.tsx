@@ -15,6 +15,7 @@ import {
   SearchOutlined,
 } from "@ant-design/icons";
 import { ProLayout } from "@ant-design/pro-components";
+import { UserSwitchOutlined, UserOutlined } from "@ant-design/icons";
 import { Dropdown, Input } from "antd";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
@@ -23,6 +24,8 @@ import Link from "next/link";
 import GlobalFooter from "@/components/GlobalFooterComponent";
 import { sysMenus } from "../../../config/menu";
 import { ConstantMsg } from "../../../public/constant/ConstantMsg";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 
 /**
  * 搜索输入框组件，包含搜索功能和快捷创建按钮
@@ -71,23 +74,22 @@ interface Props {
  * - 全局状态管理（路由跟踪、用户偏好设置存储）
  */
 export default function MainLayout({ children }: Props) {
+  // 在Redux状态中获取当前登录用户信息(在其他勾子之前，注意hooks的调用顺序)
+  const loginUser = useSelector((state: RootState) => state.userLogin);
+
   // 使用 Next.js 的导航钩子获取当前路由路径，用于菜单项的高亮状态和页面跳转逻辑
   const pathname = usePathname();
-
+  // mounted用于区分服务端渲染和客户端渲染阶段，避免在服务端渲染时执行客户端逻辑
   // 客户端渲染状态控制，组件没有挂载，故初始化 mounted 状态为 false
   const [mounted, setMounted] = useState(false);
-
-  // 使用 useEffect 在组件挂载后更新状态，空依赖数组表示该 effect 仅在组件初次渲染时执行
+  // 在组件首次挂在后，将 mounted 状态设为 true，表示客户端已完成挂载
   useEffect(() => {
-    // 将 mounted 状态设为 true，表示客户端已完成挂载
-    // 这个状态切换用于区分服务端渲染和客户端渲染
     setMounted(true);
   }, []);
-
   // 进行条件渲染控制，在服务端渲染阶段返回null：避免服务端与客户端初始渲染内容不一致导致的 hydration 错误
   // 当 mounted 为 false 时（服务端渲染阶段），返回空内容
   if (!mounted) return null;
-
+  // 服务端渲染完毕后，客户端渲染主布局组件
   return (
     <div
       id="mainLayout"
@@ -112,19 +114,42 @@ export default function MainLayout({ children }: Props) {
           pathname,
         }}
         avatarProps={{
-          src: "https://rich-tams.oss-cn-beijing.aliyuncs.com/DKD_RichDu/2025/03/09/67cd64943c851694f2a087e7.png",
+          src: loginUser.userAvatar || "/assets/pictures/userNotLogin.png",
           size: "small",
-          title: "莫桀",
+          title: loginUser.userName || "游客",
           render: (props, dom) => {
+            const handleSwitchAccount = () => {
+              // TODO 待实现
+              console.log("打开切换账号弹窗");
+            };
+            const handleViewProfile = () => {
+              // TODO 待实现
+              console.log("跳转至个人中心");
+            };
             return (
               <Dropdown
                 autoAdjustOverflow={true}
                 menu={{
                   items: [
                     {
+                      key: "profile",
+                      icon: <UserOutlined />,
+                      label: "<个人中心>",
+                      onClick: handleViewProfile,
+                    },
+                    {
+                      type: "divider",
+                    },
+                    {
+                      key: "switch",
+                      icon: <UserSwitchOutlined />,
+                      label: "<切换账号>",
+                      onClick: handleSwitchAccount,
+                    },
+                    {
                       key: "logout",
                       icon: <LogoutOutlined />,
-                      label: "退出",
+                      label: "<退出登录>",
                     },
                   ],
                 }}
