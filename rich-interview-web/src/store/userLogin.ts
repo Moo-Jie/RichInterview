@@ -15,7 +15,7 @@ const DEFAULT_USER: API.LoginUserVO = {
  * 登录用户全局状态切片
  */
 export const userLoginSlice = createSlice({
-  name: "loginUser",
+  name: "userLogin",
   initialState: DEFAULT_USER,
   reducers: {
     setUserLogin: (state, action: PayloadAction<API.LoginUserVO>) => {
