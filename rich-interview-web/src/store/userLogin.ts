@@ -1,14 +1,14 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RootState } from "@/store/index";
+import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import AccessEnumeration from "@/access/accessEnumeration";
 
 /**
  * 初始化登录用户信息
  */
 const DEFAULT_USER: API.LoginUserVO = {
   userName: "游客",
-  userProfile: "暂无简介",
+  userProfile: "暂无",
   userAvatar: "/assets/pictures/userNotLogin.png",
-  userRole: "guest",
+  userRole: AccessEnumeration.NOT_LOGIN,
 };
 
 /**
