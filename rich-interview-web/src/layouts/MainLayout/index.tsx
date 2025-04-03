@@ -13,19 +13,21 @@ import {
   LogoutOutlined,
   QuestionCircleFilled,
   SearchOutlined,
+  UserOutlined,
+  UserSwitchOutlined,
 } from "@ant-design/icons";
-import { ProLayout } from "@ant-design/pro-components";
-import { UserSwitchOutlined, UserOutlined } from "@ant-design/icons";
-import { Dropdown, Input } from "antd";
-import React, { useEffect, useState } from "react";
+import {ProLayout} from "@ant-design/pro-components";
+import {Dropdown, Input} from "antd";
+import React, {useEffect, useState} from "react";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import {usePathname} from "next/navigation";
 import Link from "next/link";
 import GlobalFooter from "@/components/GlobalFooterComponent";
-import { sysMenus } from "../../../config/menu";
-import { ConstantMsg } from "../../../public/constant/ConstantMsg";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store";
+import {sysMenus} from "../../../config/menu";
+import {ConstantMsg} from "../../../public/constant/ConstantMsg";
+import {useSelector} from "react-redux";
+import {RootState} from "@/store";
+import showMenuByUserAccess from "@/app/Forbidden/showMenuByUserAccess";
 
 /**
  * 搜索输入框组件，包含搜索功能和快捷创建按钮
@@ -171,8 +173,7 @@ export default function MainLayout({ children }: Props) {
             </a>,
           ];
         }}
-        // 头部标题渲染逻辑（响应式适配）
-        // 标题渲染
+        // 头部标题渲染
         headerTitleRender={(logo, title, _) => {
           return (
             <a href={ConstantMsg.HOME_URL} target="_blank">
@@ -189,7 +190,7 @@ export default function MainLayout({ children }: Props) {
         onMenuHeaderClick={(e) => console.log(e)}
         // 菜单项点击处理（路由跳转）
         menuDataRender={() => {
-          return sysMenus;
+          return showMenuByUserAccess( loginUser, sysMenus);
         }}
         // 菜单渲染
         menuItemRender={(item, dom) => (

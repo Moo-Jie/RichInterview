@@ -1,10 +1,11 @@
 "use client";
 import MainLayout from "@/layouts/MainLayout";
-import AppInitializer from "@/components/AppInitializer";
+import AppInitializerComponent from "@/components/AppInitializerComponent";
 import store from "@/store";
-import { Provider } from "react-redux";
-import { AntdRegistry } from "@ant-design/nextjs-registry";
+import {Provider} from "react-redux";
+import {AntdRegistry} from "@ant-design/nextjs-registry";
 import "./globals.css";
+import AccessCheekComponent from "@/components/AccessCheekComponent";
 
 /**
  * 根布局组件
@@ -20,9 +21,11 @@ export default function RootLayout({
       <body>
         <AntdRegistry>
           <Provider store={store}>
-            <AppInitializer>
-              <MainLayout>{children}</MainLayout>
-            </AppInitializer>
+            <AppInitializerComponent>
+              <MainLayout>
+                <AccessCheekComponent>{children}</AccessCheekComponent>
+              </MainLayout>
+            </AppInitializerComponent>
           </Provider>
         </AntdRegistry>
       </body>

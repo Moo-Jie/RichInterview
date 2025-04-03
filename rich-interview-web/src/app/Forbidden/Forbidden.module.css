@@ -1,0 +1,26 @@
+.container {
+    background: linear-gradient(135deg, #f0f2f5 0%, #fafafa 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+}
+
+.title {
+    color: #1d1d1d;
+    font-size: 28px;
+    letter-spacing: 0.5px;
+}
+
+.homeButton {
+    padding: 8px 24px;
+    height: auto;
+    transition: all 0.3s ease;
+}
+
+.homeButton:hover {
+    background-color: #4069ff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(64, 105, 255, 0.3);
+}
