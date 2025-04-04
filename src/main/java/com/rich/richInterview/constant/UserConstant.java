@@ -19,12 +19,12 @@ public interface UserConstant {
     /**
      * 默认用户头像图片
      */
-    String DEFAULT_USER_PICTURE = "DKD_RichDu/2025/03/09/67cd64943c851694f2a087e7.png";
+    String DEFAULT_USER_PICTURE = "https://rich-tams.oss-cn-beijing.aliyuncs.com/DKD_RichDu/2025/03/09/67cd64943c851694f2a087e7.png";
 
     /**
      * 默认题库图片
      */
-    String DEFAULT_QUESTION_BANK_PICTURE = "DKD_RichDu/2025/03/09/67cd64943c851694f2a087e7.png";
+    String DEFAULT_QUESTION_BANK_PICTURE = "https://rich-tams.oss-cn-beijing.aliyuncs.com/DKD_RichDu/2025/03/09/67cd64943c851694f2a087e7.png";
 
     /**
      * 管理员角色

@@ -16,18 +16,20 @@ import {
   UserOutlined,
   UserSwitchOutlined,
 } from "@ant-design/icons";
-import {ProLayout} from "@ant-design/pro-components";
-import {Dropdown, Input} from "antd";
-import React, {useEffect, useState} from "react";
+import { ProLayout } from "@ant-design/pro-components";
+import { Dropdown, Input } from "antd";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import {usePathname} from "next/navigation";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 import GlobalFooter from "@/components/GlobalFooterComponent";
-import {sysMenus} from "../../../config/menu";
-import {ConstantMsg} from "../../../public/constant/ConstantMsg";
-import {useSelector} from "react-redux";
-import {RootState} from "@/store";
+import { sysMenus } from "../../../config/menu";
+import { ConstantMsg } from "../../../public/constant/ConstantMsg";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 import showMenuByUserAccess from "@/app/Forbidden/showMenuByUserAccess";
+import MarkdownViewer from "@/components/MarkdownComponent/MarkdownViewer";
+import MarkdownEditor from "@/components/MarkdownComponent/MarkdownEditor";
 
 /**
  * 搜索输入框组件，包含搜索功能和快捷创建按钮
@@ -84,6 +86,7 @@ export default function MainLayout({ children }: Props) {
   // mounted用于区分服务端渲染和客户端渲染阶段，避免在服务端渲染时执行客户端逻辑
   // 客户端渲染状态控制，组件没有挂载，故初始化 mounted 状态为 false
   const [mounted, setMounted] = useState(false);
+  const [text, setText] = useState<string>("");
   // 在组件首次挂在后，将 mounted 状态设为 true，表示客户端已完成挂载
   useEffect(() => {
     setMounted(true);
@@ -190,7 +193,7 @@ export default function MainLayout({ children }: Props) {
         onMenuHeaderClick={(e) => console.log(e)}
         // 菜单项点击处理（路由跳转）
         menuDataRender={() => {
-          return showMenuByUserAccess( loginUser, sysMenus);
+          return showMenuByUserAccess(loginUser, sysMenus);
         }}
         // 菜单渲染
         menuItemRender={(item, dom) => (
@@ -199,6 +202,9 @@ export default function MainLayout({ children }: Props) {
           </Link>
         )}
       >
+        {/* 测试 */}
+        <MarkdownEditor value={text} onChange={setText} />
+        <MarkdownViewer value={text} />
         {
           // 页面主体内容
           children

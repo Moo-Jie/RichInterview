@@ -1,0 +1,26 @@
+/* 编辑器容器样式 */
+.md-editor {
+    border: 1px solid #e1e4e8;
+    border-radius: 6px;
+    overflow: hidden;
+    margin: 20px auto;
+    max-width: 1000px;
+}
+
+/* 工具栏样式优化 */
+.md-editor .bytemd-toolbar {
+    background: #f6f8fa;
+    border-bottom: 1px solid #e1e4e8;
+    padding: 8px 12px;
+}
+
+/* 编辑区高度设置 */
+.md-editor .bytemd-editor {
+    height: 500px;
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+}
+
+/* 预览区同步Viewer样式 */
+.md-editor .bytemd-preview {
+    padding: 20px;
+}
