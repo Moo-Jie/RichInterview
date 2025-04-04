@@ -26,17 +26,17 @@ export default function AppInitializerComponent({
     // TODO 初始化逻辑待实现
     try {
       const res = await getLoginUserUsingGet();
-      // TODO 排除登录注册页面
+      // TODO 登录处理逻辑
       if (res.data) {
-        // 刷新用户信息
         // dispatch(setUserLogin(res.data));
       } else {
-        // 跳转登录注册界面
+        // 测试用户
         const testUser = {
           userName: "MOJIE",
           id: 1,
           userAvatar: ConstantMsg.AUTHOR_AVATAR,
-          userRole: ACCESS_ENUM.USER,
+          // 测试权限
+          userRole: ACCESS_ENUM.ADMIN,
         };
         dispatch(setUserLogin(testUser));
       }
