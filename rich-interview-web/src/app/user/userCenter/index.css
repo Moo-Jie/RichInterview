@@ -1,0 +1,33 @@
+/* 主容器调整 */
+#userCenterPage.max-width-content {
+    padding: 24px 16px 48px;
+}
+
+/* 用户信息卡片 */
+.profile-card {
+    text-align: center !important;
+    margin-bottom: 24px !important;
+}
+
+/* 头像间距 */
+.avatar-margin {
+    margin-bottom: 16px;
+}
+
+/* 用户名样式 */
+.username {
+    margin-bottom: 0 !important;
+    font-size: 1.5rem !important;
+}
+
+/* 内容卡片 */
+.content-card {
+    min-height: 500px;
+}
+
+/* 移除原有栅格响应式 */
+@media (max-width: 768px) {
+    .content-card {
+        min-height: auto;
+    }
+}

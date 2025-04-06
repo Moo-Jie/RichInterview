@@ -1,6 +1,6 @@
 import React from "react";
 import "./index.css";
-import {ConstantMsg} from "../../../public/constant/ConstantMsg";
+import {ConstantMsg} from "@/constant/ConstantMsg";
 
 /**
  * 全局底部页脚组件

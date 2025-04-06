@@ -1,5 +1,16 @@
 import { MenuDataItem } from "@ant-design/pro-layout";
-import { CrownOutlined } from "@ant-design/icons";
+import {
+  CrownOutlined,
+  HomeOutlined,
+  BookOutlined,
+  QuestionCircleOutlined,
+  TeamOutlined,
+  DatabaseOutlined,
+  EditOutlined,
+  MoreOutlined,
+  UserOutlined,
+  InfoCircleOutlined,
+} from "@ant-design/icons";
 import AccessEnumeration from "@/access/accessEnumeration";
 
 /**
@@ -10,16 +21,19 @@ export const sysMenus = [
   {
     path: "/",
     name: "主页",
+    icon: <HomeOutlined />,
     access: AccessEnumeration.NOT_LOGIN,
   },
   {
     path: "/banks",
     name: "题库",
+    icon: <BookOutlined />,
     access: AccessEnumeration.USER,
   },
   {
     path: "/questions",
     name: "题目",
+    icon: <QuestionCircleOutlined />,
     access: AccessEnumeration.USER,
   },
   {
@@ -31,23 +45,42 @@ export const sysMenus = [
       {
         path: "/admin/user",
         name: "用户管理",
+        icon: <TeamOutlined />,
         access: AccessEnumeration.ADMIN,
       },
       {
         path: "/admin/bank",
         name: "题库管理",
+        icon: <DatabaseOutlined />,
         access: AccessEnumeration.ADMIN,
       },
       {
         path: "/admin/question",
         name: "题目管理",
+        icon: <EditOutlined />,
         access: AccessEnumeration.ADMIN,
       },
     ],
   },
   {
-    name: "关于作者",
-    path: "/aboutAuthor",
+    name: "其他",
+    path: "/other",
+    icon: <MoreOutlined />,
+    access: AccessEnumeration.NOT_LOGIN,
+    children: [
+      {
+        path: "/other/aboutAuthor",
+        name: "关于作者",
+        icon: <UserOutlined />,
+        access: AccessEnumeration.NOT_LOGIN,
+      },
+      {
+        path: "/other/aboutRichInterview",
+        name: "关于项目",
+        icon: <InfoCircleOutlined />,
+        access: AccessEnumeration.NOT_LOGIN,
+      },
+    ],
   },
 ] as MenuDataItem[];
 

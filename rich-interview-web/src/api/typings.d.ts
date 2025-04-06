@@ -72,6 +72,8 @@ declare namespace API {
   };
 
   type BaseResponsePageUser_ = {
+    total(total: any): number | undefined;
+    records: never[];
     code?: number;
     data?: PageUser_;
     message?: string;

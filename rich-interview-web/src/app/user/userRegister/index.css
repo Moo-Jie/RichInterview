@@ -1,0 +1,80 @@
+/* 保持与登录页面相同的根容器样式 */
+#userRegisterPage {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f0f2f5;
+    padding: 24px;
+}
+
+/* 表单容器 - 尺寸与登录页保持一致 */
+#userRegisterPage .ant-pro-form-login-container {
+    width: 480px;
+    background: #fff;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* 标题样式统一 */
+#userRegisterPage .ant-pro-form-login-title {
+    font-size: 24px;
+    margin-bottom: 8px;
+    color: #1f1f1f;
+}
+
+/* 副标题样式统一 */
+#userRegisterPage .ant-pro-form-login-subtitle {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 32px;
+}
+
+/* 输入框样式保持相同 */
+#userRegisterPage .ant-input-affix-wrapper-lg {
+    border-radius: 6px;
+    margin-bottom: 24px;
+}
+
+/* 注册按钮与登录按钮相同 */
+#userRegisterPage .ant-btn-lg {
+    width: 100%;
+    height: 48px;
+    border-radius: 6px;
+    font-size: 16px;
+    background: #1677ff;
+    transition: all 0.2s;
+}
+
+/* 链接区域样式一致 */
+#userRegisterPage .ant-pro-form-login-other {
+    margin-top: 24px;
+    text-align: right;
+}
+
+#userRegisterPage a {
+    color: #1677ff;
+    margin-left: 8px;
+}
+
+/* 响应式规则相同 */
+@media (max-width: 576px) {
+    #userRegisterPage .ant-pro-form-login-container {
+        width: 100%;
+        padding: 24px;
+    }
+
+    #userRegisterPage {
+        padding: 12px;
+    }
+}
+
+/* 保持相同的交互效果 */
+#userRegisterPage .ant-input-affix-wrapper:hover {
+    border-color: #1677ff !important;
+}
+
+#userRegisterPage .ant-input-affix-wrapper-focused {
+    box-shadow: 0 0 0 2px rgba(22, 119, 255, 0.1);
+}
