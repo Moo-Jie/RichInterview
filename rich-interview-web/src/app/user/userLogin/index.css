@@ -1,0 +1,80 @@
+#userLoginPage {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f0f2f5;
+    padding: 24px;
+}
+
+/* 登录表单容器 */
+#userLoginPage .ant-pro-form-login-container {
+    width: 480px;
+    background: #fff;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* 标题样式 */
+#userLoginPage .ant-pro-form-login-title {
+    font-size: 24px;
+    margin-bottom: 8px;
+    color: #1f1f1f;
+}
+
+/* 副标题样式 */
+#userLoginPage .ant-pro-form-login-subtitle {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 32px;
+}
+
+/* 输入框样式 */
+#userLoginPage .ant-input-affix-wrapper-lg {
+    border-radius: 6px;
+    margin-bottom: 24px;
+}
+
+/* 登录按钮样式 */
+#userLoginPage .ant-btn-lg {
+    width: 100%;
+    height: 48px;
+    border-radius: 6px;
+    font-size: 16px;
+    background: #1677ff;
+    transition: all 0.2s;
+}
+
+/* 注册链接样式 */
+#userLoginPage .ant-pro-form-login-other {
+    margin-top: 24px;
+    text-align: right;
+}
+
+#userLoginPage a {
+    color: #1677ff;
+    margin-left: 8px;
+}
+
+/* 响应式处理 */
+@media (max-width: 576px) {
+    #userLoginPage .ant-pro-form-login-container {
+        width: 100%;
+        padding: 24px;
+    }
+
+    #userLoginPage {
+        padding: 12px;
+    }
+}
+
+/* 输入框hover效果 */
+#userLoginPage .ant-input-affix-wrapper:hover {
+    border-color: #1677ff !important;
+}
+
+/* 输入框聚焦效果 */
+#userLoginPage .ant-input-affix-wrapper-focused {
+    box-shadow: 0 0 0 2px rgba(22, 119, 255, 0.1);
+}

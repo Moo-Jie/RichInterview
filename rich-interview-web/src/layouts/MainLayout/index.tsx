@@ -10,26 +10,29 @@
 import {
   GithubFilled,
   InfoCircleFilled,
+  LoginOutlined,
   LogoutOutlined,
   QuestionCircleFilled,
   SearchOutlined,
   UserOutlined,
   UserSwitchOutlined,
 } from "@ant-design/icons";
-import { ProLayout } from "@ant-design/pro-components";
-import { Dropdown, Input } from "antd";
+import { ProLayout, WaterMark } from "@ant-design/pro-components";
+import { App, Dropdown, Input, message } from "antd";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import GlobalFooter from "@/components/GlobalFooterComponent";
 import { sysMenus } from "../../../config/menu";
-import { ConstantMsg } from "../../../public/constant/ConstantMsg";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store";
+import { ConstantMsg } from "@/constant/ConstantMsg";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/store";
 import showMenuByUserAccess from "@/app/Forbidden/showMenuByUserAccess";
-import MarkdownViewer from "@/components/MarkdownComponent/MarkdownViewer";
-import MarkdownEditor from "@/components/MarkdownComponent/MarkdownEditor";
+import { userLogoutUsingPost } from "@/api/userController";
+import { DEFAULT_USER } from "@/constant/ConstantUser";
+import { setUserLogin } from "@/store/userLogin";
+import AccessEnumeration from "@/access/accessEnumeration";
 
 /**
  * 搜索输入框组件，包含搜索功能和快捷创建按钮
@@ -91,125 +94,182 @@ export default function MainLayout({ children }: Props) {
   useEffect(() => {
     setMounted(true);
   }, []);
+  // 路由跳转
+  const router = useRouter();
+  // 使用 Redux 的 dispatch 函数，触发异步状态更新
+  const dispatch = useDispatch<AppDispatch>();
+  // Ant Design 的 message 组件，用于显示消息通知
+  const { message } = App.useApp();
+
   // 进行条件渲染控制，在服务端渲染阶段返回null：避免服务端与客户端初始渲染内容不一致导致的 hydration 错误
   // 当 mounted 为 false 时（服务端渲染阶段），返回空内容
   if (!mounted) return null;
   // 服务端渲染完毕后，客户端渲染主布局组件
   return (
-    <div
-      id="mainLayout"
-      style={{
-        height: "100vh",
-        overflow: "auto",
-      }}
+    <WaterMark
+      height={32}
+      width={32}
+      fontSize={15}
+      content={ConstantMsg.PROJECT_CHINESE_NAME}
     >
-      <ProLayout
-        // 基础布局配置
-        layout="top"
-        title={ConstantMsg.PROJECT_CHINESE_NAME}
-        logo={
-          <Image
-            src="/assets/pictures/logo.png"
-            alt={ConstantMsg.PROJECT_NAME}
-            width={35}
-            height={35}
-          />
-        }
-        location={{
-          pathname,
+      <div
+        id="mainLayout"
+        style={{
+          height: "100vh",
+          overflow: "auto",
         }}
-        avatarProps={{
-          src: loginUser.userAvatar || "/assets/pictures/userNotLogin.png",
-          size: "small",
-          title: loginUser.userName || "游客",
-          render: (props, dom) => {
-            const handleSwitchAccount = () => {
-              // TODO 待实现
-              console.log("打开切换账号弹窗");
-            };
-            const handleViewProfile = () => {
-              // TODO 待实现
-              console.log("跳转至个人中心");
-            };
-            return (
-              <Dropdown
-                autoAdjustOverflow={true}
-                menu={{
-                  items: [
-                    {
-                      key: "profile",
-                      icon: <UserOutlined />,
-                      label: "<个人中心>",
-                      onClick: handleViewProfile,
-                    },
-                    {
-                      type: "divider",
-                    },
-                    {
-                      key: "switch",
-                      icon: <UserSwitchOutlined />,
-                      label: "<切换账号>",
-                      onClick: handleSwitchAccount,
-                    },
-                    {
-                      key: "logout",
-                      icon: <LogoutOutlined />,
-                      label: "<退出登录>",
-                    },
-                  ],
-                }}
-              >
-                {dom}
-              </Dropdown>
-            );
-          },
-        }}
-        // 顶部操作区配置（搜索、帮助、GitHub链接）
-        actionsRender={(props) => {
-          if (props.isMobile) return [];
-          return [
-            <SearchInput key="search" />,
-            <InfoCircleFilled key="InfoCircleFilled" />,
-            <QuestionCircleFilled key="QuestionCircleFilled" />,
-            <a href={ConstantMsg.REPO_URL} key="github" target="_blank">
-              <GithubFilled key="GithubFilled" />
-            </a>,
-          ];
-        }}
-        // 头部标题渲染
-        headerTitleRender={(logo, title, _) => {
-          return (
-            <a href={ConstantMsg.HOME_URL} target="_blank">
-              {logo}
-              {title}
-            </a>
-          );
-        }}
-        // 底部页脚渲染
-        footerRender={() => <GlobalFooter />}
-        // 侧边栏底部信息展示
-        menuFooterRender={() => <GlobalFooter />}
-        // 菜单头部点击处理
-        onMenuHeaderClick={(e) => console.log(e)}
-        // 菜单项点击处理（路由跳转）
-        menuDataRender={() => {
-          return showMenuByUserAccess(loginUser, sysMenus);
-        }}
-        // 菜单渲染
-        menuItemRender={(item, dom) => (
-          <Link href={item.path || "/"} target={item.target}>
-            {dom}
-          </Link>
-        )}
       >
-        {/* 测试 */}
-        <MarkdownEditor value={text} onChange={setText} />
-        <MarkdownViewer value={text} />
-        {
-          // 页面主体内容
-          children
-        }
-      </ProLayout>
-    </div>
+        <ProLayout
+          // 基础布局配置
+          layout="top"
+          title={ConstantMsg.PROJECT_CHINESE_NAME}
+          logo={
+            <Image
+              src="/assets/pictures/logo.png"
+              alt={ConstantMsg.PROJECT_NAME}
+              width={35}
+              height={35}
+            />
+          }
+          location={{
+            pathname,
+          }}
+          avatarProps={{
+            src: loginUser.userAvatar,
+            size: "small",
+            title: loginUser.userName,
+            render: (props, dom) => {
+              // 登录
+              const handleLogin = () => {
+                try {
+                  if (loginUser.userRole !== AccessEnumeration.NOT_LOGIN) {
+                    throw new Error("您已经登录");
+                  }
+                  router.push("/user/userLogin");
+                } catch (e: any) {
+                  message.error(e.message);
+                }
+                return;
+              };
+              // 退出登录
+              const handleLogout = async () => {
+                try {
+                  if (loginUser.userRole === AccessEnumeration.NOT_LOGIN) {
+                    throw new Error("您未登录");
+                  }
+                  await userLogoutUsingPost();
+                  message.success("退出成功，请重新登录");
+                  dispatch(setUserLogin(DEFAULT_USER));
+                  router.push("/");
+                } catch (e: any) {
+                  message.error(e.message);
+                }
+                return;
+              };
+              const handleSwitchAccount = async () => {
+                try {
+                  await userLogoutUsingPost();
+                  dispatch(setUserLogin(DEFAULT_USER));
+                  message.success("请登录新的账号");
+                  router.push("/user/userLogin");
+                } catch (e: any) {
+                  message.error(e.message);
+                }
+                return;
+              };
+              const handleViewProfile = () => {
+                if (loginUser.userRole === AccessEnumeration.NOT_LOGIN) {
+                  message.error("您未登录");
+                  return;
+                }
+                router.push("/user/userCenter");
+                return;
+              };
+
+              return (
+                <Dropdown
+                  autoAdjustOverflow={true}
+                  menu={{
+                    items: [
+                      {
+                        key: "profile",
+                        icon: <UserOutlined />,
+                        label: "<个人中心>",
+                        onClick: handleViewProfile,
+                      },
+                      {
+                        type: "divider",
+                      },
+                      {
+                        key: "login",
+                        icon: <LoginOutlined />,
+                        label: "<登录账号>",
+                        onClick: handleLogin,
+                      },
+                      {
+                        key: "switch",
+                        icon: <UserSwitchOutlined />,
+                        label: "<切换账号>",
+                        onClick: handleSwitchAccount,
+                      },
+                      {
+                        key: "logout",
+                        icon: <LogoutOutlined />,
+                        label: "<退出登录>",
+                        onClick: handleLogout,
+                      },
+                    ],
+                  }}
+                >
+                  {dom}
+                </Dropdown>
+              );
+            },
+          }}
+          // 顶部操作区配置（搜索、帮助、GitHub链接）
+          actionsRender={(props) => {
+            if (props.isMobile) return [];
+            return [
+              <SearchInput key="search" />,
+              <InfoCircleFilled key="InfoCircleFilled" />,
+              <QuestionCircleFilled key="QuestionCircleFilled" />,
+              <a href={ConstantMsg.REPO_URL} key="github" target="_blank">
+                <GithubFilled key="GithubFilled" />
+              </a>,
+            ];
+          }}
+          // 头部标题渲染
+          headerTitleRender={(logo, title, _) => {
+            return (
+              <a href={ConstantMsg.HOME_URL} target="_blank">
+                {logo}
+                {title}
+              </a>
+            );
+          }}
+          // 菜单头部点击处理
+          onMenuHeaderClick={(e) => console.log(e)}
+          // 菜单项点击处理（路由跳转）
+          menuDataRender={() => {
+            return showMenuByUserAccess(loginUser, sysMenus);
+          }}
+          // 菜单渲染
+          menuItemRender={(item, dom) => (
+            <Link href={item.path || "/"} target={item.target}>
+              {dom}
+            </Link>
+          )}
+            // 底部页脚渲染
+          footerRender={() => <GlobalFooter />}
+            // 侧边栏底部信息展示
+          menuFooterRender={() => <GlobalFooter />}
+        >
+          {
+            // 页面主体内容
+            children
+          }
+        </ProLayout>
+      </div>
+    </WaterMark>
   );
 }
