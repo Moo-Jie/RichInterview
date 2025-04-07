@@ -18,7 +18,7 @@ import {
   UserSwitchOutlined,
 } from "@ant-design/icons";
 import { ProLayout, WaterMark } from "@ant-design/pro-components";
-import { App, Dropdown, Input, message } from "antd";
+import { App, Dropdown, Input, message, Popover } from "antd";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
@@ -231,9 +231,49 @@ export default function MainLayout({ children }: Props) {
             if (props.isMobile) return [];
             return [
               <SearchInput key="search" />,
-              <InfoCircleFilled key="InfoCircleFilled" />,
-              <QuestionCircleFilled key="QuestionCircleFilled" />,
-              <a href={ConstantMsg.REPO_URL} key="github" target="_blank">
+              <Popover
+                key="about"
+                content={
+                  <div style={{ maxWidth: 300 }}>
+                    <h2>系统信息</h2>
+                    <h4>当前版本：{ConstantMsg.PROJECT_VERSION}</h4>
+                    <h4>维护者：{ConstantMsg.AUTHOR_NAME}</h4>
+                    <h4>更新日期：{ConstantMsg.PROJECT_LAST_UPDATE_TIME}</h4>
+                  </div>
+                }
+              >
+                <InfoCircleFilled />
+              </Popover>,
+              <Popover
+                key="help"
+                content={
+                  <div>
+                    <div>
+                      <h2>常见问题解答</h2>
+                      <h3> 1. 如何搜索题目？</h3>
+                      <h4>1.1 搜索框搜索：输入关键词进行搜索</h4>
+                      <h4>1.2 题库搜索：进入对应主题题库进行查找</h4>
+                      <h4>1.3 标签搜索：点击标签进行筛选</h4>
+                      <h3>2. 题库更新频率？</h3>
+                      <h4>题库会定期更新，将尽量保持内容的最新和全面</h4>
+                      <h3>3. 反馈渠道</h3>
+                      <h4>
+                        请前往
+                        <a href="/other/aboutAuthor">【关于作者】</a>
+                        查看联系方式，若有侵权内容请联系我
+                      </h4>
+                    </div>
+                  </div>
+                }
+              >
+                <QuestionCircleFilled />
+              </Popover>,
+              <a
+                href={ConstantMsg.REPO_URL}
+                key="github"
+                title="项目源码"
+                target="_blank"
+              >
                 <GithubFilled key="GithubFilled" />
               </a>,
             ];
@@ -254,14 +294,12 @@ export default function MainLayout({ children }: Props) {
             return showMenuByUserAccess(loginUser, sysMenus);
           }}
           // 菜单渲染
-          menuItemRender={(item, dom) => (
-            <Link href={item.path || "/"} target={item.target}>
-              {dom}
-            </Link>
-          )}
-            // 底部页脚渲染
+          menuItemRender={(item, dom) => {
+            return <Link href={item.path || "/"}>{dom}</Link>;
+          }}
+          // 底部页脚渲染
           footerRender={() => <GlobalFooter />}
-            // 侧边栏底部信息展示
+          // 侧边栏底部信息展示
           menuFooterRender={() => <GlobalFooter />}
         >
           {
