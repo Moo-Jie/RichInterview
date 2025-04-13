@@ -109,11 +109,6 @@ const UserAdminPage: React.FC = () => {
       valueType: "image",
       width: 120,
       hideInSearch: true,
-      fieldProps: {
-        width: 64,
-        height: 64,
-        style: { borderRadius: "50%" },
-      },
     },
     {
       title: "用户角色",
@@ -230,7 +225,7 @@ const UserAdminPage: React.FC = () => {
                 searchConfig.form?.resetFields();
               }}
             >
-              重置
+              清空索引
             </Button>,
           ],
         }}
@@ -267,6 +262,7 @@ const UserAdminPage: React.FC = () => {
             id: params.id,
             userName: params.userName,
             userRole: params.userRole,
+            userProfile: params.userProfile,
             // 排序参数
             sortField: sortField,
             sortOrder: sortOrder,
@@ -285,7 +281,7 @@ const UserAdminPage: React.FC = () => {
         pagination={{
           showSizeChanger: true,
           pageSizeOptions: [5, 10, 50],
-          defaultPageSize: 10,
+          defaultPageSize: 5,
           position: ["bottomRight"], // 分页对齐方式
         }} /* 分页器配置 */
         locale={{

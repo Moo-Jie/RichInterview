@@ -4,12 +4,12 @@
     border-radius: 6px;
     overflow: hidden;
     margin: 20px auto;
-    max-width: 1000px;
+    width: 100%;
 }
 
 /* 工具栏样式优化 */
 .md-editor .bytemd-toolbar {
-    background: #f6f8fa;
+    background: #6a737d;
     border-bottom: 1px solid #e1e4e8;
     padding: 8px 12px;
 }
