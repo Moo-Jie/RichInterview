@@ -26,5 +26,10 @@ public class QuestionBankAddRequest implements Serializable {
      */
     private String picture;
 
+    /**
+     * 题库介绍
+     */
+    private String description;
+
     private static final long serialVersionUID = 1L;
 }

@@ -460,6 +460,7 @@ declare namespace API {
   };
 
   type QuestionBankAddRequest = {
+    description?: string;
     content?: string;
     picture?: string;
     title?: string;
@@ -540,6 +541,7 @@ declare namespace API {
   };
 
   type QuestionBankUpdateRequest = {
+    description?: string;
     content?: string;
     id?: number;
     picture?: string;
