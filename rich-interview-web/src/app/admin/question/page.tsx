@@ -128,9 +128,14 @@ const QuestionAdminPage: React.FC = () => {
     {
       title: "内容",
       dataIndex: "content",
+      valueType: "text",
       hideInSearch: true,
-      width: 240,
-      render: (_, record) => <MarkdownViewer value={record.content || ""} />,
+      width: 200,
+      render: (text) => (
+        <Typography.Text ellipsis={{}} className="multi-line-ellipsis">
+          {text}
+        </Typography.Text>
+      ),
       // @ts-ignore
       renderFormItem: (_, { type, defaultRender, fieldProps }) => {
         if (type === "form") {
@@ -144,9 +149,15 @@ const QuestionAdminPage: React.FC = () => {
     {
       title: "答案",
       dataIndex: "answer",
+      valueType: "text",
       hideInSearch: true,
-      width: 630,
-      render: (_, record) => <MarkdownViewer value={record.answer || ""} />,
+      width: 400,
+      // 区分编辑和查看状态下的渲染逻辑
+      render: (text) => (
+        <Typography.Text ellipsis={{}} className="multi-line-ellipsis">
+          {text}
+        </Typography.Text>
+      ),
       // @ts-ignore
       renderFormItem: (_, { type, defaultRender, fieldProps }) => {
         if (type === "form") {
