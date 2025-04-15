@@ -9,7 +9,7 @@ export const ConstantMsg = {
   // 项目版本号
   PROJECT_VERSION: "0.1.0",
   // 项目最近更新时间
-  PROJECT_LAST_UPDATE_TIME: "2025-04-07",
+  PROJECT_LAST_UPDATE_TIME: "2025-04-15",
   // 项目描述
   PROJECT_DESCRIPTION: "",
   // 项目中文名
@@ -22,5 +22,5 @@ export const ConstantMsg = {
   AUTHOR_AVATAR:
     "https://rich-tams.oss-cn-beijing.aliyuncs.com/DKD_RichDu/2025/03/09/67cd64943c851694f2a087e7.png",
   // 作者名
-  AUTHOR_NAME: "Moo-Jie",
+  AUTHOR_NAME: "杜瑞持",
 } as const;

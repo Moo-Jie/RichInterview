@@ -1,0 +1,70 @@
+/* page.module.css  */
+.page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.main {
+    flex: 1;
+    padding: 20px;
+}
+
+.authorInfo {
+    margin-bottom: 20px;
+}
+
+.interviewList {
+    list-style-type: none;
+    padding: 0;
+}
+
+.interviewItem {
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+/* 头像样式 */
+.avatarContainer {
+    padding-right: 24px;
+    text-align: center;
+}
+
+.avatarFrame {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 3px solid #6a737d;
+    padding: 3px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+}
+
+.avatarImage {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.avatarFrame:hover {
+    transform: scale(1.05);
+}
+
+
+.itemBorder {
+    border: 1px solid #f0f0f0;
+    border-radius: 4px;
+    padding: 8px 12px;
+    margin: 2px 0;
+    transition: all 0.2s;
+    line-height: 1.5;
+    font-size: 14px;
+}
+
+.itemBorder:hover {
+    border-color: #1890ff;
+    box-shadow: 0 2px 8px rgba(24, 144, 255, 0.1);
+}
