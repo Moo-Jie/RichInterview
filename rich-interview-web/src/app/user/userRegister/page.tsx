@@ -65,13 +65,27 @@ const UserRegisterPage: React.FC = (props) => {
             prefix: <UserOutlined />,
           }}
           name="userAccount"
-          placeholder={"注册用户名"}
+          placeholder={"请输入账号"}
           rules={[
             {
               required: true,
-              message: "注册用户名！",
+              message: "请输入账号",
             },
           ]}
+        />
+        <ProFormText
+            fieldProps={{
+              size: "large",
+              prefix: <UserOutlined />,
+            }}
+            name="userName"
+            placeholder={"请输入用户名"}
+            rules={[
+              {
+                required: true,
+                message: "请输入用户名",
+              },
+            ]}
         />
         <ProFormText.Password
           name="userPassword"

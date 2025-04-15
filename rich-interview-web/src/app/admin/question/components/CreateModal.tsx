@@ -18,7 +18,7 @@ interface Props {
  */
 const CreateModal: React.FC<Props> = (props) => {
   const { visible, columns, onSubmit, onCancel } = props;
-  const { message } = App.useApp(); // 全局提示和对话框方法
+  const { message } = App.useApp();
   /**
    * 添加节点
    * @param fields
