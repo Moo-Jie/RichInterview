@@ -73,11 +73,13 @@ public class QuestionBankServiceImpl extends ServiceImpl<QuestionBankMapper, Que
             ThrowUtils.throwIf(StringUtils.isBlank(description), ErrorCode.PARAMS_ERROR);
         }
         // 修改数据时，有参数则校验
-        // todo 补充校验规则
         if (StringUtils.isNotBlank(title)) {
-            ThrowUtils.throwIf(title.length() > 80, ErrorCode.PARAMS_ERROR, "标题过长");
+            ThrowUtils.throwIf(title.length() > 100, ErrorCode.PARAMS_ERROR, "标题过长");
+        }
+        if (StringUtils.isNotBlank(description)) {
             ThrowUtils.throwIf(description.length() > 10240, ErrorCode.PARAMS_ERROR, "描述过长");
         }
+        // todo 补充校验规则 : 审批流状态校验
     }
 
     /**

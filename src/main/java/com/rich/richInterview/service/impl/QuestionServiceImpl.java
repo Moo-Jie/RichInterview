@@ -84,7 +84,12 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         }
         if (StringUtils.isNotBlank(content)) {
             ThrowUtils.throwIf(title.length() > 10240, ErrorCode.PARAMS_ERROR, "题目内容过长");
-            ThrowUtils.throwIf(answer.length() > 10240, ErrorCode.PARAMS_ERROR, "答案过长");
+        }
+        if (StringUtils.isNotBlank(answer)) {
+            ThrowUtils.throwIf(answer.length() > 102400, ErrorCode.PARAMS_ERROR, "答案过长");
+        }
+        if (StringUtils.isNotBlank(tags)) {
+            ThrowUtils.throwIf(tags.length() > 256, ErrorCode.PARAMS_ERROR, "标签过长");
         }
     }
 
@@ -246,8 +251,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
     }
 
     /**
-     *
-     * 创建题目
+     * 创建题目（仅管理员可用）
      * @param questionAddRequest
      * @param request
      * @return java.lang.Long
@@ -260,6 +264,10 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         // todo 在此处将实体类和 DTO 进行转换
         Question question = new Question();
         BeanUtils.copyProperties(questionAddRequest, question);
+        // tags 的转换
+        if(questionAddRequest.getTags()!= null){
+            question.setTags(JSONUtil.toJsonStr(questionAddRequest.getTags()));
+        }
         // 数据校验
         this.validQuestion(question, true);
         // todo 填充默认值
@@ -274,7 +282,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
 
     /**
      *
-     * 删除题目
+     * 删除题目（仅管理员可用）
      * @param deleteRequest
      * @param request
      * @return java.lang.Boolean
@@ -317,6 +325,10 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         // todo 在此处将实体类和 DTO 进行转换
         Question question = new Question();
         BeanUtils.copyProperties(questionUpdateRequest, question);
+        // tags 的转换
+        if(question.getTags()!= null){
+            question.setTags(JSONUtil.toJsonStr(question.getTags()));
+        }
         // 数据校验
         this.validQuestion(question, false);
         // 判断是否存在

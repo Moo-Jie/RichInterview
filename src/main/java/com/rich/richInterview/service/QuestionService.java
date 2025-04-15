@@ -63,7 +63,7 @@ public interface QuestionService extends IService<Question> {
     Page<Question> getQuestionPage(QuestionQueryRequest questionQueryRequest);
 
     /**
-     * 添加题目
+     * 添加题目（仅管理员可用）
      * @param questionAddRequest
      * @param request
      * @return java.lang.Long
@@ -73,7 +73,7 @@ public interface QuestionService extends IService<Question> {
     Long addQuestion(QuestionAddRequest questionAddRequest, HttpServletRequest request);
 
     /**
-     * 删除题目
+     * 删除题目（仅管理员可用）
      * @param deleteRequest
      * @param request
      * @return java.lang.Boolean
