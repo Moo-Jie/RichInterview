@@ -34,7 +34,7 @@ public class QuestionController {
     private QuestionService questionService;
 
     /**
-     * 创建题目
+     * 创建题目（仅管理员可用）
      *
      * @param questionAddRequest
      * @param request
@@ -47,7 +47,7 @@ public class QuestionController {
     }
 
     /**
-     * 删除题目
+     * 删除题目（仅管理员可用）
      *
      * @param deleteRequest
      * @param request
