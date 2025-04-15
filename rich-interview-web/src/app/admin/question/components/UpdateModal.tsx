@@ -19,7 +19,7 @@ interface Props {
  */
 const UpdateModal: React.FC<Props> = (props) => {
   const { oldData, visible, columns, onSubmit, onCancel } = props;
-  const { message } = App.useApp(); // 全局提示和对话框方法
+  const { message } = App.useApp();
   /**
    * 更新节点
    *

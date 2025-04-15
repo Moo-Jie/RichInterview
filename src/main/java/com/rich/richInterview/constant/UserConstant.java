@@ -36,4 +36,8 @@ public interface UserConstant {
      */
     String BAN_ROLE = "ban";
 
+    /**
+     * 默认用户简介
+     */
+    String DEFAULT_USER_PROFILE = "当前用户很懒，什么都没留下";
 }

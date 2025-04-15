@@ -658,12 +658,16 @@ declare namespace API {
     checkPassword?: string;
     userAccount?: string;
     userPassword?: string;
+    userAavatar?: string;
+    userName?: string;
+    userRole?: string;
   };
 
   type UserUpdateMyRequest = {
     userAvatar?: string;
     userName?: string;
     userProfile?: string;
+    userPassword?: string;
   };
 
   type UserUpdateRequest = {
