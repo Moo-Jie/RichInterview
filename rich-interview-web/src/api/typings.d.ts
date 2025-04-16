@@ -432,10 +432,12 @@ declare namespace API {
     updateTime?: string;
     userId?: number;
     viewNum?: number;
+    questionBankId?: number;
   };
 
   type QuestionAddRequest = {
     answer?: string;
+    questionBankId?: number;
     content?: string;
     tags?: string[];
     title?: string;
@@ -586,6 +588,7 @@ declare namespace API {
 
   type QuestionUpdateRequest = {
     answer?: string;
+    questionBankId?: number;
     content?: string;
     id?: number;
     tags?: string[];
