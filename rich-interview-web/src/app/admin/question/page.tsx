@@ -4,7 +4,7 @@ import CreateModal from "./components/CreateModal";
 import UpdateModal from "./components/UpdateModal";
 import {
   deleteQuestionUsingPost,
-  listQuestionByPageUsingPost,
+  listQuestionByPageUsingPost, listQuestionVoByPageUsingPost,
 } from "@/api/questionController";
 import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
 import type { ActionType, ProColumns } from "@ant-design/pro-components";
@@ -122,8 +122,8 @@ const QuestionAdminPage: React.FC = () => {
     {
       title: "所属题库ID",
       dataIndex: "questionBankId",
-      hideInTable: true,
-      hideInForm: true,
+      width: 120,
+      ellipsis: true,
     },
     {
       title: "内容",
@@ -173,6 +173,7 @@ const QuestionAdminPage: React.FC = () => {
       dataIndex: "tags",
       width: 200,
       valueType: "select",
+      hideInSearch: true,
       fieldProps: {
         mode: "tags",
       },
@@ -330,7 +331,7 @@ const QuestionAdminPage: React.FC = () => {
           };
 
           // @ts-ignore
-          const { data, code } = await listQuestionByPageUsingPost(queryParams);
+          const { data, code } = await listQuestionVoByPageUsingPost(queryParams);
 
           return {
             success: code === 0,
