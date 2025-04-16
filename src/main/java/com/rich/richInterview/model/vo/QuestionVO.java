@@ -62,6 +62,16 @@ public class QuestionVO implements Serializable {
     private UserVO user;
 
     /**
+     * 所属题库ID
+     */
+    private Long questionBankId;
+
+    /**
+     * 标签列表（json 数组）
+     */
+    private String tags;
+
+    /**
      * 封装类转对象
      *
      * @param questionVO

@@ -67,8 +67,8 @@ public class QuestionController {
      */
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     @PostMapping("/update")
-    public BaseResponse<Boolean> updateQuestion(@RequestBody QuestionUpdateRequest questionUpdateRequest) {
-        return ResultUtils.success(questionService.updateQuestion(questionUpdateRequest));
+    public BaseResponse<Boolean> updateQuestion(@RequestBody QuestionUpdateRequest questionUpdateRequest,HttpServletRequest request) {
+        return ResultUtils.success(questionService.updateQuestion(questionUpdateRequest, request));
     }
 
     /**
