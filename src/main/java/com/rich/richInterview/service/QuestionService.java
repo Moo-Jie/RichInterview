@@ -89,7 +89,7 @@ public interface QuestionService extends IService<Question> {
      * @author DuRuiChi
      * @create 2025/3/23
      **/
-    Boolean updateQuestion(QuestionUpdateRequest questionUpdateRequest);
+    Boolean updateQuestion(QuestionUpdateRequest questionUpdateRequest,HttpServletRequest request);
 
     /**
      * 分页获取当前登录用户创建的题目列表

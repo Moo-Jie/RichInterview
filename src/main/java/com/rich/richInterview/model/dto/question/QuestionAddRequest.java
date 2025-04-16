@@ -32,5 +32,10 @@ public class QuestionAddRequest implements Serializable {
      */
     private String answer;
 
+    /**
+     * 所属题库ID
+     */
+    private Long questionBankId;
+
     private static final long serialVersionUID = 1L;
 }

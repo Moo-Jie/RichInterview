@@ -17,6 +17,8 @@ import com.rich.richInterview.model.dto.question.QuestionAddRequest;
 import com.rich.richInterview.model.dto.question.QuestionEditRequest;
 import com.rich.richInterview.model.dto.question.QuestionQueryRequest;
 import com.rich.richInterview.model.dto.question.QuestionUpdateRequest;
+import com.rich.richInterview.model.dto.questionBankQuestion.QuestionBankQuestionAddRequest;
+import com.rich.richInterview.model.dto.questionBankQuestion.QuestionBankQuestionUpdateRequest;
 import com.rich.richInterview.model.entity.Question;
 import com.rich.richInterview.model.entity.QuestionBankQuestion;
 import com.rich.richInterview.model.entity.User;
@@ -199,9 +201,22 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
             return questionVOPage;
         }
         // 对象列表 => 封装对象列表
+        Set<Long> questionIds = questionList.stream().map(Question::getId).collect(Collectors.toSet());
+        LambdaQueryWrapper<QuestionBankQuestion> bankQuery = Wrappers.lambdaQuery(QuestionBankQuestion.class)
+                .select(QuestionBankQuestion::getQuestionId, QuestionBankQuestion::getQuestionBankId)
+                .in(QuestionBankQuestion::getQuestionId, questionIds);
+        // 查询关联的题目和题库id映射关系
+        Map<Long, Long> questionBankMap = questionBankQuestionService.list(bankQuery).stream()
+                .collect(Collectors.toMap(QuestionBankQuestion::getQuestionId,
+                        QuestionBankQuestion::getQuestionBankId, (v1, v2) -> v1));
+
+        // VO转换
         List<QuestionVO> questionVOList = questionList.stream().map(question -> {
-            return QuestionVO.objToVo(question);
+            QuestionVO vo = QuestionVO.objToVo(question);
+            vo.setQuestionBankId(questionBankMap.get(question.getId())); // 设置题库ID
+            return vo;
         }).collect(Collectors.toList());
+
 
         // todo 根据需要为封装对象补充值
          
@@ -276,6 +291,13 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         // 写入数据库
         boolean result = this.save(question);
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
+        // 同步题库题目关系
+        if (questionAddRequest.getQuestionBankId()!= null) {
+            QuestionBankQuestionAddRequest addQBQRequest = new QuestionBankQuestionAddRequest();
+            addQBQRequest.setQuestionBankId(questionAddRequest.getQuestionBankId());
+            addQBQRequest.setQuestionId(question.getId());
+            questionBankQuestionService.addQuestionBankQuestion(addQBQRequest, request);
+        }
         // 返回新写入的数据 id
         return question.getId();
     }
@@ -318,7 +340,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
      * @create 2025/3/23
      **/
     @Override
-    public Boolean updateQuestion(QuestionUpdateRequest questionUpdateRequest) {
+    public Boolean updateQuestion(QuestionUpdateRequest questionUpdateRequest, HttpServletRequest request) {
         if (questionUpdateRequest == null || questionUpdateRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -337,6 +359,18 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         ThrowUtils.throwIf(oldQuestion == null, ErrorCode.NOT_FOUND_ERROR);
         // 操作数据库
         boolean result = this.updateById(question);
+        // 同步题库题目关系
+        if (questionUpdateRequest.getQuestionBankId()!= null) {
+            // 删除原有和当前题目关联的关系
+            QueryWrapper<QuestionBankQuestion> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("questionId", question.getId());
+            questionBankQuestionService.remove(queryWrapper);
+            // 添加新的关联关系
+            QuestionBankQuestionAddRequest addQBQRequest = new QuestionBankQuestionAddRequest();
+            addQBQRequest.setQuestionBankId(questionUpdateRequest.getQuestionBankId());
+            addQBQRequest.setQuestionId(question.getId());
+            questionBankQuestionService.addQuestionBankQuestion(addQBQRequest, request);
+        }
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
         return true;
     }

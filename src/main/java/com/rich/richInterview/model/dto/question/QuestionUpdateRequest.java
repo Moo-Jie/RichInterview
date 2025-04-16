@@ -37,5 +37,10 @@ public class QuestionUpdateRequest implements Serializable {
      */
     private String answer;
 
+    /**
+     * 所属题库DI
+     */
+    private Long questionBankId;
+
     private static final long serialVersionUID = 1L;
 }
