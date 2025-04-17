@@ -1,0 +1,23 @@
+.question-list {
+
+}
+
+.question-list .ant-card {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.question-list .ant-list-item {
+    padding: 16px;
+    transition: background 0.3s;
+}
+
+.question-list .ant-list-item:hover {
+    background: rgba(0, 0, 0, 0.02);
+}
+
+.question-meta {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}

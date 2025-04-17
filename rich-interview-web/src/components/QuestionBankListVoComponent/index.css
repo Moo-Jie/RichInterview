@@ -1,0 +1,52 @@
+.bank-card {
+    transition: transform 0.3s, box-shadow 0.3s;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.bank-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.bank-cover {
+    height: 160px;
+    object-fit: cover;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.bank-stats {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 12px;
+    color: rgba(0, 0, 0, 0.45);
+}
+
+.bank-description {
+    min-height: 40px;
+}
+
+@media (max-width: 768px) {
+    .bank-cover {
+        height: 120px;
+    }
+}
+
+/* 添加卡片最小高度限制 */
+.bank-card {
+    min-height: 280px;
+}
+
+/* 响应式调整 */
+@media (max-width: 1199px) {
+    .bank-card {
+        min-height: 260px;
+    }
+}
+
+@media (max-width: 767px) {
+    .bank-card {
+        min-height: 240px;
+    }
+}
