@@ -145,5 +145,16 @@ public class QuestionController {
         return ResultUtils.success(questionService.editQuestion(questionEditRequest, request));
     }
 
-
+    /**
+     * 通过题目id查询所属题库ID
+     * @param id
+     * @return com.rich.richInterview.common.BaseResponse<java.lang.Long>
+     * @author DuRuiChi
+     * @create 2025/4/17
+     **/
+    @GetMapping("/get/questionBankId")
+    public BaseResponse<Long> getQuestionBankId(long id, HttpServletRequest request) {
+        Long questionBankId = questionService.getQuestionBankId(id);
+        return ResultUtils.success(questionBankId);
+    }
 }
