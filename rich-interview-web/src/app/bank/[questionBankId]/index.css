@@ -1,0 +1,76 @@
+#bankPage {
+    width: 100%;
+}
+
+.bank-page-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px;
+}
+
+.bank-header-card {
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    border: 2px solid #dee2e6 !important;
+    border-radius: 12px !important;
+    margin-bottom: 24px;
+}
+
+.bank-avatar {
+    border: 2px solid #adb5bd;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.header-title {
+    padding-left: 24px;
+}
+
+.bank-title {
+    color: #2c3e50 !important;
+    font-size: 32px !important;
+    margin-bottom: 8px !important;
+}
+
+.meta-stats {
+    display: flex;
+    gap: 32px;
+    margin-top: 12px;
+}
+
+.stat-item {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 12px 24px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.stat-label {
+    color: #6c757d;
+    margin-right: 8px;
+    font-size: 14px;
+}
+
+.stat-value {
+    color: #2c3e50;
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.bank-description {
+    font-size: 16px;
+    color: #495057;
+    line-height: 1.8;
+    margin: 16px 0;
+}
+
+.start-button {
+    margin-top: 16px;
+    padding: 0 32px;
+    height: 42px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.start-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(24, 144, 255, 0.3);
+}

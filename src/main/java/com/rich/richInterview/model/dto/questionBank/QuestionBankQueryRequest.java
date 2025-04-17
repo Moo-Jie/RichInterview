@@ -58,17 +58,17 @@ public class QuestionBankQueryRequest extends PageRequest implements Serializabl
     /**
      * 是否查询关联题目
      */
-    private Boolean QueryQuestionsFlag = false;
+    private Boolean queryQuestionsFlag = false;
 
     /**
      * 关联题目分页——当前页号
      */
-    private int QuestionsCurrent = 1;
+    private int questionsCurrent = 1;
 
     /**
      * 关联题目分页——页面大小
      */
-    private int QuestionsPageSize = 10000;
+    private int questionsPageSize = 10000;
 
     private static final long serialVersionUID = 1L;
 }
