@@ -110,4 +110,13 @@ public interface QuestionService extends IService<Question> {
      * @create 2025/3/23
      **/
     Boolean editQuestion(QuestionEditRequest questionEditRequest, HttpServletRequest request);
+
+    /**
+     * 通过题目id查询所属题库ID
+     * @param id
+     * @return java.lang.Long
+     * @author DuRuiChi
+     * @create 2025/4/17
+     **/
+    Long getQuestionBankId(Long id);
 }

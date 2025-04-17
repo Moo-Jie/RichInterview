@@ -1,12 +1,11 @@
 "use server";
 import { Flex, Menu, message } from "antd";
-import { getQuestionVoByIdUsingGet } from "@/api/questionController";
+import {getQuestionBankId, getQuestionVoByIdUsingGet} from "@/api/questionController";
 import QuestionMsgComponent from "../../../components/QuestionMsgComponent";
 import { Alert } from "antd";
 import "./index.css";
 import Link from "next/link";
 import {
-  getQuestionBankId,
   getQuestionBankVoByIdUsingGet,
 } from "@/api/questionBankController";
 import Sider from "antd/es/layout/Sider";
@@ -45,21 +44,29 @@ export default async function QuestionPage({ params }) {
   // 断言
   question = question as API.QuestionVO;
 
-  // TODO 获取题库id
-  // let questionBankId = undefined;
-  // // 通过 getQuestionBankId() 请求得到题库id
-  // try {
-  //   // @ts-ignore
-  //   const res = await getQuestionBankId(question.id);
-  //   questionBankId = res.data;
-  // }
-
-  // 获取题库详情
+  // 获取题库ID
   let bank = undefined;
+  let questionBankId = undefined;
+  // 通过 getQuestionBankId() 请求得到题库id
+  try {
+    // @ts-ignore
+    const res = await getQuestionBankId(question.id);
+    questionBankId = res.data;
+  } catch (e: any) {
+    console.error("获取题库id失败，" + e.message);
+    return (
+      <Alert
+        type="error"
+        message={`题库加载失败: ${e.message || "未知错误"}`}
+        style={{ margin: 24 }}
+      />
+    );
+  }
 
+  // 获取题库列表
   try {
     const res = await getQuestionBankVoByIdUsingGet({
-      id: 1,
+      id: questionBankId,
       queryQuestionsFlag: true,
       pageSize: 200,
     });
@@ -78,10 +85,8 @@ export default async function QuestionPage({ params }) {
       />
     );
   }
-  // 错误处理
-  if (!bank) {
-    return <div>获取题库详情失败，请刷新重试</div>;
-  }
+
+
   // 断言
   bank = bank as API.QuestionBankVO;
   // 题目菜单列表

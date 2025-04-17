@@ -437,4 +437,21 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         return true;
     }
 
+    @Override
+    public Long getQuestionBankId(Long id) {
+        if (id == null) {
+            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
+        }
+        Question question = this.getById(id);
+        if (question == null) {
+            throw new BusinessException(ErrorCode.OPERATION_ERROR);
+        }
+        // 返回所属题库ID
+        // 查询所有questionId为id的questionBankQuestion记录
+        QueryWrapper<QuestionBankQuestion> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("questionId", id);
+        List<QuestionBankQuestion> questionBankQuestionList = questionBankQuestionService.list(queryWrapper);
+        // 获取其id
+        return questionBankQuestionList.get(0).getQuestionBankId();
+    }
 }

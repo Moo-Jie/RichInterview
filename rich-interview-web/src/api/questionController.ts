@@ -127,3 +127,19 @@ export async function updateQuestionUsingPost(
     ...(options || {}),
   });
 }
+
+/** getQuestionBankId GET /api/questionBankId */
+export async function getQuestionBankId(
+    // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+    body: number,
+    options?: { [key: string]: any }
+){
+  return request<number>(`/api/question/get/questionBankId`, {
+    method: "GET",
+    params: {
+      id: body,
+    },
+    data: body,
+    ...(options || {}),
+  })
+}
