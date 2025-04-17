@@ -33,38 +33,7 @@ import { userLogoutUsingPost } from "@/api/userController";
 import { DEFAULT_USER } from "@/constant/ConstantUser";
 import { setUserLogin } from "@/store/userLogin";
 import AccessEnumeration from "@/access/accessEnumeration";
-
-/**
- * 搜索输入框组件，包含搜索功能和快捷创建按钮
- * 基于Ant Design的Input组件封装，支持防抖和快捷操作
- */
-const SearchInput = () => {
-  return (
-    <div
-      key="SearchOutlined"
-      aria-hidden
-      style={{
-        display: "flex",
-        alignItems: "center",
-        marginInlineEnd: 24,
-      }}
-      onMouseDown={(e) => {
-        e.stopPropagation();
-        e.preventDefault();
-      }}
-    >
-      <Input
-        style={{
-          borderRadius: 4,
-          marginInlineEnd: 12,
-        }}
-        prefix={<SearchOutlined />}
-        placeholder="搜索面试题目"
-        variant="borderless"
-      />
-    </div>
-  );
-};
+import SearchInputComponent from "@/components/SearchInputComponent";
 
 /**
  * 子组件内容，用于渲染布局主体区域
@@ -230,7 +199,7 @@ export default function MainLayout({ children }: Props) {
           actionsRender={(props) => {
             if (props.isMobile) return [];
             return [
-              <SearchInput key="search" />,
+              <SearchInputComponent key="search" />,
               <Popover
                 key="about"
                 content={

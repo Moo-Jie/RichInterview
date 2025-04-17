@@ -23,4 +23,8 @@ export const ConstantMsg = {
     "https://rich-tams.oss-cn-beijing.aliyuncs.com/DKD_RichDu/2025/03/09/67cd64943c851694f2a087e7.png",
   // 作者名
   AUTHOR_NAME: "杜瑞持",
+  // 默认题目图片
+  DEFAULT_QUESTION_IMAGE: "https://rich-tams.oss-cn-beijing.aliyuncs.com/DKD_RichDu/2025/03/09/67cd64943c851694f2a087e7.png",
+  // 默认题库图片
+  DEFAULT_QUESTION_BANK_IMAGE: "https://rich-tams.oss-cn-beijing.aliyuncs.com/DKD_RichDu/2025/03/09/67cd64943c851694f2a087e7.png",
 } as const;
