@@ -30,8 +30,8 @@ const QuestionListVo = (props: Props) => {
                 <Link
                   href={
                     questionBankId
-                      ? `/bank/${questionBankId}/question/${item.id}`
-                      : `/question/${item.id}`
+                      ? `/question/${(item.id)}`
+                      : `/question/${(item.id)}`
                   }
                 >
                   {item.title}

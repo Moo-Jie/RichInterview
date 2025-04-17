@@ -1,6 +1,6 @@
-import {listQuestionBankVoByPageUsingPost} from "@/api/questionBankController";
+import { listQuestionBankVoByPageUsingPost } from "@/api/questionBankController";
 import Title from "antd/es/typography/Title";
-import {Card, Divider, Flex, message} from "antd";
+import { Card, Divider, Flex, message } from "antd";
 import QuestionBankList from "../../components/QuestionBankListVoComponent";
 import "./page.module.css";
 
@@ -14,7 +14,7 @@ export default async function QuestionBankPage() {
   let questionBankListVo = [];
   try {
     const res = await listQuestionBankVoByPageUsingPost({
-      // 优化SEO
+      // 优化SEO,故不设置分页
       pageSize: 1000,
       sortField: "createTime",
       sortOrder: "descend",
@@ -22,7 +22,7 @@ export default async function QuestionBankPage() {
     // @ts-ignore
     questionBankListVo = res.data.records ?? [];
   } catch (e: any) {
-    message.error("无法获取题库信息，" + e.message);
+    message.error("无法获取题库信息，因为" + e.message);
   }
 
   return (

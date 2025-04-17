@@ -130,3 +130,18 @@ export async function updateQuestionBankUsingPost(
     ...(options || {}),
   });
 }
+
+/** getQuestionBankId GET /api/questionBank/get */
+export async function getQuestionBankId(
+    body: number,
+    options?: { [key: string]: any }
+){
+    return request<number>(`/api/questionBank/get`, {
+      method: "GET",
+      params: {
+        id: body,
+      },
+        data: body,
+      ...(options || {}),
+    })
+}

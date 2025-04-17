@@ -7,6 +7,7 @@ import QuestionBankList from "../components/QuestionBankListVoComponent";
 import QuestionList from "../components/QuestionListVoComponent";
 import { RightOutlined } from "@ant-design/icons";
 import "./page.module.css";
+
 /**
  * 主页
  * @constructor
@@ -25,7 +26,7 @@ export default async function HomePage() {
     // @ts-ignore
     questionBankListVo = res.data.records ?? [];
   } catch (e: any) {
-    message.error("无法获取题库信息，" + e.message);
+    message.error("无法获取题库信息，因为" + e.message);
   }
 
   try {
@@ -37,7 +38,7 @@ export default async function HomePage() {
     // @ts-ignore
     questionListVo = res.data.records ?? [];
   } catch (e: any) {
-    message.error("无法获取题目信息，" + e.message);
+    message.error("无法获取题目信息，因为" + e.message);
   }
 
   return (

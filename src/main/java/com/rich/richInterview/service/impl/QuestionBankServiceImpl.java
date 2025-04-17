@@ -307,20 +307,22 @@ public class QuestionBankServiceImpl extends ServiceImpl<QuestionBankMapper, Que
     public QuestionBankVO getQuestionBankVOById(QuestionBankQueryRequest questionBankQueryRequest, HttpServletRequest request) {
         ThrowUtils.throwIf(questionBankQueryRequest == null, ErrorCode.PARAMS_ERROR);
         Long id = questionBankQueryRequest.getId();
-        Boolean queryQuestionsFlag = questionBankQueryRequest.getQueryQuestionsFlag();
         ThrowUtils.throwIf(id <= 0, ErrorCode.PARAMS_ERROR);
         // 查询数据库
         QuestionBank questionBank = this.getById(id);
         ThrowUtils.throwIf(questionBank == null, ErrorCode.NOT_FOUND_ERROR);
+        // 题库封装类
         QuestionBankVO questionBankVO = this.getQuestionBankVO(questionBank, request);
-        // 查询关联题目并分页
-        if (queryQuestionsFlag) {
+        // 是否要查询题库下的题目集
+        boolean needQueryQuestionList = questionBankQueryRequest.getQueryQuestionsFlag();
+        if (needQueryQuestionList) {
             QuestionQueryRequest questionQueryRequest = new QuestionQueryRequest();
             questionQueryRequest.setQuestionBankId(id);
-            questionQueryRequest.setPageSize(questionBankQueryRequest.getQuestionsPageSize());
-            questionQueryRequest.setCurrent(questionBankQueryRequest.getQuestionsCurrent());
-            Page<Question> questionVOPage = questionService.getQuestionPage(questionQueryRequest);
-            questionBankVO.setQuestionsPage(questionVOPage);
+            questionQueryRequest.setPageSize(questionBankQueryRequest.getPageSize());
+            questionQueryRequest.setCurrent(questionBankQueryRequest.getCurrent());
+            // 封装VO
+            Page<Question> questionPage = questionService.getQuestionPage(questionQueryRequest);
+            questionBankVO.setQuestionsPage(questionService.getQuestionVOPage(questionPage, request));
         }
         // 获取封装类
         return questionBankVO;

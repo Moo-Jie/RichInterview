@@ -1,0 +1,61 @@
+/* 新增卡片样式 */
+.question-card {
+    background: #f8f9fa;
+    padding: 24px;
+    border-radius: 12px;
+}
+
+.question-header-card {
+    margin-bottom: 24px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border: 2px solid #dee2e6 !important;
+}
+
+.question-title {
+    color: #2c3e50 !important;
+    font-size: 28px !important;
+    margin-bottom: 16px !important;
+}
+
+.meta-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.meta-item {
+    background: rgba(255,255,255,0.9);
+    padding: 12px;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.meta-label {
+    color: #6c757d;
+    font-weight: 500;
+    margin-right: 8px;
+}
+
+.meta-value {
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.content-card, .answer-card {
+    border: 2px solid #e9ecef !important;
+    margin-bottom: 24px;
+    border-radius: 8px !important;
+}
+
+.card-title {
+    font-size: 20px;
+    color: #2c3e50 !important;
+    font-weight: 600;
+}
+
+.hint-text {
+    font-size: 14px;
+    color: #6c757d;
+    font-weight: 400;
+}
