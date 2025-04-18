@@ -7,7 +7,9 @@ import Paragraph from "antd/es/typography/Paragraph";
 import { useState } from "react";
 import { updateMyUserUsingPost } from "@/api/userController";
 import { ProColumns, ProTable } from "@ant-design/pro-components";
+import CalendarChart from "@/app/user/userCenter/components/CalendarChartComponent";
 import "./index.css";
+
 
 /**
  * 用户管理页面
@@ -119,7 +121,7 @@ export default function UserCenterPage() {
               },
               {
                 key: "userMsg",
-                label: "详细信息",
+                label: "其他信息",
               },
             ]}
             activeTabKey={activeTabKey}
@@ -127,7 +129,12 @@ export default function UserCenterPage() {
               setActiveTabKey(key);
             }}
           >
-            {activeTabKey === "userMsg" && <>待实现</>}
+            {activeTabKey === "record" && (
+              <>
+                <CalendarChart />
+              </>
+            )}
+            {activeTabKey === "userMsg" && <>其他用户信息待添加</>}
           </Card>
         </Col>
       </Row>

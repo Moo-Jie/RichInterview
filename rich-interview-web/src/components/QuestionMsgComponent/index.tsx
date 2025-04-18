@@ -4,6 +4,7 @@ import Title from "antd/es/typography/Title";
 import TagList from "@/components/TagListComponent";
 import MarkdownViewer from "@/components/MarkdownComponent/MarkdownViewer";
 import "./index.css";
+import useAddUserSignInRecordHook from "@/hooks/useAddUserSignInRecordHook";
 
 interface Props {
   question: API.QuestionVO;
@@ -16,6 +17,8 @@ interface Props {
  */
 const QuestionMsgComponent = (props: Props) => {
   const { question } = props;
+    // TODO 学习达半分钟以上
+    useAddUserSignInRecordHook();
   // 其他信息标签
   const metaItems = [
     {
@@ -44,7 +47,6 @@ const QuestionMsgComponent = (props: Props) => {
     },
     // TODO 其他信息展示
   ];
-  // TODO 次数执行签到 （用户登录且进入此页面，学习达半分钟以上）
 
   return (
     <div className="question-card">
