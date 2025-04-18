@@ -4,6 +4,12 @@ import Title from "antd/es/typography/Title";
 import QuestionTablePage from "@/components/QuestionVoTableComponent/page";
 import styles from "./page.module.css";
 
+// 添加TDK
+export const metadata = {
+    title: "题目列表",
+    description: "RICH面试刷题平台的题目列表",
+};
+
 /**
  * 题目列表页面
  * @constructor
