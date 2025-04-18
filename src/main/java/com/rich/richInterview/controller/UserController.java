@@ -27,7 +27,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 import static com.rich.richInterview.service.impl.UserServiceImpl.SALT;
 
@@ -312,4 +314,42 @@ public class UserController {
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
         return ResultUtils.success(true);
     }
+
+    /**
+     * 添加用户签到记录
+     * @param request
+     * @return com.rich.richInterview.common.BaseResponse<java.lang.Boolean>
+     * @author DuRuiChi
+     * @create 2025/4/18
+     **/
+    @PostMapping("/add/sign_in")
+    public BaseResponse<Boolean> addUserSignIn(HttpServletRequest request) {
+        // 登录方可签到
+        User loginUser = userService.getLoginUser(request);
+        // 执行签到
+        if (loginUser == null) {
+            throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
+        }
+        boolean result = userService.addUserSignIn(loginUser.getId());
+        return ResultUtils.success(result);
+    }
+
+    /**
+     *
+     * 获取用户签到记录
+     * @param year
+     * @param request
+     * @return com.rich.richInterview.common.BaseResponse<java.util.List<java.lang.Integer>>
+     * @author DuRuiChi
+     * @create 2025/4/18
+     **/
+    @GetMapping("/get/sign_in")
+    public BaseResponse<List<Integer>> getUserSignInRecord(Integer year, HttpServletRequest request) {
+        // 登录方可签到
+        User loginUser = userService.getLoginUser(request);
+        // 查询该年签到记录
+        List<Integer> userSignInRecord = userService.getUserSignInRecord(loginUser.getId(), year);
+        return ResultUtils.success(userSignInRecord);
+    }
+
 }

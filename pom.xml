@@ -95,6 +95,13 @@
             <scope>runtime</scope>
             <optional>true</optional>
         </dependency>
+        <!-- redisson https://github.com/redisson/redisson -->
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson</artifactId>
+            <version>3.21.0</version>
+        </dependency>
+
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>

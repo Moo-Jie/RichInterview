@@ -9,7 +9,9 @@ import com.rich.richInterview.model.vo.UserVO;
 import me.chanjar.weixin.common.bean.WxOAuth2UserInfo;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 用户服务
@@ -117,4 +119,25 @@ public interface UserService extends IService<User> {
      */
     QueryWrapper<User> getQueryWrapper(UserQueryRequest userQueryRequest);
 
+    /**
+     *
+     * 添加用户签到记录
+     * @param userId
+     * @return boolean
+     * @author DuRuiChi
+     * @create 2025/4/18
+     **/
+    boolean addUserSignIn(long userId);
+
+
+    /**
+     *
+     * 获取用户签到记录
+     * @param userId
+     * @param year
+     * @return java.util.List<java.lang.Integer>
+     * @author DuRuiChi
+     * @create 2025/4/18
+     **/
+    List<Integer> getUserSignInRecord(long userId, Integer year);
 }
