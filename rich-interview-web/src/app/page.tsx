@@ -12,16 +12,26 @@ import "./page.module.css";
  * 主页
  * @constructor
  */
+// 添加TDK
+export const metadata = {
+  title: "主页",
+  description: "RICH面试刷题平台的主页",
+};
+
 // 服务端渲染，禁用静态生成
 export const dynamic = "force-dynamic";
 export default async function HomePage() {
+  // 并行获取题库和题目信息
+  // 题库列表
   let questionBankListVo = [];
-  let questionListVo = [];
   try {
     const res = await listQuestionBankVoByPageUsingPost({
+      // 仅展示12个题库
       pageSize: 12,
       sortField: "createTime",
       sortOrder: "descend",
+      queryQuestionsFlag: true,
+
     });
     // @ts-ignore
     questionBankListVo = res.data.records ?? [];
@@ -29,6 +39,8 @@ export default async function HomePage() {
     message.error("无法获取题库信息，因为" + e.message);
   }
 
+  // 题目列表
+  let questionListVo = [];
   try {
     const res = await listQuestionVoByPageUsingPost({
       pageSize: 12,

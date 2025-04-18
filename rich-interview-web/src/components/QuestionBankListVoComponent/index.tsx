@@ -40,7 +40,7 @@ const questionBankListVo = (props: Props) => {
                   <div className="bank-stats">
                     {/*TODO 其他标签展示*/}
                     <span>
-                      题目数: {questionBank.questionsPage?.total || 0}
+                      最近维护日期: {questionBank.updateTime?.toString().substring(0, 10)}
                     </span>
                     <span>
                       创建者: {questionBank.user?.userName || "管理员"}
