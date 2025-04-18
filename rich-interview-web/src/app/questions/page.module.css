@@ -1,0 +1,33 @@
+#questionsPage.max-width-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px 16px;
+}
+
+/* 标题区域 */
+#questionsPage .ant-typography {
+    color: #1677ff;
+    margin-bottom: 24px !important;
+    font-weight: 600;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 12px;
+}
+
+/* 表格容器 */
+#questionsPage .ant-pro-table {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 响应式处理 */
+@media (max-width: 768px) {
+    #questionsPage.max-width-content {
+        padding: 16px 8px;
+    }
+
+    #questionsPage .ant-typography {
+        font-size: 1.25rem !important;
+        margin-bottom: 16px !important;
+    }
+}

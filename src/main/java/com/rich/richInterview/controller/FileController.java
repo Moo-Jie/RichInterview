@@ -70,7 +70,7 @@ public class FileController {
             return ResultUtils.success(FileConstant.COS_HOST + filepath);
         } catch (Exception e) {
             log.error("file upload error, filepath = " + filepath, e);
-            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "上传失败");
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR, filepath +"上传失败   "+ e.getMessage());
         } finally {
             if (file != null) {
                 // 删除临时文件
