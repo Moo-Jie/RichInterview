@@ -87,7 +87,7 @@ cos:
   client:
     accessKey: LTAI5tRo46K5EqR1rBooSEkF
     secretKey: m4r4YibdVkH6NiLEwAiv8a3Gbsyh3X
-    region: https://rich-tams.oss-cn-beijing.aliyuncs.com/
+    region: cn-beijing
     bucket: rich-tams
 # 接口文档配置
 knife4j:
