@@ -690,4 +690,15 @@ declare namespace API {
     userProfile?: string;
     userRole?: string;
   };
+
+  type getUserSignInRecordUsingGETParams = {
+    /** year */
+    year?: number;
+  };
+
+  type BaseResponseListInt_ = {
+    code?: number;
+    data?: number[];
+    message?: string;
+  };
 }
