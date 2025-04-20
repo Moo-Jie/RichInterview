@@ -11,6 +11,7 @@ import type { ActionType, ProColumns } from "@ant-design/pro-components";
 import { PageContainer, ProTable } from "@ant-design/pro-components";
 import { App, Button, Typography, Table } from "antd";
 import React, { useRef, useState } from "react";
+import UpdatePictureModal from "@/app/admin/bank/components/UpdatePicture";
 import "./index.css";
 
 const QuestionBankAdminPage: React.FC = () => {
@@ -21,6 +22,8 @@ const QuestionBankAdminPage: React.FC = () => {
   const actionRef = useRef<ActionType>(); // 表格操作引用（刷新/重置等）
   const [currentRow, setCurrentRow] = useState<API.QuestionBank>(); // 当前操作行数据缓存
   const { modal, message } = App.useApp(); // 全局提示和对话框方法
+  const [updatePictureVisible, setUpdatePictureVisible] = useState(false);
+
   // 批量删除处理
   const handleBatchDelete = async () => {
     modal.confirm({
@@ -67,6 +70,7 @@ const QuestionBankAdminPage: React.FC = () => {
       },
     });
   };
+
   // 表格列配置
   const columns: ProColumns<API.QuestionBank>[] = [
     {
@@ -106,7 +110,21 @@ const QuestionBankAdminPage: React.FC = () => {
       dataIndex: "picture",
       valueType: "image",
       width: 120,
+      tooltip: "点击即可上传图片",
       hideInSearch: true,
+      render: (
+        _,
+        record, // 新增点击事件
+      ) => (
+        <img
+          src={record.picture}
+          style={{ width: 60, height: 60, cursor: "pointer" }}
+          onClick={() => {
+            setCurrentRow(record);
+            setUpdatePictureVisible(true);
+          }}
+        />
+      ),
     },
     {
       title: "创建时间",
@@ -170,6 +188,8 @@ const QuestionBankAdminPage: React.FC = () => {
       ],
     },
   ];
+  // 过滤掉图片列的配置（用于创建/编辑表单）
+  const filteredColumns = columns.filter((col) => col.dataIndex !== "picture");
 
   return (
     <PageContainer
@@ -281,7 +301,7 @@ const QuestionBankAdminPage: React.FC = () => {
       />
       <CreateModal
         visible={createModalVisible}
-        columns={columns}
+        columns={filteredColumns}
         onSubmit={() => {
           setCreateModalVisible(false);
           actionRef.current?.reload();
@@ -290,7 +310,7 @@ const QuestionBankAdminPage: React.FC = () => {
       />
       <UpdateModal
         visible={updateModalVisible}
-        columns={columns}
+        columns={filteredColumns}
         oldData={currentRow}
         onSubmit={() => {
           setUpdateModalVisible(false);
@@ -298,6 +318,15 @@ const QuestionBankAdminPage: React.FC = () => {
           actionRef.current?.reload();
         }}
         onCancel={() => setUpdateModalVisible(false)}
+      />
+      <UpdatePictureModal
+        visible={updatePictureVisible}
+        oldData={currentRow}
+        onSubmit={() => {
+          setUpdatePictureVisible(false);
+          actionRef.current?.reload(); // 刷新表格
+        }}
+        onCancel={() => setUpdatePictureVisible(false)}
       />
     </PageContainer>
   );

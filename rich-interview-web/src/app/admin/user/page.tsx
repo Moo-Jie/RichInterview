@@ -6,12 +6,13 @@ import {
   deleteUserUsingPost,
   listUserByPageUsingPost,
 } from "@/api/userController";
-import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
+import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import type { ActionType, ProColumns } from "@ant-design/pro-components";
 import { PageContainer, ProTable } from "@ant-design/pro-components";
-import { App, Button, Space, Typography, Table } from "antd";
+import { App, Button, Table, Typography } from "antd";
 import React, { useRef, useState } from "react";
 import "./index.css";
+import UpdateUserAvatarModal from "@/app/admin/user/components/UpdatePicture";
 
 const UserAdminPage: React.FC = () => {
   // 组件状态管理
@@ -21,6 +22,8 @@ const UserAdminPage: React.FC = () => {
   const actionRef = useRef<ActionType>(); // 表格操作引用（刷新/重置等）
   const [currentRow, setCurrentRow] = useState<API.User>(); // 当前操作行数据缓存
   const { modal, message } = App.useApp(); // 全局提示和对话框方法
+  const [updatePictureVisible, setUpdatePictureVisible] = useState(false);
+
   // 批量删除处理
   const handleBatchDelete = async () => {
     modal.confirm({
@@ -108,7 +111,21 @@ const UserAdminPage: React.FC = () => {
       dataIndex: "userAvatar",
       valueType: "image",
       width: 120,
+      tooltip: "点击即可上传图片",
       hideInSearch: true,
+      render: (
+        _,
+        record, // 新增点击事件
+      ) => (
+        <img
+          src={record.userAvatar}
+          style={{ width: 60, height: 60, cursor: "pointer" }}
+          onClick={() => {
+            setCurrentRow(record);
+            setUpdatePictureVisible(true);
+          }}
+        />
+      ),
     },
     {
       title: "用户角色",
@@ -189,6 +206,11 @@ const UserAdminPage: React.FC = () => {
       ],
     },
   ];
+
+  // 过滤掉图片列的配置（用于创建/编辑表单）
+  const filteredColumns = columns.filter(
+    (col) => col.dataIndex !== "userAvatar",
+  );
 
   return (
     <PageContainer
@@ -295,7 +317,7 @@ const UserAdminPage: React.FC = () => {
       /* 新建/编辑弹窗组件 */
       <CreateModal
         visible={createModalVisible}
-        columns={columns}
+        columns={filteredColumns}
         onSubmit={() => {
           setCreateModalVisible(false);
           actionRef.current?.reload();
@@ -304,7 +326,7 @@ const UserAdminPage: React.FC = () => {
       />
       <UpdateModal
         visible={updateModalVisible}
-        columns={columns}
+        columns={filteredColumns}
         oldData={currentRow}
         onSubmit={() => {
           setUpdateModalVisible(false);
@@ -312,6 +334,15 @@ const UserAdminPage: React.FC = () => {
           actionRef.current?.reload();
         }}
         onCancel={() => setUpdateModalVisible(false)}
+      />
+      <UpdateUserAvatarModal
+        visible={updatePictureVisible}
+        oldData={currentRow}
+        onSubmit={() => {
+          setUpdatePictureVisible(false);
+          actionRef.current?.reload(); // 刷新表格
+        }}
+        onCancel={() => setUpdatePictureVisible(false)}
       />
     </PageContainer>
   );

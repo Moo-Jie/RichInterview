@@ -701,4 +701,34 @@ declare namespace API {
     data?: number[];
     message?: string;
   };
+
+  type FileInfo = {
+    attr?: Record<string, any>;
+    basePath?: string;
+    contentType?: string;
+    createTime?: string;
+    ext?: string;
+    fileAcl?: Record<string, any>;
+    filename?: string;
+    hashInfo?: Record<string, any>;
+    id?: string;
+    metadata?: Record<string, any>;
+    objectId?: string;
+    objectType?: string;
+    originalFilename?: string;
+    path?: string;
+    platform?: string;
+    size?: number;
+    thContentType?: string;
+    thFileAcl?: Record<string, any>;
+    thFilename?: string;
+    thMetadata?: Record<string, any>;
+    thSize?: number;
+    thUrl?: string;
+    thUserMetadata?: Record<string, any>;
+    uploadId?: string;
+    uploadStatus?: number;
+    url?: string;
+    userMetadata?: Record<string, any>;
+  };
 }
