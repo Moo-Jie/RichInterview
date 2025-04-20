@@ -1,5 +1,6 @@
 package com.rich.richInterview;
 
+import org.dromara.x.file.storage.spring.EnableFileStorage;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -11,6 +12,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
  *
  */
 // todo 如需开启 Redis，须移除 exclude 中的内容
+@EnableFileStorage
 @SpringBootApplication()
 @MapperScan("com.rich.richInterview.mapper")
 @EnableScheduling

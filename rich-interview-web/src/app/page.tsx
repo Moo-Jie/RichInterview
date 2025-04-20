@@ -61,7 +61,7 @@ export default async function HomePage() {
       <Card className="section-card">
         <Flex justify="space-between" align="center">
           <Title level={3} className="section-title">
-            题目上新！
+            题库上新！
           </Title>
           <Link href={"/banks"} className="more-link">
             查看更多热门题库
@@ -75,7 +75,7 @@ export default async function HomePage() {
       <Card className="section-card">
         <Flex justify="space-between" align="center">
           <Title level={3} className="section-title">
-            题库上新！
+            题目上新！
           </Title>
           <Link href={"/questions"} className="more-link">
             查看更多热门题目
