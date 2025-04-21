@@ -5,7 +5,7 @@ const DEV_BASE_URL = "http://localhost:8101";
 const PROD_BASE_URL = "";
 const myAxios = axios.create({
   baseURL: DEV_BASE_URL,
-  timeout: 10000,
+  timeout: 200000,
   withCredentials: true,
 });
 

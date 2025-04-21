@@ -11,6 +11,21 @@ declare namespace API {
     message?: string;
   };
 
+  type setDefaultRoleUsingPUTParams = {
+    /** role */
+    role: string;
+  };
+
+  type setMaxWaitTimeUsingPUTParams = {
+    /** milliseconds */
+    milliseconds: number;
+  };
+
+  type queryAIUsingPOSTParams = {
+    /** question */
+    question: string;
+  };
+
   type BaseResponseLoginUserVO_ = {
     code?: number;
     data?: LoginUserVO;
@@ -20,6 +35,12 @@ declare namespace API {
   type BaseResponseLong_ = {
     code?: number;
     data?: number;
+    message?: string;
+  };
+
+  type BaseResponseString_ = {
+    code?: number;
+    data?: string;
     message?: string;
   };
 
