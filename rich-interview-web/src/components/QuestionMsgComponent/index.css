@@ -25,10 +25,10 @@
 }
 
 .meta-item {
-    background: rgba(255,255,255,0.9);
+    background: rgba(255, 255, 255, 0.9);
     padding: 12px;
     border-radius: 6px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .meta-label {
@@ -55,7 +55,192 @@
 }
 
 .hint-text {
+    font-size: 15px;
+    color: #4a90e2;
+    font-weight: 400;
+}
+
+/* 在原有样式后新增 */
+.ask-ai-card {
+    border: 2px solid #e9ecef !important;
+    margin-bottom: 24px;
+    border-radius: 8px !important;
+    background: #f8f9fa;
+}
+
+.ask-ai-button {
+    margin-bottom: 16px;
+    background: #4a90e2;
+    transition: all 0.3s;
+}
+
+.ask-ai-button:hover {
+    background: #357abd !important;
+}
+
+.ai-response {
+    margin-top: 16px;
+    padding: 12px;
+    background: #fff;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* 在原有样式后新增 */
+.ask-ai-button {
+    margin-bottom: 16px;
+    background: #4a90e2;
+    transition: all 0.3s;
+    height: 42px;
+    font-size: 16px;
+    border-radius: 8px;
+    padding: 0 24px;
+}
+
+.ask-ai-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+}
+
+.loading-content {
+    padding: 24px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.loading-hint {
+    margin-top: 12px;
+    color: #6c757d;
+    font-size: 14px;
+}
+
+.ant-spin-dot-item {
+    background-color: #4a90e2 !important;
+}
+
+.ai-response {
+    margin-top: 24px;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* 新增样式 */
+.spin-container {
+    min-height: 200px; /* 保持内容区域高度稳定 */
+    display: flex;
+    justify-content: center;
+    padding: 24px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+/* 调整加载提示样式 */
+.ant-spin-nested-loading .ant-spin-text {
+    font-size: 16px;
+    color: #4a90e2 !important;
+    margin-top: 16px;
+}
+
+.loading-hint {
     font-size: 14px;
     color: #6c757d;
-    font-weight: 400;
+    margin-top: 8px;
+}
+
+/* 新增样式 */
+.premium-hint {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 8px;
+    padding: 16px;
+    margin: 16px 0;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.hint-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+    position: relative;
+    z-index: 2;
+}
+
+.gradient-text {
+    background: linear-gradient(45deg, #4a90e2, #63b3ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-weight: 600;
+    font-size: 1.2em;
+    letter-spacing: 1px;
+}
+
+.animated-text {
+    color: #2c3e50;
+    position: relative;
+    padding-left: 24px;
+}
+
+.animated-text::before {
+    content: "✨";
+    position: absolute;
+    left: -8px;
+    top: -2px;
+    animation: sparkle 1.5s infinite;
+}
+
+.shine {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(
+            to right,
+            rgba(255, 255, 255, 0) 0%,
+            rgba(255, 255, 255, 0.3) 50%,
+            rgba(255, 255, 255, 0) 100%
+    );
+    animation: shine 2s infinite;
+}
+
+@keyframes sparkle {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+}
+
+@keyframes shine {
+    100% {
+        left: 200%;
+    }
+}
+
+.long-time-hint {
+    margin-top: 12px;
+    margin-left: 20px;
+    color: #ff6b6b;
+    font-size: 14px;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 0.8;
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.05);
+    }
+    100% {
+        opacity: 0.8;
+    }
 }
