@@ -1,0 +1,14 @@
+<!-- 屏蔽DashScope SDK的调试日志输出,防止流式响应与日志输出混合 -->
+<configuration>
+    <logger name="com.alibaba.dashscope" level="WARN"/>
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+</configuration>
