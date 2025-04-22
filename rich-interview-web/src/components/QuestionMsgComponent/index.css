@@ -11,6 +11,13 @@
     border: 2px solid #dee2e6 !important;
 }
 
+/* 参考答案卡片图标 */
+.ask-ai-card .card-title02::before {
+    content: '✅';
+    filter: drop-shadow(0 2px 4px rgba(67, 181, 115, 0.4));
+    animation: iconFloat 1.2s ease-in-out infinite;
+}
+
 .question-title {
     color: #2c3e50 !important;
     font-size: 28px !important;
@@ -60,12 +67,86 @@
     font-weight: 400;
 }
 
-/* 在原有样式后新增 */
+
 .ask-ai-card {
-    border: 2px solid #e9ecef !important;
+    border: none !important;
     margin-bottom: 24px;
-    border-radius: 8px !important;
-    background: #f8f9fa;
+    border-radius: 16px !important;
+    background: linear-gradient(145deg, rgba(42, 45, 72, 0.9) 0%, rgba(34, 37, 64, 0.9) 100%);
+    backdrop-filter: blur(12px);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 4px 12px rgba(255, 255, 255, 0.05);
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* 发光边框效果 */
+.ask-ai-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 16px;
+    padding: 2px;
+    background: linear-gradient(
+            135deg,
+            rgba(74, 144, 226, 0.6) 0%,
+            rgba(139, 108, 240, 0.6) 50%,
+            rgba(74, 144, 226, 0.6) 100%
+    );
+    -webkit-mask: linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    animation: borderGlow 4s linear infinite;
+}
+
+@keyframes borderGlow {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* 标题样式调整 */
+.ask-ai-card .card-title {
+    color: #1d1d1d !important;
+    font-size: 22px !important;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    position: relative;
+    padding-left: 32px;
+}
+
+.ask-ai-card .card-title::before {
+    content: '🤖';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 24px;
+    filter: drop-shadow(0 2px 4px rgba(74, 144, 226, 0.4));
+}
+
+/* 新增悬停效果 */
+.ask-ai-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(74, 144, 226, 0.2),
+    inset 0 4px 12px rgba(255, 255, 255, 0.1);
+}
+
+/* 响应式微调 */
+@media (max-width: 768px) {
+    .ask-ai-card {
+        border-radius: 12px !important;
+    }
 }
 
 .ask-ai-button {
@@ -86,15 +167,18 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-/* 在原有样式后新增 */
 .ask-ai-button {
-    margin-bottom: 16px;
-    background: #4a90e2;
-    transition: all 0.3s;
-    height: 42px;
-    font-size: 16px;
-    border-radius: 8px;
-    padding: 0 24px;
+    width: 380px;
+    height: 48px;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    border-radius: 24px !important;
+    background: linear-gradient(135deg, #4a90e2 0%, #8b6cf0 100%) !important;
+    border: none !important;
+    box-shadow: 0 4px 15px rgba(74, 144, 226, 0.3);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateY(0);
 }
 
 .ask-ai-button:hover {
@@ -107,6 +191,22 @@
     background: #f8f9fa;
     border-radius: 8px;
     text-align: center;
+}
+
+.ask-ai-button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(74, 144, 226, 0.4);
+    background: linear-gradient(135deg, #5a9cf4 0%, #9b7cff 100%) !important;
+}
+
+.ask-ai-button:active:not(:disabled) {
+    transform: translateY(1px) scale(0.98);
+    box-shadow: 0 2px 8px rgba(74, 144, 226, 0.2);
+}
+
+.ask-ai-button:disabled {
+    background: linear-gradient(135deg, #cccccc 0%, #999999 100%) !important;
+    cursor: not-allowed;
 }
 
 .loading-hint {

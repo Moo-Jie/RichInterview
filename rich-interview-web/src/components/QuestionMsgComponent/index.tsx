@@ -1,14 +1,13 @@
 "use client";
-import { Card } from "antd";
+import { Button, Card, Modal } from "antd";
 import Title from "antd/es/typography/Title";
 import TagList from "@/components/TagListComponent";
 import MarkdownViewer from "@/components/MarkdownComponent/MarkdownViewer";
 import useAddUserSignInRecordHook from "@/hooks/useAddUserSignInRecordHook";
-import { Button, Spin } from "antd";
 import { useState } from "react";
 import { queryAiUsingPost } from "@/api/aiClientController";
-import "./index.css";
 import { LoadingOutlined } from "@ant-design/icons";
+import "./index.css";
 
 interface Props {
   question: API.QuestionVO;
@@ -24,6 +23,10 @@ const QuestionMsgComponent = (props: Props) => {
   const [aiLoading, setAiLoading] = useState(false);
   const [aiResponse, setAiResponse] = useState<string>();
   const [thinkingSeconds, setThinkingSeconds] = useState(0);
+  const [showAnswer, setShowAnswer] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [pendingAction, setPendingAction] = useState<() => void>(() => {});
+
   const { question } = props;
 
   // 调用AI接口
@@ -35,12 +38,12 @@ const QuestionMsgComponent = (props: Props) => {
       setAiLoading(true);
       // 计时逻辑
       const timer = setInterval(() => {
-        // [!++ 新增计时逻辑 ++]
+        // 新增计时逻辑
         setThinkingSeconds((v) => v + 1);
       }, 1000);
       // 调用接口
       const response = await queryAiUsingPost({
-        question: question.title,
+        question: question.content,
       } as API.queryAIUsingPOSTParams);
       // 清除定时器
       clearInterval(timer);
@@ -114,7 +117,10 @@ const QuestionMsgComponent = (props: Props) => {
       >
         <Button
           type="primary"
-          onClick={handleAskAI}
+          onClick={() => {
+            setPendingAction(() => handleAskAI);
+            setIsModalVisible(true);
+          }}
           className="ask-ai-button"
           disabled={aiLoading}
         >
@@ -152,18 +158,52 @@ const QuestionMsgComponent = (props: Props) => {
       </Card>
       {/*题目答案*/}
       <Card
-        className="answer-card"
+        className="ask-ai-card"
         title={
-          <span className="card-title">
+          <span className="card-title02">
             参考答案{" "}
             <span className="hint-text">
-              （答案仅供学习,回答时应流畅、准确、加以自己的独到理解！）
+              （答案仅供学习，回答时应流畅、准确、加以自己的独到理解！）
             </span>
           </span>
         }
       >
-        <MarkdownViewer value={question.answer} />
+        <Button
+          type="primary"
+          onClick={() => {
+            setPendingAction(() => () => setShowAnswer(true));
+            setIsModalVisible(true);
+          }}
+          className="ask-ai-button"
+          style={{ marginBottom: showAnswer ? 16 : 0 }}
+        >
+          {showAnswer ? "答案已解锁 ✅" : "点击查看参考答案"}
+        </Button>
+
+        {showAnswer && (
+          <div className="ai-response">
+            <MarkdownViewer value={question.answer} />
+          </div>
+        )}
       </Card>
+      {/* 确认执行框 */}
+      <Modal
+        title="RICH 提示您"
+        visible={isModalVisible}
+        onOk={() => {
+          pendingAction();
+          setIsModalVisible(false);
+        }}
+        onCancel={() => setIsModalVisible(false)}
+        okText="确定"
+        cancelText="那我再想想"
+        closable={false}
+        centered
+      >
+        <div style={{ padding: "16px 0", fontSize: 16 }}>
+            💡 先尝试独立回答，再查看题解或问AI哦！
+        </div>
+      </Modal>
     </div>
   );
 };
