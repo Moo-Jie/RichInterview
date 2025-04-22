@@ -1,12 +1,14 @@
 import { listQuestionBankVoByPageUsingPost } from "@/api/questionBankController";
 import { listQuestionVoByPageUsingPost } from "@/api/questionController";
 import Title from "antd/es/typography/Title";
-import { Card, Divider, Flex, message, Space } from "antd";
+import { Button, Card, Flex, message } from "antd";
 import Link from "next/link";
-import QuestionBankList from "../components/QuestionBankListVoComponent";
-import QuestionList from "../components/QuestionListVoComponent";
+import QuestionBankListVoComponent from "../components/QuestionBankListVoComponent";
 import { RightOutlined } from "@ant-design/icons";
-import "./page.module.css";
+import Sider from "antd/es/layout/Sider";
+import QuestionListVo from "@/components/QuestionListVoComponent";
+import styles from "./page.module.css";
+import AiCallComponent from "@/components/aiCallComponent";
 
 /**
  * 主页
@@ -31,7 +33,6 @@ export default async function HomePage() {
       sortField: "createTime",
       sortOrder: "descend",
       queryQuestionsFlag: true,
-
     });
     // @ts-ignore
     questionBankListVo = res.data.records ?? [];
@@ -54,36 +55,91 @@ export default async function HomePage() {
   }
 
   return (
-    <div id="homePage">
-      {/*TODO 轮播图*/}
+    <div id="homePage" className={styles.homeContainer}>
+      <Flex gap={24} align="flex-start">
+        {/* 主内容区 */}
+        <div className={styles.mainContent}>
+          {/* RICH AI 模块 */}
+          <Card>
+            <AiCallComponent />
+          </Card>
 
-      {/*题库列表*/}
-      <Card className="section-card">
-        <Flex justify="space-between" align="center">
-          <Title level={3} className="section-title">
-            题库上新！
-          </Title>
-          <Link href={"/banks"} className="more-link">
-            查看更多热门题库
-            <RightOutlined />
-          </Link>
-        </Flex>
-      </Card>
-      <QuestionBankList questionBankList={questionBankListVo} />
-      <Divider />
-      {/*题目列表*/}
-      <Card className="section-card">
-        <Flex justify="space-between" align="center">
-          <Title level={3} className="section-title">
-            题目上新！
-          </Title>
-          <Link href={"/questions"} className="more-link">
-            查看更多热门题目
-            <RightOutlined />
-          </Link>
-        </Flex>
-        <QuestionList questionList={questionListVo} />
-      </Card>
+          {/* 题库列表 */}
+          <Card className={`section-card ${styles.sectionCard}`}>
+            <Flex justify="space-between" align="center">
+              <Title level={3} className="card-title">
+                最新题库
+              </Title>
+              <Link href={"/banks"} className="more-link">
+                更多题库 <RightOutlined />
+              </Link>
+            </Flex>
+            <QuestionBankListVoComponent
+              questionBankList={questionBankListVo}
+            />
+          </Card>
+
+          {/*题目列表*/}
+          <Card className="section-card">
+            <Flex justify="space-between" align="center">
+              <Title level={3} className="section-title">
+                题目上新！
+              </Title>
+              <Link href={"/questions"} className="more-link">
+                查看更多热门题目
+                <RightOutlined />
+              </Link>
+            </Flex>
+            <QuestionListVo questionList={questionListVo} />
+          </Card>
+        </div>
+
+        {/* 右侧边栏 */}
+        <Sider width={300} theme="light" className={styles.sidebar}>
+          {/* 热门题目 */}
+          <Card className={styles.sideCard}>
+            <div className={styles.sideCardHeader}>
+              <span className={styles.cardTitle}>🔥 热门题目 TOP10</span>
+            </div>
+            <div className={styles.hotItems}>
+              {questionListVo
+                .slice(0, 10)
+                // @ts-ignore
+                .map((item, index) => (
+                  <div key={item.id} className={styles.hotItem}>
+                    <span className={styles.rank}>{index + 1}.</span>
+                    <Link
+                      href={`/question/${item.id}`}
+                      className={styles.itemLink}
+                    >
+                      {item.title}
+                    </Link>
+                  </div>
+                ))}
+            </div>
+          </Card>
+
+          {/* 热门题库 */}
+          <Card className={styles.sideCard} style={{ marginTop: 24 }}>
+            <div className={styles.sideCardHeader}>
+              <span className={styles.cardTitle}>🏆 热门题库 TOP5</span>
+            </div>
+            <div className={styles.hotItems}>
+              {questionBankListVo
+                .slice(0, 5)
+                // @ts-ignore
+                .map((item, index) => (
+                  <div key={item.id} className={styles.hotItem}>
+                    <span className={styles.rank}>{index + 1}.</span>
+                    <Link href={`/bank/${item.id}`} className={styles.itemLink}>
+                      {item.title}
+                    </Link>
+                  </div>
+                ))}
+            </div>
+          </Card>
+        </Sider>
+      </Flex>
     </div>
   );
 }
