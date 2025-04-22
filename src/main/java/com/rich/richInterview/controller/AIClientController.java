@@ -28,7 +28,7 @@ public class AIClientController {
         Generation gen = new Generation();
         Message userMsg = Message.builder()
                 .role(defaultRole)
-                .content("现在我要问你一个面试题，请你简明扼要地、总结性质地回答我的问题,字数在300左右：" +
+                .content("现在我要问你一个面试题，请你简明扼要地、总结性质地回答我的问题,字数在300之内：" +
                         question +
                         "(   语气设定：回答之前，先打印：“# 你好，我是RICH！ 接下来我将帮助你理解这道题目 ：”   )" +
                         "(   身份设定：你是一个程序员名叫RICH，你必须在短时间内回答面试官提出的问题  )" +

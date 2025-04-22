@@ -23,3 +23,124 @@
 .section-divider {
     margin: 32px 0;
 }
+
+.homeContainer {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 24px;
+}
+
+.mainContent {
+    flex: 1;
+    min-width: 0;
+}
+
+.sidebar {
+    width: 360px;
+    position: sticky;
+    top: 24px;
+}
+
+.sectionCard {
+    margin-top: 24px;
+    border-radius: 16px !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.aiInput {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    border-radius: 8px;
+    padding: 12px;
+}
+
+.hotList {
+    padding: 8px 0;
+}
+
+.listItem {
+    padding: 12px;
+    margin: 4px 0;
+    border-radius: 6px;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.listItem:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateX(4px);
+}
+
+.rankIndex {
+    width: 28px;
+    color: #4a90e2;
+    font-weight: 600;
+    margin-right: 12px;
+}
+
+/* 响应式处理 */
+@media (max-width: 1200px) {
+    .sidebar {
+        width: 300px;
+    }
+}
+
+@media (max-width: 992px) {
+    .homeContainer {
+        padding: 16px;
+    }
+
+    .sidebar {
+        display: none;
+    }
+}
+
+
+/* 侧边栏卡片 */
+.sideCard {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.sideCardHeader {
+    padding: 12px 16px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.cardTitle {
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.hotItems {
+    padding: 8px 0;
+}
+
+.hotItem {
+    display: flex;
+    align-items: center;
+    padding: 10px 16px;
+    transition: background 0.3s;
+}
+
+.hotItem:hover {
+    background: #f8f9fa;
+}
+
+.rank {
+    width: 24px;
+    color: #1890ff;
+    font-weight: 500;
+}
+
+.itemLink {
+    flex: 1;
+    color: #2c3e50;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
