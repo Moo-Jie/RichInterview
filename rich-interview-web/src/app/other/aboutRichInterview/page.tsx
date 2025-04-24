@@ -14,9 +14,9 @@ const interviewData = [
     technologyStackRow02:
       "本系统使用服务端渲染SSR，更好的搜索引擎优化，更快的首屏加载速度，更好的可访问性",
     technologyStackRow03:
-      "本系统通过同设备登录互斥监测、实时IP黑白名单、熔断机制、速率管控、分层反爬虫规则强化系统和数据安全防护",
+      "",
     technologyStackRow04:
-      "本系统采用连接复用机制、热点实时侦测、多级缓存、高效数据结构等优化性能表现",
+      "",
   },
   {
     direction: "后端",
@@ -25,7 +25,7 @@ const interviewData = [
       "Redis 分布式缓存 + Caffeine 本地缓存 + Redission 分布式 + BloomFilter + BitMap",
     technologyStackRow03: "Elasticsearch 搜索引擎",
     technologyStackRow04:
-      " HotKey 热点探测 + Sentinel 流量控制 + Nacos 配置中心",
+      "",
   },
   {
     direction: "前端",

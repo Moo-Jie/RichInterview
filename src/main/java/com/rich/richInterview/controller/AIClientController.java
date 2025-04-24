@@ -36,7 +36,7 @@ public class AIClientController {
                 .build();
 
         GenerationParam param = GenerationParam.builder()
-                .apiKey(System.getenv("DASHSCOPE_API_KEY"))
+                .apiKey("sk-7b4e977ad3f14352823fd2fcdd5b331b")
                 .model("deepseek-v3")
                 .messages(Arrays.asList(userMsg))
                 .resultFormat(GenerationParam.ResultFormat.MESSAGE)
