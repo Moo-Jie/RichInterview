@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 8.0.35, for Win64 (x86_64)
 -- RIchInterview初始数据库（测试用）
--- Host: 127.0.0.1    Database: rich_interview
+-- Host: 127.0.0.1    Database: richInterview
 -- ------------------------------------------------------
 -- Server version	8.0.35
 

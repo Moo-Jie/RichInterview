@@ -77,9 +77,6 @@ export default function Home() {
             <Col span={12} className={styles.itemBorder}>
               性别：男
             </Col>
-            <Col span={12} className={styles.itemBorder}>
-              学校：潍坊科技学院
-            </Col>
           </Row>
         </Card>
 

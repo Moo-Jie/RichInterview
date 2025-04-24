@@ -1,6 +1,6 @@
 # 测试数据，由AI生成
 -- 初始数据
-use rich_interview;
+use richInterview;
 
 -- 用户表初始数据（密码是 12345678）
 INSERT INTO user (id, userAccount, userPassword, unionId, mpOpenId, userName, userAvatar, userProfile, userRole)
