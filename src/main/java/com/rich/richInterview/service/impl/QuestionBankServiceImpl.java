@@ -318,8 +318,8 @@ public class QuestionBankServiceImpl extends ServiceImpl<QuestionBankMapper, Que
         if (needQueryQuestionList) {
             QuestionQueryRequest questionQueryRequest = new QuestionQueryRequest();
             questionQueryRequest.setQuestionBankId(id);
-            questionQueryRequest.setPageSize(questionBankQueryRequest.getPageSize());
-            questionQueryRequest.setCurrent(questionBankQueryRequest.getCurrent());
+            questionQueryRequest.setPageSize(questionBankQueryRequest.getQuestionsPageSize());
+            questionQueryRequest.setCurrent(questionBankQueryRequest.getQuestionsCurrent());
             // 封装VO
             Page<Question> questionPage = questionService.getQuestionPage(questionQueryRequest);
             questionBankVO.setQuestionsPage(questionService.getQuestionVOPage(questionPage, request));

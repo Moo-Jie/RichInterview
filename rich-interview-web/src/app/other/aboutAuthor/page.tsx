@@ -66,16 +66,10 @@ export default function Home() {
           </Row>
           <Row>
             <Col span={12} className={styles.itemBorder}>
-              姓名：{ConstantMsg.AUTHOR_NAME}
+              {ConstantMsg.AUTHOR_NAME}
             </Col>
             <Col span={12} className={styles.itemBorder}>
-              职业：Java 全栈开发工程师
-            </Col>
-            <Col span={12} className={styles.itemBorder}>
-              年龄：21
-            </Col>
-            <Col span={12} className={styles.itemBorder}>
-              性别：男
+              Java 全栈开发工程师
             </Col>
           </Row>
         </Card>

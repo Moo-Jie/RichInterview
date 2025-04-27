@@ -50,3 +50,17 @@
         min-height: 240px;
     }
 }
+
+/* 维护信息 */
+.maintain-info {
+    font-size: 12px;
+    color: #666;
+}
+
+/* 创建者信息 */
+.creator-info {
+    font-size: 12px;
+    color: #666;
+    word-break: break-word; /* 允许长文本换行 */
+    max-width: 100%;
+}

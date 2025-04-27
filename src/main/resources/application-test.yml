@@ -1,5 +1,4 @@
 # 测试配置文件
-   
 server:
   port: 8101
 spring:
