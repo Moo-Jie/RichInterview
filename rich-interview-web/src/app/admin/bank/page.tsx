@@ -287,7 +287,7 @@ const QuestionBankAdminPage: React.FC = () => {
         columns={columns}
         pagination={{
           showSizeChanger: true,
-          pageSizeOptions: [5, 10, 50],
+          pageSizeOptions: [5, 10, 20],
           defaultPageSize: 5,
           position: ["bottomRight"], // 分页对齐方式
         }} /* 分页器配置 */

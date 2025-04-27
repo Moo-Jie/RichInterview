@@ -155,8 +155,10 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
                         .stream()
                         .map(QuestionBankQuestion::getQuestionId)
                         .collect(Collectors.toSet());
-                if( CollUtil.isNotEmpty(questionIds)){
-                    queryWrapper.in("id",questionIds);
+                if (CollUtil.isEmpty(questionIds)) {
+                    queryWrapper.apply("1 = 0");
+                } else {
+                    queryWrapper.in("id", questionIds);
                 }
             }
         return queryWrapper;

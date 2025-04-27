@@ -31,7 +31,7 @@ export default async function QuestionBankPage() {
       <Card className="section-card">
         <Flex justify="space-between" align="center">
           <Title level={3} className="section-title">
-            全部热门题目
+            全部热门题库
           </Title>
         </Flex>
       </Card>
