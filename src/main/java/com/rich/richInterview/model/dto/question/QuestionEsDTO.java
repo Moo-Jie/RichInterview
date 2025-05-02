@@ -21,7 +21,8 @@ import java.util.List;
  * @create 2025/5/1
  *
  **/
-@Document(indexName = "question")
+// TODO 维护索引版本
+@Document(indexName = "es_index_question_version1")
 @Data
 public class QuestionEsDTO implements Serializable {
 

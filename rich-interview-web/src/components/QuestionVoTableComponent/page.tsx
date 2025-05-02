@@ -7,7 +7,7 @@ import React, { useRef, useState } from "react";
 import TagListComponent from "@/components/TagListComponent";
 import "./index.css";
 import Link from "next/link";
-import { listQuestionVoByPageUsingPost } from "@/api/questionController";
+import {listQuestionVoByPageUsingPost, searchQuestionVoByPageUsingPost} from "@/api/questionController";
 import { TablePaginationConfig } from "antd";
 
 interface Props {
@@ -35,7 +35,7 @@ const QuestionTablePage: React.FC = (tableProps: Props) => {
   );
   // 题目总数
   const [total, setTotal] = useState<number>(defaultTotal || 0);
-  // 用于判断是否首次加载, 用于初始化搜索条件
+  // 用于判断是否首次加载, 初始化搜索条件
   const [init, setInit] = useState<boolean>(true);
 
   // 表格列配置
@@ -43,9 +43,8 @@ const QuestionTablePage: React.FC = (tableProps: Props) => {
     {
       title: "序号",
       width: 120,
-      hideInForm: true, // 新建/编辑表单中隐藏
-      search: false, // 禁用搜索
-      sorter: true, // 开启后端排序
+      hideInForm: true,
+      search: false,
       render: (_, __, index) => {
         /* 分页序号生成逻辑 */
         const { current = 1, pageSize = 10 } =
@@ -115,7 +114,7 @@ const QuestionTablePage: React.FC = (tableProps: Props) => {
         dataSource={questionList}
         pagination={
           {
-            pageSize: 12,
+            pageSize: 10,
             showTotal: (total) => `总共 ${total} 条`,
             showSizeChanger: false,
             total,
@@ -126,7 +125,7 @@ const QuestionTablePage: React.FC = (tableProps: Props) => {
           // 首次请求
           if (init) {
             setInit(false);
-            // 如果已有外层传来的默认数据，无需再次查询
+            // 如果已有数据，无需再次查询
             if (defaultQuestionList && defaultTotal) {
               return;
             }
@@ -135,9 +134,9 @@ const QuestionTablePage: React.FC = (tableProps: Props) => {
           const sortField = Object.keys(sort)?.[0] || "createTime";
           const sortOrder = sort?.[sortField] || "descend";
           // @ts-ignore
-          const { data, code } = await listQuestionVoByPageUsingPost({
+          const { data, code } = await searchQuestionVoByPageUsingPost({
             ...params,
-            sortField,
+            sortField : '_score',
             sortOrder,
             ...filter,
           } as API.QuestionQueryRequest);

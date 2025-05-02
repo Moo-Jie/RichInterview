@@ -1,4 +1,4 @@
-import { listQuestionVoByPageUsingPost } from "@/api/questionController";
+import {listQuestionVoByPageUsingPost, searchQuestionVoByPageUsingPost} from "@/api/questionController";
 import { Card, Flex, message } from "antd";
 import Title from "antd/es/typography/Title";
 import QuestionTablePage from "@/components/QuestionVoTableComponent/page";
@@ -23,10 +23,11 @@ export default async function QuestionsPage({ searchParams }) {
   let total = 0;
 
   try {
-    const res = await listQuestionVoByPageUsingPost({
+    const res = await searchQuestionVoByPageUsingPost({
       searchText,
-      pageSize: 12,
-      sortField: "createTime",
+      current: 1,
+      pageSize: 10,
+      sortField: "_score",
       sortOrder: "descend",
     });
     // @ts-ignore

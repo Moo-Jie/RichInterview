@@ -157,4 +157,23 @@ public class QuestionController {
         Long questionBankId = questionService.getQuestionBankId(id);
         return ResultUtils.success(questionBankId);
     }
+
+    /**
+     * 从 ES 数据库中查询题目
+     * @param questionQueryRequest
+     * @param request
+     * @return com.rich.richInterview.common.BaseResponse<com.baomidou.mybatisplus.extension.plugins.pagination.Page<com.rich.richInterview.model.vo.QuestionVO>>
+     * @author DuRuiChi
+     * @create 2025/5/2
+     **/
+    @PostMapping("/search/page/vo")
+    public BaseResponse<Page<QuestionVO>> searchQuestionVOByPage(@RequestBody QuestionQueryRequest questionQueryRequest,
+                                                                 HttpServletRequest request) {
+        long size = questionQueryRequest.getPageSize();
+        // 限制爬虫
+        ThrowUtils.throwIf(size > 200, ErrorCode.PARAMS_ERROR);
+        Page<Question> questionPage = questionService.searchFromEs(questionQueryRequest);
+        return ResultUtils.success(questionService.getQuestionVOPage(questionPage, request));
+    }
+
 }

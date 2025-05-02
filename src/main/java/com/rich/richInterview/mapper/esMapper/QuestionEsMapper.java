@@ -13,6 +13,7 @@ import java.util.List;
  */
 public interface QuestionEsMapper
         // ElasticsearchRepository 是 Spring Data Elasticsearch 提供的一个接口，包含大量操作 Es 索引的方法。
+        // 考虑没有复杂的查询需求，直接继承 ElasticsearchRepository ，否则考虑 elasticsearchRestTemplate 自己写查询。
         extends ElasticsearchRepository<QuestionEsDTO, Long> {
     /**
      * 根据用户 id 查询
