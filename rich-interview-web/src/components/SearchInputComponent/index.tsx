@@ -40,7 +40,8 @@ const SearchInputComponent = (props: Props) => {
         maxLength={20}
         variant="borderless"
         onSearch={(value) => {
-          router.push(`/questions?q=${value}`);
+          //   TODO 适配 ES 搜索
+          router.push(`/questions?searchText=${value}`);
         }}
       />
     </div>

@@ -119,4 +119,14 @@ public interface QuestionService extends IService<Question> {
      * @create 2025/4/17
      **/
     Long getQuestionBankId(Long id);
+
+    /**
+     * 从 ES 数据库中查询题目
+     * @param questionQueryRequest
+     * @return com.baomidou.mybatisplus.extension.plugins.pagination.Page<com.rich.richInterview.model.entity.Question>
+     * @author DuRuiChi
+     * @create 2025/5/2
+     **/
+    Page<Question> searchFromEs(QuestionQueryRequest questionQueryRequest);
+
 }
