@@ -28,6 +28,7 @@ import com.rich.richInterview.utils.SqlUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.sort.SortBuilder;
@@ -44,12 +45,12 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
 /**
  * 题目服务实现
- *
  */
 @Service
 @Slf4j
@@ -68,7 +69,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
      * 校验数据
      *
      * @param question
-     * @param add 对创建的数据进行校验
+     * @param add      对创建的数据进行校验
      */
     @Override
     public void validQuestion(Question question, boolean add) {
@@ -153,22 +154,22 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
                 sortOrder.equals(CommonConstant.SORT_ORDER_ASC),
                 sortField);
         // 按所属题库过滤
-            if (questionBankId != null) {
-                // 查询题库关联的题目，取出题目id并过滤
-                LambdaQueryWrapper<QuestionBankQuestion> lambdaQueryWrapper = Wrappers.lambdaQuery(QuestionBankQuestion.class)
-                        //仅映射题目id字段的值
-                        .select(QuestionBankQuestion::getQuestionId)
-                        .eq(QuestionBankQuestion::getQuestionBankId, questionBankId);
-                Set<Long> questionIds = questionBankQuestionService.list(lambdaQueryWrapper)
-                        .stream()
-                        .map(QuestionBankQuestion::getQuestionId)
-                        .collect(Collectors.toSet());
-                if (CollUtil.isEmpty(questionIds)) {
-                    queryWrapper.apply("1 = 0");
-                } else {
-                    queryWrapper.in("id", questionIds);
-                }
+        if (questionBankId != null) {
+            // 查询题库关联的题目，取出题目id并过滤
+            LambdaQueryWrapper<QuestionBankQuestion> lambdaQueryWrapper = Wrappers.lambdaQuery(QuestionBankQuestion.class)
+                    //仅映射题目id字段的值
+                    .select(QuestionBankQuestion::getQuestionId)
+                    .eq(QuestionBankQuestion::getQuestionBankId, questionBankId);
+            Set<Long> questionIds = questionBankQuestionService.list(lambdaQueryWrapper)
+                    .stream()
+                    .map(QuestionBankQuestion::getQuestionId)
+                    .collect(Collectors.toSet());
+            if (CollUtil.isEmpty(questionIds)) {
+                queryWrapper.apply("1 = 0");
+            } else {
+                queryWrapper.in("id", questionIds);
             }
+        }
         return queryWrapper;
     }
 
@@ -229,7 +230,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
 
 
         // todo 根据需要为封装对象补充值
-         
+
         // 1. 关联查询用户信息
         Set<Long> userIdSet = questionList.stream().map(Question::getUserId).collect(Collectors.toSet());
         Map<Long, List<User>> userIdUserListMap = userService.listByIds(userIdSet).stream()
@@ -257,8 +258,8 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
     }
 
     /**
-     *
      * 分页获取题目列表（仅管理员可用）
+     *
      * @param questionQueryRequest
      * @return com.baomidou.mybatisplus.extension.plugins.pagination.Page<com.rich.richInterview.model.entity.Question>
      * @author DuRuiChi
@@ -268,6 +269,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
     public Page<Question> getQuestionPage(QuestionQueryRequest questionQueryRequest) {
         long current = questionQueryRequest.getCurrent();
         long size = questionQueryRequest.getPageSize();
+
         // 题目表的查询条件
         QueryWrapper<Question> queryWrapper = this.getQueryWrapper(questionQueryRequest);
         // 查询数据库
@@ -277,6 +279,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
 
     /**
      * 创建题目（仅管理员可用）
+     *
      * @param questionAddRequest
      * @param request
      * @return java.lang.Long
@@ -290,7 +293,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         Question question = new Question();
         BeanUtils.copyProperties(questionAddRequest, question);
         // tags 的转换
-        if(questionAddRequest.getTags()!= null){
+        if (questionAddRequest.getTags() != null) {
             question.setTags(JSONUtil.toJsonStr(questionAddRequest.getTags()));
         }
         // 数据校验
@@ -302,7 +305,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         boolean result = this.save(question);
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
         // 同步题库题目关系
-        if (questionAddRequest.getQuestionBankId()!= null) {
+        if (questionAddRequest.getQuestionBankId() != null) {
             QuestionBankQuestionAddRequest addQBQRequest = new QuestionBankQuestionAddRequest();
             addQBQRequest.setQuestionBankId(questionAddRequest.getQuestionBankId());
             addQBQRequest.setQuestionId(question.getId());
@@ -313,8 +316,8 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
     }
 
     /**
-     *
      * 删除题目（仅管理员可用）
+     *
      * @param deleteRequest
      * @param request
      * @return java.lang.Boolean
@@ -342,8 +345,8 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
     }
 
     /**
-     *
      * 更新题目（仅管理员可用）
+     *
      * @param questionUpdateRequest
      * @return java.lang.Boolean
      * @author DuRuiChi
@@ -358,7 +361,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         Question question = new Question();
         BeanUtils.copyProperties(questionUpdateRequest, question);
         // tags 的转换
-        if(question.getTags()!= null){
+        if (question.getTags() != null) {
             question.setTags(JSONUtil.toJsonStr(question.getTags()));
         }
         // 数据校验
@@ -370,7 +373,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         // 操作数据库
         boolean result = this.updateById(question);
         // 同步题库题目关系
-        if (questionUpdateRequest.getQuestionBankId()!= null) {
+        if (questionUpdateRequest.getQuestionBankId() != null) {
             // 删除原有和当前题目关联的关系
             QueryWrapper<QuestionBankQuestion> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("questionId", question.getId());
@@ -387,6 +390,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
 
     /**
      * 分页获取当前登录用户创建的题目列表
+     *
      * @param questionQueryRequest
      * @param request
      * @return com.baomidou.mybatisplus.extension.plugins.pagination.Page<com.rich.richInterview.model.vo.QuestionVO>
@@ -412,6 +416,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
 
     /**
      * 编辑题目（给用户使用）
+     *
      * @param questionEditRequest
      * @param request
      * @return java.lang.Boolean
@@ -449,6 +454,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
 
     /**
      * 获取题目
+     *
      * @param id
      * @return com.rich.richInterview.model.vo.QuestionVO
      * @author DuRuiChi
@@ -474,6 +480,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
 
     /**
      * 从 ES 数据库中查询题目
+     *
      * @param questionQueryRequest
      * @return com.baomidou.mybatisplus.extension.plugins.pagination.Page<com.rich.richInterview.model.entity.Question>
      * @author DuRuiChi
@@ -482,89 +489,138 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
      **/
     @Override
     public Page<Question> searchFromEs(QuestionQueryRequest questionQueryRequest) {
-        // 1. 获取参数
-        // 请求参数
-        Long id = questionQueryRequest.getId();
-        Long notId = questionQueryRequest.getNotId();
-        String searchText = questionQueryRequest.getSearchText();
-        List<String> tags = questionQueryRequest.getTags();
-        Long questionBankId = questionQueryRequest.getQuestionBankId();
-        Long userId = questionQueryRequest.getUserId();
-        // 分页参数（ES页码从0开始）
-        int current = questionQueryRequest.getCurrent() - 1;
-        int pageSize = questionQueryRequest.getPageSize();
-        // 排序参数
-        String sortField = questionQueryRequest.getSortField();
-        String sortOrder = questionQueryRequest.getSortOrder();
-
-        // 2. 构造查询条件（bool类型）
-        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
-        // 过滤未删除的数据
-        boolQueryBuilder.filter(QueryBuilders.termQuery("isDelete", 0));
-        // 过滤其他条件
-        if (id != null) {
-            boolQueryBuilder.filter(QueryBuilders.termQuery("id", id));
-        }
-        if (notId != null) {
-            boolQueryBuilder.mustNot(QueryBuilders.termQuery("id", notId));
-        }
-        if (userId != null) {
-            boolQueryBuilder.filter(QueryBuilders.termQuery("userId", userId));
-        }
-        if (questionBankId != null) {
-            boolQueryBuilder.filter(QueryBuilders.termQuery("questionBankId", questionBankId));
-        }
-        // 过滤标签
-        if (CollUtil.isNotEmpty(tags)) {
-            for (String tag : tags) {
-                boolQueryBuilder.filter(QueryBuilders.termQuery("tags", tag));
+        // 实现接口检测降级
+        try {
+            // 检查 ES 客户端是否初始化
+            if (!isEsAvailable()) {
+                throw new BusinessException(ErrorCode.SYSTEM_ERROR, "ES 服务不可用,请查看 ES 服务是否正常。");
             }
-        }
-        // 设置全字段匹配检索
-        if (StringUtils.isNotBlank(searchText)) {
-            // 在标题、内容和答案字段中匹配任意一个
-            boolQueryBuilder.should(QueryBuilders.matchQuery("title", searchText));
-            boolQueryBuilder.should(QueryBuilders.matchQuery("content", searchText));
-            boolQueryBuilder.should(QueryBuilders.matchQuery("answer", searchText));
-            // 至少匹配一个条件
-            boolQueryBuilder.minimumShouldMatch(1);
-        }
 
-        //  设置排序规则
-        SortBuilder<?> sortBuilder = SortBuilders.scoreSort();
-        if (StringUtils.isNotBlank(sortField)) {
-            // 自定义字段排序（支持升序/降序）
-            sortBuilder = SortBuilders.fieldSort(sortField);
-            sortBuilder.order(CommonConstant.SORT_ORDER_ASC.equals(sortOrder) ? SortOrder.ASC : SortOrder.DESC);
-        }
+            // 正常ES查询逻辑
 
-        // 构建分页参数（ES的分页对象）
-        PageRequest pageRequest = PageRequest.of(current, pageSize);
+            // 1. 获取参数
+            // 请求参数
+            Long id = questionQueryRequest.getId();
+            Long notId = questionQueryRequest.getNotId();
+            String searchText = questionQueryRequest.getSearchText();
+            List<String> tags = questionQueryRequest.getTags();
+            Long questionBankId = questionQueryRequest.getQuestionBankId();
+            Long userId = questionQueryRequest.getUserId();
+            // 分页参数（ES页码从0开始）
+            int current = questionQueryRequest.getCurrent() - 1;
+            int pageSize = questionQueryRequest.getPageSize();
+            // 排序参数
+            String sortField = questionQueryRequest.getSortField();
+            String sortOrder = questionQueryRequest.getSortOrder();
 
-        // 组合完整查询条件
-        NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
-                .withQuery(boolQueryBuilder)
-                .withPageable(pageRequest)
-                .withSorts(sortBuilder)
-                .build();
-
-        // 3. ES 查询并转化为实体类
-        // 为了保证查询灵活性，使用 ElasticsearchRestTemplate 查询
-        SearchHits<QuestionEsDTO> searchHits = elasticsearchRestTemplate.search(searchQuery, QuestionEsDTO.class);
-        Page<Question> page = new Page<>();
-        // 设置总命中数量
-        page.setTotal(searchHits.getTotalHits());
-        List<Question> resourceList = new ArrayList<>();
-        if (searchHits.hasSearchHits()) {
-            // 转换每个命中的 ES 文档为数据库实体
-            List<SearchHit<QuestionEsDTO>> searchHitList = searchHits.getSearchHits();
-            for (SearchHit<QuestionEsDTO> questionEsDTOSearchHit : searchHitList) {
-                resourceList.add(QuestionEsDTO.dtoToObj(questionEsDTOSearchHit.getContent()));
+            // 2. 构造查询条件（bool类型）
+            BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+            // 过滤未删除的数据
+            boolQueryBuilder.filter(QueryBuilders.termQuery("isDelete", 0));
+            // 过滤其他条件
+            if (id != null) {
+                boolQueryBuilder.filter(QueryBuilders.termQuery("id", id));
             }
-        }
+            if (notId != null) {
+                boolQueryBuilder.mustNot(QueryBuilders.termQuery("id", notId));
+            }
+            if (userId != null) {
+                boolQueryBuilder.filter(QueryBuilders.termQuery("userId", userId));
+            }
+            if (questionBankId != null) {
+                boolQueryBuilder.filter(QueryBuilders.termQuery("questionBankId", questionBankId));
+            }
+            // 过滤标签
+            if (CollUtil.isNotEmpty(tags)) {
+                for (String tag : tags) {
+                    boolQueryBuilder.filter(QueryBuilders.termQuery("tags", tag));
+                }
+            }
+            // 设置全字段匹配检索
+            if (StringUtils.isNotBlank(searchText)) {
+                // 在标题、内容和答案字段中匹配任意一个
+                boolQueryBuilder.should(QueryBuilders.matchQuery("title", searchText));
+                boolQueryBuilder.should(QueryBuilders.matchQuery("content", searchText));
+                boolQueryBuilder.should(QueryBuilders.matchQuery("answer", searchText));
+                // 至少匹配一个条件
+                boolQueryBuilder.minimumShouldMatch(1);
+            }
 
-        // 4. 分页返回结果
-        page.setRecords(resourceList);
-        return page;
+            //  设置排序规则
+            SortBuilder<?> sortBuilder = SortBuilders.scoreSort();
+            if (StringUtils.isNotBlank(sortField)) {
+                // 自定义字段排序（支持升序/降序）
+                sortBuilder = SortBuilders.fieldSort(sortField);
+                sortBuilder.order(CommonConstant.SORT_ORDER_ASC.equals(sortOrder) ? SortOrder.ASC : SortOrder.DESC);
+            }
+
+            // 构建分页参数（ES的分页对象）
+            PageRequest pageRequest = PageRequest.of(current, pageSize);
+
+            // 组合完整查询条件
+            NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
+                    .withQuery(boolQueryBuilder)
+                    .withPageable(pageRequest)
+                    .withSorts(sortBuilder)
+                    .build();
+
+            // 3. ES 查询并转化为实体类
+            // 为了保证查询灵活性，使用 ElasticsearchRestTemplate 查询
+            SearchHits<QuestionEsDTO> searchHits = elasticsearchRestTemplate.search(searchQuery, QuestionEsDTO.class);
+            Page<Question> page = new Page<>();
+            // 设置总命中数量
+            page.setTotal(searchHits.getTotalHits());
+            List<Question> resourceList = new ArrayList<>();
+            if (searchHits.hasSearchHits()) {
+                // 转换每个命中的 ES 文档为数据库实体
+                List<SearchHit<QuestionEsDTO>> searchHitList = searchHits.getSearchHits();
+                for (SearchHit<QuestionEsDTO> questionEsDTOSearchHit : searchHitList) {
+                    resourceList.add(QuestionEsDTO.dtoToObj(questionEsDTOSearchHit.getContent()));
+                }
+            }
+
+            // 4. 分页返回结果
+            page.setRecords(resourceList);
+            return page;
+        } catch (Exception e) {
+            // 捕获所有异常（包括健康检查抛出的BusinessException）
+            log.info("ES 查询异常，触发接口降级，异常信息：{}" +
+                    "若使用 ES 服务，请打开配置并启动服务器", e.getMessage());
+            // 降级到数据库查询
+            // ES 排序方式和数据库排序方式不一致，需要重新设置排序字段
+            if (! CommonConstant.SORT_ORDER_ASC.equals(questionQueryRequest.getSortOrder())
+            && ! CommonConstant.SORT_ORDER_DESC.equals(questionQueryRequest.getSortOrder())) {
+                questionQueryRequest.setSortOrder(CommonConstant.SORT_ORDER_ASC);
+            }
+            if (! "id".equals(questionQueryRequest.getSortField())) {
+                questionQueryRequest.setSortField("id");
+            }
+            // ES 分页方式和数据库分页方式不一致，需要重新设置分页参数
+            return getQuestionPage(questionQueryRequest);
+        }
+    }
+
+    /**
+     * 检查 ES 客户端配置是否存在
+     *
+     * @return boolean
+     * @author DuRuiChi
+     * @create 2025/5/4
+     **/
+    private boolean isEsAvailable() {
+        try {
+            // execute 方法用于执行一个操作，这里是检查 ES 客户端是否可用
+            return elasticsearchRestTemplate.execute(client -> {
+                try {
+                    // 尝试ping ES服务器 ， RequestOptions.DEFAULT 是请求选项的默认值
+                    return client.ping(RequestOptions.DEFAULT);
+                } catch (IOException e) {
+                    return false;
+                }
+            });
+        } catch (Exception e) {
+            log.info("ES 初始化状态健康检查异常,若使用 ES 服务,请打开配置并启动服务器:{}", e.getMessage());
+            return false;
+        }
     }
 }

@@ -17,30 +17,31 @@ spring:
     # 30 天过期
     timeout: 2592000
   # 数据库配置
-  # todo 需替换配置
+  # 本地库
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/rich_interview
     username: root
     password: 12345
+    # 线上库
 #    url: jdbc:mysql://49.233.207.238:3306/richinterview
 #    username: richInterviewUser
 #    password: 5Fse3fNPkYFz6Bef
   # Redis 配置
-  # todo 需替换配置，然后取消注释
   redis:
     database: 1
+    # 本地库
     host: localhost
-#    host: 49.233.207.238
     port: 6379
+    # 线上库
+#    host: 49.233.207.238
 #    password: 123456
     timeout: 5000
   # Elasticsearch 配置
-  # todo 需替换配置，然后取消注释
   elasticsearch:
     uris: http://localhost:9200
-#    username: root
-#    password: 123456
+    username: root
+    password: 123456
   # 文件上传
   servlet:
     multipart:
