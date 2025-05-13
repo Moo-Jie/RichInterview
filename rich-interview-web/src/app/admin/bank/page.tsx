@@ -2,15 +2,12 @@
 "use client";
 import CreateModal from "./components/CreateModal";
 import UpdateModal from "./components/UpdateModal";
-import {
-  deleteQuestionBankUsingPost,
-  listQuestionBankByPageUsingPost,
-} from "@/api/questionBankController";
-import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
-import type { ActionType, ProColumns } from "@ant-design/pro-components";
-import { PageContainer, ProTable } from "@ant-design/pro-components";
-import { App, Button, Typography, Table } from "antd";
-import React, { useRef, useState } from "react";
+import {deleteQuestionBankUsingPost, listQuestionBankByPageUsingPost,} from "@/api/questionBankController";
+import {DeleteOutlined, PlusOutlined} from "@ant-design/icons";
+import type {ActionType, ProColumns} from "@ant-design/pro-components";
+import {PageContainer, ProTable} from "@ant-design/pro-components";
+import {App, Button, Table, Typography} from "antd";
+import React, {useRef, useState} from "react";
 import UpdatePictureModal from "@/app/admin/bank/components/UpdatePicture";
 import "./index.css";
 

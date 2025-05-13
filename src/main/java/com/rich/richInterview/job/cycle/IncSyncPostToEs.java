@@ -1,8 +1,8 @@
 package com.rich.richInterview.job.cycle;
 
 import cn.hutool.core.collection.CollUtil;
-import com.rich.richInterview.mapper.esMapper.PostEsMapper;
 import com.rich.richInterview.mapper.PostMapper;
+import com.rich.richInterview.mapper.esMapper.PostEsMapper;
 import com.rich.richInterview.model.dto.post.PostEsDTO;
 import com.rich.richInterview.model.entity.Post;
 import lombok.extern.slf4j.Slf4j;

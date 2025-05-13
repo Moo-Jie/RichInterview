@@ -8,10 +8,7 @@ import com.rich.richInterview.common.ErrorCode;
 import com.rich.richInterview.common.ResultUtils;
 import com.rich.richInterview.constant.UserConstant;
 import com.rich.richInterview.exception.ThrowUtils;
-import com.rich.richInterview.model.dto.questionBankQuestion.QuestionBankQuestionAddRequest;
-import com.rich.richInterview.model.dto.questionBankQuestion.QuestionBankQuestionQueryRequest;
-import com.rich.richInterview.model.dto.questionBankQuestion.QuestionBankQuestionRemoveRequest;
-import com.rich.richInterview.model.dto.questionBankQuestion.QuestionBankQuestionUpdateRequest;
+import com.rich.richInterview.model.dto.questionBankQuestion.*;
 import com.rich.richInterview.model.entity.QuestionBankQuestion;
 import com.rich.richInterview.model.entity.User;
 import com.rich.richInterview.model.vo.QuestionBankQuestionVO;
@@ -22,10 +19,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * 题库题目关系接口
-  *
  */
 @RestController
 @RequestMapping("/questionBankQuestion")
@@ -131,7 +128,7 @@ public class QuestionBankQuestionController {
      */
     @PostMapping("/list/page/vo")
     public BaseResponse<Page<QuestionBankQuestionVO>> listQuestionBankQuestionVOByPage(@RequestBody QuestionBankQuestionQueryRequest questionBankQuestionQueryRequest,
-                                                               HttpServletRequest request) {
+                                                                                       HttpServletRequest request) {
         long current = questionBankQuestionQueryRequest.getCurrent();
         long size = questionBankQuestionQueryRequest.getPageSize();
         // 限制爬虫
@@ -152,7 +149,7 @@ public class QuestionBankQuestionController {
      */
     @PostMapping("/my/list/page/vo")
     public BaseResponse<Page<QuestionBankQuestionVO>> listMyQuestionBankQuestionVOByPage(@RequestBody QuestionBankQuestionQueryRequest questionBankQuestionQueryRequest,
-                                                                 HttpServletRequest request) {
+                                                                                         HttpServletRequest request) {
         ThrowUtils.throwIf(questionBankQuestionQueryRequest == null, ErrorCode.PARAMS_ERROR);
         // 补充查询条件，只查询当前登录用户的数据
         User loginUser = userService.getLoginUser(request);
@@ -167,4 +164,29 @@ public class QuestionBankQuestionController {
         // 获取封装类
         return ResultUtils.success(questionBankQuestionService.getQuestionBankQuestionVOPage(questionBankQuestionPage, request));
     }
+
+    /**
+     * 批量添加或更改题目所属关系到指定题库
+     *
+     * @param questionBankQuestionBatchAddRequest
+     * @param request
+     * @return com.rich.richInterview.common.BaseResponse<java.lang.Boolean>
+     * @author DuRuiChi
+     * @create 2025/5/13
+     **/
+    @PostMapping("/add/batch")
+    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    public BaseResponse<Boolean> batchAddOrUpdateQuestionsToBank(
+            @RequestBody QuestionBankQuestionBatchAddOrUpdateRequest questionBankQuestionBatchAddRequest,
+            HttpServletRequest request
+    ) {
+        // 参数校验
+        ThrowUtils.throwIf(questionBankQuestionBatchAddRequest == null, ErrorCode.PARAMS_ERROR);
+        User loginUser = userService.getLoginUser(request);
+        questionBankQuestionService.batchAddOrUpdateQuestionsToBank(questionBankQuestionBatchAddRequest.getQuestionIdList(),
+                questionBankQuestionBatchAddRequest.getQuestionBankId(),
+                loginUser);
+        return ResultUtils.success(true);
+    }
+
 }

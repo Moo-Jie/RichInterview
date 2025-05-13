@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import ReactECharts from "echarts-for-react";
 import dayjs from "dayjs";
-import {Button, message} from "antd";
-import { getUserSignInRecordUsingGet } from "@/api/userController";
-import { Skeleton } from "antd";
+import {Button, message, Skeleton} from "antd";
+import {getUserSignInRecordUsingGet} from "@/api/userController";
 import "./index.css";
 
 interface Props {}

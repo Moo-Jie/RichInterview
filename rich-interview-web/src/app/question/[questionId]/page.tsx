@@ -1,19 +1,14 @@
 "use server";
-import { Flex, Menu, message } from "antd";
-import {
-  getQuestionBankId,
-  getQuestionVoByIdUsingGet,
-} from "@/api/questionController";
+import {Alert, Button, Flex, Menu, message, Space} from "antd";
+import {getQuestionBankId, getQuestionVoByIdUsingGet,} from "@/api/questionController";
 import QuestionMsgComponent from "../../../components/QuestionMsgComponent";
-import { Alert } from "antd";
 
 import Link from "next/link";
-import { getQuestionBankVoByIdUsingGet } from "@/api/questionBankController";
+import {getQuestionBankVoByIdUsingGet} from "@/api/questionBankController";
 import Sider from "antd/es/layout/Sider";
 import Title from "antd/es/typography/Title";
-import { Content } from "antd/es/layout/layout";
-import { LeftOutlined, RightOutlined } from "@ant-design/icons";
-import { Button, Space } from "antd";
+import {Content} from "antd/es/layout/layout";
+import {LeftOutlined, RightOutlined} from "@ant-design/icons";
 import "./index.css";
 
 /**

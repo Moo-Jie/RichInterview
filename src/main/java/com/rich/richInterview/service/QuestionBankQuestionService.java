@@ -9,9 +9,11 @@ import com.rich.richInterview.model.dto.questionBankQuestion.QuestionBankQuestio
 import com.rich.richInterview.model.dto.questionBankQuestion.QuestionBankQuestionRemoveRequest;
 import com.rich.richInterview.model.dto.questionBankQuestion.QuestionBankQuestionUpdateRequest;
 import com.rich.richInterview.model.entity.QuestionBankQuestion;
+import com.rich.richInterview.model.entity.User;
 import com.rich.richInterview.model.vo.QuestionBankQuestionVO;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * 题库题目关系服务
@@ -92,4 +94,15 @@ public interface QuestionBankQuestionService extends IService<QuestionBankQuesti
      * @create 2025/3/23
      **/
     Boolean updateQuestionBankQuestion(QuestionBankQuestionUpdateRequest questionBankQuestionUpdateRequest);
+
+    /**
+     * 批量添加或更改题目所属关系到指定题库
+     * @param questionIdList
+     * @param questionBankId
+     * @param loginUser
+     * @return void
+     * @author DuRuiChi
+     * @create 2025/5/13
+     **/
+    void batchAddOrUpdateQuestionsToBank(List<Long> questionIdList, Long questionBankId, User loginUser);
 }

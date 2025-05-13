@@ -1,8 +1,7 @@
-import {listQuestionVoByPageUsingPost, searchQuestionVoByPageUsingPost} from "@/api/questionController";
-import { Card, Flex, message } from "antd";
+import {searchQuestionVoByPageUsingPost} from "@/api/questionController";
+import {Card, Flex, message} from "antd";
 import Title from "antd/es/typography/Title";
 import QuestionTablePage from "@/components/QuestionVoTableComponent/page";
-import styles from "./page.module.css";
 
 // 添加TDK
 export const metadata = {

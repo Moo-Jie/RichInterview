@@ -2,18 +2,17 @@
 "use client";
 import CreateModal from "./components/CreateModal";
 import UpdateModal from "./components/UpdateModal";
-import {
-  deleteQuestionUsingPost,
-  listQuestionByPageUsingPost, listQuestionVoByPageUsingPost,
-} from "@/api/questionController";
-import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
-import type { ActionType, ProColumns } from "@ant-design/pro-components";
-import { PageContainer, ProTable } from "@ant-design/pro-components";
-import { App, Button, Typography, Table } from "antd";
-import React, { useRef, useState } from "react";
-import MarkdownViewer from "@/components/MarkdownComponent/MarkdownViewer";
+import {deleteQuestionUsingPost, listQuestionVoByPageUsingPost,} from "@/api/questionController";
+import {DeleteOutlined, PlusOutlined, SwapOutlined} from "@ant-design/icons";
+import type {ActionType, ProColumns} from "@ant-design/pro-components";
+import {PageContainer, ProTable} from "@ant-design/pro-components";
+import {App, Button, Modal, Select, Table, Typography} from "antd";
+import React, {useRef, useState} from "react";
 import TagListComponent from "@/components/TagListComponent";
 import MarkdownEditor from "@/components/MarkdownComponent/MarkdownEditor";
+import {listQuestionBankVoByPageUsingPost} from "@/api/questionBankController";
+import { batchAddOrUpdateQuestionsToBankUsingPost } from "@/api/questionBankQuestionController";
+
 import "./index.css";
 
 /**
@@ -46,6 +45,43 @@ const QuestionAdminPage: React.FC = () => {
   const [currentRow, setCurrentRow] = useState<API.Question>();
   // 全局提示和对话框方法
   const { modal, message } = App.useApp();
+  // 题库列表
+  const [bankOptions, setBankOptions] = useState<{ label: string; value: number }[]>([]);
+  // 调整题目所属题库状态
+  const [batchUpdateBankVisible, setBatchUpdateBankVisible] = useState(false);
+  const [selectedBankId, setSelectedBankId] = useState<number>();
+
+  // 批量调整题目所属题库
+  const handleBatchUpdateBank = async () => {
+    if (!selectedBankId) {
+      message.warning("请先选择目标题库");
+      return;
+    }
+
+    modal.confirm({
+      title: "确认批量更新所属题库？",
+      content: `即将将 ${selectedRows.length} 个题目转移到所选题库`,
+      onOk: async () => {
+        const hide = message.loading("正在批量更新");
+        try {
+          await batchAddOrUpdateQuestionsToBankUsingPost({
+            questionBankId: selectedBankId,
+            // @ts-ignore
+            questionIdList: selectedRows.map((row) => row.id),
+          });
+          hide();
+          message.success("批量更新成功");
+          actionRef.current?.reload();
+          setSelectedRows([]);
+          setBatchUpdateBankVisible(false);
+        } catch (error: any) {
+          hide();
+          message.error("更新失败，" + error.message);
+        }
+      }
+    });
+  };
+
   // 批量删除处理
   const handleBatchDelete = async () => {
     modal.confirm({
@@ -120,10 +156,39 @@ const QuestionAdminPage: React.FC = () => {
       ellipsis: true,
     },
     {
-      title: "所属题库ID",
+      title: "所属题库",
       dataIndex: "questionBankId",
-      width: 120,
-      ellipsis: true,
+      width: 200,
+      valueType: "select",
+      fieldProps: {
+        showSearch: true,
+        options: bankOptions,
+        placeholder: "请选择所属题库",
+        // @ts-ignore
+        filterOption: (input, option) =>
+            (option?.label ?? "").toLowerCase().includes(input.toLowerCase()),
+      },
+      render: (_, record) => {
+        const bank = bankOptions.find(b => b.value === record.questionBankId);
+        return bank ? bank.label : record.questionBankId;
+      },
+      renderFormItem: (_, { defaultRender }) => defaultRender(_),
+      request: async (key) => {
+        const { data } = await listQuestionBankVoByPageUsingPost({
+          pageSize: 100,
+          current: 1
+        });
+        // @ts-ignore
+        const options = (data?.records || []).map(bank => ({
+          label: bank.title || "",
+          value: bank.id || 0
+        }));
+        setBankOptions(options);
+        // @ts-ignore
+        return options.filter(opt =>
+            opt.label.toLowerCase().includes((key.keyword || "").toLowerCase())
+        );
+      }
     },
     {
       title: "内容",
@@ -286,6 +351,7 @@ const QuestionAdminPage: React.FC = () => {
             </Button>,
           ],
         }}
+        // 工具栏按钮
         toolBarRender={() => [
           <Button
             key="add"
@@ -305,7 +371,17 @@ const QuestionAdminPage: React.FC = () => {
               批量删除
             </Button>
           ),
-        ]} /* 工具栏按钮组 */
+          selectedRows?.length > 0 && (
+              <Button
+                  key="batchUpdateBank"
+                  icon={<SwapOutlined />}
+                  onClick={() => setBatchUpdateBankVisible(true)}
+              >
+                批量指定所属题库
+              </Button>
+          ),
+        ]}
+          /* 工具栏按钮组 */
         request={async (params, sort, filter) => {
           const sortField = Object.keys(sort)?.[0];
           const sortOrder = sort?.[sortField] ?? undefined;
@@ -356,6 +432,23 @@ const QuestionAdminPage: React.FC = () => {
           },
         }} // 本地化文本
       />
+      <Modal
+          title="批量指定所属题库"
+          open={batchUpdateBankVisible}
+          onCancel={() => setBatchUpdateBankVisible(false)}
+          onOk={handleBatchUpdateBank}
+      >
+        <Select
+            showSearch
+            style={{ width: '100%' }}
+            placeholder="选择目标题库"
+            options={bankOptions}
+            onChange={value => setSelectedBankId(value)}
+            filterOption={(input, option) =>
+                (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+            }
+        />
+      </Modal>
       <CreateModal
         visible={createModalVisible}
         columns={columns}

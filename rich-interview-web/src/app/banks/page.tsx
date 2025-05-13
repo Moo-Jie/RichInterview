@@ -1,6 +1,6 @@
-import { listQuestionBankVoByPageUsingPost } from "@/api/questionBankController";
+import {listQuestionBankVoByPageUsingPost} from "@/api/questionBankController";
 import Title from "antd/es/typography/Title";
-import { Card, Divider, Flex, message } from "antd";
+import {Card, Divider, Flex, message} from "antd";
 import QuestionBankList from "../../components/QuestionBankListVoComponent";
 import "./page.module.css";
 

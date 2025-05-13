@@ -591,6 +591,11 @@ declare namespace API {
     title?: string;
   };
 
+  type QuestionBankQuestionBatchAddOrUpdateRequest = {
+    questionBankId?: number;
+    questionIdList?: number[];
+  };
+
   type QuestionQueryRequest = {
     answer?: string;
     content?: string;

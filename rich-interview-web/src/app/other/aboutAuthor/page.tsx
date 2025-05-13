@@ -1,8 +1,8 @@
 "use client";
-import { Card, Row, Col } from "antd";
-import { ConstantMsg } from "@/constant/ConstantMsg";
+import {Card, Col, Row} from "antd";
+import {ConstantMsg} from "@/constant/ConstantMsg";
 import styles from "../components/page.module.css";
-import { GithubFilled } from "@ant-design/icons";
+import {GithubFilled} from "@ant-design/icons";
 import React from "react";
 
 // 数据

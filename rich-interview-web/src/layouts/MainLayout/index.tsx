@@ -8,30 +8,29 @@
  */
 
 import {
-  GithubFilled,
-  InfoCircleFilled,
-  LoginOutlined,
-  LogoutOutlined,
-  QuestionCircleFilled,
-  SearchOutlined,
-  UserOutlined,
-  UserSwitchOutlined,
+    GithubFilled,
+    InfoCircleFilled,
+    LoginOutlined,
+    LogoutOutlined,
+    QuestionCircleFilled,
+    UserOutlined,
+    UserSwitchOutlined,
 } from "@ant-design/icons";
-import { ProLayout, WaterMark } from "@ant-design/pro-components";
-import { App, Dropdown, Input, message, Popover } from "antd";
-import React, { useEffect, useState } from "react";
+import {ProLayout, WaterMark} from "@ant-design/pro-components";
+import {App, Dropdown, Popover} from "antd";
+import React, {useEffect, useState} from "react";
 import Image from "next/image";
-import { usePathname, useRouter } from "next/navigation";
+import {usePathname, useRouter} from "next/navigation";
 import Link from "next/link";
 import GlobalFooter from "@/components/GlobalFooterComponent";
-import { sysMenus } from "../../../config/menu";
-import { ConstantMsg } from "@/constant/ConstantMsg";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "@/store";
+import {sysMenus} from "../../../config/menu";
+import {ConstantMsg} from "@/constant/ConstantMsg";
+import {useDispatch, useSelector} from "react-redux";
+import {AppDispatch, RootState} from "@/store";
 import showMenuByUserAccess from "@/app/Forbidden/showMenuByUserAccess";
-import { userLogoutUsingPost } from "@/api/userController";
-import { DEFAULT_USER } from "@/constant/ConstantUser";
-import { setUserLogin } from "@/store/userLogin";
+import {userLogoutUsingPost} from "@/api/userController";
+import {DEFAULT_USER} from "@/constant/ConstantUser";
+import {setUserLogin} from "@/store/userLogin";
 import AccessEnumeration from "@/access/accessEnumeration";
 import SearchInputComponent from "@/components/SearchInputComponent";
 

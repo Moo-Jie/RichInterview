@@ -1,15 +1,15 @@
-import { MenuDataItem } from "@ant-design/pro-layout";
+import {MenuDataItem} from "@ant-design/pro-layout";
 import {
-  CrownOutlined,
-  HomeOutlined,
-  BookOutlined,
-  QuestionCircleOutlined,
-  TeamOutlined,
-  DatabaseOutlined,
-  EditOutlined,
-  MoreOutlined,
-  UserOutlined,
-  InfoCircleOutlined,
+    BookOutlined,
+    CrownOutlined,
+    DatabaseOutlined,
+    EditOutlined,
+    HomeOutlined,
+    InfoCircleOutlined,
+    MoreOutlined,
+    QuestionCircleOutlined,
+    TeamOutlined,
+    UserOutlined,
 } from "@ant-design/icons";
 import AccessEnumeration from "@/access/accessEnumeration";
 
