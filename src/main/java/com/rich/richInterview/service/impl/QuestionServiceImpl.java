@@ -15,7 +15,6 @@ import com.rich.richInterview.exception.ThrowUtils;
 import com.rich.richInterview.mapper.QuestionMapper;
 import com.rich.richInterview.model.dto.question.*;
 import com.rich.richInterview.model.dto.questionBankQuestion.QuestionBankQuestionAddRequest;
-import com.rich.richInterview.model.dto.questionBankQuestion.QuestionBankQuestionUpdateRequest;
 import com.rich.richInterview.model.entity.Question;
 import com.rich.richInterview.model.entity.QuestionBankQuestion;
 import com.rich.richInterview.model.entity.User;

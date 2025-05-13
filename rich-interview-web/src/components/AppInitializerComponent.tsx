@@ -1,12 +1,10 @@
 "use client";
-import { ReactNode, useCallback, useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/store";
-import { getLoginUserUsingGet } from "@/api/userController";
-import { setUserLogin } from "@/store/userLogin";
-import ACCESS_ENUM from "@/access/accessEnumeration";
-import { ConstantMsg } from "@/constant/ConstantMsg";
-import { DEFAULT_USER } from "@/constant/ConstantUser";
+import {ReactNode, useCallback, useEffect} from "react";
+import {useDispatch} from "react-redux";
+import {AppDispatch} from "@/store";
+import {getLoginUserUsingGet} from "@/api/userController";
+import {setUserLogin} from "@/store/userLogin";
+import {DEFAULT_USER} from "@/constant/ConstantUser";
 
 interface AppInitializerProps {
   children: ReactNode;

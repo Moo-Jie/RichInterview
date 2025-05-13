@@ -32,6 +32,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -296,4 +297,51 @@ public class QuestionBankQuestionServiceImpl extends ServiceImpl<QuestionBankQue
         return true;
     }
 
+    /**
+     * 批量添加或更改题目所属关系到指定题库
+     * @param questionIdList
+     * @param questionBankId
+     * @param loginUser
+     * @return void
+     * @author DuRuiChi
+     * @create 2025/5/13
+     **/
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void batchAddOrUpdateQuestionsToBank(List<Long> questionIdList, Long questionBankId, User loginUser) {
+        // 参数校验
+        ThrowUtils.throwIf(CollUtil.isEmpty(questionIdList), ErrorCode.PARAMS_ERROR, "题目集合请求参数错误，请联系管理员");
+        ThrowUtils.throwIf(questionBankId == null || questionBankId <= 0, ErrorCode.PARAMS_ERROR, "题库请求参数错误，请联系管理员");
+        ThrowUtils.throwIf(loginUser == null, ErrorCode.NOT_LOGIN_ERROR);
+        // 过滤题库
+        QuestionBank questionBank = questionBankService.getById(questionBankId);
+        ThrowUtils.throwIf(questionBank == null, ErrorCode.NOT_FOUND_ERROR, "题库不存在，请联系管理员");
+        // 过滤题目
+        List<Question> questionList = questionService.listByIds(questionIdList);
+        List<Long> validQuestionIdList = questionList.stream()
+                .map(Question::getId)
+                .collect(Collectors.toList());
+        ThrowUtils.throwIf(CollUtil.isEmpty(validQuestionIdList), ErrorCode.PARAMS_ERROR, "过滤后的题目不存在，请联系管理员");
+        // 插入前删除所有关联
+        questionList.stream()
+                .map(Question::getId)
+                .forEach(questionId -> {
+                    // 构造查询条件
+                   LambdaQueryWrapper<QuestionBankQuestion> lambdaQueryWrapper = Wrappers.lambdaQuery(QuestionBankQuestion.class)
+                          .eq(QuestionBankQuestion::getQuestionId, questionId);
+                   // 执行删除
+                   this.remove(lambdaQueryWrapper);
+                });
+        // 执行插入
+        for (Long questionId : validQuestionIdList) {
+            QuestionBankQuestion questionBankQuestion = new QuestionBankQuestion();
+            questionBankQuestion.setQuestionBankId(questionBankId);
+            questionBankQuestion.setQuestionId(questionId);
+            questionBankQuestion.setUserId(loginUser.getId());
+            boolean result = this.save(questionBankQuestion);
+            if (!result) {
+                throw new BusinessException(ErrorCode.OPERATION_ERROR, "批量调整所属题库失败，请联系管理员");
+            }
+        }
+    }
 }

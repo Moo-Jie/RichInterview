@@ -1,9 +1,9 @@
 "use client";
-import { Button, Card, Collapse, Input } from "antd";
+import {Button, Card, Collapse, Input} from "antd";
 import MarkdownViewer from "@/components/MarkdownComponent/MarkdownViewer";
-import { useState } from "react";
-import { queryAiUsingPost } from "@/api/aiClientController";
-import { LoadingOutlined } from "@ant-design/icons";
+import {useState} from "react";
+import {queryAiUsingPost} from "@/api/aiClientController";
+import {LoadingOutlined} from "@ant-design/icons";
 import "../QuestionMsgComponent/index.css";
 
 /**

@@ -1,14 +1,14 @@
 // 基于ant design 组件库：https://procomponents.ant.design/components/table
 "use client";
 
-import type { ActionType, ProColumns } from "@ant-design/pro-components";
-import { PageContainer, ProTable } from "@ant-design/pro-components";
-import React, { useRef, useState } from "react";
+import type {ActionType, ProColumns} from "@ant-design/pro-components";
+import {PageContainer, ProTable} from "@ant-design/pro-components";
+import React, {useRef, useState} from "react";
 import TagListComponent from "@/components/TagListComponent";
 import "./index.css";
 import Link from "next/link";
-import {listQuestionVoByPageUsingPost, searchQuestionVoByPageUsingPost} from "@/api/questionController";
-import { TablePaginationConfig } from "antd";
+import {searchQuestionVoByPageUsingPost} from "@/api/questionController";
+import {TablePaginationConfig} from "antd";
 
 interface Props {
   // 服务端渲染时，默认数据

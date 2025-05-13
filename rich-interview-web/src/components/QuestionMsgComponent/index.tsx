@@ -1,12 +1,12 @@
 "use client";
-import { Button, Card, Modal } from "antd";
+import {Button, Card, Modal} from "antd";
 import Title from "antd/es/typography/Title";
 import TagList from "@/components/TagListComponent";
 import MarkdownViewer from "@/components/MarkdownComponent/MarkdownViewer";
 import useAddUserSignInRecordHook from "@/hooks/useAddUserSignInRecordHook";
-import { useState } from "react";
-import { queryAiUsingPost } from "@/api/aiClientController";
-import { LoadingOutlined } from "@ant-design/icons";
+import {useState} from "react";
+import {queryAiUsingPost} from "@/api/aiClientController";
+import {LoadingOutlined} from "@ant-design/icons";
 import "./index.css";
 
 interface Props {

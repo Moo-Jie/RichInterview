@@ -1,4 +1,4 @@
-import { Tag } from "antd";
+import {Tag} from "antd";
 import "@bytemd/plugin-gfm"
 import "highlight.js/styles/vs.css"
 

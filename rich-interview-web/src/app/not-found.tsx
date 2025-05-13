@@ -1,5 +1,4 @@
-import { Button, Result } from "antd";
-import Link from "next/link";
+import {Button, Result} from "antd";
 import styles from "@/app/Forbidden/Forbidden.module.css";
 import {LoginOutlined} from "@ant-design/icons";
 

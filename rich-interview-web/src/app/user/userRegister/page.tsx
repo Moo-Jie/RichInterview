@@ -1,15 +1,14 @@
 "use client";
 
 import React from "react";
-import { LoginForm, ProForm, ProFormText } from "@ant-design/pro-form";
-import { message } from "antd";
-import { LockOutlined, UserOutlined } from "@ant-design/icons";
-import { userRegisterUsingPost } from "@/api/userController";
+import {LoginForm, ProForm, ProFormText} from "@ant-design/pro-form";
+import {App} from "antd";
+import {LockOutlined, UserOutlined} from "@ant-design/icons";
+import {userRegisterUsingPost} from "@/api/userController";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import {useRouter} from "next/navigation";
 import Image from "next/image";
-import { ConstantMsg } from "@/constant/ConstantMsg";
-import { App } from 'antd'
+import {ConstantMsg} from "@/constant/ConstantMsg";
 import "./index.css";
 
 /**

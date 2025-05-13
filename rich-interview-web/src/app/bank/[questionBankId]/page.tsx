@@ -1,6 +1,6 @@
 "use server";
-import { Alert, Avatar, Button, Card } from "antd";
-import { getQuestionBankVoByIdUsingGet } from "@/api/questionBankController";
+import {Alert, Avatar, Button, Card} from "antd";
+import {getQuestionBankVoByIdUsingGet} from "@/api/questionBankController";
 import Meta from "antd/es/card/Meta";
 import Paragraph from "antd/es/typography/Paragraph";
 import Title from "antd/es/typography/Title";

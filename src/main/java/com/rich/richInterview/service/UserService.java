@@ -9,9 +9,7 @@ import com.rich.richInterview.model.vo.UserVO;
 import me.chanjar.weixin.common.bean.WxOAuth2UserInfo;
 
 import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 用户服务
