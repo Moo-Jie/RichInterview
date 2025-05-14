@@ -105,4 +105,16 @@ public interface QuestionBankQuestionService extends IService<QuestionBankQuesti
      * @create 2025/5/13
      **/
     void batchAddOrUpdateQuestionsToBank(List<Long> questionIdList, Long questionBankId, User loginUser);
+
+    /**
+     * 批量添加题目到指定题库关系
+     *
+     * @param questionBankId
+     * @param loginUser
+     * @param validQuestionIdList
+     * @return void
+     * @author DuRuiChi
+     * @create 2025/5/14
+     **/
+    void batchAddQuestionsToBank(Long questionBankId, User loginUser, List<Long> validQuestionIdList);
 }
