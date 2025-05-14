@@ -7,6 +7,7 @@ import useAddUserSignInRecordHook from "@/hooks/useAddUserSignInRecordHook";
 import {useState} from "react";
 import {queryAiUsingPost} from "@/api/aiClientController";
 import {LoadingOutlined} from "@ant-design/icons";
+import { CopyOutlined } from "@ant-design/icons";
 import "./index.css";
 
 interface Props {
@@ -153,6 +154,13 @@ const QuestionMsgComponent = (props: Props) => {
         {!aiLoading && aiResponse && (
           <div className="ai-response">
             <MarkdownViewer value={aiResponse} />
+              <Button
+                  icon={<CopyOutlined />}
+                  onClick={() => navigator.clipboard.writeText(question.answer || '')}
+                  className="copy-button"
+              >
+                  复制参考答案
+              </Button>
           </div>
         )}
       </Card>
@@ -180,11 +188,18 @@ const QuestionMsgComponent = (props: Props) => {
           {showAnswer ? "答案已解锁 ✅" : "点击查看参考答案"}
         </Button>
 
-        {showAnswer && (
-          <div className="ai-response">
-            <MarkdownViewer value={question.answer} />
-          </div>
-        )}
+          {showAnswer && (
+              <div className="ai-response">
+                  <MarkdownViewer value={question.answer} />
+                  <Button
+                      icon={<CopyOutlined />}
+                      onClick={() => navigator.clipboard.writeText(question.answer || '')}
+                      className="copy-button"
+                  >
+                      复制参考答案
+                  </Button>
+              </div>
+          )}
       </Card>
       {/* 确认执行框 */}
       <Modal

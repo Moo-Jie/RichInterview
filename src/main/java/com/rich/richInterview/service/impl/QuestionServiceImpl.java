@@ -132,22 +132,25 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         // 从多字段中搜索
         if (StringUtils.isNotBlank(searchText)) {
             // 需要拼接查询条件
-            queryWrapper.and(qw -> qw.like("title", searchText).or().like("content", searchText).or().like("answer", searchText));
+            queryWrapper.and(qw -> qw.like("title", searchText)
+//                    .or().like("content", searchText)
+//                    .or().like("answer", searchText)
+            );
         }
-        // 模糊查询
-        queryWrapper.like(StringUtils.isNotBlank(title), "title", title);
-        queryWrapper.like(StringUtils.isNotBlank(content), "content", content);
-        queryWrapper.like(StringUtils.isNotBlank(answer), "answer", answer);
+        // 精确查询
+        queryWrapper.ne(ObjectUtils.isNotEmpty(notId), "id", notId);
+        queryWrapper.eq(ObjectUtils.isNotEmpty(id), "id", id);
+        queryWrapper.eq(ObjectUtils.isNotEmpty(userId), "userId", userId);
         // JSON 数组查询
         if (CollUtil.isNotEmpty(tagList)) {
             for (String tag : tagList) {
                 queryWrapper.like("tags", "\"" + tag + "\"");
             }
         }
-        // 精确查询
-        queryWrapper.ne(ObjectUtils.isNotEmpty(notId), "id", notId);
-        queryWrapper.eq(ObjectUtils.isNotEmpty(id), "id", id);
-        queryWrapper.eq(ObjectUtils.isNotEmpty(userId), "userId", userId);
+        // 模糊查询
+        queryWrapper.like(StringUtils.isNotBlank(title), "title", title);
+//        queryWrapper.like(StringUtils.isNotBlank(content), "content", content);
+//        queryWrapper.like(StringUtils.isNotBlank(answer), "answer", answer);
         // 排序规则
         queryWrapper.orderBy(SqlUtils.validSortField(sortField),
                 sortOrder.equals(CommonConstant.SORT_ORDER_ASC),

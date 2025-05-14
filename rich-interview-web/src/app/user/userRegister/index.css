@@ -10,9 +10,9 @@
 
 /* 表单容器 - 尺寸与登录页保持一致 */
 #userRegisterPage .ant-pro-form-login-container {
-    width: 480px;
+    width: 560px;  /* 同步登录页宽度 */
     background: #fff;
-    padding: 40px;
+    padding: 48px;  /* 增加内边距 */
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
@@ -58,7 +58,7 @@
     margin-left: 8px;
 }
 
-/* 响应式规则相同 */
+/* 响应式规则 */
 @media (max-width: 576px) {
     #userRegisterPage .ant-pro-form-login-container {
         width: 100%;
@@ -78,3 +78,4 @@
 #userRegisterPage .ant-input-affix-wrapper-focused {
     box-shadow: 0 0 0 2px rgba(22, 119, 255, 0.1);
 }
+

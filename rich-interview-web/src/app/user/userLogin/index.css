@@ -7,13 +7,11 @@
     padding: 24px;
 }
 
-/* 登录表单容器 */
-#userLoginPage .ant-pro-form-login-container {
-    width: 480px;
-    background: #fff;
-    padding: 40px;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+.ant-col-md-12 { /* 匹配右侧Col组件 */
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    padding-left: 5%;
 }
 
 /* 标题样式 */
@@ -59,11 +57,6 @@
 
 /* 响应式处理 */
 @media (max-width: 576px) {
-    #userLoginPage .ant-pro-form-login-container {
-        width: 100%;
-        padding: 24px;
-    }
-
     #userLoginPage {
         padding: 12px;
     }
@@ -77,4 +70,69 @@
 /* 输入框聚焦效果 */
 #userLoginPage .ant-input-affix-wrapper-focused {
     box-shadow: 0 0 0 2px rgba(22, 119, 255, 0.1);
+}
+
+
+/*  权益卡片样式 */
+.benefit-card {
+    padding: 24px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin-bottom: 16px;
+}
+
+.benefit-card.premium {
+    background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+}
+
+.benefit-card.analysis {
+    background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%);
+}
+
+.benefit-card.interview {
+    background: linear-gradient(135deg, #96fbc4 0%, #f9f586 100%);
+}
+
+.benefit-icon {
+    font-size: 32px;
+    margin-bottom: 16px;
+    color: rgba(0, 0, 0, 0.8);
+}
+
+.benefit-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+/* 营销页脚样式 */
+.marketing-footer {
+    background: linear-gradient(145deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 12px;
+    padding: 24px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.marketing-footer .anticon {
+    margin-right: 8px;
+    font-size: 16px;
+}
+
+/* 响应式优化 */
+@media (max-width: 992px) {
+    .ant-col-md-12 {
+        padding-left: 0;
+        margin-top: 40px;
+    }
+}
+
+/* 布局样式 */
+.login-container {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 60px 24px;
+}
+
+.marketing-footer {
+    margin-bottom: 40px;
 }

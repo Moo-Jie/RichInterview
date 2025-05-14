@@ -179,11 +179,36 @@
 }
 
 .ai-response {
+    user-select: text !important; /* 允许文本选择 */
+    -webkit-user-select: text !important;
     margin-top: 16px;
     padding: 12px;
     background: #fff;
     border-radius: 6px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* 移除Markdown渲染区域的点击拦截 */
+.markdown-viewer {
+    pointer-events: none; /* 移除该属性或设置为 auto */
+}
+
+.ai-response pre,
+.ai-response code {
+    user-select: text !important;
+    -webkit-user-select: text !important;
+}
+
+.ai-response pre:hover::after {
+    content: "点击代码块可全选";
+    position: absolute;
+    right: 10px;
+    top: 5px;
+    font-size: 12px;
+    color: #666;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 2px 5px;
+    border-radius: 3px;
 }
 
 .ask-ai-button {
@@ -238,13 +263,6 @@
     background-color: #4a90e2 !important;
 }
 
-.ai-response {
-    margin-top: 24px;
-    padding: 20px;
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
 
 /* 新增样式 */
 .spin-container {
