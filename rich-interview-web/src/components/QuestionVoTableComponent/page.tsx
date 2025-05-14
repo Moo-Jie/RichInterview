@@ -5,10 +5,12 @@ import type {ActionType, ProColumns} from "@ant-design/pro-components";
 import {PageContainer, ProTable} from "@ant-design/pro-components";
 import React, {useRef, useState} from "react";
 import TagListComponent from "@/components/TagListComponent";
-import "./index.css";
 import Link from "next/link";
 import {searchQuestionVoByPageUsingPost} from "@/api/questionController";
 import {TablePaginationConfig} from "antd";
+import {useSearchParams} from "next/navigation";
+import "./index.css";
+
 
 interface Props {
   // 服务端渲染时，默认数据
@@ -24,6 +26,8 @@ interface Props {
  */
 const QuestionTablePage: React.FC = (tableProps: Props) => {
   const actionRef = useRef<ActionType>();
+  const searchParams = useSearchParams();  // 获取查询参数
+  const searchParam = searchParams?.get('searchParam');        // 读取搜索参数
   const {
     defaultQuestionList,
     defaultTotal,
@@ -101,6 +105,7 @@ const QuestionTablePage: React.FC = (tableProps: Props) => {
       }}
     >
       <ProTable<API.QuestionVO>
+
         rowKey="id"
         actionRef={actionRef}
         size="large"
@@ -109,7 +114,11 @@ const QuestionTablePage: React.FC = (tableProps: Props) => {
         }}
         // 默认搜索条件设置
         form={{
-          initialValues: defaultSearchParams,
+          initialValues: {
+            ...defaultSearchParams,
+            // 同步 URL 参数到表单
+            searchText: searchParam || '',
+          },
         }}
         dataSource={questionList}
         pagination={
@@ -122,6 +131,11 @@ const QuestionTablePage: React.FC = (tableProps: Props) => {
         }
         // @ts-ignore
         request={async (params, sort, filter) => {
+          const finalParams = {
+            ...params,
+            // 通过 URL 参数覆盖默认值
+            searchText: searchParam || params.searchText,
+          };
           // 首次请求
           if (init) {
             setInit(false);

@@ -29,8 +29,11 @@ import com.rich.richInterview.service.UserService;
 import com.rich.richInterview.utils.SqlUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
+import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.BeanUtils;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,7 +46,6 @@ import java.util.stream.Collectors;
 
 /**
  * 题库题目关系服务实现
- *
  */
 @Service
 @Slf4j
@@ -64,7 +66,7 @@ public class QuestionBankQuestionServiceImpl extends ServiceImpl<QuestionBankQue
      * 校验题目与题库数据
      *
      * @param questionBankQuestion
-     * @param add      对创建的数据进行校验
+     * @param add                  对创建的数据进行校验
      */
     @Override
     public void validQuestionBankQuestion(QuestionBankQuestion questionBankQuestion, boolean add) {
@@ -111,9 +113,7 @@ public class QuestionBankQuestionServiceImpl extends ServiceImpl<QuestionBankQue
         queryWrapper.eq(ObjectUtils.isNotEmpty(questionBankId), "questionBankId", questionBankId);
         queryWrapper.eq(ObjectUtils.isNotEmpty(questionId), "questionId", questionId);
         // 排序规则
-        queryWrapper.orderBy(SqlUtils.validSortField(sortField),
-                sortOrder.equals(CommonConstant.SORT_ORDER_ASC),
-                sortField);
+        queryWrapper.orderBy(SqlUtils.validSortField(sortField), sortOrder.equals(CommonConstant.SORT_ORDER_ASC), sortField);
         return queryWrapper;
     }
 
@@ -130,7 +130,7 @@ public class QuestionBankQuestionServiceImpl extends ServiceImpl<QuestionBankQue
         QuestionBankQuestionVO questionBankQuestionVO = QuestionBankQuestionVO.objToVo(questionBankQuestion);
 
         // todo 根据需要为封装对象补充值
-         
+
         // 1. 关联查询用户信息
         Long userId = questionBankQuestion.getUserId();
         User user = null;
@@ -152,25 +152,18 @@ public class QuestionBankQuestionServiceImpl extends ServiceImpl<QuestionBankQue
     @Override
     public Page<QuestionBankQuestionVO> getQuestionBankQuestionVOPage(Page<QuestionBankQuestion> questionBankQuestionPage, HttpServletRequest request) {
         List<QuestionBankQuestion> questionBankQuestionList = questionBankQuestionPage.getRecords();
-        Page<QuestionBankQuestionVO> questionBankQuestionVOPage = new Page<>(questionBankQuestionPage.getCurrent(),
-                questionBankQuestionPage.getSize(), 
-                questionBankQuestionPage.getTotal());
+        Page<QuestionBankQuestionVO> questionBankQuestionVOPage = new Page<>(questionBankQuestionPage.getCurrent(), questionBankQuestionPage.getSize(), questionBankQuestionPage.getTotal());
         if (CollUtil.isEmpty(questionBankQuestionList)) {
             return questionBankQuestionVOPage;
         }
         // 对象列表 => 封装对象列表
-        List<QuestionBankQuestionVO> questionBankQuestionVOList = questionBankQuestionList.stream()
-                .map(QuestionBankQuestionVO::objToVo)
-                .collect(Collectors.toList());
+        List<QuestionBankQuestionVO> questionBankQuestionVOList = questionBankQuestionList.stream().map(QuestionBankQuestionVO::objToVo).collect(Collectors.toList());
 
         // todo 根据需要为封装对象补充值
 
         // 1.关联查询用户信息
-        Set<Long> userIdSet = questionBankQuestionList.stream()
-                .map(QuestionBankQuestion::getUserId)
-                .collect(Collectors.toSet());
-        Map<Long, List<User>> userIdUserListMap = userService.listByIds(userIdSet).stream()
-                .collect(Collectors.groupingBy(User::getId));
+        Set<Long> userIdSet = questionBankQuestionList.stream().map(QuestionBankQuestion::getUserId).collect(Collectors.toSet());
+        Map<Long, List<User>> userIdUserListMap = userService.listByIds(userIdSet).stream().collect(Collectors.groupingBy(User::getId));
         questionBankQuestionVOList.forEach(questionBankQuestionVO -> {
             Long userId = questionBankQuestionVO.getUserId();
             User user = null;
@@ -194,6 +187,7 @@ public class QuestionBankQuestionServiceImpl extends ServiceImpl<QuestionBankQue
 
     /**
      * (题库ID、题目ID删除)
+     *
      * @param questionBankQuestionRemoveRequest
      * @param request
      * @return java.lang.Boolean
@@ -209,14 +203,13 @@ public class QuestionBankQuestionServiceImpl extends ServiceImpl<QuestionBankQue
         ThrowUtils.throwIf(questionId == null, ErrorCode.PARAMS_ERROR);
         ThrowUtils.throwIf(questionBankId == null, ErrorCode.PARAMS_ERROR);
         // 删除
-        LambdaQueryWrapper<QuestionBankQuestion> lambdaQueryWrapper = Wrappers.lambdaQuery(QuestionBankQuestion.class)
-                .eq(QuestionBankQuestion::getQuestionBankId, questionBankId)
-                .eq(QuestionBankQuestion::getQuestionId, questionId);
+        LambdaQueryWrapper<QuestionBankQuestion> lambdaQueryWrapper = Wrappers.lambdaQuery(QuestionBankQuestion.class).eq(QuestionBankQuestion::getQuestionBankId, questionBankId).eq(QuestionBankQuestion::getQuestionId, questionId);
         return this.remove(lambdaQueryWrapper);
     }
 
     /**
      * 创建题库题目关系
+     *
      * @param questionBankQuestionAddRequest
      * @param request
      * @return java.lang.Long
@@ -244,6 +237,7 @@ public class QuestionBankQuestionServiceImpl extends ServiceImpl<QuestionBankQue
 
     /**
      * 删除题库题目关系(按照ID删除，仅管理员可用)
+     *
      * @param deleteRequest
      * @param request
      * @return java.lang.Boolean
@@ -272,6 +266,7 @@ public class QuestionBankQuestionServiceImpl extends ServiceImpl<QuestionBankQue
 
     /**
      * 更新题库题目关系（仅管理员可用）
+     *
      * @param questionBankQuestionUpdateRequest
      * @return java.lang.Boolean
      * @author DuRuiChi
@@ -299,6 +294,7 @@ public class QuestionBankQuestionServiceImpl extends ServiceImpl<QuestionBankQue
 
     /**
      * 批量添加或更改题目所属关系到指定题库
+     *
      * @param questionIdList
      * @param questionBankId
      * @param loginUser
@@ -309,6 +305,8 @@ public class QuestionBankQuestionServiceImpl extends ServiceImpl<QuestionBankQue
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void batchAddOrUpdateQuestionsToBank(List<Long> questionIdList, Long questionBankId, User loginUser) {
+        // 把方法加入动态代理中,从而使事务作用于方法,因为 Spring 事务依赖于代理机制
+        QuestionBankQuestionService questionBankQuestionService = (QuestionBankQuestionServiceImpl) AopContext.currentProxy();
         // 参数校验
         ThrowUtils.throwIf(CollUtil.isEmpty(questionIdList), ErrorCode.PARAMS_ERROR, "题目集合请求参数错误，请联系管理员");
         ThrowUtils.throwIf(questionBankId == null || questionBankId <= 0, ErrorCode.PARAMS_ERROR, "题库请求参数错误，请联系管理员");
@@ -318,30 +316,54 @@ public class QuestionBankQuestionServiceImpl extends ServiceImpl<QuestionBankQue
         ThrowUtils.throwIf(questionBank == null, ErrorCode.NOT_FOUND_ERROR, "题库不存在，请联系管理员");
         // 过滤题目
         List<Question> questionList = questionService.listByIds(questionIdList);
-        List<Long> validQuestionIdList = questionList.stream()
-                .map(Question::getId)
-                .collect(Collectors.toList());
+        List<Long> validQuestionIdList = questionList.stream().map(Question::getId).collect(Collectors.toList());
         ThrowUtils.throwIf(CollUtil.isEmpty(validQuestionIdList), ErrorCode.PARAMS_ERROR, "过滤后的题目不存在，请联系管理员");
         // 插入前删除所有关联
-        questionList.stream()
-                .map(Question::getId)
-                .forEach(questionId -> {
-                    // 构造查询条件
-                   LambdaQueryWrapper<QuestionBankQuestion> lambdaQueryWrapper = Wrappers.lambdaQuery(QuestionBankQuestion.class)
-                          .eq(QuestionBankQuestion::getQuestionId, questionId);
-                   // 执行删除
-                   this.remove(lambdaQueryWrapper);
-                });
-        // 执行插入
-        for (Long questionId : validQuestionIdList) {
+        LambdaQueryWrapper<QuestionBankQuestion> deleteWrapper = Wrappers.lambdaQuery(QuestionBankQuestion.class)
+                .in(QuestionBankQuestion::getQuestionId, validQuestionIdList);
+        questionBankQuestionService.remove(deleteWrapper);
+        // 分批处理
+        int batchSize = 500;
+        List<List<Long>> partitions = CollUtil.split(validQuestionIdList, batchSize);
+        partitions.forEach(subList -> {
+            questionBankQuestionService.batchAddQuestionsToBank(questionBankId, loginUser, subList);
+        });
+    }
+
+    /**
+     * 批量添加题目到指定题库关系
+     *
+     * @param questionBankId
+     * @param loginUser
+     * @param validQuestionIdList
+     * @return void
+     * @author DuRuiChi
+     * @create 2025/5/14
+     **/
+    public void batchAddQuestionsToBank(Long questionBankId, User loginUser, List<Long> validQuestionIdList) {
+        // 创建要批量插入的对象列表
+        List<QuestionBankQuestion> questionBankQuestions = validQuestionIdList.stream().map(questionId -> {
             QuestionBankQuestion questionBankQuestion = new QuestionBankQuestion();
             questionBankQuestion.setQuestionBankId(questionBankId);
             questionBankQuestion.setQuestionId(questionId);
             questionBankQuestion.setUserId(loginUser.getId());
-            boolean result = this.save(questionBankQuestion);
-            if (!result) {
-                throw new BusinessException(ErrorCode.OPERATION_ERROR, "批量调整所属题库失败，请联系管理员");
-            }
+            return questionBankQuestion;
+        }).collect(Collectors.toList());
+
+        // 批量插入
+        try {
+            QuestionBankQuestionService questionBankQuestionService = (QuestionBankQuestionServiceImpl) AopContext.currentProxy();
+            boolean result = questionBankQuestionService.saveBatch(questionBankQuestions);
+            ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR, "批量题目题库关系失败，请 检查数据 或 联系管理员");
+        } catch (DataIntegrityViolationException e) {
+            log.error("批量添加题库题目关系时发生唯一键或外键冲突，题库ID：{}，错误信息：{}", questionBankId, e.getMessage());
+            throw new BusinessException(ErrorCode.OPERATION_ERROR, "部分题目已存在于该题库，请检查重复数据");
+        } catch (DataAccessException e) {
+            log.error("批量添加题库题目关系时数据库异常，错误信息：{}", e.getMessage());
+            throw new BusinessException(ErrorCode.OPERATION_ERROR, "数据库操作失败");
+        } catch (Exception e) {
+            log.error("批量添加题库题目关系时未知错误：{}", e.getMessage());
+            throw new BusinessException(ErrorCode.OPERATION_ERROR, "批量添加题目到题库失败");
         }
     }
 }
