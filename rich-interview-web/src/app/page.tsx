@@ -1,14 +1,15 @@
-import {listQuestionBankVoByPageUsingPost} from "@/api/questionBankController";
-import {listQuestionVoByPageUsingPost} from "@/api/questionController";
+import { listQuestionBankVoByPageUsingPost } from "@/api/questionBankController";
+import { listQuestionVoByPageUsingPost } from "@/api/questionController";
 import Title from "antd/es/typography/Title";
-import {Card, Flex, message} from "antd";
+import { Card, Flex, message } from "antd";
 import Link from "next/link";
 import QuestionBankListVoComponent from "../components/QuestionBankListVoComponent";
-import {RightOutlined} from "@ant-design/icons";
+import { RightOutlined } from "@ant-design/icons";
 import Sider from "antd/es/layout/Sider";
 import QuestionListVo from "@/components/QuestionListVoComponent";
-import styles from "./page.module.css";
+import { BulbOutlined } from "@ant-design/icons";
 import AiCallComponent from "@/components/aiCallComponent";
+import styles from "./page.module.css";
 
 /**
  * 主页
@@ -95,7 +96,42 @@ export default async function HomePage() {
         </div>
 
         {/* 右侧边栏 */}
-        <Sider width={300} theme="light" className={styles.sidebar}>
+        <Sider width={400} theme="light" className={styles.sidebar}>
+          {/* 每日一刷 */}
+          <Card className={styles.sideCard}>
+            <div className={styles.sideCardHeader}>
+              <span className={styles.cardTitle}>
+                <BulbOutlined style={{ color: "#faad14", marginRight: 8 }} />
+                每日一刷
+              </span>
+            </div>
+            {questionListVo.length > 0 ? (
+              <div className={styles.dailyQuestion}>
+                <Link
+                  href={`/question/${questionListVo[0].id}`}
+                  className={styles.itemLink}
+                >
+                  <div className={styles.dailyTitle}>
+                    #{questionListVo[0].title}
+                  </div>
+                  <div className={styles.dailyTags}>
+                    {(questionListVo[0].tagList || [])
+                      // 取前三个标签
+                      .slice(0, 3)
+                      /* @ts-ignore */
+                      .map((tag, index) => (
+                        <span key={index} className={styles.tag}>
+                          {tag}
+                        </span>
+                      ))}
+                  </div>
+                </Link>
+              </div>
+            ) : (
+              <div className={styles.emptyTip}>今日题目加载中...</div>
+            )}
+          </Card>
+
           {/* 热门题目 */}
           <Card className={styles.sideCard}>
             <div className={styles.sideCardHeader}>
