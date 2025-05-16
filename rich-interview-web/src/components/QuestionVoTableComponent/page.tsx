@@ -1,16 +1,15 @@
 // 基于ant design 组件库：https://procomponents.ant.design/components/table
 "use client";
 
-import type {ActionType, ProColumns} from "@ant-design/pro-components";
-import {PageContainer, ProTable} from "@ant-design/pro-components";
-import React, {useRef, useState} from "react";
+import type { ActionType, ProColumns } from "@ant-design/pro-components";
+import { PageContainer, ProTable } from "@ant-design/pro-components";
+import React, { useRef, useState } from "react";
 import TagListComponent from "@/components/TagListComponent";
 import Link from "next/link";
-import {searchQuestionVoByPageUsingPost} from "@/api/questionController";
-import {TablePaginationConfig} from "antd";
-import {useSearchParams} from "next/navigation";
+import { searchQuestionVoByPageUsingPost } from "@/api/questionController";
+import { TablePaginationConfig } from "antd";
+import { useSearchParams } from "next/navigation";
 import "./index.css";
-
 
 interface Props {
   // 服务端渲染时，默认数据
@@ -26,8 +25,8 @@ interface Props {
  */
 const QuestionTablePage: React.FC = (tableProps: Props) => {
   const actionRef = useRef<ActionType>();
-  const searchParams = useSearchParams();  // 获取查询参数
-  const searchParam = searchParams?.get('searchParam');        // 读取搜索参数
+  const searchParams = useSearchParams(); // 获取查询参数
+  const searchParam = searchParams?.get("searchParam"); // 读取搜索参数
   const {
     defaultQuestionList,
     defaultTotal,
@@ -105,7 +104,6 @@ const QuestionTablePage: React.FC = (tableProps: Props) => {
       }}
     >
       <ProTable<API.QuestionVO>
-
         rowKey="id"
         actionRef={actionRef}
         size="large"
@@ -117,7 +115,7 @@ const QuestionTablePage: React.FC = (tableProps: Props) => {
           initialValues: {
             ...defaultSearchParams,
             // 同步 URL 参数到表单
-            searchText: searchParam || '',
+            searchText: searchParam || "",
           },
         }}
         dataSource={questionList}
@@ -139,10 +137,6 @@ const QuestionTablePage: React.FC = (tableProps: Props) => {
           // 首次请求
           if (init) {
             setInit(false);
-            // 如果已有数据，无需再次查询
-            if (defaultQuestionList && defaultTotal) {
-              return;
-            }
           }
 
           const sortField = Object.keys(sort)?.[0] || "createTime";
@@ -150,7 +144,7 @@ const QuestionTablePage: React.FC = (tableProps: Props) => {
           // @ts-ignore
           const { data, code } = await searchQuestionVoByPageUsingPost({
             ...params,
-            sortField : '_score',
+            sortField: "_score",
             sortOrder,
             ...filter,
           } as API.QuestionQueryRequest);

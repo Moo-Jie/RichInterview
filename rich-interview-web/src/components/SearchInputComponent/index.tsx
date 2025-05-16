@@ -1,7 +1,7 @@
-import {Input} from "antd";
-import {useRouter} from "next/navigation";
+import { Input } from "antd";
+import { useRouter } from "next/navigation";
 import "./index.css";
-import {SearchOutlined} from "@ant-design/icons";
+import { SearchOutlined } from "@ant-design/icons";
 import React from "react";
 
 interface Props {}
@@ -40,10 +40,11 @@ const SearchInputComponent = (props: Props) => {
         maxLength={20}
         variant="borderless"
         onSearch={(value) => {
-            // 使用 URLSearchParams 构造查询参数
-            const params = new URLSearchParams();
-            params.set('searchParam', value);
-            router.push(`/questions?${params.toString()}`);
+          // 使用 URLSearchParams 构造查询参数
+          const params = new URLSearchParams();
+          params.set("searchParam", value);
+          // 跳转
+          router.push(`/questions?${params.toString()}`);
         }}
       />
     </div>
