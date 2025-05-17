@@ -100,7 +100,7 @@ const CalendarChart = (props: Props) => {
     },
     tooltip: {
       formatter: (params: any) => {
-        return `日期: ${params.data[0]}<br/>刷题次数: ${params.data[1]}次`;
+        return `日期: ${params.data[0]}`;
       },
     },
   };

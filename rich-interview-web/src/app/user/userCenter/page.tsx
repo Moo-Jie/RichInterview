@@ -1,5 +1,5 @@
 "use client";
-import {App, Avatar, Card, Col, Modal, Row} from "antd";
+import {App, Avatar, Button, Card, Col, Flex, Modal, Row, Typography,} from "antd";
 import {useSelector} from "react-redux";
 import {RootState} from "@/store";
 import Title from "antd/es/typography/Title";
@@ -8,7 +8,10 @@ import {useState} from "react";
 import {updateMyUserUsingPost} from "@/api/userController";
 import {ProColumns, ProTable} from "@ant-design/pro-components";
 import CalendarChart from "@/app/user/userCenter/components/CalendarChartComponent";
+import Link from "next/link";
 import "./index.css";
+import {RightOutlined} from "@ant-design/icons";
+import RecentStudy from "@/components/RecentStudyComponent";
 
 /**
  * 用户管理页面
@@ -103,6 +106,9 @@ export default function UserCenterPage() {
                   </h5>
                   <h5>注册时间：{user.createTime}</h5>
                   <h5>最后操作时间：{user.updateTime}</h5>
+                  <Card>
+                    <RecentStudy />
+                  </Card>
                 </Paragraph>
               }
             />
@@ -119,6 +125,10 @@ export default function UserCenterPage() {
                 label: "刷题记录",
               },
               {
+                key: "updateUserMsg",
+                label: "编辑资料",
+              },
+              {
                 key: "userMsg",
                 label: "其他信息",
               },
@@ -133,7 +143,25 @@ export default function UserCenterPage() {
                 <CalendarChart />
               </>
             )}
-            {activeTabKey === "userMsg" && <>其他用户信息待添加</>}
+            {activeTabKey === "updateUserMsg" && (
+              <ProTable
+                type="form"
+                columns={editColumns}
+                form={{
+                  initialValues: user,
+                }}
+                onSubmit={async (values) => {
+                  const success = await handleUpdateMy(
+                    values as API.UserUpdateMyRequest,
+                  );
+                  if (success) {
+                    setEditVisible(false);
+                    // 这里可以添加刷新用户数据的逻辑
+                  }
+                }}
+              />
+            )}
+            {activeTabKey === "userMsg" && <>暂无</>}
           </Card>
         </Col>
       </Row>

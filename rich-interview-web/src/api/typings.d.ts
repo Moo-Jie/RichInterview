@@ -214,6 +214,7 @@ declare namespace API {
     userName?: string;
     userProfile?: string;
     userRole?: string;
+    previousQuestionID ?: number;
   };
 
   type OrderItem = {
@@ -715,6 +716,7 @@ declare namespace API {
     userName?: string;
     userProfile?: string;
     userRole?: string;
+    previousQuestionID ?: number;
   };
 
   type getUserSignInRecordUsingGETParams = {

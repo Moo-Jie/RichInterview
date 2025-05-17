@@ -5,19 +5,20 @@
 <mapper namespace="com.rich.richInterview.mapper.UserMapper">
 
     <resultMap id="BaseResultMap" type="com.rich.richInterview.model.entity.User">
-            <id property="id" column="id" jdbcType="BIGINT"/>
-            <result property="userAccount" column="userAccount" jdbcType="VARCHAR"/>
-            <result property="userPassword" column="userPassword" jdbcType="VARCHAR"/>
-            <result property="unionId" column="unionId" jdbcType="VARCHAR"/>
-            <result property="mpOpenId" column="mpOpenId" jdbcType="VARCHAR"/>
-            <result property="userName" column="userName" jdbcType="VARCHAR"/>
-            <result property="userAvatar" column="userAvatar" jdbcType="VARCHAR"/>
-            <result property="userProfile" column="userProfile" jdbcType="VARCHAR"/>
-            <result property="userRole" column="userRole" jdbcType="VARCHAR"/>
-            <result property="editTime" column="editTime" jdbcType="TIMESTAMP"/>
-            <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
-            <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
-            <result property="isDelete" column="isDelete" jdbcType="TINYINT"/>
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="userAccount" column="userAccount" jdbcType="VARCHAR"/>
+        <result property="userPassword" column="userPassword" jdbcType="VARCHAR"/>
+        <result property="unionId" column="unionId" jdbcType="VARCHAR"/>
+        <result property="mpOpenId" column="mpOpenId" jdbcType="VARCHAR"/>
+        <result property="userName" column="userName" jdbcType="VARCHAR"/>
+        <result property="userAvatar" column="userAvatar" jdbcType="VARCHAR"/>
+        <result property="userProfile" column="userProfile" jdbcType="VARCHAR"/>
+        <result property="userRole" column="userRole" jdbcType="VARCHAR"/>
+        <result property="editTime" column="editTime" jdbcType="TIMESTAMP"/>
+        <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
+        <result property="isDelete" column="isDelete" jdbcType="TINYINT"/>
+        <result property="previousQuestionID" column="previousQuestionID" jdbcType="BIGINT"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -26,6 +27,7 @@
         userAvatar,userProfile,userRole,
         editTime,createTime,updateTime,
         isDelete,vipExpireTime,vipCode,
-        vipNumber,shareCode,inviteUser
+        vipNumber,shareCode,inviteUser,
+          previousQuestionID
     </sql>
 </mapper>

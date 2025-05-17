@@ -9,6 +9,7 @@ import Sider from "antd/es/layout/Sider";
 import QuestionListVo from "@/components/QuestionListVoComponent";
 import AiCallComponent from "@/components/aiCallComponent";
 import styles from "./page.module.css";
+import RecentStudy from "@/components/RecentStudyComponent";
 
 /**
  * 主页
@@ -96,6 +97,9 @@ export default async function HomePage() {
 
         {/* 右侧边栏 */}
         <Sider width={400} theme="light" className={styles.sidebar}>
+          <Card>
+            <RecentStudy />
+          </Card>
           {/* 每日一刷 */}
           <Card className={styles.sideCard}>
             <div className={styles.sideCardHeader}>

@@ -76,6 +76,11 @@ public class User implements Serializable {
     private Date updateTime;
 
     /**
+     * 最近刷题ID
+     */
+    private Long previousQuestionID;
+
+    /**
      * 是否删除
      */
     @TableLogic
