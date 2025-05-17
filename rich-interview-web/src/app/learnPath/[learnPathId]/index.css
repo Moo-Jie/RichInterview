@@ -1,0 +1,27 @@
+#learnPathPage {
+    width: 100%;
+}
+
+/* 现代卡片式布局 */
+.learnPath-container {
+    max-width: 1200px;
+    margin: 24px auto;
+    padding: 24px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.learnPath-card .ant-card {
+    margin-bottom: 24px;
+    border: 1px solid #e8e8e8;
+}
+
+.learnPath-card .ant-typography {
+    color: #1890ff !important;
+    font-size: 1.5em;
+}
+
+.learnPath-card .tag-list {
+    margin: 12px 0;
+}

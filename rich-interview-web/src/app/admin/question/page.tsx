@@ -11,7 +11,7 @@ import React, {useRef, useState} from "react";
 import TagListComponent from "@/components/TagListComponent";
 import MarkdownEditor from "@/components/MarkdownComponent/MarkdownEditor";
 import {listQuestionBankVoByPageUsingPost} from "@/api/questionBankController";
-import { batchAddOrUpdateQuestionsToBankUsingPost } from "@/api/questionBankQuestionController";
+import {batchAddOrUpdateQuestionsToBankUsingPost} from "@/api/questionBankQuestionController";
 
 import "./index.css";
 
@@ -46,7 +46,9 @@ const QuestionAdminPage: React.FC = () => {
   // 全局提示和对话框方法
   const { modal, message } = App.useApp();
   // 题库列表
-  const [bankOptions, setBankOptions] = useState<{ label: string; value: number }[]>([]);
+  const [bankOptions, setBankOptions] = useState<
+    { label: string; value: number }[]
+  >([]);
   // 调整题目所属题库状态
   const [batchUpdateBankVisible, setBatchUpdateBankVisible] = useState(false);
   const [selectedBankId, setSelectedBankId] = useState<number>();
@@ -78,7 +80,7 @@ const QuestionAdminPage: React.FC = () => {
           hide();
           message.error("更新失败，" + error.message);
         }
-      }
+      },
     });
   };
 
@@ -166,29 +168,29 @@ const QuestionAdminPage: React.FC = () => {
         placeholder: "请选择所属题库",
         // @ts-ignore
         filterOption: (input, option) =>
-            (option?.label ?? "").toLowerCase().includes(input.toLowerCase()),
+          (option?.label ?? "").toLowerCase().includes(input.toLowerCase()),
       },
       render: (_, record) => {
-        const bank = bankOptions.find(b => b.value === record.questionBankId);
+        const bank = bankOptions.find((b) => b.value === record.questionBankId);
         return bank ? bank.label : record.questionBankId;
       },
       renderFormItem: (_, { defaultRender }) => defaultRender(_),
       request: async (key) => {
         const { data } = await listQuestionBankVoByPageUsingPost({
           pageSize: 100,
-          current: 1
+          current: 1,
         });
         // @ts-ignore
-        const options = (data?.records || []).map(bank => ({
+        const options = (data?.records || []).map((bank) => ({
           label: bank.title || "",
-          value: bank.id || 0
+          value: bank.id || 0,
         }));
         setBankOptions(options);
         // @ts-ignore
-        return options.filter(opt =>
-            opt.label.toLowerCase().includes((key.keyword || "").toLowerCase())
+        return options.filter((opt) =>
+          opt.label.toLowerCase().includes((key.keyword || "").toLowerCase()),
         );
-      }
+      },
     },
     {
       title: "内容",
@@ -235,6 +237,7 @@ const QuestionAdminPage: React.FC = () => {
     },
     {
       title: "标签",
+      tooltip: "本系统标签规范：首部为难度标签",
       dataIndex: "tags",
       width: 200,
       valueType: "select",
@@ -372,16 +375,16 @@ const QuestionAdminPage: React.FC = () => {
             </Button>
           ),
           selectedRows?.length > 0 && (
-              <Button
-                  key="batchUpdateBank"
-                  icon={<SwapOutlined />}
-                  onClick={() => setBatchUpdateBankVisible(true)}
-              >
-                批量指定所属题库
-              </Button>
+            <Button
+              key="batchUpdateBank"
+              icon={<SwapOutlined />}
+              onClick={() => setBatchUpdateBankVisible(true)}
+            >
+              批量指定所属题库
+            </Button>
           ),
         ]}
-          /* 工具栏按钮组 */
+        /* 工具栏按钮组 */
         request={async (params, sort, filter) => {
           const sortField = Object.keys(sort)?.[0];
           const sortOrder = sort?.[sortField] ?? undefined;
@@ -405,9 +408,9 @@ const QuestionAdminPage: React.FC = () => {
             sortField: sortField,
             sortOrder: sortOrder,
           };
-
           // @ts-ignore
-          const { data, code } = await listQuestionVoByPageUsingPost(queryParams);
+          const { data, code } =
+            await listQuestionVoByPageUsingPost(queryParams);
 
           return {
             success: code === 0,
@@ -433,20 +436,20 @@ const QuestionAdminPage: React.FC = () => {
         }} // 本地化文本
       />
       <Modal
-          title="批量指定所属题库"
-          open={batchUpdateBankVisible}
-          onCancel={() => setBatchUpdateBankVisible(false)}
-          onOk={handleBatchUpdateBank}
+        title="批量指定所属题库"
+        open={batchUpdateBankVisible}
+        onCancel={() => setBatchUpdateBankVisible(false)}
+        onOk={handleBatchUpdateBank}
       >
         <Select
-            showSearch
-            style={{ width: '100%' }}
-            placeholder="选择目标题库"
-            options={bankOptions}
-            onChange={value => setSelectedBankId(value)}
-            filterOption={(input, option) =>
-                (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-            }
+          showSearch
+          style={{ width: "100%" }}
+          placeholder="选择目标题库"
+          options={bankOptions}
+          onChange={(value) => setSelectedBankId(value)}
+          filterOption={(input, option) =>
+            (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
+          }
         />
       </Modal>
       <CreateModal

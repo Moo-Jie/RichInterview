@@ -2,12 +2,15 @@
 "use client";
 import CreateModal from "./components/CreateModal";
 import UpdateModal from "./components/UpdateModal";
-import {deleteUserUsingPost, listUserByPageUsingPost,} from "@/api/userController";
-import {DeleteOutlined, PlusOutlined} from "@ant-design/icons";
-import type {ActionType, ProColumns} from "@ant-design/pro-components";
-import {PageContainer, ProTable} from "@ant-design/pro-components";
-import {App, Button, Table, Typography} from "antd";
-import React, {useRef, useState} from "react";
+import {
+  deleteUserUsingPost,
+  listUserByPageUsingPost,
+} from "@/api/userController";
+import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
+import type { ActionType, ProColumns } from "@ant-design/pro-components";
+import { PageContainer, ProTable } from "@ant-design/pro-components";
+import { App, Button, Table, Typography } from "antd";
+import React, { useRef, useState } from "react";
 import "./index.css";
 import UpdateUserAvatarModal from "@/app/admin/user/components/UpdatePicture";
 

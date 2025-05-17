@@ -1,8 +1,8 @@
 "use client";
-import {Card, Col, Row} from "antd";
-import {ConstantMsg} from "@/constant/ConstantMsg";
+import { Card, Col, Row } from "antd";
+import { ConstantBasicMsg } from "@/constant/ConstantBasicMsg";
 import styles from "../components/page.module.css";
-import {GithubFilled} from "@ant-design/icons";
+import { GithubFilled } from "@ant-design/icons";
 import React from "react";
 
 // 数据
@@ -45,7 +45,7 @@ export default function Home() {
           <Col span={6} className={styles.avatarContainer}>
             <div className={styles.avatarFrame}>
               <img
-                src={ConstantMsg.AUTHOR_AVATAR} // 请替换实际头像路径
+                src={ConstantBasicMsg.AUTHOR_AVATAR} // 请替换实际头像路径
                 className={styles.avatarImage}
                 alt="作者头像"
               />
@@ -66,7 +66,7 @@ export default function Home() {
           </Row>
           <Row>
             <Col span={12} className={styles.itemBorder}>
-              {ConstantMsg.AUTHOR_NAME}
+              {ConstantBasicMsg.AUTHOR_NAME}
             </Col>
             <Col span={12} className={styles.itemBorder}>
               Java 全栈开发工程师

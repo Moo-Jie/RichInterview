@@ -5,7 +5,7 @@ import request from "@/libs/request";
 /** doThumb POST /api/post_thumb/ */
 export async function doThumbUsingPost(
   body: API.PostThumbAddRequest,
-  options?: { [key: string]: any }
+  options?: { [key: string]: any },
 ) {
   return request<API.BaseResponseInt_>("/api/post_thumb/", {
     method: "POST",

@@ -757,4 +757,116 @@ declare namespace API {
     url?: string;
     userMetadata?: Record<string, any>;
   };
+
+  type getLearnPathVOByIdUsingGETParams = {
+    /** id */
+    id?: number;
+  };
+
+  type BaseResponseLearnPathVO_ = {
+    code?: number;
+    data?: LearnPathVO;
+    message?: string;
+  };
+
+  type BaseResponsePageLearnPath_ = {
+    code?: number;
+    data?: PageLearnPath_;
+    message?: string;
+  };
+
+  type BaseResponsePageLearnPathVO_ = {
+    code?: number;
+    data?: PageLearnPathVO_;
+    message?: string;
+  };
+
+  type LearnPath = {
+    answer?: string;
+    content?: string;
+    createTime?: string;
+    editTime?: string;
+    id?: number;
+    isDelete?: number;
+    tags?: string;
+    title?: string;
+    updateTime?: string;
+    userId?: number;
+  };
+
+  type LearnPathAddRequest = {
+    answer?: string;
+    content?: string;
+    tags?: string[];
+    title?: string;
+  };
+
+  type LearnPathEditRequest = {
+    answer?: string;
+    content?: string;
+    id?: number;
+    tags?: string[];
+    title?: string;
+  };
+
+  type LearnPathQueryRequest = {
+    answer?: string;
+    content?: string;
+    current?: number;
+    id?: number;
+    notId?: number;
+    pageSize?: number;
+    searchText?: string;
+    sortField?: string;
+    sortOrder?: string;
+    tags?: string[];
+    title?: string;
+    userId?: number;
+  };
+
+  type PageLearnPath_ = {
+    countId?: string;
+    current?: number;
+    maxLimit?: number;
+    optimizeCountSql?: boolean;
+    orders?: OrderItem[];
+    pages?: number;
+    records?: LearnPath[];
+    searchCount?: boolean;
+    size?: number;
+    total?: number;
+  };
+
+  type PageLearnPathVO_ = {
+    countId?: string;
+    current?: number;
+    maxLimit?: number;
+    optimizeCountSql?: boolean;
+    orders?: OrderItem[];
+    pages?: number;
+    records?: LearnPathVO[];
+    searchCount?: boolean;
+    size?: number;
+    total?: number;
+  };
+
+  type LearnPathUpdateRequest = {
+    answer?: string;
+    content?: string;
+    id?: number;
+    tags?: string[];
+    title?: string;
+  };
+
+  type LearnPathVO = {
+    content?: string;
+    answer?: string;
+    createTime?: string;
+    id?: number;
+    tagList?: string[];
+    title?: string;
+    updateTime?: string;
+    user?: UserVO;
+    userId?: number;
+  };
 }

@@ -40,8 +40,8 @@ export async function uploadUsingPost(
 
 /** uploadImage POST /api/upload-image */
 export async function uploadImageUsingPost(
-    file: File,  // 将file作为主要参数
-    options?: { [key: string]: any }
+  file: File, // 将file作为主要参数
+  options?: { [key: string]: any },
 ) {
   const formData = new FormData();
   formData.append("file", file);

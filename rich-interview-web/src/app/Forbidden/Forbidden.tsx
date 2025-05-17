@@ -1,5 +1,5 @@
-import {Button, Result} from "antd";
-import {LoginOutlined} from "@ant-design/icons";
+import { Button, Result } from "antd";
+import { LoginOutlined } from "@ant-design/icons";
 import styles from "./Forbidden.module.css";
 
 const Forbidden = () => {

@@ -26,6 +26,7 @@
     margin-right: 12px;
     transition: color 0.3s;
 }
+
 .question-admin-page .ant-typography-link:hover {
     color: #1890ff !important;
 }

@@ -1,0 +1,62 @@
+/* 页面容器样式 */
+.learnPath-admin-page .ant-page-container {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+    padding: 24px;
+    margin: 16px;
+    min-height: calc(100vh - 350px);
+    position: relative;
+}
+
+/* 表格标题行 */
+.learnPath-admin-page .ant-pro-table .ant-table-thead > tr > th {
+    background: #fafafa !important;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+/* 表格行悬停效果 */
+.learnPath-admin-page .ant-pro-table .ant-table-tbody > tr:hover td {
+    background: #f8fbff !important;
+}
+
+/* 操作按钮样式 */
+.learnPath-admin-page .ant-typography-link {
+    margin-right: 12px;
+    transition: color 0.3s;
+}
+
+.learnPath-admin-page .ant-typography-link:hover {
+    color: #1890ff !important;
+}
+
+/* 分页样式 */
+.learnPath-admin-page .ant-pagination {
+    margin: 24px 0 16px;
+    padding: 12px 24px;
+    background: #fff;
+    border-top: 1px solid #f0f0f0;
+    position: sticky;
+    bottom: 60px;
+    z-index: 1;
+}
+
+/* 搜索栏样式 */
+.learnPath-admin-page .ant-pro-table-search {
+    padding: 16px 24px;
+    background: #fff;
+    border-bottom: 1px solid #f0f0f0;
+    margin-bottom: 16px;
+}
+
+/* 调整滚动条位置 */
+.learnPath-admin-page ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.learnPath-admin-page ::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+}

@@ -5,7 +5,10 @@ import ACCESS_ENUM from "@/access/accessEnumeration";
  * @param loginUser 登录用户对象
  * @param needAccess 所需权限集合
  */
-const accessChecker = (loginUser: API.LoginUserVO, needAccess = ACCESS_ENUM.NOT_LOGIN) => {
+const accessChecker = (
+  loginUser: API.LoginUserVO,
+  needAccess = ACCESS_ENUM.NOT_LOGIN,
+) => {
   // 获取并校验权限
   const loginUserAccess = loginUser?.userRole ?? ACCESS_ENUM.NOT_LOGIN;
   // 1.未登录即可访问

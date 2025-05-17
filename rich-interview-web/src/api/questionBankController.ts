@@ -5,7 +5,7 @@ import request from "@/libs/request";
 /** addQuestionBank POST /api/questionBank/add */
 export async function addQuestionBankUsingPost(
   body: API.QuestionBankAddRequest,
-  options?: { [key: string]: any }
+  options?: { [key: string]: any },
 ) {
   return request<API.BaseResponseLong_>("/api/questionBank/add", {
     method: "POST",
@@ -20,7 +20,7 @@ export async function addQuestionBankUsingPost(
 /** deleteQuestionBank POST /api/questionBank/delete */
 export async function deleteQuestionBankUsingPost(
   body: API.DeleteRequest,
-  options?: { [key: string]: any }
+  options?: { [key: string]: any },
 ) {
   return request<API.BaseResponseBoolean_>("/api/questionBank/delete", {
     method: "POST",
@@ -35,7 +35,7 @@ export async function deleteQuestionBankUsingPost(
 /** editQuestionBank POST /api/questionBank/edit */
 export async function editQuestionBankUsingPost(
   body: API.QuestionBankEditRequest,
-  options?: { [key: string]: any }
+  options?: { [key: string]: any },
 ) {
   return request<API.BaseResponseBoolean_>("/api/questionBank/edit", {
     method: "POST",
@@ -51,7 +51,7 @@ export async function editQuestionBankUsingPost(
 export async function getQuestionBankVoByIdUsingGet(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
   params: API.getQuestionBankVOByIdUsingGETParams,
-  options?: { [key: string]: any }
+  options?: { [key: string]: any },
 ) {
   return request<API.BaseResponseQuestionBankVO_>("/api/questionBank/get/vo", {
     method: "GET",
@@ -65,7 +65,7 @@ export async function getQuestionBankVoByIdUsingGet(
 /** listQuestionBankByPage POST /api/questionBank/list/page */
 export async function listQuestionBankByPageUsingPost(
   body: API.QuestionBankQueryRequest,
-  options?: { [key: string]: any }
+  options?: { [key: string]: any },
 ) {
   return request<API.BaseResponsePageQuestionBank_>(
     "/api/questionBank/list/page",
@@ -76,14 +76,14 @@ export async function listQuestionBankByPageUsingPost(
       },
       data: body,
       ...(options || {}),
-    }
+    },
   );
 }
 
 /** listQuestionBankVOByPage POST /api/questionBank/list/page/vo */
 export async function listQuestionBankVoByPageUsingPost(
   body: API.QuestionBankQueryRequest,
-  options?: { [key: string]: any }
+  options?: { [key: string]: any },
 ) {
   return request<API.BaseResponsePageQuestionBankVO_>(
     "/api/questionBank/list/page/vo",
@@ -94,14 +94,14 @@ export async function listQuestionBankVoByPageUsingPost(
       },
       data: body,
       ...(options || {}),
-    }
+    },
   );
 }
 
 /** listMyQuestionBankVOByPage POST /api/questionBank/my/list/page/vo */
 export async function listMyQuestionBankVoByPageUsingPost(
   body: API.QuestionBankQueryRequest,
-  options?: { [key: string]: any }
+  options?: { [key: string]: any },
 ) {
   return request<API.BaseResponsePageQuestionBankVO_>(
     "/api/questionBank/my/list/page/vo",
@@ -112,14 +112,14 @@ export async function listMyQuestionBankVoByPageUsingPost(
       },
       data: body,
       ...(options || {}),
-    }
+    },
   );
 }
 
 /** updateQuestionBank POST /api/questionBank/update */
 export async function updateQuestionBankUsingPost(
   body: API.QuestionBankUpdateRequest,
-  options?: { [key: string]: any }
+  options?: { [key: string]: any },
 ) {
   return request<API.BaseResponseBoolean_>("/api/questionBank/update", {
     method: "POST",
