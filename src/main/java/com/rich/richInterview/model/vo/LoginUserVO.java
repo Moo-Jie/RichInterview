@@ -48,5 +48,10 @@ public class LoginUserVO implements Serializable {
      */
     private Date updateTime;
 
+    /**
+     * 最近刷题ID
+     */
+    private Long previousQuestionID;
+
     private static final long serialVersionUID = 1L;
 }

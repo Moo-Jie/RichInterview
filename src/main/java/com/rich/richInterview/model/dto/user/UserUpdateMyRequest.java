@@ -31,5 +31,10 @@ public class UserUpdateMyRequest implements Serializable {
      */
     private String userPassword;
 
+    /**
+     * 最近刷题ID
+     */
+    private Long previousQuestionID;
+
     private static final long serialVersionUID = 1L;
 }
