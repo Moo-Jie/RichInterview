@@ -1,14 +1,14 @@
 "use client";
-import {Button, Card, Modal} from "antd";
+import { Button, Card, Modal } from "antd";
 import Title from "antd/es/typography/Title";
 import TagList from "@/components/TagListComponent";
 import MarkdownViewer from "@/components/MarkdownComponent/MarkdownViewer";
 import useAddUserSignInRecordHook from "@/hooks/useAddUserSignInRecordHook";
-import {useState} from "react";
-import {queryAiUsingPost} from "@/api/aiClientController";
-import {LoadingOutlined} from "@ant-design/icons";
-import { CopyOutlined } from "@ant-design/icons";
+import React, { useState } from "react";
+import { queryAiUsingPost } from "@/api/aiClientController";
+import { CopyOutlined, LoadingOutlined } from "@ant-design/icons";
 import "./index.css";
+import TagListComponent from "@/components/TagListComponent";
 
 interface Props {
   question: API.QuestionVO;
@@ -60,6 +60,18 @@ const QuestionMsgComponent = (props: Props) => {
   // 其他信息标签
   const metaItems = [
     {
+      label: "题目编号",
+      value: question.id,
+    },
+    {
+      label: "题目难度",
+      value: question.tagList?.[0] || "暂无",
+    },
+    {
+      label: "题目标签",
+      value: <TagListComponent tagList={question.tagList?.slice(1) || []} />,
+    },
+    {
       label: "创建时间",
       value: question.createTime
         ? new Date(question.createTime).toLocaleDateString("zh-CN", {
@@ -92,7 +104,7 @@ const QuestionMsgComponent = (props: Props) => {
       <Card className="question-header-card">
         <div className="header-content">
           <Title level={1} className="question-title">
-            #{question.id} {question.title}
+            # {question.title}
           </Title>
           <div className="meta-container">
             {metaItems.map((item, index) => (
@@ -154,13 +166,15 @@ const QuestionMsgComponent = (props: Props) => {
         {!aiLoading && aiResponse && (
           <div className="ai-response">
             <MarkdownViewer value={aiResponse} />
-              <Button
-                  icon={<CopyOutlined />}
-                  onClick={() => navigator.clipboard.writeText(question.answer || '')}
-                  className="copy-button"
-              >
-                  复制参考答案
-              </Button>
+            <Button
+              icon={<CopyOutlined />}
+              onClick={() =>
+                navigator.clipboard.writeText(question.answer || "")
+              }
+              className="copy-button"
+            >
+              复制参考答案
+            </Button>
           </div>
         )}
       </Card>
@@ -188,18 +202,20 @@ const QuestionMsgComponent = (props: Props) => {
           {showAnswer ? "答案已解锁 ✅" : "点击查看参考答案"}
         </Button>
 
-          {showAnswer && (
-              <div className="ai-response">
-                  <MarkdownViewer value={question.answer} />
-                  <Button
-                      icon={<CopyOutlined />}
-                      onClick={() => navigator.clipboard.writeText(question.answer || '')}
-                      className="copy-button"
-                  >
-                      复制参考答案
-                  </Button>
-              </div>
-          )}
+        {showAnswer && (
+          <div className="ai-response">
+            <MarkdownViewer value={question.answer} />
+            <Button
+              icon={<CopyOutlined />}
+              onClick={() =>
+                navigator.clipboard.writeText(question.answer || "")
+              }
+              className="copy-button"
+            >
+              复制参考答案
+            </Button>
+          </div>
+        )}
       </Card>
       {/* 确认执行框 */}
       <Modal
@@ -216,7 +232,7 @@ const QuestionMsgComponent = (props: Props) => {
         centered
       >
         <div style={{ padding: "16px 0", fontSize: 16 }}>
-            💡 先尝试独立回答，再查看题解或问AI哦！
+          💡 先尝试独立回答，再查看题解或问AI哦！
         </div>
       </Modal>
     </div>

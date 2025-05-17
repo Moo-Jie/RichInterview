@@ -10,9 +10,9 @@
 
 /* 表单容器 - 尺寸与登录页保持一致 */
 #userRegisterPage .ant-pro-form-login-container {
-    width: 560px;  /* 同步登录页宽度 */
+    width: 560px; /* 同步登录页宽度 */
     background: #fff;
-    padding: 48px;  /* 增加内边距 */
+    padding: 48px; /* 增加内边距 */
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }

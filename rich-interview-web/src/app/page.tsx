@@ -1,13 +1,12 @@
-import { listQuestionBankVoByPageUsingPost } from "@/api/questionBankController";
-import { listQuestionVoByPageUsingPost } from "@/api/questionController";
+import {listQuestionBankVoByPageUsingPost} from "@/api/questionBankController";
+import {listQuestionVoByPageUsingPost} from "@/api/questionController";
 import Title from "antd/es/typography/Title";
-import { Card, Flex, message } from "antd";
+import {Card, Flex, message} from "antd";
 import Link from "next/link";
 import QuestionBankListVoComponent from "../components/QuestionBankListVoComponent";
-import { RightOutlined } from "@ant-design/icons";
+import {BulbOutlined, RightOutlined} from "@ant-design/icons";
 import Sider from "antd/es/layout/Sider";
 import QuestionListVo from "@/components/QuestionListVoComponent";
-import { BulbOutlined } from "@ant-design/icons";
 import AiCallComponent from "@/components/aiCallComponent";
 import styles from "./page.module.css";
 

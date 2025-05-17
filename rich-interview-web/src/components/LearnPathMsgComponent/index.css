@@ -1,0 +1,383 @@
+.learnPath-card {
+    background: #f8f9fa;
+    padding: 24px;
+    border-radius: 12px;
+}
+
+.learnPath-header-card {
+    margin-bottom: 24px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border: 2px solid #dee2e6 !important;
+}
+
+.custom-collapse .ant-collapse-item {
+    border-radius: 8px !important;
+    margin-top: 16px;
+}
+
+.custom-collapse .ant-collapse-header {
+    background: #f5f7fa;
+    border-radius: 8px !important;
+    padding: 12px 16px !important;
+}
+
+.custom-collapse .ant-collapse-content-box {
+    padding: 16px !important;
+}
+
+.collapse-arrow {
+    color: #4a90e2;
+    font-size: 14px;
+}
+
+/* 学习路线卡片图标 */
+.ask-ai-card .card-title02::before {
+    content: '✅';
+    filter: drop-shadow(0 2px 4px rgba(67, 181, 115, 0.4));
+    animation: iconFloat 1.2s ease-in-out infinite;
+}
+
+.learnPath-title {
+    color: #2c3e50 !important;
+    font-size: 28px !important;
+    margin-bottom: 16px !important;
+}
+
+.meta-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.meta-item {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 12px;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.meta-label {
+    color: #6c757d;
+    font-weight: 500;
+    margin-right: 8px;
+}
+
+.meta-value {
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.content-card, .answer-card {
+    border: 2px solid #e9ecef !important;
+    margin-bottom: 24px;
+    border-radius: 8px !important;
+}
+
+.card-title {
+    font-size: 20px;
+    color: #2c3e50 !important;
+    font-weight: 600;
+}
+
+.hint-text {
+    font-size: 15px;
+    color: #4a90e2;
+    font-weight: 400;
+}
+
+
+.ask-ai-card {
+    border: none !important;
+    margin-bottom: 24px;
+    border-radius: 16px !important;
+    background: linear-gradient(145deg, rgba(42, 45, 72, 0.9) 0%, rgba(34, 37, 64, 0.9) 100%);
+    backdrop-filter: blur(12px);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 4px 12px rgba(255, 255, 255, 0.05);
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* 发光边框效果 */
+.ask-ai-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 16px;
+    padding: 2px;
+    background: linear-gradient(
+            135deg,
+            rgba(74, 144, 226, 0.6) 0%,
+            rgba(139, 108, 240, 0.6) 50%,
+            rgba(74, 144, 226, 0.6) 100%
+    );
+    -webkit-mask: linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    animation: borderGlow 4s linear infinite;
+}
+
+@keyframes borderGlow {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* 标题样式调整 */
+.ask-ai-card .card-title {
+    color: #1d1d1d !important;
+    font-size: 22px !important;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    position: relative;
+    padding-left: 32px;
+}
+
+.ask-ai-card .card-title::before {
+    content: '🤖';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 24px;
+    filter: drop-shadow(0 2px 4px rgba(74, 144, 226, 0.4));
+}
+
+/* 新增悬停效果 */
+.ask-ai-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(74, 144, 226, 0.2),
+    inset 0 4px 12px rgba(255, 255, 255, 0.1);
+}
+
+/* 响应式微调 */
+@media (max-width: 768px) {
+    .ask-ai-card {
+        border-radius: 12px !important;
+    }
+}
+
+.ask-ai-button {
+    margin-bottom: 16px;
+    background: #4a90e2;
+    transition: all 0.3s;
+}
+
+.ask-ai-button:hover {
+    background: #357abd !important;
+}
+
+.ai-response {
+    user-select: text !important; /* 允许文本选择 */
+    -webkit-user-select: text !important;
+    margin-top: 16px;
+    padding: 12px;
+    background: #fff;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* 移除Markdown渲染区域的点击拦截 */
+.markdown-viewer {
+    pointer-events: none; /* 移除该属性或设置为 auto */
+}
+
+.ai-response pre,
+.ai-response code {
+    user-select: text !important;
+    -webkit-user-select: text !important;
+}
+
+.ai-response pre:hover::after {
+    content: "点击代码块可全选";
+    position: absolute;
+    right: 10px;
+    top: 5px;
+    font-size: 12px;
+    color: #666;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 2px 5px;
+    border-radius: 3px;
+}
+
+.ask-ai-button {
+    width: 380px;
+    height: 48px;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    border-radius: 24px !important;
+    background: linear-gradient(135deg, #4a90e2 0%, #8b6cf0 100%) !important;
+    border: none !important;
+    box-shadow: 0 4px 15px rgba(74, 144, 226, 0.3);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateY(0);
+}
+
+.ask-ai-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+}
+
+.loading-content {
+    padding: 24px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.ask-ai-button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(74, 144, 226, 0.4);
+    background: linear-gradient(135deg, #5a9cf4 0%, #9b7cff 100%) !important;
+}
+
+.ask-ai-button:active:not(:disabled) {
+    transform: translateY(1px) scale(0.98);
+    box-shadow: 0 2px 8px rgba(74, 144, 226, 0.2);
+}
+
+.ask-ai-button:disabled {
+    background: linear-gradient(135deg, #cccccc 0%, #999999 100%) !important;
+    cursor: not-allowed;
+}
+
+.loading-hint {
+    margin-top: 12px;
+    color: #6c757d;
+    font-size: 14px;
+}
+
+.ant-spin-dot-item {
+    background-color: #4a90e2 !important;
+}
+
+
+/* 新增样式 */
+.spin-container {
+    min-height: 200px; /* 保持内容区域高度稳定 */
+    display: flex;
+    justify-content: center;
+    padding: 24px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+/* 调整加载提示样式 */
+.ant-spin-nested-loading .ant-spin-text {
+    font-size: 16px;
+    color: #4a90e2 !important;
+    margin-top: 16px;
+}
+
+.loading-hint {
+    font-size: 14px;
+    color: #6c757d;
+    margin-top: 8px;
+}
+
+/* 新增样式 */
+.premium-hint {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 8px;
+    padding: 16px;
+    margin: 16px 0;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.hint-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+    position: relative;
+    z-index: 2;
+}
+
+.gradient-text {
+    background: linear-gradient(45deg, #4a90e2, #63b3ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-weight: 600;
+    font-size: 1.2em;
+    letter-spacing: 1px;
+}
+
+.animated-text {
+    color: #2c3e50;
+    position: relative;
+    padding-left: 24px;
+}
+
+.animated-text::before {
+    content: "✨";
+    position: absolute;
+    left: -8px;
+    top: -2px;
+    animation: sparkle 1.5s infinite;
+}
+
+.shine {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(
+            to right,
+            rgba(255, 255, 255, 0) 0%,
+            rgba(255, 255, 255, 0.3) 50%,
+            rgba(255, 255, 255, 0) 100%
+    );
+    animation: shine 2s infinite;
+}
+
+@keyframes sparkle {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+}
+
+@keyframes shine {
+    100% {
+        left: 200%;
+    }
+}
+
+.long-time-hint {
+    margin-top: 12px;
+    margin-left: 20px;
+    color: #ff6b6b;
+    font-size: 14px;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 0.8;
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.05);
+    }
+    100% {
+        opacity: 0.8;
+    }
+}

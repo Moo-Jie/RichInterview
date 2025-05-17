@@ -1,8 +1,8 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import ReactECharts from "echarts-for-react";
 import dayjs from "dayjs";
-import {Button, message, Skeleton} from "antd";
-import {getUserSignInRecordUsingGet} from "@/api/userController";
+import { Button, message, Skeleton } from "antd";
+import { getUserSignInRecordUsingGet } from "@/api/userController";
 import "./index.css";
 
 interface Props {}
@@ -45,7 +45,7 @@ const CalendarChart = (props: Props) => {
   useEffect(() => {
     fetchDataList(year);
   }, []);
-// 年份切换
+  // 年份切换
   const handleYearChange = (offset: number) => {
     const newYear = selectedYear + offset;
     setSelectedYear(newYear);
@@ -70,7 +70,7 @@ const CalendarChart = (props: Props) => {
       max: 1,
       inRange: {
         // 渐变
-        color: ['#f0f0f0', '#8cc269'],
+        color: ["#f0f0f0", "#8cc269"],
       },
     },
     calendar: {
@@ -80,18 +80,18 @@ const CalendarChart = (props: Props) => {
       yearLabel: {
         textStyle: {
           fontSize: 16,
-          fontWeight: 'bold',
-          color: '#333'
+          fontWeight: "bold",
+          color: "#333",
         },
         position: "top",
         formatter: `${year} 年度刷题记录总览`,
       },
       dayLabel: {
-        color: '#666'
+        color: "#666",
       },
       monthLabel: {
-        color: '#666'
-      }
+        color: "#666",
+      },
     },
     series: {
       type: "heatmap",
@@ -101,27 +101,27 @@ const CalendarChart = (props: Props) => {
     tooltip: {
       formatter: (params: any) => {
         return `日期: ${params.data[0]}<br/>刷题次数: ${params.data[1]}次`;
-      }
-    }
+      },
+    },
   };
 
   return (
-      <div className="calendar-container">
-        <div className="toolbar">
-          <Button onClick={() => handleYearChange(-1)}>{'<'}</Button>
-          <span className="year-display">{selectedYear}</span>
-          <Button onClick={() => handleYearChange(1)}>{'>'}</Button>
-        </div>
-        {loading ? (
-            <Skeleton active paragraph={{ rows: 6 }} />
-        ) : (
-            <ReactECharts
-                className="calendar-chart"
-                option={options}
-                style={{ height: 240 }}
-            />
-        )}
+    <div className="calendar-container">
+      <div className="toolbar">
+        <Button onClick={() => handleYearChange(-1)}>{"<"}</Button>
+        <span className="year-display">{selectedYear}</span>
+        <Button onClick={() => handleYearChange(1)}>{">"}</Button>
       </div>
+      {loading ? (
+        <Skeleton active paragraph={{ rows: 6 }} />
+      ) : (
+        <ReactECharts
+          className="calendar-chart"
+          option={options}
+          style={{ height: 240 }}
+        />
+      )}
+    </div>
   );
 };
 

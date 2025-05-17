@@ -24,12 +24,12 @@ import {usePathname, useRouter} from "next/navigation";
 import Link from "next/link";
 import GlobalFooter from "@/components/GlobalFooterComponent";
 import {sysMenus} from "../../../config/menu";
-import {ConstantMsg} from "@/constant/ConstantMsg";
+import {ConstantBasicMsg} from "@/constant/ConstantBasicMsg";
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "@/store";
 import showMenuByUserAccess from "@/app/Forbidden/showMenuByUserAccess";
 import {userLogoutUsingPost} from "@/api/userController";
-import {DEFAULT_USER} from "@/constant/ConstantUser";
+import {DEFAULT_USER} from "@/constant/ConstantUserMsg";
 import {setUserLogin} from "@/store/userLogin";
 import AccessEnumeration from "@/access/accessEnumeration";
 import SearchInputComponent from "@/components/SearchInputComponent";
@@ -78,7 +78,7 @@ export default function MainLayout({ children }: Props) {
       height={32}
       width={32}
       fontSize={15}
-      content={ConstantMsg.PROJECT_CHINESE_NAME}
+      content={ConstantBasicMsg.PROJECT_CHINESE_NAME}
     >
       <div
         id="mainLayout"
@@ -90,11 +90,11 @@ export default function MainLayout({ children }: Props) {
         <ProLayout
           // 基础布局配置
           layout="top"
-          title={ConstantMsg.PROJECT_CHINESE_NAME}
+          title={ConstantBasicMsg.PROJECT_CHINESE_NAME}
           logo={
             <Image
               src="/assets/pictures/logo.png"
-              alt={ConstantMsg.PROJECT_NAME}
+              alt={ConstantBasicMsg.PROJECT_NAME}
               width={35}
               height={35}
             />
@@ -204,9 +204,9 @@ export default function MainLayout({ children }: Props) {
                 content={
                   <div style={{ maxWidth: 300 }}>
                     <h2>系统信息</h2>
-                    <h4>当前版本：{ConstantMsg.PROJECT_VERSION}</h4>
-                    <h4>维护者：{ConstantMsg.AUTHOR_NAME}</h4>
-                    <h4>更新日期：{ConstantMsg.PROJECT_LAST_UPDATE_TIME}</h4>
+                    <h4>当前版本：{ConstantBasicMsg.PROJECT_VERSION}</h4>
+                    <h4>维护者：{ConstantBasicMsg.AUTHOR_NAME}</h4>
+                    <h4>更新日期：{ConstantBasicMsg.PROJECT_LAST_UPDATE_TIME}</h4>
                   </div>
                 }
               >
@@ -237,7 +237,7 @@ export default function MainLayout({ children }: Props) {
                 <QuestionCircleFilled />
               </Popover>,
               <a
-                href={ConstantMsg.REPO_URL}
+                href={ConstantBasicMsg.REPO_URL}
                 key="github"
                 title="项目源码"
                 target="_blank"
@@ -249,7 +249,7 @@ export default function MainLayout({ children }: Props) {
           // 头部标题渲染
           headerTitleRender={(logo, title, _) => {
             return (
-              <a href={ConstantMsg.HOME_URL} target="_blank">
+              <a href={ConstantBasicMsg.HOME_URL} target="_blank">
                 {logo}
                 {title}
               </a>

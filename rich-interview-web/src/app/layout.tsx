@@ -15,37 +15,37 @@ import "./globals.css";
  * @param children 子组件
  */
 export default function RootLayout({
-                                       children,
-                                   }: Readonly<{
-    children: React.ReactNode;
+  children,
+}: Readonly<{
+  children: React.ReactNode;
 }>) {
-    return (
-        <html lang="zh">
-        <body>
+  return (
+    <html lang="zh">
+      <body>
         <AntdRegistry>
-            <ConfigProvider
-                theme={{
-                    token: {
-                        colorPrimary: "#1677ff",
-                    },
-                    cssVar: true,
-                    hashed: false,
-                }}
-            >
-                <AntdApp>
-                    <Provider store={store}>
-                        <AppInitializerComponent>
-                            <Suspense fallback={<Loading/>}>
-                                <MainLayout>
-                                    <AccessCheekComponent>{children}</AccessCheekComponent>
-                                </MainLayout>
-                            </Suspense>
-                        </AppInitializerComponent>
-                    </Provider>
-                </AntdApp>
-            </ConfigProvider>
+          <ConfigProvider
+            theme={{
+              token: {
+                colorPrimary: "#1677ff",
+              },
+              cssVar: true,
+              hashed: false,
+            }}
+          >
+            <AntdApp>
+              <Provider store={store}>
+                <AppInitializerComponent>
+                  <Suspense fallback={<Loading />}>
+                    <MainLayout>
+                      <AccessCheekComponent>{children}</AccessCheekComponent>
+                    </MainLayout>
+                  </Suspense>
+                </AppInitializerComponent>
+              </Provider>
+            </AntdApp>
+          </ConfigProvider>
         </AntdRegistry>
-        </body>
-        </html>
-    );
+      </body>
+    </html>
+  );
 }

@@ -1,8 +1,7 @@
-import {updateQuestionUsingPost} from "@/api/questionController";
-import {ProColumns, ProTable} from "@ant-design/pro-components";
-import {App, Modal} from "antd";
+import { updateQuestionUsingPost } from "@/api/questionController";
+import { ProColumns, ProTable } from "@ant-design/pro-components";
+import { App, Modal } from "antd";
 import React from "react";
-
 
 interface Props {
   oldData?: API.Question;

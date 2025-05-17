@@ -10,7 +10,6 @@ import {ProColumns, ProTable} from "@ant-design/pro-components";
 import CalendarChart from "@/app/user/userCenter/components/CalendarChartComponent";
 import "./index.css";
 
-
 /**
  * 用户管理页面
  * @constructor
