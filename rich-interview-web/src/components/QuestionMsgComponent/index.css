@@ -1,3 +1,35 @@
+/* 新增动态渐变背景 */
+.question-card {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.question-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(
+            #4a90e2 0deg,
+            #63b3ff 90deg,
+            #8b6cf0 180deg,
+            #ff6b6b 270deg,
+            #4a90e2 360deg
+    );
+    animation: rotate 8s linear infinite;
+    opacity: 0.18;
+}
+
+/* 添加动画定义 */
+@keyframes rotate {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
 .question-card {
     background: #f8f9fa;
     padding: 24px;

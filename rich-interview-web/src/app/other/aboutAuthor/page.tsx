@@ -1,38 +1,35 @@
 "use client";
 import { Card, Col, Row } from "antd";
 import { ConstantBasicMsg } from "@/constant/ConstantBasicMsg";
-import styles from "../components/page.module.css";
 import { GithubFilled } from "@ant-design/icons";
 import React from "react";
+import styles from "../components/page.module.css";
 
 // 数据
 const interviewData = [
   {
     direction: "后端",
     technologyStackRow01:
-      "•熟悉JAVASE相关内容：基础语法、面向对象、常用API、继承和多态、集合、异常、IO流、多线程、锁、网络编程基础、反射",
-    technologyStackRow02: "熟悉springMVC框架下基于JAVAEE的开发生态",
+      "• JAVA 基础知识、常用 API 、主流集合特性与底层机制、异常、 IO 流、多线程及分布式锁、网络编程基础、反射等。",
+    technologyStackRow02: "熟悉 JVM 工作原理，包括内存结构、运行数据区、垃圾回收机制、类加载机制、对象创建过程、JVM 调优等",
     technologyStackRow03:
-      "•熟悉JavaWeb项目开发流程，能基于行业规范实现业务逻辑，能自主解决BUG",
+      "• 熟练使用 MySQL数据库，掌握索引使用规则和运行细节，熟悉事务、MVCC、锁机制、SQL的执行分析与优化、日志等",
     technologyStackRow04:
-      "•熟悉基于MySQL的数据库内容，主流存储引擎及其结构，了解事务、SQL优化相关内容；掌握Mybites、Mybatis-Plus框架，能熟练地基于业务需求快速实现数据库操作",
+      "• 熟悉 Redis 的常见数据类型和应用场景，以及持久化、分布式锁、过期删除策略、内存淘汰策略等特性，能够解决高并发下的缓存击穿、穿透、雪崩问题，掌握 Redis HotKey、BigKey等请问题的解决。",
     technologyStackRow05:
-      "•熟悉Redis、ElasticSearch、Kafka等常用中间件，能基于业务需求实现数据的缓存、消息队列、全文检索等功能，如Redis + Caffeine + Hotkey 构建高性能实时缓存",
+      "• 熟悉 SpringBoot、SpringMVC，掌握 IOC、AOP、Bean 生命周期及作用域、启动流程、MVC执行流程、设计模式、事务等，可以灵活地运用 SpringBoot 框架进行项目开发；熟悉Mybatis、Mybatis-Plus 开发框架。",
   },
   {
     direction: "前端",
-    technologyStackRow01: "•熟悉HTML、CSS、JavaScript、TypeScript等前端语言",
-    technologyStackRow02: "•熟悉Vue、React（本项目）框架",
-    technologyStackRow03: "•使用热门组件element、Ant Design快速搭建项目页面",
+    technologyStackRow01: "•熟悉 HTML、CSS、JavaScript、TypeScript等前端语言",
+    technologyStackRow02: "•熟悉 Vue 框架+ element Plus 组件、React 框架+ Ant Design 组件，可以基于后端业务进行快速地Web页面搭建",
   },
   {
     direction: "其他",
     technologyStackRow01:
-      "•了解常见的数据结构与算法,并根据实际应用场景对功能进行优化",
-    technologyStackRow02: "•计算机组成原理",
-    technologyStackRow03: "•计算机操作系统",
-    technologyStackRow04: "•数据库原理",
-    technologyStackRow05: "•计算机网络",
+      "• 了解常见的数据结构与算法,并根据实际应用场景对功能进行优化",
+    technologyStackRow02: "• 计算机组成原理、计算机网络、计算机操作系统、数据库原理",
+    technologyStackRow03: "• 熟练使用 IDEA、Maven、ApiPfox等项目管理和构建工具；熟悉 Git 的使用、Linux 常用命令和 Docker 基本操作。",
   },
 ];
 
@@ -56,10 +53,10 @@ export default function Home() {
               <a
                 href="https://github.com/Moo-Jie"
                 key="github"
-                title="我的GITHUB主页"
+                title="GITHUB主页"
                 target="_blank"
               >
-                我的GITHUB主页
+                GITHUB主页
                 <GithubFilled key="GithubFilled" />
               </a>
             </Col>
@@ -88,7 +85,12 @@ export default function Home() {
               >
                 <Card
                   title={item.direction}
-                  headStyle={{ background: "#f0f5ff" }}
+                  styles={{
+                    header: {
+                      background: "#f0f5ff",
+                      borderRadius: "8px 8px 0 0"
+                    }
+                  }}
                   className={styles.boxShadowHover}
                 >
                   <Row gutter={[8, 8]}>

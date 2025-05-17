@@ -1,9 +1,10 @@
 "use client";
-import {Button, Card, Collapse, Input} from "antd";
+import { Button, Card, Collapse, Input } from "antd";
 import MarkdownViewer from "@/components/MarkdownComponent/MarkdownViewer";
-import {useState} from "react";
-import {queryAiUsingPost} from "@/api/aiClientController";
-import {LoadingOutlined} from "@ant-design/icons";
+import { useState } from "react";
+import { queryAiUsingPost } from "@/api/aiClientController";
+import { LoadingOutlined } from "@ant-design/icons";
+import LoginConfirmModal from "@/components/LoginConfirmComponent";
 import "../QuestionMsgComponent/index.css";
 
 /**
@@ -27,9 +28,16 @@ const AiCallComponent = () => {
   const handleQuestionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setQuestion(e.target.value);
   };
+  // 跳转登录弹窗
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   // 调用AI接口
   const handleAskAI = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setShowLoginModal(true);
+      return;
+    }
     try {
       // 模拟思考时间
       setThinkingSeconds(0);
@@ -125,6 +133,11 @@ const AiCallComponent = () => {
           </div>
         )}
       </Card>
+      <LoginConfirmModal
+        visible={showLoginModal}
+        onConfirm={() => setShowLoginModal(false)}
+        onCancel={() => setShowLoginModal(false)}
+      />
     </div>
   );
 };

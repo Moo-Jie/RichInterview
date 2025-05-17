@@ -49,8 +49,8 @@ const UserRegisterPage: React.FC = (props) => {
             height={44}
           />
         }
-        title="RICH面试刷题平台 - 用户登录"
-        subTitle="-程序员必备的面试刷题网站-"
+        title="RICH 智能面试刷题平台"
+        subTitle="- 极速注册 -"
         onFinish={doSubmit}
         submitter={{
           searchConfig: {

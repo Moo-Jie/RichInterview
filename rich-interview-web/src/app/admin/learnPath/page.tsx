@@ -151,22 +151,6 @@ const LearnPathAdminPage: React.FC = () => {
       },
     },
     {
-      title: "标签",
-      dataIndex: "tags",
-      width: 200,
-      valueType: "select",
-      hideInSearch: true,
-      fieldProps: {
-        mode: "tags",
-      },
-      align: "left",
-      render: (_, record) => {
-        const tagList = JSON.parse(record.tags || "[]");
-        return <TagListComponent tagList={tagList} />;
-      },
-    },
-
-    {
       title: "创建时间",
       dataIndex: "createTime",
       valueType: "dateTime",

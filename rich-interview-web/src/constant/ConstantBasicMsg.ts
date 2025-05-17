@@ -7,9 +7,9 @@ export const ConstantBasicMsg = {
   // 项目名称
   PROJECT_NAME: "RichInterview",
   // 项目版本号
-  PROJECT_VERSION: "1.0.0",
+  PROJECT_VERSION: "1.3.0",
   // 项目最近更新时间
-  PROJECT_LAST_UPDATE_TIME: "2025-04-23",
+  PROJECT_LAST_UPDATE_TIME: "2025-05-18",
   // 项目描述
   PROJECT_DESCRIPTION: "",
   // 项目中文名

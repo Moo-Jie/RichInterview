@@ -76,8 +76,8 @@ const UserLoginPage: React.FC = (props) => {
                 height={44}
               />
             }
-            title="登录 —— Rich 智能面试刷题平台"
-            subTitle="登录后免费享全部热门题目"
+            title="RICH 智能面试刷题平台"
+            subTitle="- 登录后免费享全部热门题目 -"
             onFinish={doSubmit}
             submitter={{
               searchConfig: {

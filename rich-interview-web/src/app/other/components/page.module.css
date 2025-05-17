@@ -1,4 +1,7 @@
 /* page.module.css  */
+/* 新增动态渐变背景 */
+
+
 .page {
     display: flex;
     flex-direction: column;

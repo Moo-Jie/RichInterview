@@ -109,7 +109,7 @@ const QuestionMsgComponent = (props: Props) => {
           <div className="meta-container">
             {metaItems.map((item, index) => (
               <div key={index} className="meta-item">
-                <span className="meta-label">{item.label}:</span>
+                <span className="meta-label">{item.label}</span>
                 <span className="meta-value">{item.value}</span>
               </div>
             ))}

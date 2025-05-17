@@ -22,7 +22,7 @@
 
 /* 内容卡片 */
 .content-card {
-    min-height: 500px;
+    min-height: 150px;
 }
 
 /* 移除原有栅格响应式 */

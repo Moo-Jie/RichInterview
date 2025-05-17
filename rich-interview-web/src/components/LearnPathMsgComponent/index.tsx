@@ -1,10 +1,9 @@
 "use client";
-import { Button, Card, Modal } from "antd";
+import { Button, Card } from "antd";
 import Title from "antd/es/typography/Title";
 import TagList from "@/components/TagListComponent";
 import MarkdownViewer from "@/components/MarkdownComponent/MarkdownViewer";
 import useAddUserSignInRecordHook from "@/hooks/useAddUserSignInRecordHook";
-import { useState } from "react";
 import { CopyOutlined } from "@ant-design/icons";
 import "./index.css";
 
@@ -18,7 +17,6 @@ interface Props {
  * @constructor
  */
 const LearnPathMsgComponent = (props: Props) => {
-
   const { learnPath } = props;
 
   // TODO 学习达半分钟以上才记为签到
@@ -54,7 +52,7 @@ const LearnPathMsgComponent = (props: Props) => {
 
   return (
     <div className="learnPath-card">
-      {/*学习路线基本信息*/}
+      {/* 学习路线基本信息 */}
       <Card className="learnPath-header-card">
         <div className="header-content">
           <Title level={1} className="learnPath-title">
@@ -70,13 +68,13 @@ const LearnPathMsgComponent = (props: Props) => {
           </div>
         </div>
         <TagList tagList={learnPath.tagList} />
-      </Card>
-      {/*学习路线描述*/}
-      <Card
-        className="content-card"
-        title={<span className="card-title">学习路线描述</span>}
-      >
-        <MarkdownViewer value={learnPath.content} />
+        {/*学习路线描述*/}
+        <Card
+          className="content-card"
+          title={<span className="card-title">介绍</span>}
+        >
+          <MarkdownViewer value={learnPath.content} />
+        </Card>
       </Card>
       {/*学习路线展示*/}
       <Card
@@ -88,7 +86,7 @@ const LearnPathMsgComponent = (props: Props) => {
           </span>
         }
       >
-        {(
+        {
           <div className="ai-response">
             <MarkdownViewer value={learnPath.answer} />
             <Button
@@ -101,7 +99,7 @@ const LearnPathMsgComponent = (props: Props) => {
               复制学习路线
             </Button>
           </div>
-        )}
+        }
       </Card>
     </div>
   );
