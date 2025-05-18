@@ -1,6 +1,7 @@
 package com.rich.richInterview.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.jd.platform.hotkey.client.callback.JdHotKeyStore;
 import com.rich.richInterview.annotation.AuthCheck;
 import com.rich.richInterview.common.BaseResponse;
 import com.rich.richInterview.common.DeleteRequest;
@@ -13,6 +14,7 @@ import com.rich.richInterview.model.dto.question.QuestionEditRequest;
 import com.rich.richInterview.model.dto.question.QuestionQueryRequest;
 import com.rich.richInterview.model.dto.question.QuestionUpdateRequest;
 import com.rich.richInterview.model.entity.Question;
+import com.rich.richInterview.model.vo.QuestionBankVO;
 import com.rich.richInterview.model.vo.QuestionVO;
 import com.rich.richInterview.service.QuestionService;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +25,6 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * 题目接口
-  *
  */
 @RestController
 @RequestMapping("/question")
@@ -67,7 +68,7 @@ public class QuestionController {
      */
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     @PostMapping("/update")
-    public BaseResponse<Boolean> updateQuestion(@RequestBody QuestionUpdateRequest questionUpdateRequest,HttpServletRequest request) {
+    public BaseResponse<Boolean> updateQuestion(@RequestBody QuestionUpdateRequest questionUpdateRequest, HttpServletRequest request) {
         return ResultUtils.success(questionService.updateQuestion(questionUpdateRequest, request));
     }
 
@@ -78,18 +79,51 @@ public class QuestionController {
      * @return
      */
     @GetMapping("/get/vo")
-    public BaseResponse<QuestionVO> getQuestionVOById(long id, HttpServletRequest request) {
+    public BaseResponse<QuestionVO> getQuestionVOById(Long id, HttpServletRequest request) {
+        ThrowUtils.throwIf(id == null || id <= 0, ErrorCode.PARAMS_ERROR);
+
+        // 生成 question_detail_ 开头的 key ，应当与数据库内设定好的热点探测规则匹配
+//         规则备份：
+//                [
+//                  {
+//                    "duration": 600,
+//                        "key": "question_detail_",
+//                        "prefix": true,
+//                        "interval": 5,
+//                        "threshold": 10,
+//                        "desc": "热门题目 HotKey 缓存：首先判断 question_detail_ 开头的 key，如果 5 秒访问次数达到 10 次，就会指认为HotKey 被添加到缓存中，为期10 分钟，到期后从 JVM 中清除，变回普通 Key"
+//                  }
+//                ]
+        String key = "question_detail_" + id;
+
+        // 响应缓存内容
+        // 通过 JD-HotKey-Client 内置方法，判断是否被指认为 HotKey
+        if (JdHotKeyStore.isHotKey(key)) {
+            // 尝试从本地缓存中获取缓存值
+            Object cachedQuestionVO = JdHotKeyStore.get(key);
+            // 如果缓存值存在，响应缓存的值
+            if (cachedQuestionVO != null) {
+                return ResultUtils.success((QuestionVO) cachedQuestionVO);
+            }
+        }
         // TODO 校验是否会员题目
         ThrowUtils.throwIf(id <= 0, ErrorCode.PARAMS_ERROR);
         // 查询数据库
         Question question = questionService.getById(id);
         ThrowUtils.throwIf(question == null, ErrorCode.NOT_FOUND_ERROR);
         // 获取封装类
-        return ResultUtils.success(questionService.getQuestionVO(question, request));
+        QuestionVO questionVO = questionService.getQuestionVO(question, request);
+        // 缓存查询结果
+        // 通过 JD-HotKey-Client 内置方法，直接将查询结果缓存到本地 Caffeine 缓存中
+        JdHotKeyStore.smartSet(key, questionVO);
+
+        // 获取封装类
+        return ResultUtils.success(questionVO);
     }
 
     /**
      * 分页获取题目列表（仅管理员可用）
+     *
      * @param questionQueryRequest
      * @return
      */
@@ -136,6 +170,7 @@ public class QuestionController {
 
     /**
      * 编辑题目（给用户使用）
+     *
      * @param questionEditRequest
      * @param request
      * @return
@@ -147,6 +182,7 @@ public class QuestionController {
 
     /**
      * 通过题目id查询所属题库ID
+     *
      * @param id
      * @return com.rich.richInterview.common.BaseResponse<java.lang.Long>
      * @author DuRuiChi
@@ -160,9 +196,10 @@ public class QuestionController {
 
     /**
      * 从 ES 数据库中查询题目
+     *
      * @param questionQueryRequest
      * @param request
-     * @return com.rich.richInterview.common.BaseResponse<com.baomidou.mybatisplus.extension.plugins.pagination.Page<com.rich.richInterview.model.vo.QuestionVO>>
+     * @return com.rich.richInterview.common.BaseResponse<com.baomidou.mybatisplus.extension.plugins.pagination.Page < com.rich.richInterview.model.vo.QuestionVO>>
      * @author DuRuiChi
      * @create 2025/5/2
      **/

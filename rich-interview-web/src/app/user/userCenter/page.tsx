@@ -1,5 +1,5 @@
 "use client";
-import {App, Avatar, Button, Card, Col, Flex, Modal, Row, Typography,} from "antd";
+import {App, Avatar, Card, Col, Modal, Row} from "antd";
 import {useSelector} from "react-redux";
 import {RootState} from "@/store";
 import Title from "antd/es/typography/Title";
@@ -8,10 +8,8 @@ import {useState} from "react";
 import {updateMyUserUsingPost} from "@/api/userController";
 import {ProColumns, ProTable} from "@ant-design/pro-components";
 import CalendarChart from "@/app/user/userCenter/components/CalendarChartComponent";
-import Link from "next/link";
-import "./index.css";
-import {RightOutlined} from "@ant-design/icons";
 import RecentStudy from "@/components/RecentStudyComponent";
+import "./index.css";
 
 /**
  * 用户管理页面

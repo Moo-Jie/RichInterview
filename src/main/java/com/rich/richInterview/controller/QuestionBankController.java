@@ -1,6 +1,7 @@
 package com.rich.richInterview.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.jd.platform.hotkey.client.callback.JdHotKeyStore;
 import com.rich.richInterview.annotation.AuthCheck;
 import com.rich.richInterview.common.BaseResponse;
 import com.rich.richInterview.common.DeleteRequest;
@@ -38,10 +39,9 @@ public class QuestionBankController {
     private UserService userService;
 
 
-
-
     /**
      * 创建题库(仅管理员权限)
+     *
      * @param questionBankAddRequest
      * @param request
      * @return
@@ -79,13 +79,51 @@ public class QuestionBankController {
 
     /**
      * 根据 id 获取题库详情（封装类）
+     *
      * @param questionBankQueryRequest
      * @param request
      * @return
      */
     @GetMapping("/get/vo")
     public BaseResponse<QuestionBankVO> getQuestionBankVOById(QuestionBankQueryRequest questionBankQueryRequest, HttpServletRequest request) {
-        return ResultUtils.success(questionBankService.getQuestionBankVOById(questionBankQueryRequest, request));
+        ThrowUtils.throwIf(questionBankQueryRequest == null, ErrorCode.PARAMS_ERROR);
+        Long id = questionBankQueryRequest.getId();
+        ThrowUtils.throwIf(id <= 0, ErrorCode.PARAMS_ERROR);
+
+        // 生成 bank_detail_ 开头的 key ，应当与数据库内设定好的热点探测规则匹配
+        // 规则备份：
+        //        [
+//                  {
+//                    "duration": 600,
+//                        "key": "bank_detail_",
+//                        "prefix": true,
+//                        "interval": 5,
+//                        "threshold": 10,
+//                        "desc": "热门题库 HotKey 缓存：首先判断 bank_detail_ 开头的 key，如果 5 秒访问次数达到 10 次，就会指认为HotKey 被添加到缓存中，为期10 分钟，到期后从 JVM 中清除，变回普通 Key"
+//                  }
+        //        ]
+        String key = "bank_detail_" + id;
+
+        // 响应缓存内容
+        // 通过 JD-HotKey-Client 内置方法，判断是否被指认为 HotKey
+        if (JdHotKeyStore.isHotKey(key)) {
+            // 尝试从本地缓存中获取缓存值
+            Object cachedQuestionBankVO = JdHotKeyStore.get(key);
+            // 如果缓存值存在，响应缓存的值
+            if (cachedQuestionBankVO != null) {
+                return ResultUtils.success((QuestionBankVO) cachedQuestionBankVO);
+            }
+        }
+        // 查询数据库
+        QuestionBankVO questionBankVO = questionBankService.getQuestionBankVOById(questionBankQueryRequest, request);
+
+        // 缓存查询结果
+        // 通过 JD-HotKey-Client 内置方法，直接将查询结果缓存到本地 Caffeine 缓存中
+        JdHotKeyStore.smartSet(key, questionBankVO);
+
+        // 获取封装类
+        return ResultUtils.success(questionBankVO);
+
     }
 
     /**
@@ -114,7 +152,7 @@ public class QuestionBankController {
      */
     @PostMapping("/list/page/vo")
     public BaseResponse<Page<QuestionBankVO>> listQuestionBankVOByPage(@RequestBody QuestionBankQueryRequest questionBankQueryRequest,
-                                                               HttpServletRequest request) {
+                                                                       HttpServletRequest request) {
         long current = questionBankQueryRequest.getCurrent();
         long size = questionBankQueryRequest.getPageSize();
         // 限制爬虫
@@ -135,7 +173,7 @@ public class QuestionBankController {
      */
     @PostMapping("/my/list/page/vo")
     public BaseResponse<Page<QuestionBankVO>> listMyQuestionBankVOByPage(@RequestBody QuestionBankQueryRequest questionBankQueryRequest,
-                                                                 HttpServletRequest request) {
+                                                                         HttpServletRequest request) {
         ThrowUtils.throwIf(questionBankQueryRequest == null, ErrorCode.PARAMS_ERROR);
         // 补充查询条件，只查询当前登录用户的数据
         User loginUser = userService.getLoginUser(request);

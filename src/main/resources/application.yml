@@ -5,7 +5,7 @@ spring:
   # 默认 dev 环境
   profiles:
     active: dev
-#    active: prod
+  #    active: prod
   # 支持 swagger3
   mvc:
     pathmatch:
@@ -24,9 +24,9 @@ spring:
     username: root
     password: 12345
     # 线上库
-#    url: jdbc:mysql://49.233.207.238:3306/richinterview
-#    username: richInterviewUser
-#    password: 5Fse3fNPkYFz6Bef
+  #    url: jdbc:mysql://49.233.207.238:3306/richinterview
+  #    username: richInterviewUser
+  #    password: 5Fse3fNPkYFz6Bef
   # Redis 配置
   redis:
     database: 1
@@ -34,14 +34,15 @@ spring:
     host: localhost
     port: 6379
     # 线上库
-#    host: 49.233.207.238
-#    password: 123456
+    #    host: 49.233.207.238
+    #    password: 123456
     timeout: 5000
   # Elasticsearch 配置
-#  elasticsearch:
-#    uris: http://localhost:9200
-#    username: root
-#    password: 123456
+  # 已实现接口降级服务，不使用时注销即可
+  #  elasticsearch:
+  #    uris: http://localhost:9200
+  #    username: root
+  #    password: 123456
   # 文件上传
   servlet:
     multipart:
@@ -118,3 +119,10 @@ knife4j:
   basic:
     username: root
     password: 123456
+# JD - Hotkey 探测中间件链接相关配置
+hotkey:
+  app-name: RichInterview
+  caffeine-size: 10000
+  push-period: 1000
+  etcd-server: http://localhost:2379
+

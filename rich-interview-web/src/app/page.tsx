@@ -96,12 +96,12 @@ export default async function HomePage() {
         </div>
 
         {/* 右侧边栏 */}
-        <Sider width={400} theme="light" className={styles.sidebar}>
+        <Sider width={320} theme="light" className={styles.sidebar}>
           <Card>
             <RecentStudy />
           </Card>
           {/* 每日一刷 */}
-          <Card className={styles.sideCard}>
+          <Card className={styles.sideCard} style={{ marginTop: 24 }}>
             <div className={styles.sideCardHeader}>
               <span className={styles.cardTitle}>
                 <BulbOutlined style={{ color: "#faad14", marginRight: 8 }} />
@@ -136,7 +136,7 @@ export default async function HomePage() {
           </Card>
 
           {/* 热门题目 */}
-          <Card className={styles.sideCard}>
+          <Card className={styles.sideCard} style={{ marginTop: 24 }}>
             <div className={styles.sideCardHeader}>
               <span className={styles.cardTitle}>🔥 热门题目 TOP10</span>
             </div>

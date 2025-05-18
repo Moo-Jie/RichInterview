@@ -5,7 +5,10 @@ import { useState } from "react";
 import { queryAiUsingPost } from "@/api/aiClientController";
 import { LoadingOutlined } from "@ant-design/icons";
 import LoginConfirmModal from "@/components/LoginConfirmComponent";
+import {useSelector} from "react-redux";
+import {RootState} from "@/store";
 import "../QuestionMsgComponent/index.css";
+import AccessEnumeration from "@/access/accessEnumeration";
 
 /**
  * Ai问答通用组件
@@ -13,6 +16,7 @@ import "../QuestionMsgComponent/index.css";
  * @constructor
  */
 const AiCallComponent = () => {
+  const loginUser = useSelector((state: RootState) => state.userLogin);
   // AI 调用相关状态
   const [aiLoading, setAiLoading] = useState(false);
   const [aiResponse, setAiResponse] = useState<string>();
@@ -33,8 +37,8 @@ const AiCallComponent = () => {
 
   // 调用AI接口
   const handleAskAI = async () => {
-    const token = localStorage.getItem("token");
-    if (!token) {
+
+    if (loginUser.userRole === AccessEnumeration.NOT_LOGIN) {
       setShowLoginModal(true);
       return;
     }
@@ -62,7 +66,7 @@ const AiCallComponent = () => {
   };
 
   return (
-    <div className="question-card">
+    <div className="question-card-ai">
       <Card
         className="ask-ai-card"
         title={<span className="card-title">AI助手解答</span>}
@@ -111,26 +115,27 @@ const AiCallComponent = () => {
           </div>
         )}
         {!aiLoading && aiResponse && (
-          <div className="ai-response">
-            <Collapse
-              activeKey={activeKey}
-              onChange={(key) => setActiveKey(key)}
-              bordered={false}
-              className="custom-collapse"
-            >
-              <Panel
-                header="文档构建成功✅  点击查看"
-                key="1"
-                extra={
-                  <div className="collapse-arrow">
-                    {activeKey.length ? "收起" : "展开"}
-                  </div>
-                }
+            <div className="ai-response">
+              <Collapse
+                  activeKey={activeKey}
+                  onChange={(key) => setActiveKey(key)}
+                  bordered={false}
+                  className="custom-collapse"
+                  items={[
+                    {
+                      key: '1',
+                      label: '文档构建成功✅  点击查看',
+                      extra: (
+                          <div className="collapse-arrow">
+                            {activeKey.length ? "收起" : "展开"}
+                          </div>
+                      ),
+                      children: <MarkdownViewer value={aiResponse} />,
+                    }
+                  ]}
               >
-                <MarkdownViewer value={aiResponse} />
-              </Panel>
-            </Collapse>
-          </div>
+              </Collapse>
+            </div>
         )}
       </Card>
       <LoginConfirmModal

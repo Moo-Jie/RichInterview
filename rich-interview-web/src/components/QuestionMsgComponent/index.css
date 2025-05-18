@@ -19,7 +19,7 @@
             #ff6b6b 270deg,
             #4a90e2 360deg
     );
-    animation: rotate 8s linear infinite;
+    animation: rotate 4s linear infinite;
     opacity: 0.18;
 }
 
@@ -28,6 +28,37 @@
     100% {
         transform: rotate(360deg);
     }
+}
+
+.question-card-ai {
+    background: #f8f9fa;
+    padding: 24px;
+    border-radius: 12px;
+}
+
+/* 新增动态渐变背景 */
+.question-card-ai {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.question-card-ai::before {
+    content: '';
+    position: absolute;
+    top: -500%;    /* 从-100%调整为-500% */
+    left: -500%;   /* 从-100%调整为-500% */
+    width: 2000%;  /* 从400%调整为2000% */
+    height: 2000%; /* 从300%调整为2000% */
+    background: conic-gradient(
+            #4a90e2 0deg,
+            #63b3ff 90deg,
+            #8b6cf0 180deg,
+            #ff6b6b 270deg,
+            #4a90e2 360deg
+    );
+    animation: rotate 8s linear infinite;
+    opacity: 0.18;
 }
 
 .question-card {

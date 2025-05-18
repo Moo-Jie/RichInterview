@@ -169,11 +169,11 @@ const QuestionMsgComponent = (props: Props) => {
             <Button
               icon={<CopyOutlined />}
               onClick={() =>
-                navigator.clipboard.writeText(question.answer || "")
+                navigator.clipboard.writeText(aiResponse || "")
               }
               className="copy-button"
             >
-              复制参考答案
+              复制 AI 文档
             </Button>
           </div>
         )}
