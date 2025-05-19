@@ -129,13 +129,14 @@
             <optional>true</optional>
         </dependency>
         <!-- 引入hotkey client 使用 hotkey 项目 -->
-        <dependency>
-            <artifactId>hotkey-client</artifactId>
-            <groupId>com.jd.platform.hotkey</groupId>
-            <version>0.0.4-SNAPSHOT</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/hotkey-client-0.0.4-SNAPSHOT.jar</systemPath>
-        </dependency>
+        <!-- 不使用改热点探测服务注销即可 -->
+<!--        <dependency>-->
+<!--            <artifactId>hotkey-client</artifactId>-->
+<!--            <groupId>com.jd.platform.hotkey</groupId>-->
+<!--            <version>0.0.4-SNAPSHOT</version>-->
+<!--            <scope>system</scope>-->
+<!--            <systemPath>${project.basedir}/lib/hotkey-client-0.0.4-SNAPSHOT.jar</systemPath>-->
+<!--        </dependency>-->
 
         <!-- Lombok -->
         <dependency>

@@ -1,7 +1,6 @@
 package com.rich.richInterview.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.jd.platform.hotkey.client.callback.JdHotKeyStore;
 import com.rich.richInterview.annotation.AuthCheck;
 import com.rich.richInterview.common.BaseResponse;
 import com.rich.richInterview.common.DeleteRequest;
@@ -14,7 +13,6 @@ import com.rich.richInterview.model.dto.question.QuestionEditRequest;
 import com.rich.richInterview.model.dto.question.QuestionQueryRequest;
 import com.rich.richInterview.model.dto.question.QuestionUpdateRequest;
 import com.rich.richInterview.model.entity.Question;
-import com.rich.richInterview.model.vo.QuestionBankVO;
 import com.rich.richInterview.model.vo.QuestionVO;
 import com.rich.richInterview.service.QuestionService;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +20,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+// 不使用改热点探测服务注销即可
+//import com.jd.platform.hotkey.client.callback.JdHotKeyStore;
 
 /**
  * 题目接口
@@ -94,18 +94,19 @@ public class QuestionController {
 //                        "desc": "热门题目 HotKey 缓存：首先判断 question_detail_ 开头的 key，如果 5 秒访问次数达到 10 次，就会指认为HotKey 被添加到缓存中，为期10 分钟，到期后从 JVM 中清除，变回普通 Key"
 //                  }
 //                ]
-        String key = "question_detail_" + id;
+        // 不使用改热点探测服务注销即可
+//        String key = "question_detail_" + id;
 
         // 响应缓存内容
         // 通过 JD-HotKey-Client 内置方法，判断是否被指认为 HotKey
-        if (JdHotKeyStore.isHotKey(key)) {
-            // 尝试从本地缓存中获取缓存值
-            Object cachedQuestionVO = JdHotKeyStore.get(key);
-            // 如果缓存值存在，响应缓存的值
-            if (cachedQuestionVO != null) {
-                return ResultUtils.success((QuestionVO) cachedQuestionVO);
-            }
-        }
+//        if (JdHotKeyStore.isHotKey(key)) {
+//            // 尝试从本地缓存中获取缓存值
+//            Object cachedQuestionVO = JdHotKeyStore.get(key);
+//            // 如果缓存值存在，响应缓存的值
+//            if (cachedQuestionVO != null) {
+//                return ResultUtils.success((QuestionVO) cachedQuestionVO);
+//            }
+//        }
         // TODO 校验是否会员题目
         ThrowUtils.throwIf(id <= 0, ErrorCode.PARAMS_ERROR);
         // 查询数据库
@@ -115,7 +116,7 @@ public class QuestionController {
         QuestionVO questionVO = questionService.getQuestionVO(question, request);
         // 缓存查询结果
         // 通过 JD-HotKey-Client 内置方法，直接将查询结果缓存到本地 Caffeine 缓存中
-        JdHotKeyStore.smartSet(key, questionVO);
+//        JdHotKeyStore.smartSet(key, questionVO);
 
         // 获取封装类
         return ResultUtils.success(questionVO);

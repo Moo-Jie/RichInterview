@@ -1,10 +1,11 @@
 package com.rich.richInterview.config;
 
-import com.jd.platform.hotkey.client.ClientStarter;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+// 不使用改热点探测服务注销即可
+// import org.springframework.context.annotation.Bean;
+// import com.jd.platform.hotkey.client.ClientStarter;
 
 @Configuration
 @ConfigurationProperties(prefix = "hotkey")
@@ -33,15 +34,16 @@ public class HotKeyConfig {
 
     /**
      * 初始化 hotkey
+     * （不使用改热点探测服务注销即可）
      */
-    @Bean
-    public void initHotkey() {
-        ClientStarter.Builder builder = new ClientStarter.Builder();
-        ClientStarter starter = builder.setAppName(appName)
-                .setCaffeineSize(caffeineSize)
-                .setPushPeriod(pushPeriod)
-                .setEtcdServer(etcdServer)
-                .build();
-        starter.startPipeline();
-    }
+//    @Bean
+//    public void initHotkey() {
+//        ClientStarter.Builder builder = new ClientStarter.Builder();
+//        ClientStarter starter = builder.setAppName(appName)
+//                .setCaffeineSize(caffeineSize)
+//                .setPushPeriod(pushPeriod)
+//                .setEtcdServer(etcdServer)
+//                .build();
+//        starter.startPipeline();
+//    }
 }

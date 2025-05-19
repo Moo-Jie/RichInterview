@@ -1,7 +1,6 @@
 package com.rich.richInterview.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.jd.platform.hotkey.client.callback.JdHotKeyStore;
 import com.rich.richInterview.annotation.AuthCheck;
 import com.rich.richInterview.common.BaseResponse;
 import com.rich.richInterview.common.DeleteRequest;
@@ -23,6 +22,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+// 不使用改热点探测服务注销即可
+//import com.jd.platform.hotkey.client.callback.JdHotKeyStore;
 
 /**
  * 题库接口
@@ -89,7 +90,7 @@ public class QuestionBankController {
         ThrowUtils.throwIf(questionBankQueryRequest == null, ErrorCode.PARAMS_ERROR);
         Long id = questionBankQueryRequest.getId();
         ThrowUtils.throwIf(id <= 0, ErrorCode.PARAMS_ERROR);
-
+        // 不使用改热点探测服务注销即可
         // 生成 bank_detail_ 开头的 key ，应当与数据库内设定好的热点探测规则匹配
         // 规则备份：
         //        [
@@ -102,24 +103,24 @@ public class QuestionBankController {
 //                        "desc": "热门题库 HotKey 缓存：首先判断 bank_detail_ 开头的 key，如果 5 秒访问次数达到 10 次，就会指认为HotKey 被添加到缓存中，为期10 分钟，到期后从 JVM 中清除，变回普通 Key"
 //                  }
         //        ]
-        String key = "bank_detail_" + id;
+//        String key = "bank_detail_" + id;
 
         // 响应缓存内容
         // 通过 JD-HotKey-Client 内置方法，判断是否被指认为 HotKey
-        if (JdHotKeyStore.isHotKey(key)) {
-            // 尝试从本地缓存中获取缓存值
-            Object cachedQuestionBankVO = JdHotKeyStore.get(key);
-            // 如果缓存值存在，响应缓存的值
-            if (cachedQuestionBankVO != null) {
-                return ResultUtils.success((QuestionBankVO) cachedQuestionBankVO);
-            }
-        }
+//        if (JdHotKeyStore.isHotKey(key)) {
+//            // 尝试从本地缓存中获取缓存值
+//            Object cachedQuestionBankVO = JdHotKeyStore.get(key);
+//            // 如果缓存值存在，响应缓存的值
+//            if (cachedQuestionBankVO != null) {
+//                return ResultUtils.success((QuestionBankVO) cachedQuestionBankVO);
+//            }
+//        }
         // 查询数据库
         QuestionBankVO questionBankVO = questionBankService.getQuestionBankVOById(questionBankQueryRequest, request);
 
         // 缓存查询结果
         // 通过 JD-HotKey-Client 内置方法，直接将查询结果缓存到本地 Caffeine 缓存中
-        JdHotKeyStore.smartSet(key, questionBankVO);
+//        JdHotKeyStore.smartSet(key, questionBankVO);
 
         // 获取封装类
         return ResultUtils.success(questionBankVO);
