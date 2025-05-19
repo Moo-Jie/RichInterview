@@ -1,6 +1,6 @@
 # RICH面试刷题平台     
         
-![LOGO](https://rich-tams.oss-cn-beijing.aliyuncs.com/LOGOSM.jpg "LOGO.jpg")      
+![LOGO](https://rich-tams.oss-cn-beijing.aliyuncs.com/LOGO2SM.jpg "LOGO.jpg")        
      
 在当前的求职市场中，企业越来越注重通过技术面试来评估应聘者的专业素养和实战能力。为帮助求职者更高效地备战技术面试，一个集智能
 AI 解答、面试题目类型齐全、精准检索、学习分析、简洁高效于一体的刷题平台显得尤为重要。       
