@@ -133,6 +133,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         if (StringUtils.isNotBlank(searchText)) {
             // 需要拼接查询条件
             queryWrapper.and(qw -> qw.like("title", searchText)
+                    .or().like("tags", searchText)
 //                    .or().like("content", searchText)
 //                    .or().like("answer", searchText)
             );
@@ -149,8 +150,8 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         }
         // 模糊查询
         queryWrapper.like(StringUtils.isNotBlank(title), "title", title);
-//        queryWrapper.like(StringUtils.isNotBlank(content), "content", content);
-//        queryWrapper.like(StringUtils.isNotBlank(answer), "answer", answer);
+        queryWrapper.like(StringUtils.isNotBlank(content), "content", content);
+        queryWrapper.like(StringUtils.isNotBlank(answer), "answer", answer);
         // 排序规则
         queryWrapper.orderBy(SqlUtils.validSortField(sortField),
                 sortOrder.equals(CommonConstant.SORT_ORDER_ASC),

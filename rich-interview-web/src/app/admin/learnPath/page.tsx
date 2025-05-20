@@ -2,16 +2,12 @@
 "use client";
 import CreateModal from "./components/CreateModal";
 import UpdateModal from "./components/UpdateModal";
-import {
-  deleteLearnPathUsingPost,
-  listLearnPathVoByPageUsingPost,
-} from "@/api/learnPathController";
-import { DeleteOutlined, PlusOutlined, SwapOutlined } from "@ant-design/icons";
-import type { ActionType, ProColumns } from "@ant-design/pro-components";
-import { PageContainer, ProTable } from "@ant-design/pro-components";
-import { App, Button, Modal, Select, Table, Typography } from "antd";
-import React, { useRef, useState } from "react";
-import TagListComponent from "@/components/TagListComponent";
+import {deleteLearnPathUsingPost, listLearnPathVoByPageUsingPost,} from "@/api/learnPathController";
+import {DeleteOutlined, PlusOutlined} from "@ant-design/icons";
+import type {ActionType, ProColumns} from "@ant-design/pro-components";
+import {PageContainer, ProTable} from "@ant-design/pro-components";
+import {App, Button, Table, Typography} from "antd";
+import React, {useRef, useState} from "react";
 import MarkdownEditor from "@/components/MarkdownComponent/MarkdownEditor";
 
 import "./index.css";

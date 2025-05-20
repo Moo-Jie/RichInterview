@@ -1,6 +1,6 @@
-import { Button, Result } from "antd";
+import {Button, Result} from "antd";
 import styles from "@/app/Forbidden/Forbidden.module.css";
-import { LoginOutlined } from "@ant-design/icons";
+import {LoginOutlined} from "@ant-design/icons";
 
 export default function NotFound() {
   return (

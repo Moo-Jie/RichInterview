@@ -1,11 +1,12 @@
 "use client";
-import { Button, Card } from "antd";
+import {Button, Card} from "antd";
 import Title from "antd/es/typography/Title";
 import TagList from "@/components/TagListComponent";
 import MarkdownViewer from "@/components/MarkdownComponent/MarkdownViewer";
 import useAddUserSignInRecordHook from "@/hooks/useAddUserSignInRecordHook";
-import { CopyOutlined } from "@ant-design/icons";
+import {CopyOutlined} from "@ant-design/icons";
 import "./index.css";
+import React from "react";
 
 interface Props {
   learnPath: API.LearnPathVO;
@@ -62,6 +63,7 @@ const LearnPathMsgComponent = (props: Props) => {
             {metaItems.map((item, index) => (
               <div key={index} className="meta-item">
                 <span className="meta-label">{item.label}:</span>
+                  <br/> <br/>
                 <span className="meta-value">{item.value}</span>
               </div>
             ))}

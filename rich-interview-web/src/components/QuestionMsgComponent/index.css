@@ -123,7 +123,17 @@
 .meta-label {
     color: #6c757d;
     font-weight: 500;
-    margin-right: 8px;
+    position: relative;
+    padding-left: 24px;
+}
+
+.meta-label::before {
+    content: '●';
+    position: absolute;
+    left: 0;
+    color: #4a90e2;
+    font-size: 1.2em;
+    animation: blink 1.2s infinite;
 }
 
 .meta-value {

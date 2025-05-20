@@ -1,11 +1,11 @@
 "use client";
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store";
-import { Button, Card, Flex, Spin, Tag, Typography } from "antd";
+import {useEffect, useState} from "react";
+import {useSelector} from "react-redux";
+import {RootState} from "@/store";
+import {Button, Card, Flex, Spin, Tag, Typography} from "antd";
 import Link from "next/link";
-import { RightOutlined } from "@ant-design/icons";
-import { getQuestionVoByIdUsingGet } from "@/api/questionController";
+import {RightOutlined} from "@ant-design/icons";
+import {getQuestionVoByIdUsingGet} from "@/api/questionController";
 
 export default function RecentStudy() {
   const user = useSelector((state: RootState) => state.userLogin);

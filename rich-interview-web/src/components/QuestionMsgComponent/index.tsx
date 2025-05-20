@@ -1,15 +1,14 @@
 "use client";
-import { Button, Card, Modal } from "antd";
+import {Button, Card, Modal} from "antd";
 import Title from "antd/es/typography/Title";
-import TagList from "@/components/TagListComponent";
+import TagListComponent from "@/components/TagListComponent";
 import MarkdownViewer from "@/components/MarkdownComponent/MarkdownViewer";
 import useAddUserSignInRecordHook from "@/hooks/useAddUserSignInRecordHook";
-import React, { useState } from "react";
-import { queryAiUsingPost } from "@/api/aiClientController";
-import { CopyOutlined, LoadingOutlined } from "@ant-design/icons";
-import "./index.css";
-import TagListComponent from "@/components/TagListComponent";
+import React, {useState} from "react";
+import {queryAiUsingPost} from "@/api/aiClientController";
+import {CopyOutlined, LoadingOutlined} from "@ant-design/icons";
 import useAddUserPreviousQuestionRecordHook from "@/hooks/useAddUserPreviousQuestionRecordHook";
+import "./index.css";
 
 interface Props {
   question: API.QuestionVO;
@@ -115,12 +114,12 @@ const QuestionMsgComponent = (props: Props) => {
             {metaItems.map((item, index) => (
               <div key={index} className="meta-item">
                 <span className="meta-label">{item.label}</span>
+                  <br/> <br/>
                 <span className="meta-value">{item.value}</span>
               </div>
             ))}
           </div>
         </div>
-        <TagList tagList={question.tagList} />
       </Card>
       {/*题目描述*/}
       <Card

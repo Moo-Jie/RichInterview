@@ -1,6 +1,6 @@
-import { updateUserUsingPost } from "@/api/userController";
-import { ProColumns, ProTable } from "@ant-design/pro-components";
-import { message, Modal } from "antd";
+import {updateUserUsingPost} from "@/api/userController";
+import {ProColumns, ProTable} from "@ant-design/pro-components";
+import {message, Modal} from "antd";
 import React from "react";
 
 interface Props {

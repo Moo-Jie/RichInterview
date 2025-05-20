@@ -1,7 +1,7 @@
-import { Input } from "antd";
-import { useRouter } from "next/navigation";
+import {Input} from "antd";
+import {useRouter} from "next/navigation";
 import "./index.css";
-import { SearchOutlined } from "@ant-design/icons";
+import {SearchOutlined} from "@ant-design/icons";
 import React from "react";
 
 interface Props {}

@@ -1,7 +1,7 @@
 "use client";
-import { Card, Col, Row } from "antd";
-import { ConstantBasicMsg } from "@/constant/ConstantBasicMsg";
-import { GithubFilled } from "@ant-design/icons";
+import {Card, Col, Row} from "antd";
+import {ConstantBasicMsg} from "@/constant/ConstantBasicMsg";
+import {GithubFilled} from "@ant-design/icons";
 import React from "react";
 import styles from "../components/page.module.css";
 

@@ -1,19 +1,14 @@
-import { MenuDataItem } from "@ant-design/pro-layout";
+import {MenuDataItem} from "@ant-design/pro-layout";
 import {
-  BookOutlined,
-  CrownOutlined,
-  DatabaseOutlined,
-  EditOutlined,
-  HomeOutlined,
-  InfoCircleOutlined,
-  MoreOutlined,
-  QuestionCircleOutlined,
-  StockOutlined,
-  TeamOutlined,
-  UserOutlined,
+    BookOutlined,
+    CrownOutlined,
+    HomeOutlined,
+    MoreOutlined,
+    QuestionCircleOutlined,
+    StockOutlined,
 } from "@ant-design/icons";
 import AccessEnumeration from "@/access/accessEnumeration";
-import { ConstantPathMsg } from "@/constant/ConstantPathMsg";
+import {ConstantPathMsg} from "@/constant/ConstantPathMsg";
 
 /**
  * 菜单列表

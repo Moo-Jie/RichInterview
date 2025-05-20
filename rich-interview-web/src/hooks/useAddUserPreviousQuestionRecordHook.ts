@@ -1,5 +1,5 @@
-import { useEffect } from "react";
-import { updateMyUserUsingPost } from "@/api/userController";
+import {useEffect} from "react";
+import {updateMyUserUsingPost} from "@/api/userController";
 
 const useAddUserPreviousQuestionRecordHook = (questionId?: number) => {
   useEffect(() => {
