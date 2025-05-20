@@ -4,7 +4,7 @@ import {addUserSignInUsingPost} from "@/api/userController";
 
 /**
  * 添加用户刷题签到记录钩子
- * （由于服务端渲染，拿不到用户登录数据，所以在客户端阶段时，再请求一次来执行签到操作）
+ * （由于服务端渲染，拿不到用户登录数据，故在客户端阶段时，请求执行签到操作）
  * @param props
  * @constructor
  */

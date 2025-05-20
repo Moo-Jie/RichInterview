@@ -9,6 +9,7 @@ import { queryAiUsingPost } from "@/api/aiClientController";
 import { CopyOutlined, LoadingOutlined } from "@ant-design/icons";
 import "./index.css";
 import TagListComponent from "@/components/TagListComponent";
+import useAddUserPreviousQuestionRecordHook from "@/hooks/useAddUserPreviousQuestionRecordHook";
 
 interface Props {
   question: API.QuestionVO;
@@ -55,8 +56,12 @@ const QuestionMsgComponent = (props: Props) => {
     }
   };
 
-  // TODO 学习达半分钟以上才记为签到
+  // 钩子在客户端阶段时，请求执行签到操作
+  // 用户签到记录钩子
   useAddUserSignInRecordHook();
+  // 刷题记录钩子
+    useAddUserPreviousQuestionRecordHook(question?.id);
+
   // 其他信息标签
   const metaItems = [
     {

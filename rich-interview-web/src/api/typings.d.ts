@@ -699,6 +699,7 @@ declare namespace API {
     userName?: string;
     userProfile?: string;
     userPassword?: string;
+    previousQuestionID?: number;
   };
 
   type UserUpdateRequest = {
