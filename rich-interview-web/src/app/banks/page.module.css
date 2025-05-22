@@ -23,3 +23,16 @@
 .section-divider {
     margin: 32px 0;
 }
+
+@media (max-width: 768px) {
+    .page {
+        padding: 16px;
+    }
+
+    .section-card {
+        margin: 0 -16px 24px;
+        border-radius: 0;
+        box-shadow: none;
+        border-bottom: 1px solid #f0f0f0;
+    }
+}

@@ -102,6 +102,9 @@ const LearnPathAdminPage: React.FC = () => {
       dataIndex: "title",
       valueType: "text",
       ellipsis: true,
+      formItemProps: {
+        rules: [{ required: true, message: '请输入路线名称' }]
+      }
     },
     {
       title: "路线介绍",
@@ -123,6 +126,9 @@ const LearnPathAdminPage: React.FC = () => {
         }
         return defaultRender(_);
       },
+      formItemProps: {
+        rules: [{ required: true, message: '请输入路线介绍内容' }]
+      }
     },
     {
       title: "路线详情",
@@ -145,6 +151,9 @@ const LearnPathAdminPage: React.FC = () => {
         }
         return defaultRender(_);
       },
+      formItemProps: {
+        rules: [{ required: true, message: '请输入路线详细内容' }]
+      }
     },
     {
       title: "创建时间",

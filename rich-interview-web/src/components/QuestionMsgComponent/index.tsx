@@ -59,7 +59,7 @@ const QuestionMsgComponent = (props: Props) => {
   // 用户签到记录钩子
   useAddUserSignInRecordHook();
   // 刷题记录钩子
-    useAddUserPreviousQuestionRecordHook(question?.id);
+  useAddUserPreviousQuestionRecordHook(question?.id);
 
   // 其他信息标签
   const metaItems = [

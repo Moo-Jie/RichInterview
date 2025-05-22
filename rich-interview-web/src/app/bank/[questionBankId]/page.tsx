@@ -65,12 +65,19 @@ export default async function BankPage({ params }) {
                     {new Date(bank.createTime).toLocaleDateString("zh-CN")}
                   </span>
                 </span>
+                <span className="stat-item">
+                  <span className="stat-label">最近操作时间</span>
+                  <span className="stat-value">
+                    {new Date(bank.updateTime).toLocaleDateString("zh-CN")}
+                  </span>
+                </span>
               </div>
             </div>
           }
           description={
             <>
-              <Paragraph className="bank-description">
+              <Paragraph className="stat-item
+              ">
                 {bank.description}
               </Paragraph>
               <Button

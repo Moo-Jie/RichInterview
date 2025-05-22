@@ -54,6 +54,16 @@ export const sysMenus = [
         name: "Python 学习路线",
         access: AccessEnumeration.USER,
       },
+      {
+        path: "/learnPath/" + ConstantPathMsg.LEARN_PATH_AI_ID,
+        name: "人工智能 学习路线",
+        access: AccessEnumeration.USER,
+      },
+      {
+        path: "/learnPath/" + ConstantPathMsg.LEARN_PATH_CPP_QT_ID,
+        name: "C++ Qt 学习路线",
+        access: AccessEnumeration.USER,
+      }
     ],
   },
   {

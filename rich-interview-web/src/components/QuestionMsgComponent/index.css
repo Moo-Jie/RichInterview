@@ -1,8 +1,13 @@
-/* 新增动态渐变背景 */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+/* 动态渐变背景 */
 .question-card {
     position: relative;
     overflow: hidden;
     transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    animation: fadeIn 0.6s ease-out;
 }
 
 .question-card::before {

@@ -24,10 +24,16 @@
     margin: 32px 0;
 }
 
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
 .homeContainer {
     max-width: 1600px;
     margin: 0 auto;
     padding: 24px;
+    animation: fadeIn 0.6s ease-out;
 }
 
 .mainContent {

@@ -632,7 +632,7 @@ declare namespace API {
     updateTime?: string;
     user?: UserVO;
     userId?: number;
-    qeustionBankId?: number;
+    questionBankId?: number;
   };
 
   type uploadFileUsingPOSTParams = {

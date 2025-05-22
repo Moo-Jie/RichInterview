@@ -36,7 +36,7 @@ export default async function LearnPathPage({ params }) {
   // 断言
   learnPathData = learnPathData as API.LearnPathVO;
   return (
-    <div id="learnPathPage">
+    <div id="learnPathPage" className="learnPath-container">
       <Flex gap={24}>
         <Content>
           <LearnPathMsgComponent learnPath={learnPathData} />

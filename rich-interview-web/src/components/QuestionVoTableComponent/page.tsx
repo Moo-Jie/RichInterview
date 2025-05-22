@@ -10,6 +10,7 @@ import { searchQuestionVoByPageUsingPost } from "@/api/questionController";
 import { TablePaginationConfig } from "antd";
 import { useSearchParams } from "next/navigation";
 import "./index.css";
+import { listQuestionBankVoByPageUsingPost } from "@/api/questionBankController";
 
 interface Props {
   // 服务端渲染时，默认数据
@@ -25,8 +26,15 @@ interface Props {
  */
 const QuestionTablePage: React.FC = (tableProps: Props) => {
   const actionRef = useRef<ActionType>();
-  const searchParams = useSearchParams(); // 获取查询参数
-  const searchParam = searchParams?.get("searchParam"); // 读取搜索参数
+  // 获取查询参数
+  const searchParams = useSearchParams();
+  // 读取搜索参数
+  const searchParam = searchParams?.get("searchParam");
+  // 用于存储题库选项
+  const [bankOptions, setBankOptions] = useState<
+    { label: string; value: number }[]
+  >([]);
+
   const {
     defaultQuestionList,
     defaultTotal,
@@ -72,10 +80,44 @@ const QuestionTablePage: React.FC = (tableProps: Props) => {
       },
     },
     {
-      title: "所属题库ID",
+      title: "所属题库",
       dataIndex: "questionBankId",
-      width: 120,
-      ellipsis: true,
+      valueType: "select",
+      width: 180,
+      fieldProps: {
+        showSearch: true,
+        // 预加载题库选项
+        options: bankOptions,
+        placeholder: "请选择所属题库",
+        // 自定义搜索逻辑
+        // @ts-ignore
+        filterOption: (input, option) =>
+          //
+          (option?.label ?? "").toLowerCase().includes(input.toLowerCase()),
+      },
+      // 异步请求题库列表并存储到 bankOptions 状态
+      request: async () => {
+        const { data } = await listQuestionBankVoByPageUsingPost({
+          pageSize: 1000,
+        });
+        // 存储题库列表
+        // 把每一个 bank 的 id 和 title 映射成一个对象，然后返回一个 options 数组
+        // @ts-ignore
+        const options = (data?.records || []).map((bank) => ({
+          label: bank.title || "未命名题库",
+          value: bank.id,
+        }));
+        // 同步到 bankOptions 状态
+        setBankOptions(options);
+        return options;
+      },
+      // 自定义表格渲染逻辑
+      render: (_, record) => {
+        // 根据ID查找对应题库
+        const bank = bankOptions.find((b) => b.value === record.questionBankId);
+        // 显示题库名称，当没查到时显示ID
+        return bank?.label || record.questionBankId;
+      },
     },
     {
       title: "标签",

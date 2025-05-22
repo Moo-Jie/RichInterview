@@ -60,12 +60,14 @@
 }
 
 .meta-label {
+    color: #6c757d;
+    font-weight: 500;
     position: relative;
     padding-left: 24px;
 }
 
 .meta-label::before {
-    content: '▹';
+    content: '●';
     position: absolute;
     left: 0;
     color: #4a90e2;

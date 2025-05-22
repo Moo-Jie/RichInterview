@@ -26,7 +26,7 @@ export default async function QuestionBankPage() {
   }
 
   return (
-    <div id="questionBankPage">
+    <div id="questionBankPage" className="page">
       {/*题库列表*/}
       <Card className="section-card">
         <Flex justify="space-between" align="center">
