@@ -3,7 +3,6 @@ package com.rich.richInterview.model.dto.questionHotspot;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * 创建题目热点请求

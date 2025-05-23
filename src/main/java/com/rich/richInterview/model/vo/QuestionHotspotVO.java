@@ -1,6 +1,5 @@
 package com.rich.richInterview.model.vo;
 
-import cn.hutool.json.JSONUtil;
 import com.rich.richInterview.model.entity.QuestionHotspot;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
