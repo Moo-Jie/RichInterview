@@ -29,9 +29,9 @@ public class CodeGenerator {
     public static void main(String[] args) throws TemplateException, IOException {
         // 指定生成参数
         String packageName = "com.rich.richInterview";
-        String dataName = "学习路线关系";
-        String dataKey = "learnPath";
-        String upperDataKey = "LearnPath";
+        String dataName = "题库热点";
+        String dataKey = "questionBankHotspot";
+        String upperDataKey = "QuestionBankHotspot";
 
         // 封装生成参数
         Map<String, Object> dataModel = new HashMap<>();

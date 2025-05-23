@@ -203,7 +203,7 @@ const QuestionMsgComponent = (props: Props) => {
           className="ask-ai-button"
           style={{ marginBottom: showAnswer ? 16 : 0 }}
         >
-          {showAnswer ? "答案已解锁 ✅" : "点击查看参考答案"}
+          {showAnswer ? "答案已解锁,已计入刷题记录 ✅" : "点击查看参考答案"}
         </Button>
 
         {showAnswer && (
