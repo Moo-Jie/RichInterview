@@ -6,6 +6,7 @@ import {Button, Card, Flex, Spin, Tag, Typography} from "antd";
 import Link from "next/link";
 import {RightOutlined} from "@ant-design/icons";
 import {getQuestionVoByIdUsingGet} from "@/api/questionController";
+import "./index.css";
 
 export default function RecentStudy() {
   const user = useSelector((state: RootState) => state.userLogin);
@@ -41,9 +42,18 @@ export default function RecentStudy() {
               <Flex vertical gap={8}>
                 <Link href={`/question/${questionData.id}`}>
                   <Button
-                    type="link"
-                    icon={<RightOutlined />}
-                    style={{ padding: 0, textAlign: "left" }}
+                      type="link"
+                      icon={<RightOutlined />}
+                      style={{
+                        padding: 0,
+                        textAlign: "left",
+                        maxWidth: "250px",
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        display: "block",
+                        width: "100%"
+                      }}
                   >
                     {questionData.title}
                   </Button>

@@ -20,6 +20,7 @@ import com.rich.richInterview.service.QuestionService;
 import com.rich.richInterview.utils.SqlUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -52,14 +53,20 @@ public class QuestionHotspotServiceImpl extends ServiceImpl<QuestionHotspotMappe
 
         // 不存在时初始化热点数据
         if (hotspot == null) {
-            hotspot = new QuestionHotspot();
-            hotspot.setQuestionId(questionId);
-            hotspot.setViewNum(0);
-            hotspot.setStarNum(0);
-            hotspot.setForwardNum(0);
-            hotspot.setCollectNum(0);
-            hotspot.setCommentNum(0);
-            this.save(hotspot);
+            try {
+                // 尝试原子性插入
+                hotspot = new QuestionHotspot();
+                hotspot.setQuestionId(questionId);
+                hotspot.setViewNum(0);
+                hotspot.setStarNum(0);
+                hotspot.setForwardNum(0);
+                hotspot.setCollectNum(0);
+                hotspot.setCommentNum(0);
+                this.save(hotspot);
+            } catch (DuplicateKeyException e) {
+                // 重新查询
+                return this.getOne(queryWrapper);
+            }
         }
         return hotspot;
     }
@@ -79,15 +86,13 @@ public class QuestionHotspotServiceImpl extends ServiceImpl<QuestionHotspotMappe
         Question q = questionService.getById(questionId);
         ThrowUtils.throwIf(q == null, ErrorCode.NOT_FOUND_ERROR);
 
-        // 使用原子操作进行字段递增
+        // 原子操作
         UpdateWrapper<QuestionHotspot> updateWrapper = new UpdateWrapper<>();
         updateWrapper.eq("questionId", questionId)
                 .setSql(field.getFieldName() + " = " + field.getFieldName() + " + 1");
 
-        // 如果不存在记录则创建
-        boolean exists = this.baseMapper.exists(new QueryWrapper<QuestionHotspot>()
-                .eq("questionId", questionId));
-        if (!exists) {
+        // 使用异常处理替代存在性检查
+        try {
             QuestionHotspot newRecord = new QuestionHotspot();
             newRecord.setQuestionId(questionId);
             newRecord.setViewNum(0);
@@ -96,6 +101,8 @@ public class QuestionHotspotServiceImpl extends ServiceImpl<QuestionHotspotMappe
             newRecord.setCollectNum(0);
             newRecord.setCommentNum(0);
             this.save(newRecord);
+        } catch (DuplicateKeyException e) {
+            // 忽略重复键异常，说明记录已存在
         }
 
         return this.update(updateWrapper);

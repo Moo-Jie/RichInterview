@@ -8,8 +8,9 @@ import {BulbOutlined, RightOutlined} from "@ant-design/icons";
 import Sider from "antd/es/layout/Sider";
 import QuestionListVo from "@/components/QuestionListVoComponent";
 import AiCallComponent from "@/components/aiCallComponent";
-import styles from "./page.module.css";
+import { listQuestionHotspotVoByPageUsingPost } from "@/api/questionHotspotController";
 import RecentStudy from "@/components/RecentStudyComponent";
+import styles from "./page.module.css";
 
 /**
  * 主页
@@ -53,6 +54,20 @@ export default async function HomePage() {
     questionListVo = res.data.records ?? [];
   } catch (e: any) {
     message.error("无法获取题目信息，因为" + e.message);
+  }
+
+  // 热点题目列表
+  let questionHotspotListVo = [];
+  try {
+    const res = await listQuestionHotspotVoByPageUsingPost({
+      pageSize: 12,
+      sortField: "viewNum",    // 根据浏览数排序
+      sortOrder: "descend",    // 降序排列
+    });
+    // @ts-ignore
+    questionHotspotListVo = res.data.records ?? [];
+  } catch (e: any) {
+    message.error("无法获取热点题目信息，因为" + e.message);
   }
 
   return (
@@ -148,14 +163,14 @@ export default async function HomePage() {
               <span className={styles.cardTitle}>🔥 热门题目 TOP10</span>
             </div>
             <div className={styles.hotItems}>
-              {questionListVo
+              {questionHotspotListVo
                 .slice(0, 10)
                 // @ts-ignore
                 .map((item, index) => (
                   <div key={item.id} className={styles.hotItem}>
                     <span className={styles.rank}>{index + 1}.</span>
                     <Link
-                      href={`/question/${item.id}`}
+                      href={`/question/${item.questionId}`}
                       className={styles.itemLink}
                     >
                       {item.title}

@@ -622,6 +622,218 @@ declare namespace API {
     title?: string;
   };
 
+  type incrementFieldUsingPOSTParams = {
+    /** fieldType */
+    fieldType: string;
+    /** questionId */
+    questionId: number;
+  };
+
+  type QuestionHotspotUpdateRequest = {
+    collectNum?: number;
+    commentNum?: number;
+    forwardNum?: number;
+    questionId?: number;
+    starNum?: number;
+    viewNum?: number;
+  };
+
+  type QuestionHotspot = {
+    collectNum?: number;
+    commentNum?: number;
+    createTime?: string;
+    forwardNum?: number;
+    id?: number;
+    questionId?: number;
+    starNum?: number;
+    updateTime?: string;
+    viewNum?: number;
+  };
+
+  type getQuestionHotspotVOByQuestionIdUsingGETParams = {
+    /** questionId */
+    questionId: number;
+  };
+
+  type PageQuestionBankHotspot_ = {
+    countId?: string;
+    current?: number;
+    maxLimit?: number;
+    optimizeCountSql?: boolean;
+    orders?: OrderItem[];
+    pages?: number;
+    records?: QuestionBankHotspot[];
+    searchCount?: boolean;
+    size?: number;
+    total?: number;
+  };
+
+  type PageQuestionHotspot_ = {
+    countId?: string;
+    current?: number;
+    maxLimit?: number;
+    optimizeCountSql?: boolean;
+    orders?: OrderItem[];
+    pages?: number;
+    records?: QuestionHotspot[];
+    searchCount?: boolean;
+    size?: number;
+    total?: number;
+  };
+
+  type PageQuestionHotspotVO_ = {
+    countId?: string;
+    current?: number;
+    maxLimit?: number;
+    optimizeCountSql?: boolean;
+    orders?: OrderItem[];
+    pages?: number;
+    records?: QuestionHotspotVO[];
+    searchCount?: boolean;
+    size?: number;
+    total?: number;
+  };
+
+  type QuestionBankHotspot = {
+    collectNum?: number;
+    commentNum?: number;
+    createTime?: string;
+    forwardNum?: number;
+    id?: number;
+    questionBankId?: number;
+    starNum?: number;
+    updateTime?: string;
+    viewNum?: number;
+  };
+
+  type QuestionBankHotspotAddRequest = {
+    content?: string;
+    tags?: string[];
+    title?: string;
+  };
+
+  type QuestionBankHotspotEditRequest = {
+    content?: string;
+    id?: number;
+    tags?: string[];
+    title?: string;
+  };
+
+  type QuestionBankHotspotQueryRequest = {
+    content?: string;
+    current?: number;
+    id?: number;
+    notId?: number;
+    pageSize?: number;
+    searchText?: string;
+    sortField?: string;
+    sortOrder?: string;
+    tags?: string[];
+    title?: string;
+    userId?: number;
+  };
+
+  type QuestionBankHotspotUpdateRequest = {
+    content?: string;
+    id?: number;
+    tags?: string[];
+    title?: string;
+  };
+
+  type QuestionBankHotspotVO = {
+    content?: string;
+    createTime?: string;
+    id?: number;
+    tagList?: string[];
+    title?: string;
+    updateTime?: string;
+    user?: UserVO;
+    userId?: number;
+  };
+
+  type PageQuestionBankHotspotVO_ = {
+    countId?: string;
+    current?: number;
+    maxLimit?: number;
+    optimizeCountSql?: boolean;
+    orders?: OrderItem[];
+    pages?: number;
+    records?: QuestionBankHotspotVO[];
+    searchCount?: boolean;
+    size?: number;
+    total?: number;
+  };
+
+  type BaseResponseQuestionBankHotspotVO_ = {
+    code?: number;
+    data?: QuestionBankHotspotVO;
+    message?: string;
+  };
+
+  type getQuestionBankHotspotVOByIdUsingGETParams = {
+    /** id */
+    id?: number;
+  };
+
+  type BaseResponseQuestionHotspotVO_ = {
+    code?: number;
+    data?: QuestionHotspotVO;
+    message?: string;
+  };
+
+  type BaseResponsePageQuestionHotspot_ = {
+    code?: number;
+    data?: PageQuestionHotspot_;
+    message?: string;
+  };
+
+  type BaseResponsePageQuestionHotspotVO_ = {
+    code?: number;
+    data?: PageQuestionHotspotVO_;
+    message?: string;
+  };
+
+  type BaseResponsePageQuestionBankHotspot_ = {
+    code?: number;
+    data?: PageQuestionBankHotspot_;
+    message?: string;
+  };
+
+  type BaseResponsePageQuestionBankHotspotVO_ = {
+    code?: number;
+    data?: PageQuestionBankHotspotVO_;
+    message?: string;
+  };
+
+  type QuestionHotspotQueryRequest = {
+    collectNum?: number;
+    commentNum?: number;
+    current?: number;
+    forwardNum?: number;
+    pageSize?: number;
+    questionId?: number;
+    sortField?: string;
+    sortOrder?: string;
+    starNum?: number;
+    viewNum?: number;
+  };
+
+  type QuestionHotspotVO = {
+    answer?: string;
+    collectNum?: number;
+    commentNum?: number;
+    content?: string;
+    createTime?: string;
+    forwardNum?: number;
+    id?: number;
+    questionId?: number;
+    starNum?: number;
+    tagList?: string[];
+    title?: string;
+    updateTime?: string;
+    viewNum?: number;
+  };
+
   type QuestionVO = {
     answer?: string;
     content?: string;

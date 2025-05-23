@@ -1,13 +1,15 @@
 "use client";
-import {Button, Card, Modal} from "antd";
+import { Button, Card, Modal } from "antd";
 import Title from "antd/es/typography/Title";
 import TagListComponent from "@/components/TagListComponent";
 import MarkdownViewer from "@/components/MarkdownComponent/MarkdownViewer";
 import useAddUserSignInRecordHook from "@/hooks/useAddUserSignInRecordHook";
-import React, {useState} from "react";
-import {queryAiUsingPost} from "@/api/aiClientController";
-import {CopyOutlined, LoadingOutlined} from "@ant-design/icons";
+import React, { useEffect, useState } from "react";
+import { queryAiUsingPost } from "@/api/aiClientController";
+import { CopyOutlined, LoadingOutlined } from "@ant-design/icons";
 import useAddUserPreviousQuestionRecordHook from "@/hooks/useAddUserPreviousQuestionRecordHook";
+import useQuestionViewNumIncrementFieldHook from "@/hooks/useQuestionViewNumIncrementFieldHook";
+import { getQuestionHotspotVoByQuestionIdUsingGet } from "@/api/questionHotspotController";
 import "./index.css";
 
 interface Props {
@@ -20,15 +22,18 @@ interface Props {
  * @constructor
  */
 const QuestionMsgComponent = (props: Props) => {
-  // AI 调用相关状态
+  const { question } = props;
   const [aiLoading, setAiLoading] = useState(false);
   const [aiResponse, setAiResponse] = useState<string>();
   const [thinkingSeconds, setThinkingSeconds] = useState(0);
   const [showAnswer, setShowAnswer] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [pendingAction, setPendingAction] = useState<() => void>(() => {});
+  const [starCount, setStarCount] = useState(0);
+  const [viewCount, setViewCount] = useState(0);
+  const [loading, setLoading] = useState(false);
 
-  const { question } = props;
+  const questionId = question?.id;
 
   // 调用AI接口
   const handleAskAI = async () => {
@@ -59,7 +64,31 @@ const QuestionMsgComponent = (props: Props) => {
   // 用户签到记录钩子
   useAddUserSignInRecordHook();
   // 刷题记录钩子
-  useAddUserPreviousQuestionRecordHook(question?.id);
+  useAddUserPreviousQuestionRecordHook(questionId);
+  // 浏览量增加
+  useQuestionViewNumIncrementFieldHook(questionId);
+  // 点赞增加
+  // useQuestionStarNumIncrementFieldHook(questionId);
+
+  // 获取热点数据
+  useEffect(() => {
+    const fetchHotspot = async () => {
+      try {
+        const res = await getQuestionHotspotVoByQuestionIdUsingGet({
+          questionId: questionId,
+        } as API.getQuestionHotspotVOByQuestionIdUsingGETParams);
+        if (res.data) {
+          // @ts-ignore
+          setStarCount(res.data.starNum || 0);
+          // @ts-ignore
+          setViewCount(res.data.viewNum || 0);
+        }
+      } catch (e) {
+        console.error("获取热点数据失败", e);
+      }
+    };
+    fetchHotspot();
+  }, [questionId]);
 
   // 其他信息标签
   const metaItems = [
@@ -74,6 +103,14 @@ const QuestionMsgComponent = (props: Props) => {
     {
       label: "题目标签",
       value: <TagListComponent tagList={question.tagList?.slice(1) || []} />,
+    },
+    {
+      label: "浏览量",
+      value: viewCount,
+    },
+    {
+      label: "点赞数",
+      value: starCount,
     },
     {
       label: "创建时间",
@@ -99,7 +136,6 @@ const QuestionMsgComponent = (props: Props) => {
           })
         : "暂无维护",
     },
-    // TODO 其他信息展示
   ];
 
   return (
@@ -114,7 +150,7 @@ const QuestionMsgComponent = (props: Props) => {
             {metaItems.map((item, index) => (
               <div key={index} className="meta-item">
                 <span className="meta-label">{item.label}</span>
-                  <br/> <br/>
+                <br /> <br />
                 <span className="meta-value">{item.value}</span>
               </div>
             ))}
@@ -172,9 +208,7 @@ const QuestionMsgComponent = (props: Props) => {
             <MarkdownViewer value={aiResponse} />
             <Button
               icon={<CopyOutlined />}
-              onClick={() =>
-                navigator.clipboard.writeText(aiResponse || "")
-              }
+              onClick={() => navigator.clipboard.writeText(aiResponse || "")}
               className="copy-button"
             >
               复制 AI 文档
@@ -224,7 +258,7 @@ const QuestionMsgComponent = (props: Props) => {
       {/* 确认执行框 */}
       <Modal
         title="RICH 提示您"
-        visible={isModalVisible}
+        open={isModalVisible}
         onOk={() => {
           pendingAction();
           setIsModalVisible(false);

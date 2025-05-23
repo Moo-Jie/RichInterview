@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from "react";
+import { incrementFieldUsingPost } from "@/api/questionHotspotController";
 import { message } from "antd";
-import { updateMyUserUsingPost } from "@/api/userController";
 
-const useAddUserPreviousQuestionRecordHook = (questionId?: number) => {
+export default function useQuestionStarNumIncrementFieldHook(
+  questionId?: number,
+) {
   const [loading, setLoading] = useState(true);
   // 预防 SSR 和C SR 渲染阶段重复请求
   const hasFetched = useRef(false);
@@ -10,16 +12,12 @@ const useAddUserPreviousQuestionRecordHook = (questionId?: number) => {
   const doFetch = async () => {
     setLoading(true);
     try {
-      await updateMyUserUsingPost(
-        { previousQuestionID: questionId },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        },
-      );
+      await incrementFieldUsingPost({
+        fieldType: "starNum",
+        questionId: questionId || 0,
+      });
     } catch (e: any) {
-      message.error("刷题记录更新失败: " + e.message);
+      message.error("点赞数更新失败: " + e.message);
     }
     setLoading(false);
   };
@@ -32,6 +30,4 @@ const useAddUserPreviousQuestionRecordHook = (questionId?: number) => {
   }, [questionId]); // questionId 变化时都会重新请求
 
   return { loading };
-};
-
-export default useAddUserPreviousQuestionRecordHook;
+}
