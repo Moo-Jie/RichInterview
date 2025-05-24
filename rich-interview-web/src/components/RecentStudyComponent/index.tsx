@@ -26,11 +26,11 @@ export default function RecentStudy() {
   }, [user?.previousQuestionID]);
 
   return (
-    <Card
-      className="side-card"
-      bodyStyle={{ padding: "12px 16px" }}
-      style={{ marginBottom: 24 }}
-    >
+      <Card
+          className="side-card"
+          styles={{ body: { padding: "12px 16px" } }}
+          style={{ marginBottom: 24 }}
+      >
       <div className="side-card-header">
         <span className="card-title">🕒 继续上次的刷题</span>
       </div>

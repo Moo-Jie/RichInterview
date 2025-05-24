@@ -10,6 +10,11 @@
     animation: fadeIn 0.6s ease-out;
 }
 
+.star-button:hover {
+    color: #40a9ff !important;
+    border-color: #40a9ff !important;
+}
+
 .question-card::before {
     content: '';
     position: absolute;

@@ -7,7 +7,7 @@ export default function useQuestionViewNumIncrementFieldHook(
 ) {
   const [loading, setLoading] = useState(true);
   // 预防 SSR 和C SR 渲染阶段重复请求
-  const hasFetched = useRef(false); // 新增 ref 用于追踪请求状态
+  const hasFetched = useRef(false);
 
   const doFetch = async () => {
     setLoading(true);

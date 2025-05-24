@@ -9,25 +9,23 @@ export default function useQuestionStarNumIncrementFieldHook(
   // 预防 SSR 和C SR 渲染阶段重复请求
   const hasFetched = useRef(false);
 
-  const doFetch = async () => {
+  const incrementStar = async () => {
+    if (!questionId) return;
+
     setLoading(true);
     try {
       await incrementFieldUsingPost({
         fieldType: "starNum",
-        questionId: questionId || 0,
+        questionId: questionId,
       });
+      return true;
     } catch (e: any) {
       message.error("点赞数更新失败: " + e.message);
+      return false;
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
-  useEffect(() => {
-    if (questionId && !hasFetched.current) {
-      hasFetched.current = true;
-      doFetch();
-    }
-  }, [questionId]); // questionId 变化时都会重新请求
-
-  return { loading };
+  return { incrementStar, loading };
 }
