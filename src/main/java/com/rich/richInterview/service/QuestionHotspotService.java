@@ -62,7 +62,7 @@ public interface QuestionHotspotService extends IService<QuestionHotspot> {
     Page<QuestionHotspotVO> getQuestionHotspotVOPage(Page<QuestionHotspot> questionHotspotPage, HttpServletRequest request);
 
     /**
-     * 根据题目ID获取热点
+     * 根据题目 id 获取题库热点信息，不存在时初始化
      *
      * @param questionId
      * @return

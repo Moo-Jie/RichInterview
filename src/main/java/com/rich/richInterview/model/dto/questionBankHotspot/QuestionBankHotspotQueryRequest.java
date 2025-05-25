@@ -16,39 +16,34 @@ import java.util.List;
 public class QuestionBankHotspotQueryRequest extends PageRequest implements Serializable {
 
     /**
-     * id
+     * 题库 id
      */
-    private Long id;
+    private Long questionBankId;
 
     /**
-     * id
+     * 浏览量
      */
-    private Long notId;
+    private Integer viewNum;
 
     /**
-     * 搜索词
+     * 点赞量
      */
-    private String searchText;
+    private Integer starNum;
 
     /**
-     * 标题
+     * 转发量
      */
-    private String title;
+    private Integer forwardNum;
 
     /**
-     * 内容
+     * 收藏量
      */
-    private String content;
+    private Integer collectNum;
 
     /**
-     * 标签列表
+     * 评论量
      */
-    private List<String> tags;
-
-    /**
-     * 创建用户 id
-     */
-    private Long userId;
+    private Integer commentNum;
 
     private static final long serialVersionUID = 1L;
 }

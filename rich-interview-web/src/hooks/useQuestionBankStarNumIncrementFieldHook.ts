@@ -1,31 +1,27 @@
 import { useEffect, useRef, useState } from "react";
-import { incrementFieldUsingPost } from "@/api/questionHotspotController";
+import { incrementFieldUsingPost } from "@/api/questionBankHotspotController";
 import { message } from "antd";
 
 /**
- * 点赞数自增钩子
- * @param questionId 问题ID
- * @constructor
+ * 题库点赞钩子
+ * @param questionBankId 题库ID
  */
-export default function useQuestionStarNumIncrementFieldHook(
-  questionId?: number,
-) {
+export default function useQuestionBankStarNumIncrementFieldHook(questionBankId?: number) {
   const [loading, setLoading] = useState(true);
-  // 预防 SSR 和C SR 渲染阶段重复请求
   const hasFetched = useRef(false);
 
   const incrementStar = async () => {
-    if (!questionId) return;
+    if (!questionBankId) return;
 
     setLoading(true);
     try {
       await incrementFieldUsingPost({
         fieldType: "starNum",
-        questionId: questionId,
+        questionBankId: questionBankId,
       });
       return true;
     } catch (e: any) {
-      message.error("点赞数更新失败: " + e.message);
+      message.error("题库点赞失败: " + e.message);
       return false;
     } finally {
       setLoading(false);

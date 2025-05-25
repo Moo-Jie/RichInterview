@@ -629,6 +629,13 @@ declare namespace API {
     questionId: number;
   };
 
+  type incrementBankFieldUsingPOSTParams = {
+    /** fieldType */
+    fieldType: string;
+    /** questionBankId */
+    questionBankId: number;
+  };
+
   type QuestionHotspotUpdateRequest = {
     collectNum?: number;
     commentNum?: number;
@@ -648,6 +655,103 @@ declare namespace API {
     starNum?: number;
     updateTime?: string;
     viewNum?: number;
+  };
+
+  type PageQuestionBankHotspot_ = {
+    countId?: string;
+    current?: number;
+    maxLimit?: number;
+    optimizeCountSql?: boolean;
+    orders?: OrderItem[];
+    pages?: number;
+    records?: QuestionBankHotspot[];
+    searchCount?: boolean;
+    size?: number;
+    total?: number;
+  };
+
+  type QuestionBankHotspot = {
+    collectNum?: number;
+    commentNum?: number;
+    createTime?: string;
+    forwardNum?: number;
+    id?: number;
+    questionBankId?: number;
+    starNum?: number;
+    updateTime?: string;
+    viewNum?: number;
+  };
+
+  type QuestionBankHotspotQueryRequest = {
+    collectNum?: number;
+    commentNum?: number;
+    current?: number;
+    forwardNum?: number;
+    pageSize?: number;
+    questionBankId?: number;
+    sortField?: string;
+    sortOrder?: string;
+    starNum?: number;
+    viewNum?: number;
+  };
+
+  type QuestionBankHotspotUpdateRequest = {
+    collectNum?: number;
+    commentNum?: number;
+    forwardNum?: number;
+    questionBankId?: number;
+    starNum?: number;
+    viewNum?: number;
+  };
+
+  type BaseResponseQuestionBankHotspotVO_ = {
+    code?: number;
+    data?: QuestionBankHotspotVO;
+    message?: string;
+  };
+
+  type getQuestionBankHotspotVOByQuestionBankIdUsingGETParams = {
+    /** questionBankId */
+    questionBankId: number;
+  };
+
+  type BaseResponsePageQuestionBankHotspot_ = {
+    code?: number;
+    data?: PageQuestionBankHotspot_;
+    message?: string;
+  };
+
+  type BaseResponsePageQuestionBankHotspotVO_ = {
+    code?: number;
+    data?: PageQuestionBankHotspotVO_;
+    message?: string;
+  };
+
+  type QuestionBankHotspotVO = {
+    collectNum?: number;
+    commentNum?: number;
+    createTime?: string;
+    description?: string;
+    forwardNum?: number;
+    id?: number;
+    questionBankId?: number;
+    starNum?: number;
+    title?: string;
+    updateTime?: string;
+    viewNum?: number;
+  };
+
+  type PageQuestionBankHotspotVO_ = {
+    countId?: string;
+    current?: number;
+    maxLimit?: number;
+    optimizeCountSql?: boolean;
+    orders?: OrderItem[];
+    pages?: number;
+    records?: QuestionBankHotspotVO[];
+    searchCount?: boolean;
+    size?: number;
+    total?: number;
   };
 
   type getQuestionHotspotVOByQuestionIdUsingGETParams = {
@@ -719,37 +823,7 @@ declare namespace API {
     title?: string;
   };
 
-  type QuestionBankHotspotQueryRequest = {
-    content?: string;
-    current?: number;
-    id?: number;
-    notId?: number;
-    pageSize?: number;
-    searchText?: string;
-    sortField?: string;
-    sortOrder?: string;
-    tags?: string[];
-    title?: string;
-    userId?: number;
-  };
 
-  type QuestionBankHotspotUpdateRequest = {
-    content?: string;
-    id?: number;
-    tags?: string[];
-    title?: string;
-  };
-
-  type QuestionBankHotspotVO = {
-    content?: string;
-    createTime?: string;
-    id?: number;
-    tagList?: string[];
-    title?: string;
-    updateTime?: string;
-    user?: UserVO;
-    userId?: number;
-  };
 
   type PageQuestionBankHotspotVO_ = {
     countId?: string;
@@ -764,11 +838,7 @@ declare namespace API {
     total?: number;
   };
 
-  type BaseResponseQuestionBankHotspotVO_ = {
-    code?: number;
-    data?: QuestionBankHotspotVO;
-    message?: string;
-  };
+
 
   type getQuestionBankHotspotVOByIdUsingGETParams = {
     /** id */
@@ -790,18 +860,6 @@ declare namespace API {
   type BaseResponsePageQuestionHotspotVO_ = {
     code?: number;
     data?: PageQuestionHotspotVO_;
-    message?: string;
-  };
-
-  type BaseResponsePageQuestionBankHotspot_ = {
-    code?: number;
-    data?: PageQuestionBankHotspot_;
-    message?: string;
-  };
-
-  type BaseResponsePageQuestionBankHotspotVO_ = {
-    code?: number;
-    data?: PageQuestionBankHotspotVO_;
     message?: string;
   };
 

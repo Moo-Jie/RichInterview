@@ -13,9 +13,9 @@ import java.util.List;
 public class QuestionBankHotspotEditRequest implements Serializable {
 
     /**
-     * id
+     * 题库id
      */
-    private Long id;
+    private Long questionBankId;
 
     /**
      * 标题

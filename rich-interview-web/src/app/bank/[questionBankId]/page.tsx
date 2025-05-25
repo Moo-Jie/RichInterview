@@ -1,16 +1,13 @@
 "use server";
-import {Alert, Avatar, Button, Card} from "antd";
-import {getQuestionBankVoByIdUsingGet} from "@/api/questionBankController";
+import { Alert, Avatar, Card } from "antd";
+import { getQuestionBankVoByIdUsingGet } from "@/api/questionBankController";
 import Meta from "antd/es/card/Meta";
-import Paragraph from "antd/es/typography/Paragraph";
 import Title from "antd/es/typography/Title";
 import QuestionList from "@/components/QuestionListVoComponent";
+import BankActionComponent from "@/components/BankActionComponent";
 import "./index.css";
+import Paragraph from "antd/es/typography/Paragraph";
 
-/**
- * 题库详情页
- * @constructor
- */
 // @ts-ignore
 export default async function BankPage({ params }) {
   // 从 url 中获取 questionBankId
@@ -53,6 +50,7 @@ export default async function BankPage({ params }) {
                 {bank.title}
               </Title>
               <div className="meta-stats">
+                {/* 题库信息 */}
                 <span className="stat-item">
                   <span className="stat-label">题目总数</span>
                   <span className="stat-value">
@@ -75,22 +73,14 @@ export default async function BankPage({ params }) {
             </div>
           }
           description={
-            <>
-              <Paragraph className="stat-item
-              ">
-                {bank.description}
-              </Paragraph>
-              <Button
-                type="primary"
-                shape="round"
-                size="large"
-                className="start-button"
-                href={`/question/${firstQuestionId}`}
-                disabled={!firstQuestionId}
-              >
-                🚀 开始刷题
-              </Button>
-            </>
+            <div>
+              <BankActionComponent
+                // 按钮参数
+                questionBankId={questionBankId}
+                firstQuestionId={firstQuestionId}
+                description={bank.description}
+              />
+            </div>
           }
         />
       </Card>

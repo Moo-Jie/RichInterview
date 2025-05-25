@@ -112,9 +112,7 @@ export default async function HomePage() {
 
         {/* 右侧边栏 */}
         <Sider width={350} theme="light" className={styles.sidebar}>
-          <Card>
             <RecentStudy />
-          </Card>
           {/* 每日一刷 */}
           <Card className={styles.sideCard} style={{ marginTop: 24 }}>
             <div className={styles.sideCardHeader}>

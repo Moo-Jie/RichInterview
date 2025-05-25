@@ -2,6 +2,11 @@ import { useEffect, useRef, useState } from "react";
 import { message } from "antd";
 import { updateMyUserUsingPost } from "@/api/userController";
 
+/**
+ * 添加用户刷题签到记录钩子
+ * @param questionId
+ * @returns 加载状态
+ */
 const useAddUserPreviousQuestionRecordHook = (questionId?: number) => {
   const [loading, setLoading] = useState(true);
   // 预防 SSR 和C SR 渲染阶段重复请求

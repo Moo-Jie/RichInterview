@@ -171,7 +171,7 @@ const QuestionMsgComponent = (props: Props) => {
                     {/* 点赞按钮 */}
                     <Button
                         icon={<LikeOutlined/>}
-                        className={"ask-ai-button"}
+                        className={"star-button"}
                         onClick={async () => {
                             if (hasLiked) return;
                             setHasLiked(true);

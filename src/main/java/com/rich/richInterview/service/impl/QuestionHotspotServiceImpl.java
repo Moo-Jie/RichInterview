@@ -40,7 +40,7 @@ public class QuestionHotspotServiceImpl extends ServiceImpl<QuestionHotspotMappe
     private QuestionService questionService;
 
     /**
-     * 根据题目id获取题目热点
+     * 根据题目 id 获取题库热点信息，不存在时初始化
      *
      * @param questionId
      * @return
@@ -64,7 +64,7 @@ public class QuestionHotspotServiceImpl extends ServiceImpl<QuestionHotspotMappe
                 hotspot.setCommentNum(0);
                 this.save(hotspot);
             } catch (DuplicateKeyException e) {
-                // 重新查询
+                // 重新查询，防止前端因 SSR 和 CSR 渲染差异而并发插入
                 return this.getOne(queryWrapper);
             }
         }
@@ -83,31 +83,35 @@ public class QuestionHotspotServiceImpl extends ServiceImpl<QuestionHotspotMappe
     public boolean incrementField(Long questionId, IncrementField field) {
         // 参数校验
         ThrowUtils.throwIf(questionId == null || field == null, ErrorCode.PARAMS_ERROR);
+        // 题库合法
         Question q = questionService.getById(questionId);
         ThrowUtils.throwIf(q == null, ErrorCode.NOT_FOUND_ERROR);
+        // 题库是否已被记录在热点表
+        QueryWrapper<QuestionHotspot> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(ObjectUtils.isNotEmpty(q.getId()), "questionId", questionId);
+        QuestionHotspot questionHotspot = this.getOne(queryWrapper);
 
         // 原子操作
+        if (questionHotspot == null) {
+            // 若不存在则插入
+            try {
+                QuestionHotspot newRecord = new QuestionHotspot();
+                newRecord.setQuestionId(questionId);
+                newRecord.setViewNum(0);
+                newRecord.setStarNum(0);
+                newRecord.setForwardNum(0);
+                newRecord.setCollectNum(0);
+                newRecord.setCommentNum(0);
+                this.save(newRecord);
+            } catch (DuplicateKeyException ignored) {
+                // 忽略重复键异常，并停止本次保存，防止前端因 SSR 和 CSR 渲染差异而并发插入
+            }
+        }
         UpdateWrapper<QuestionHotspot> updateWrapper = new UpdateWrapper<>();
         updateWrapper.eq("questionId", questionId)
                 .setSql(field.getFieldName() + " = " + field.getFieldName() + " + 1");
-
-        // 使用异常处理替代存在性检查
-        try {
-            QuestionHotspot newRecord = new QuestionHotspot();
-            newRecord.setQuestionId(questionId);
-            newRecord.setViewNum(0);
-            newRecord.setStarNum(0);
-            newRecord.setForwardNum(0);
-            newRecord.setCollectNum(0);
-            newRecord.setCommentNum(0);
-            this.save(newRecord);
-        } catch (DuplicateKeyException e) {
-            // 忽略重复键异常，说明记录已存在
-        }
-
         return this.update(updateWrapper);
     }
-
     /**
      * 校验数据
      *

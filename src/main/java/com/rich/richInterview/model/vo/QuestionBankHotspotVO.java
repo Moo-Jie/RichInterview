@@ -21,19 +21,34 @@ public class QuestionBankHotspotVO implements Serializable {
     private Long id;
 
     /**
-     * 标题
+     * 题库 id
      */
-    private String title;
+    private Long questionBankId;
 
     /**
-     * 内容
+     * 浏览量
      */
-    private String content;
+    private Integer viewNum;
 
     /**
-     * 创建用户 id
+     * 点赞量
      */
-    private Long userId;
+    private Integer starNum;
+
+    /**
+     * 转发量
+     */
+    private Integer forwardNum;
+
+    /**
+     * 收藏量
+     */
+    private Integer collectNum;
+
+    /**
+     * 评论量
+     */
+    private Integer commentNum;
 
     /**
      * 创建时间
@@ -46,14 +61,14 @@ public class QuestionBankHotspotVO implements Serializable {
     private Date updateTime;
 
     /**
-     * 标签列表
+     * 标题
      */
-    private List<String> tagList;
+    private String title;
 
     /**
-     * 创建用户信息
+     * 介绍
      */
-    private UserVO user;
+    private String description;
 
     /**
      * 封装类转对象
@@ -67,7 +82,6 @@ public class QuestionBankHotspotVO implements Serializable {
         }
         QuestionBankHotspot questionBankHotspot = new QuestionBankHotspot();
         BeanUtils.copyProperties(questionBankHotspotVO, questionBankHotspot);
-        List<String> tagList = questionBankHotspotVO.getTagList();
         return questionBankHotspot;
     }
 

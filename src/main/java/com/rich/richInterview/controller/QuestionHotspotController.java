@@ -61,7 +61,7 @@ public class QuestionHotspotController {
             HttpServletRequest request) {
         ThrowUtils.throwIf(questionId == null || questionId <= 0, ErrorCode.PARAMS_ERROR);
 
-        // 通过题目ID查询热点记录
+        // 根据题目 id 获取题库热点信息，不存在时初始化
         QuestionHotspot questionHotspot = questionHotspotService.getByQuestionId(questionId);
         ThrowUtils.throwIf(questionHotspot == null, ErrorCode.NOT_FOUND_ERROR);
 
@@ -77,7 +77,7 @@ public class QuestionHotspotController {
     @PostMapping("/update")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Boolean> updateQuestionHotspot(@RequestBody QuestionHotspotUpdateRequest questionHotspotUpdateRequest) {
-        if (questionHotspotUpdateRequest == null) {
+        if (questionHotspotUpdateRequest == null || questionHotspotUpdateRequest.getQuestionId() == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         // todo 在此处将实体类和 DTO 进行转换

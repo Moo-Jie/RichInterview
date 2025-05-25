@@ -2,6 +2,11 @@ import { useEffect, useRef, useState } from "react";
 import { incrementFieldUsingPost } from "@/api/questionHotspotController";
 import { message } from "antd";
 
+/**
+ * 点赞数自增钩子
+ * @param questionId 问题ID
+ * @constructor
+ */
 export default function useQuestionViewNumIncrementFieldHook(
   questionId?: number,
 ) {

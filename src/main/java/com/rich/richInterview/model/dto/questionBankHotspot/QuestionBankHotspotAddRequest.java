@@ -13,19 +13,34 @@ import java.util.List;
 public class QuestionBankHotspotAddRequest implements Serializable {
 
     /**
-     * 标题
+     * 题库 id
      */
-    private String title;
+    private Long questionBankId;
 
     /**
-     * 内容
+     * 浏览量
      */
-    private String content;
+    private Integer viewNum;
 
     /**
-     * 标签列表
+     * 点赞量
      */
-    private List<String> tags;
+    private Integer starNum;
+
+    /**
+     * 转发量
+     */
+    private Integer forwardNum;
+
+    /**
+     * 收藏量
+     */
+    private Integer collectNum;
+
+    /**
+     * 评论量
+     */
+    private Integer commentNum;
 
     private static final long serialVersionUID = 1L;
 }

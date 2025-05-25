@@ -108,6 +108,35 @@
     margin-top: 12px;
 }
 
+/* 点赞按钮特效 */
+.start-button:not([href]) {
+    background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%) !important;
+    border: none !important;
+}
+
+.start-button:not([href]):hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(255, 154, 158, 0.3);
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+    .action-buttons {
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .start-button {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .description {
+        font-size: 14px;
+        padding: 8px;
+    }
+}
+
 .stat-item {
     background: rgba(255, 255, 255, 0.9);
     padding: 12px 24px;
@@ -145,4 +174,23 @@
 .start-button:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(24, 144, 255, 0.3);
+}
+
+.description {
+    font-size: 16px;
+    line-height: 1.8;
+    color: #495057;
+    margin: 16px 0;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* 操作按钮容器 */
+.action-buttons {
+    display: flex;
+    gap: 24px;
+    margin-top: 32px;
+    flex-wrap: wrap;
 }
