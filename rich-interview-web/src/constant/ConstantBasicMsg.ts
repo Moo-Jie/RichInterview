@@ -7,9 +7,9 @@ export const ConstantBasicMsg = {
   // 项目名称
   PROJECT_NAME: "RichInterview",
   // 项目版本号
-  PROJECT_VERSION: "1.3.0",
+  PROJECT_VERSION: "1.5.0",
   // 项目最近更新时间
-  PROJECT_LAST_UPDATE_TIME: "2025-05-18",
+  PROJECT_LAST_UPDATE_TIME: "2025-05-25",
   // 项目描述
   PROJECT_DESCRIPTION: "",
   // 项目中文名
@@ -25,8 +25,8 @@ export const ConstantBasicMsg = {
   AUTHOR_NAME: "莫桀",
   // 默认题目图片
   DEFAULT_QUESTION_IMAGE:
-    "https://rich-tams.oss-cn-beijing.aliyuncs.com/DKD_RichDu/2025/03/09/67cd64943c851694f2a087e7.png",
+    "https://rich-tams.oss-cn-beijing.aliyuncs.com/LOGO.jpg",
   // 默认题库图片
   DEFAULT_QUESTION_BANK_IMAGE:
-    "https://rich-tams.oss-cn-beijing.aliyuncs.com/DKD_RichDu/2025/03/09/67cd64943c851694f2a087e7.png",
+    "https://rich-tams.oss-cn-beijing.aliyuncs.com/LOGO.jpg",
 } as const;
