@@ -1,18 +1,22 @@
 :root {
-  --primary-color: #2c3e50;
-  --secondary-color: #6c757d;
-  --accent-color: #1890ff;
-  --spacing-base: 8px;
-  --shadow-light: 0 2px 8px rgba(0, 0, 0, 0.1);
+    --primary-color: #2c3e50;
+    --secondary-color: #6c757d;
+    --accent-color: #1890ff;
+    --spacing-base: 8px;
+    --shadow-light: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
 .bank-page-container {
-  animation: fadeIn 0.5s ease-in;
+    animation: fadeIn 0.5s ease-in;
 }
 
 @media (max-width: 768px) {
@@ -36,42 +40,41 @@
 }
 
 .stat-item {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .stat-item:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-light);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-light);
 }
 
 .start-button {
-  --button-hover-scale: 1.05;
-  transition:
-    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    --button-hover-scale: 1.05;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
     box-shadow 0.3s ease;
 }
 
 .start-button:hover {
-  transform: scale(var(--button-hover-scale));
-  box-shadow: 0 4px 16px rgba(24, 144, 255, 0.3);
+    transform: scale(var(--button-hover-scale));
+    box-shadow: 0 4px 16px rgba(24, 144, 255, 0.3);
 }
 
 .meta-stats {
-  gap: calc(var(--spacing-base) * 4);
-  margin-top: calc(var(--spacing-base) * 3);
+    gap: calc(var(--spacing-base) * 4);
+    margin-top: calc(var(--spacing-base) * 3);
 }
 
 .stat-item {
-  padding: calc(var(--spacing-base) * 2) calc(var(--spacing-base) * 4);
+    padding: calc(var(--spacing-base) * 2) calc(var(--spacing-base) * 4);
 }
 
 .bank-header-card {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .bank-header-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
     width: 100%;
 }
 
@@ -174,17 +177,6 @@
 .start-button:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(24, 144, 255, 0.3);
-}
-
-.description {
-    font-size: 16px;
-    line-height: 1.8;
-    color: #495057;
-    margin: 16px 0;
-    padding: 12px;
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 /* 操作按钮容器 */

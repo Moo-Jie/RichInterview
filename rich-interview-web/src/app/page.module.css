@@ -131,6 +131,8 @@
     align-items: center;
     padding: 10px 16px;
     transition: background 0.3s;
+    min-width: 0;
+    overflow: hidden;
 }
 
 .hotItem:hover {
@@ -149,6 +151,9 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    display: block;
+    min-width: 0;
+    max-width: 100%;
 }
 
 /* 每日一刷样式 */
@@ -191,4 +196,34 @@
     color: #8c8c8c;
     text-align: center;
     padding: 16px 0;
+}
+
+/* 在现有样式基础上新增 */
+.hotStats {
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+    font-size: 13px;
+}
+
+.statItem {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    color: #e8aaff;
+}
+
+.statItem2 {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    color: #8b6cf0;
+}
+
+.itemTitle {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

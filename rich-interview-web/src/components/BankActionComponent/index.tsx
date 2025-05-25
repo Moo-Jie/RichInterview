@@ -1,8 +1,13 @@
 "use client";
-import { Button } from "antd";
+import { App, Button, Card } from "antd";
 import useQuestionBankStarNumIncrementFieldHook from "@/hooks/useQuestionBankStarNumIncrementFieldHook";
-import { LikeOutlined } from "@ant-design/icons";
-import { App } from "antd";
+import {
+  EyeFilled,
+  LikeFilled,
+  LikeOutlined,
+  PushpinFilled,
+  QuestionCircleFilled,
+} from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { getQuestionBankHotspotVoByQuestionBankIdUsingGet } from "@/api/questionBankHotspotController";
 import Paragraph from "antd/es/typography/Paragraph";
@@ -13,11 +18,10 @@ import "../../app/bank/[questionBankId]/index.css";
 interface Props {
   questionBankId: number;
   firstQuestionId?: number;
-  description: string;
 }
 
 export default function BankActionComponent(props: Props) {
-  const { questionBankId, firstQuestionId, description } = props;
+  const { questionBankId, firstQuestionId } = props;
   const { message } = App.useApp();
   // 点赞数量
   const [starCount, setStarCount] = useState(0);
@@ -52,15 +56,21 @@ export default function BankActionComponent(props: Props) {
 
   return (
     <>
-      <Paragraph type="secondary" className={"description"}>
-        {description}
-      </Paragraph>
-      <Paragraph type="secondary" className={"description"}>
-        浏览量：{viewCount}
-      </Paragraph>
-      <Paragraph type="secondary" className={"description"}>
-        点赞量：{starCount}
-      </Paragraph>
+      <div className="meta-stats">
+        <Card className={"stat-item"}>
+          <span className="stat-label">
+            浏览量 &nbsp;&nbsp;
+            <EyeFilled style={{color : "#e8aaff"}} />
+          </span>
+          <span className="stat-value">{viewCount}</span>
+          <br />
+          <span className="stat-label">
+            点赞量 &nbsp;&nbsp;
+            <LikeFilled style={{color : "#8b6cf0"}} />
+          </span>
+          <span className="stat-value">{starCount}</span>
+        </Card>
+      </div>
       {/* 操作按钮组 */}
       <div className="action-buttons">
         <Button

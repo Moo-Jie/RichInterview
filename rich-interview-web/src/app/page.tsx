@@ -1,13 +1,19 @@
-import {listQuestionBankVoByPageUsingPost} from "@/api/questionBankController";
-import {listQuestionVoByPageUsingPost} from "@/api/questionController";
+import { listQuestionBankVoByPageUsingPost } from "@/api/questionBankController";
+import { listQuestionVoByPageUsingPost } from "@/api/questionController";
 import Title from "antd/es/typography/Title";
-import {Card, Flex, message} from "antd";
+import { Card, Flex, message } from "antd";
 import Link from "next/link";
 import QuestionBankListVoComponent from "../components/QuestionBankListVoComponent";
-import {BulbOutlined, RightOutlined} from "@ant-design/icons";
+import {
+  BulbOutlined,
+  EyeFilled,
+  LikeFilled,
+  RightOutlined,
+} from "@ant-design/icons";
 import Sider from "antd/es/layout/Sider";
 import QuestionListVo from "@/components/QuestionListVoComponent";
 import AiCallComponent from "@/components/aiCallComponent";
+import { listQuestionBankHotspotVoByPageUsingPost } from "@/api/questionBankHotspotController";
 import { listQuestionHotspotVoByPageUsingPost } from "@/api/questionHotspotController";
 import RecentStudy from "@/components/RecentStudyComponent";
 import styles from "./page.module.css";
@@ -61,13 +67,29 @@ export default async function HomePage() {
   try {
     const res = await listQuestionHotspotVoByPageUsingPost({
       pageSize: 12,
-      sortField: "viewNum",    // 根据浏览数排序
-      sortOrder: "descend",    // 降序排列
+      sortField: "viewNum", // 根据浏览数排序
+      sortOrder: "descend", // 降序排列
     });
     // @ts-ignore
     questionHotspotListVo = res.data.records ?? [];
   } catch (e: any) {
     message.error("无法获取热点题目信息，因为" + e.message);
+  }
+
+  // 热点题库列表
+  let questionBankHotspotListVo = [];
+  try {
+    const res = await listQuestionBankHotspotVoByPageUsingPost({
+      // 获取前10个热门题库
+      pageSize: 10,
+      // 根据浏览量排序
+      sortField: "viewNum",
+      sortOrder: "descend",
+    });
+    // @ts-ignore
+    questionBankHotspotListVo = res.data.records ?? [];
+  } catch (e: any) {
+    message.error("无法获取热门题库信息，因为" + e.message);
   }
 
   return (
@@ -112,7 +134,7 @@ export default async function HomePage() {
 
         {/* 右侧边栏 */}
         <Sider width={350} theme="light" className={styles.sidebar}>
-            <RecentStudy />
+          <RecentStudy />
           {/* 每日一刷 */}
           <Card className={styles.sideCard} style={{ marginTop: 24 }}>
             <div className={styles.sideCardHeader}>
@@ -170,8 +192,18 @@ export default async function HomePage() {
                     <Link
                       href={`/question/${item.questionId}`}
                       className={styles.itemLink}
+                      title={item.title}
                     >
-                      {item.title}
+                      <div className={styles.hotStats}>
+                        <span className={styles.itemTitle}>{item.title}</span>
+                        ...
+                        <span className={styles.statItem}>
+                          <EyeFilled /> {item.viewNum || 0}
+                        </span>
+                        <span className={styles.statItem2}>
+                          <LikeFilled /> {item.starNum || 0}
+                        </span>
+                      </div>
                     </Link>
                   </div>
                 ))}
@@ -181,17 +213,29 @@ export default async function HomePage() {
           {/* 热门题库 */}
           <Card className={styles.sideCard} style={{ marginTop: 24 }}>
             <div className={styles.sideCardHeader}>
-              <span className={styles.cardTitle}>🏆 热门题库 TOP5</span>
+              <span className={styles.cardTitle}>🏆 热门题库 TOP10</span>
             </div>
             <div className={styles.hotItems}>
-              {questionBankListVo
-                .slice(0, 5)
+              {questionBankHotspotListVo
+                .slice(0, 10)
                 // @ts-ignore
                 .map((item, index) => (
-                  <div key={item.id} className={styles.hotItem}>
+                  <div key={item.questionBankId} className={styles.hotItem}>
                     <span className={styles.rank}>{index + 1}.</span>
-                    <Link href={`/bank/${item.id}`} className={styles.itemLink}>
-                      {item.title}
+                    <Link
+                      href={`/bank/${item.questionBankId}`}
+                      className={styles.itemLink}
+                      title={item.title}
+                    >
+                      <div className={styles.hotStats}>
+                        <span className={styles.itemTitle}>{item.title}</span>
+                        <span className={styles.statItem}>
+                          <EyeFilled /> {item.viewNum || 0}
+                        </span>
+                        <span className={styles.statItem2}>
+                          <LikeFilled /> {item.starNum || 0}
+                        </span>
+                      </div>
                     </Link>
                   </div>
                 ))}

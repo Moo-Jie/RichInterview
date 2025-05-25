@@ -49,36 +49,39 @@ export default async function BankPage({ params }) {
               <Title level={2} className="bank-title">
                 {bank.title}
               </Title>
+              {/* 题库信息 */}
               <div className="meta-stats">
-                {/* 题库信息 */}
                 <span className="stat-item">
-                  <span className="stat-label">题目总数</span>
+                  <span className="stat-label">题目总数&nbsp;&nbsp;</span>
                   <span className="stat-value">
                     {bank.questionsPage?.total || 0}
                   </span>
                 </span>
+              </div>
+              <div className="meta-stats">
                 <span className="stat-item">
-                  <span className="stat-label">创建时间</span>
+                  <span className="stat-label">简介&nbsp;&nbsp;</span>
+                  <span className="stat-value">{bank.description}</span>
+                </span>
+              </div>
+              <div className="meta-stats">
+                <span className="stat-item">
+                  <span className="stat-label">创建时间&nbsp;&nbsp;</span>
                   <span className="stat-value">
                     {new Date(bank.createTime).toLocaleDateString("zh-CN")}
                   </span>
                 </span>
                 <span className="stat-item">
-                  <span className="stat-label">最近操作时间</span>
+                  <span className="stat-label">最近操作时间&nbsp;&nbsp;</span>
                   <span className="stat-value">
                     {new Date(bank.updateTime).toLocaleDateString("zh-CN")}
                   </span>
                 </span>
               </div>
-            </div>
-          }
-          description={
-            <div>
               <BankActionComponent
                 // 按钮参数
                 questionBankId={questionBankId}
                 firstQuestionId={firstQuestionId}
-                description={bank.description}
               />
             </div>
           }
