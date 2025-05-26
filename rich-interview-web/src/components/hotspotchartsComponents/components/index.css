@@ -1,0 +1,62 @@
+.hotspot-card {
+    background: linear-gradient(145deg, #f8f9fa, #ffffff);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+    position: relative;
+    padding: 24px;
+    border: 1px solid rgba(139, 108, 240, 0.1);
+}
+
+.hotspot-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 24px rgba(139, 108, 240, 0.12);
+}
+
+.chart-container {
+    height: 350px;
+    margin: -12px -16px 12px;
+}
+
+.rank-item {
+    transition: all 0.3s;
+    padding: 12px 16px;
+    border-radius: 8px;
+}
+
+.rank-item:hover {
+    background: rgba(139,108,240,0.05);
+    box-shadow: 0 2px 8px rgba(139,108,240,0.1);
+}
+
+.rank-index {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    background: #8b6cf0;
+    color: white;
+    border-radius: 50%;
+    font-weight: 600;
+}
+
+.update-time {
+    color: #4a90e2;
+    font-size: 12px;
+    padding: 4px 8px;
+    background: rgba(74,144,226,0.1);
+    border-radius: 4px;
+}
+
+/* 响应式处理 */
+@media (max-width: 768px) {
+    .chart-container {
+        height: 200px;
+    }
+
+    .rank-item {
+        padding: 8px;
+    }
+}

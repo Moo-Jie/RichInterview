@@ -15,6 +15,18 @@
     border-bottom: 1px solid rgba(0, 0, 0, 0.06);
 }
 
+.question-bank-list {
+    margin: 0 auto;
+    padding: 24px 0;
+    width: 100%;
+    transition: all 0.3s ease;
+}
+
+.question-bank-list .ant-list-grid {
+    width: calc(100% + 24px);
+    margin-left: -12px !important;
+}
+
 .bank-stats {
     display: flex;
     justify-content: space-between;

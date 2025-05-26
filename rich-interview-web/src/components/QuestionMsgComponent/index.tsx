@@ -239,16 +239,16 @@ const QuestionMsgComponent = (props: Props) => {
                 {!aiLoading && aiResponse && (
                     <div className="ai-response">
                         <MarkdownViewer value={aiResponse}/>
-                        {/*<Button*/}
-                        {/*    icon={<CopyOutlined/>}*/}
-                        {/*    onClick={() => {*/}
-                        {/*        navigator.clipboard.writeText(aiResponse || "");*/}
-                        {/*        message.success("复制成功！");*/}
-                        {/*    }}*/}
-                        {/*    className="copy-button"*/}
-                        {/*>*/}
-                        {/*    复制 AI 文档*/}
-                        {/*</Button>*/}
+                        <Button
+                            icon={<CopyOutlined/>}
+                            onClick={() => {
+                                navigator.clipboard.writeText(aiResponse || "");
+                                message.success("复制成功！");
+                            }}
+                            className="copy-button"
+                        >
+                            复制 AI 文档
+                        </Button>
                     </div>
                 )}
             </Card>
@@ -279,18 +279,18 @@ const QuestionMsgComponent = (props: Props) => {
                 {showAnswer && (
                     <div className="ai-response">
                         <MarkdownViewer value={question.answer}/>
-                        {/*<div style={{display: 'flex', gap: 8}}>*/}
-                        {/*    <Button*/}
-                        {/*        icon={<CopyOutlined/>}*/}
-                        {/*        onClick={() => {*/}
-                        {/*            navigator.clipboard.writeText(question.answer || "");*/}
-                        {/*            message.success("复制成功！");*/}
-                        {/*        }}*/}
-                        {/*        className="copy-button"*/}
-                        {/*    >*/}
-                        {/*        复制参考答案*/}
-                        {/*    </Button>*/}
-                        {/*</div>*/}
+                        <div style={{display: 'flex', gap: 8}}>
+                            <Button
+                                icon={<CopyOutlined/>}
+                                onClick={() => {
+                                    navigator.clipboard.writeText(question.answer || "");
+                                    message.success("复制成功！");
+                                }}
+                                className="copy-button"
+                            >
+                                复制参考答案
+                            </Button>
+                        </div>
                     </div>
                 )}
             </Card>

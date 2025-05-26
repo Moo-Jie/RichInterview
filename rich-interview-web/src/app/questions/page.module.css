@@ -31,6 +31,15 @@
     padding: 24px 16px;
 }
 
+/* 图表标题 */
+#questionsPage .chart-title {
+    margin-bottom: 24px !important;
+}
+
+#questionsPage .table-title {
+    margin: 32px 0 24px !important;
+}
+
 /* 标题区域 */
 #questionsPage .ant-typography {
     color: #1677ff;
@@ -49,12 +58,11 @@
 
 /* 响应式处理 */
 @media (max-width: 768px) {
-    #questionsPage.max-width-content {
-        padding: 16px 8px;
+    #questionsPage .chart-title {
+        margin-bottom: 16px !important;
     }
 
-    #questionsPage .ant-typography {
-        font-size: 1.25rem !important;
-        margin-bottom: 16px !important;
+    #questionsPage .table-title {
+        margin: 24px 0 16px !important;
     }
 }
