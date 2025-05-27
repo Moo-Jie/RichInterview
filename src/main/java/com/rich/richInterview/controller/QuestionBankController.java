@@ -157,9 +157,10 @@ public class QuestionBankController {
     /**
      * 分页获取题库列表（封装类）
      * 源：https://sentinelguard.io/zh-cn/docs/annotation-support.html
+     *
      * @param questionBankQueryRequest
      * @param request
-     * @return com.rich.richInterview.common.BaseResponse<com.baomidou.mybatisplus.extension.plugins.pagination.Page<com.rich.richInterview.model.vo.QuestionBankVO>>
+     * @return com.rich.richInterview.common.BaseResponse<com.baomidou.mybatisplus.extension.plugins.pagination.Page < com.rich.richInterview.model.vo.QuestionBankVO>>
      * @author DuRuiChi
      * @create 2025/5/27
      **/
@@ -169,7 +170,7 @@ public class QuestionBankController {
             fallback = "handleFallback")
     public BaseResponse<Page<QuestionBankVO>> listQuestionBankVOByPage(@RequestBody QuestionBankQueryRequest questionBankQueryRequest,
                                                                        HttpServletRequest request) {
-        initFlowRules();
+
         long current = questionBankQueryRequest.getCurrent();
         long size = questionBankQueryRequest.getPageSize();
         // 限制爬虫
@@ -183,12 +184,12 @@ public class QuestionBankController {
 
 
     /**
-     *
      * Sintel 流控：触发异常熔断后的降级服务
+     *
      * @param questionBankQueryRequest
      * @param request
      * @param ex
-     * @return com.rich.richInterview.common.BaseResponse<com.baomidou.mybatisplus.extension.plugins.pagination.Page<com.rich.richInterview.model.vo.QuestionBankVO>>
+     * @return com.rich.richInterview.common.BaseResponse<com.baomidou.mybatisplus.extension.plugins.pagination.Page < com.rich.richInterview.model.vo.QuestionBankVO>>
      * @author DuRuiChi
      * @create 2025/5/27
      **/
@@ -212,11 +213,13 @@ public class QuestionBankController {
 
     /**
      * 限流规则
+     *
      * @return void
      * @author DuRuiChi
      * @create 2025/5/27
      **/
-        private void initFlowRules() {
+    @PostConstruct
+    private void initFlowRules() {
         List<FlowRule> rules = new ArrayList<>(FlowRuleManager.getRules());
         FlowRule rule = new FlowRule();
         // 指定资源名称，此处是要监测的方法
@@ -224,7 +227,7 @@ public class QuestionBankController {
         // QPS 模式
         rule.setGrade(RuleConstant.FLOW_GRADE_QPS);
         // 阈值：5次/秒
-        rule.setCount(2);
+        rule.setCount(60);
         // 添加规则
         rules.add(rule);
         // 加载规则

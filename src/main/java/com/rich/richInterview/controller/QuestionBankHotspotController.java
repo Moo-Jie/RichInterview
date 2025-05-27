@@ -137,9 +137,10 @@ public class QuestionBankHotspotController {
     /**
      * 分页获取题库热点列表（封装类）
      * 源： https://sentinelguard.io/zh-cn/docs/annotation-support.html
+     *
      * @param questionBankHotspotQueryRequest
      * @param request
-     * @return com.rich.richInterview.common.BaseResponse<com.baomidou.mybatisplus.extension.plugins.pagination.Page<com.rich.richInterview.model.vo.QuestionBankHotspotVO>>
+     * @return com.rich.richInterview.common.BaseResponse<com.baomidou.mybatisplus.extension.plugins.pagination.Page < com.rich.richInterview.model.vo.QuestionBankHotspotVO>>
      * @author DuRuiChi
      * @create 2025/5/27
      **/
@@ -149,7 +150,7 @@ public class QuestionBankHotspotController {
             fallback = "handleFallback")
     public BaseResponse<Page<QuestionBankHotspotVO>> listQuestionBankHotspotVOByPage(@RequestBody QuestionBankHotspotQueryRequest questionBankHotspotQueryRequest,
                                                                                      HttpServletRequest request) {
-        initFlowRules();
+
         long current = questionBankHotspotQueryRequest.getCurrent();
         long size = questionBankHotspotQueryRequest.getPageSize();
         // 限制爬虫
@@ -163,10 +164,11 @@ public class QuestionBankHotspotController {
 
     /**
      * Sintel 流控：触发异常熔断后的降级服务
+     *
      * @param questionBankHotspotQueryRequest
      * @param request
      * @param ex
-     * @return com.rich.richInterview.common.BaseResponse<com.baomidou.mybatisplus.extension.plugins.pagination.Page<com.rich.richInterview.model.vo.QuestionBankHotspotVO>>
+     * @return com.rich.richInterview.common.BaseResponse<com.baomidou.mybatisplus.extension.plugins.pagination.Page < com.rich.richInterview.model.vo.QuestionBankHotspotVO>>
      * @author DuRuiChi
      * @create 2025/5/27
      **/
@@ -189,11 +191,13 @@ public class QuestionBankHotspotController {
 
     /**
      * 限流规则
+     *
      * @return void
      * @author DuRuiChi
      * @create 2025/5/27
      **/
-        private void initFlowRules() {
+    @PostConstruct
+    private void initFlowRules() {
         List<FlowRule> rules = new ArrayList<>(FlowRuleManager.getRules());
         FlowRule rule = new FlowRule();
         // 指定资源名称，此处是要监测的方法
@@ -201,7 +205,7 @@ public class QuestionBankHotspotController {
         // QPS 模式
         rule.setGrade(RuleConstant.FLOW_GRADE_QPS);
         // 阈值：5次/秒
-        rule.setCount(2);
+        rule.setCount(60);
         // 添加规则
         rules.add(rule);
         // 加载规则
@@ -210,15 +214,16 @@ public class QuestionBankHotspotController {
 
     /**
      * Sintel 流控： 触发流量过大阻塞后响应的服务
+     *
      * @param questionBankHotspotQueryRequest
      * @param request
      * @param ex
-     * @return com.rich.richInterview.common.BaseResponse<com.baomidou.mybatisplus.extension.plugins.pagination.Page<com.rich.richInterview.model.vo.QuestionBankHotspotVO>>
+     * @return com.rich.richInterview.common.BaseResponse<com.baomidou.mybatisplus.extension.plugins.pagination.Page < com.rich.richInterview.model.vo.QuestionBankHotspotVO>>
      * @author DuRuiChi
      * @create 2025/5/27
      **/
     public BaseResponse<Page<QuestionBankHotspotVO>> handleBlockException(@RequestBody QuestionBankHotspotQueryRequest questionBankHotspotQueryRequest,
-                                                                   HttpServletRequest request, BlockException ex) {
+                                                                          HttpServletRequest request, BlockException ex) {
         // 过滤普通降级操作
         if (ex instanceof DegradeException) {
             return handleFallback(questionBankHotspotQueryRequest, request, ex);

@@ -1,11 +1,20 @@
 package com.rich.richInterview.controller;
 
+import com.alibaba.csp.sentinel.Entry;
+import com.alibaba.csp.sentinel.EntryType;
+import com.alibaba.csp.sentinel.SphU;
+import com.alibaba.csp.sentinel.Tracer;
 import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.alibaba.csp.sentinel.slots.block.RuleConstant;
 import com.alibaba.csp.sentinel.slots.block.degrade.DegradeException;
+import com.alibaba.csp.sentinel.slots.block.degrade.DegradeRule;
+import com.alibaba.csp.sentinel.slots.block.degrade.DegradeRuleManager;
+import com.alibaba.csp.sentinel.slots.block.degrade.circuitbreaker.CircuitBreakerStrategy;
 import com.alibaba.csp.sentinel.slots.block.flow.FlowRule;
 import com.alibaba.csp.sentinel.slots.block.flow.FlowRuleManager;
+import com.alibaba.csp.sentinel.slots.block.flow.param.ParamFlowRule;
+import com.alibaba.csp.sentinel.slots.block.flow.param.ParamFlowRuleManager;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.rich.richInterview.annotation.AuthCheck;
 import com.rich.richInterview.common.BaseResponse;
@@ -29,9 +38,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 // 不使用改热点探测服务注销即可
 //import com.jd.platform.hotkey.client.callback.JdHotKeyStore;
 
@@ -151,29 +158,61 @@ public class QuestionController {
     /**
      * 分页获取题目列表（封装类）
      * 源：https://sentinelguard.io/zh-cn/docs/annotation-support.html
+     *
      * @param questionQueryRequest
      * @param request
      * @return
      */
-    @PostMapping("/list/page/vo")
     @SentinelResource(value = "listQuestionVOByPage",
             blockHandler = "handleBlockException",
             fallback = "handleFallback")
+    @PostMapping("/list/page/vo")
     public BaseResponse<Page<QuestionVO>> listQuestionVOByPage(@RequestBody QuestionQueryRequest questionQueryRequest,
                                                                HttpServletRequest request) {
-        initFlowRules();
         long size = questionQueryRequest.getPageSize();
         // TODO 安全性配置
         // 限制爬虫
         ThrowUtils.throwIf(size > 20, ErrorCode.PARAMS_ERROR);
-        // 查询数据库
-        Page<Question> questionPage = questionService.getQuestionPage(questionQueryRequest);
-        // 获取封装类
-        return ResultUtils.success(questionService.getQuestionVOPage(questionPage, request));
+        // 获取用户 IP
+        String remoteAddr = request.getRemoteAddr();
+        // 非注解方式，手动针对用户 IP 进行流控
+        // 源：https://sentinelguard.io/zh-cn/docs/parameter-flow-control.html
+        Entry entry = null;
+        try {
+            // SphU.entry() 方法用于创建一个流控入口，该方法接受三个参数：
+            // 1. 资源名称：用于标识流控规则的资源名称。
+            // 2. 入口类型：表示流控入口的类型，EntryType.IN 表示类型为入口。
+            // 3. 入口数量：表示流控入口的数量，设置为 1。
+            // 4. 额外参数：用于传递额外的参数，此处传入用户 IP 地址等。
+            entry = SphU.entry("listQuestionVOByPage", EntryType.IN, 1, remoteAddr);
+            // 查询数据库
+            Page<Question> questionPage = questionService.getQuestionPage(questionQueryRequest);
+            // 获取封装类
+            return ResultUtils.success(questionService.getQuestionVOPage(questionPage, request));
+        } catch (Throwable ex) {
+            // 当限流时，抛出 BlockException
+            // 普通业务异常后逻辑
+            if (!BlockException.isBlockException(ex)) {
+                // 记录日志
+                Tracer.trace(ex);
+                return ResultUtils.error(ErrorCode.SYSTEM_ERROR, "系统错误");
+            }
+            // 降级后逻辑
+            if (ex instanceof DegradeException) {
+                return handleFallback(questionQueryRequest, request, ex);
+            }
+            // 限流后逻辑
+            return ResultUtils.error(ErrorCode.SYSTEM_ERROR, "您访问过于频繁，系统压力稍大，请耐心等待哟~");
+        } finally {
+            if (entry != null) {
+                // 退出流控
+                entry.exit(1, remoteAddr);
+            }
+        }
     }
 
     /**
-     * Sintel 流控：触发异常熔断后的降级服务
+     * Sintel 熔断：触发异常熔断后的降级服务
      *
      * @param questionQueryRequest
      * @param request
@@ -196,50 +235,47 @@ public class QuestionController {
         simulateQuestionVO.setUpdateTime(new Date(System.currentTimeMillis()));
         simulateQuestionVOList.add(simulateQuestionVO);
         simulateQuestionVOPage.setRecords(simulateQuestionVOList);
-        
+
         // TODO 降级响应设定好的数据，不影响正常显示
         return ResultUtils.success(simulateQuestionVOPage);
     }
 
     /**
-     * 限流规则
+     * 设定限流与熔断规则
+     *
      * @return void
      * @author DuRuiChi
      * @PostConstruct 依赖注入后自动执行
      * @create 2025/5/27
      **/
-        private void initFlowRules() {
-        List<FlowRule> rules = new ArrayList<>(FlowRuleManager.getRules());
-        FlowRule rule = new FlowRule();
-        // 指定资源名称，此处是要监测的方法
-        rule.setResource("listQuestionVOByPage");
-        // QPS 模式
-        rule.setGrade(RuleConstant.FLOW_GRADE_QPS);
-        // 阈值：5次/秒
-        rule.setCount(2);
-        // 添加规则
-        rules.add(rule);
-        // 加载规则
-        FlowRuleManager.loadRules(rules);
-    }
+    @PostConstruct
+    private void initFlowAndDegradeRules() {
+        // 限流规则
+        // 单 IP 查看题目列表限流规则
+        ParamFlowRule rule = new ParamFlowRule("listQuestionVOByPage")
+                .setParamIdx(0) // 对第 0 个参数限流，即 IP 地址
+                .setCount(60) // 每分钟最多 60 次
+                .setDurationInSec(60); // 规则的统计周期为 60 秒
+        ParamFlowRuleManager.loadRules(Collections.singletonList(rule));
 
-    /**
-     * Sintel 流控： 触发流量过大阻塞后响应的服务
-     *
-     * @param questionQueryRequest
-     * @param request
-     * @param ex
-     * @author DuRuiChi
-     * @create 2025/5/27
-     **/
-    public BaseResponse<Page<QuestionVO>> handleBlockException(@RequestBody QuestionQueryRequest questionQueryRequest,
-                                                                   HttpServletRequest request, BlockException ex) {
-        // 过滤普通降级操作
-        if (ex instanceof DegradeException) {
-            return handleFallback(questionQueryRequest, request, ex);
-        }
-        // 系统高压限流降级操作
-        return ResultUtils.error(ErrorCode.SYSTEM_ERROR, "系统压力稍大，请耐心等待哟~");
+        // 熔断规则
+        DegradeRule slowCallRule = new DegradeRule("listQuestionVOByPage")
+                .setGrade(CircuitBreakerStrategy.SLOW_REQUEST_RATIO.getType())
+                .setCount(0.2) // 慢调用比例大于 20%
+                .setTimeWindow(60) // 熔断持续时间 60 秒
+                .setStatIntervalMs(30 * 1000) // 统计时长 30 秒
+                .setMinRequestAmount(10) // 最小请求数
+                .setSlowRatioThreshold(3); // 响应时间超过 3 秒
+
+        DegradeRule errorRateRule = new DegradeRule("listQuestionVOByPage")
+                .setGrade(CircuitBreakerStrategy.ERROR_RATIO.getType())
+                .setCount(0.1) // 异常率大于 10%
+                .setTimeWindow(60) // 熔断持续时间 60 秒
+                .setStatIntervalMs(30 * 1000) // 统计时长 30 秒
+                .setMinRequestAmount(10); // 最小请求数
+
+        // 加载规则
+        DegradeRuleManager.loadRules(Arrays.asList(slowCallRule, errorRateRule));
     }
 
     /**

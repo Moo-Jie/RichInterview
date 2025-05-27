@@ -8,6 +8,7 @@ import com.alibaba.csp.sentinel.slots.block.flow.FlowRule;
 import com.alibaba.csp.sentinel.slots.block.flow.FlowRuleManager;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,9 +23,8 @@ import java.util.List;
 public class sentinelTest {
 
     public static void main(String[] args) {
-        // 配置规则.
         initFlowRules();
-
+        // 配置规则.
         while (true) {
             // 1.5.0 版本开始可以直接利用 try-with-resources 特性
             try (Entry entry = SphU.entry("HelloWorld")) {
