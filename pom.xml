@@ -130,13 +130,38 @@
         </dependency>
         <!-- 引入hotkey client 使用 hotkey 项目 -->
         <!-- 不使用改热点探测服务注销即可 -->
-<!--        <dependency>-->
-<!--            <artifactId>hotkey-client</artifactId>-->
-<!--            <groupId>com.jd.platform.hotkey</groupId>-->
-<!--            <version>0.0.4-SNAPSHOT</version>-->
-<!--            <scope>system</scope>-->
-<!--            <systemPath>${project.basedir}/lib/hotkey-client-0.0.4-SNAPSHOT.jar</systemPath>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <artifactId>hotkey-client</artifactId>-->
+        <!--            <groupId>com.jd.platform.hotkey</groupId>-->
+        <!--            <version>0.0.4-SNAPSHOT</version>-->
+        <!--            <scope>system</scope>-->
+        <!--            <systemPath>${project.basedir}/lib/hotkey-client-0.0.4-SNAPSHOT.jar</systemPath>-->
+        <!--        </dependency>-->
+
+        <!-- 引入sentinel client -->
+        <!-- 源: https://sentinelguard.io/zh-cn/docs/quick-start.html -->
+        <dependency>
+            <groupId>com.alibaba.csp</groupId>
+            <artifactId>sentinel-core</artifactId>
+            <version>1.8.6</version>
+        </dependency>
+        <!-- 引入sentinel client 与 sentinel dashboard 使用 http 进行通信的组件 -->
+        <!-- 源: https://sentinelguard.io/zh-cn/docs/dashboard.html -->
+        <dependency>
+            <groupId>com.alibaba.csp</groupId>
+            <artifactId>sentinel-transport-simple-http</artifactId>
+            <version>1.8.6</version>
+        </dependency>
+
+        <!-- 引入sentinel 官方集成整合的依赖集群，包括 Sentinel 的 core 包、客户端通讯包、注解开发包、webmvc 适配‌包、热点参数限流包等 -->
+        <!-- 源： https://mvnrepository.com/artifact/com.alibaba.cloud/spring-cloud-starter-alibaba-sentinel -->
+        <!-- 注：启动前要添加置 " -Dcsp.sentinel.dashboard.server=[Your Ip]:[Your Port] " 来上报流量数据到 dashboard -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
+            <version>2021.0.5.0</version>
+        </dependency>
+
 
         <!-- Lombok -->
         <dependency>
@@ -144,6 +169,7 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
+        <!-- test -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
