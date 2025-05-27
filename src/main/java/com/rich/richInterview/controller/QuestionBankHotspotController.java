@@ -1,5 +1,11 @@
 package com.rich.richInterview.controller;
 
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
+import com.alibaba.csp.sentinel.slots.block.BlockException;
+import com.alibaba.csp.sentinel.slots.block.RuleConstant;
+import com.alibaba.csp.sentinel.slots.block.degrade.DegradeException;
+import com.alibaba.csp.sentinel.slots.block.flow.FlowRule;
+import com.alibaba.csp.sentinel.slots.block.flow.FlowRuleManager;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.rich.richInterview.annotation.AuthCheck;
 import com.rich.richInterview.common.BaseResponse;
@@ -10,6 +16,7 @@ import com.rich.richInterview.constant.IncrementField;
 import com.rich.richInterview.constant.UserConstant;
 import com.rich.richInterview.exception.BusinessException;
 import com.rich.richInterview.exception.ThrowUtils;
+import com.rich.richInterview.model.dto.questionBank.QuestionBankQueryRequest;
 import com.rich.richInterview.model.dto.questionBankHotspot.QuestionBankHotspotAddRequest;
 import com.rich.richInterview.model.dto.questionBankHotspot.QuestionBankHotspotEditRequest;
 import com.rich.richInterview.model.dto.questionBankHotspot.QuestionBankHotspotQueryRequest;
@@ -18,6 +25,7 @@ import com.rich.richInterview.model.entity.QuestionBankHotspot;
 import com.rich.richInterview.model.entity.QuestionHotspot;
 import com.rich.richInterview.model.entity.User;
 import com.rich.richInterview.model.vo.QuestionBankHotspotVO;
+import com.rich.richInterview.model.vo.QuestionBankVO;
 import com.rich.richInterview.model.vo.QuestionHotspotVO;
 import com.rich.richInterview.service.QuestionBankHotspotService;
 import com.rich.richInterview.service.UserService;
@@ -25,8 +33,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 题库热点接口
@@ -124,14 +136,20 @@ public class QuestionBankHotspotController {
 
     /**
      * 分页获取题库热点列表（封装类）
-     *
+     * 源： https://sentinelguard.io/zh-cn/docs/annotation-support.html
      * @param questionBankHotspotQueryRequest
      * @param request
-     * @return
-     */
+     * @return com.rich.richInterview.common.BaseResponse<com.baomidou.mybatisplus.extension.plugins.pagination.Page<com.rich.richInterview.model.vo.QuestionBankHotspotVO>>
+     * @author DuRuiChi
+     * @create 2025/5/27
+     **/
     @PostMapping("/list/page/vo")
+    @SentinelResource(value = "listQuestionBankHotspotVOByPage",
+            blockHandler = "handleBlockException",
+            fallback = "handleFallback")
     public BaseResponse<Page<QuestionBankHotspotVO>> listQuestionBankHotspotVOByPage(@RequestBody QuestionBankHotspotQueryRequest questionBankHotspotQueryRequest,
                                                                                      HttpServletRequest request) {
+        initFlowRules();
         long current = questionBankHotspotQueryRequest.getCurrent();
         long size = questionBankHotspotQueryRequest.getPageSize();
         // 限制爬虫
@@ -141,5 +159,71 @@ public class QuestionBankHotspotController {
                 questionBankHotspotService.getQueryWrapper(questionBankHotspotQueryRequest));
         // 获取封装类
         return ResultUtils.success(questionBankHotspotService.getQuestionBankHotspotVOPage(questionBankHotspotPage, request));
+    }
+
+    /**
+     * Sintel 流控：触发异常熔断后的降级服务
+     * @param questionBankHotspotQueryRequest
+     * @param request
+     * @param ex
+     * @return com.rich.richInterview.common.BaseResponse<com.baomidou.mybatisplus.extension.plugins.pagination.Page<com.rich.richInterview.model.vo.QuestionBankHotspotVO>>
+     * @author DuRuiChi
+     * @create 2025/5/27
+     **/
+    public BaseResponse<Page<QuestionBankHotspotVO>> handleFallback(@RequestBody QuestionBankHotspotQueryRequest questionBankHotspotQueryRequest, HttpServletRequest request, Throwable ex) {
+        // TODO 调取缓存真实数据或其他方案
+        // 生成模拟数据
+        Page<QuestionBankHotspotVO> simulateQuestionBankHotspotVOPage = new Page<>();
+        List<QuestionBankHotspotVO> simulateQuestionBankHotspotVOList = new ArrayList<>();
+        QuestionBankHotspotVO simulateQuestionBankHotspotVO = new QuestionBankHotspotVO();
+        simulateQuestionBankHotspotVO.setId(404L);
+        simulateQuestionBankHotspotVO.setTitle("您的数据丢了！请检查网络或通知管理员。");
+        simulateQuestionBankHotspotVO.setDescription("您的题库信息暂时访问不到，请检查网络后再试试，或者联系管理员。");
+        simulateQuestionBankHotspotVO.setCreateTime(new Date(System.currentTimeMillis()));
+        simulateQuestionBankHotspotVO.setUpdateTime(new Date(System.currentTimeMillis()));
+        simulateQuestionBankHotspotVOList.add(simulateQuestionBankHotspotVO);
+        simulateQuestionBankHotspotVOPage.setRecords(simulateQuestionBankHotspotVOList);
+        // TODO 降级响应设定好的数据，不影响正常显示
+        return ResultUtils.success(simulateQuestionBankHotspotVOPage);
+    }
+
+    /**
+     * 限流规则
+     * @return void
+     * @author DuRuiChi
+     * @create 2025/5/27
+     **/
+        private void initFlowRules() {
+        List<FlowRule> rules = new ArrayList<>(FlowRuleManager.getRules());
+        FlowRule rule = new FlowRule();
+        // 指定资源名称，此处是要监测的方法
+        rule.setResource("listQuestionBankHotspotVOByPage");
+        // QPS 模式
+        rule.setGrade(RuleConstant.FLOW_GRADE_QPS);
+        // 阈值：5次/秒
+        rule.setCount(2);
+        // 添加规则
+        rules.add(rule);
+        // 加载规则
+        FlowRuleManager.loadRules(rules);
+    }
+
+    /**
+     * Sintel 流控： 触发流量过大阻塞后响应的服务
+     * @param questionBankHotspotQueryRequest
+     * @param request
+     * @param ex
+     * @return com.rich.richInterview.common.BaseResponse<com.baomidou.mybatisplus.extension.plugins.pagination.Page<com.rich.richInterview.model.vo.QuestionBankHotspotVO>>
+     * @author DuRuiChi
+     * @create 2025/5/27
+     **/
+    public BaseResponse<Page<QuestionBankHotspotVO>> handleBlockException(@RequestBody QuestionBankHotspotQueryRequest questionBankHotspotQueryRequest,
+                                                                   HttpServletRequest request, BlockException ex) {
+        // 过滤普通降级操作
+        if (ex instanceof DegradeException) {
+            return handleFallback(questionBankHotspotQueryRequest, request, ex);
+        }
+        // 系统高压限流降级操作
+        return ResultUtils.error(ErrorCode.SYSTEM_ERROR, "系统压力稍大，请耐心等待哟~");
     }
 }

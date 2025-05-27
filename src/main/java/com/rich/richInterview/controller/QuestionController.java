@@ -1,5 +1,11 @@
 package com.rich.richInterview.controller;
 
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
+import com.alibaba.csp.sentinel.slots.block.BlockException;
+import com.alibaba.csp.sentinel.slots.block.RuleConstant;
+import com.alibaba.csp.sentinel.slots.block.degrade.DegradeException;
+import com.alibaba.csp.sentinel.slots.block.flow.FlowRule;
+import com.alibaba.csp.sentinel.slots.block.flow.FlowRuleManager;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.rich.richInterview.annotation.AuthCheck;
 import com.rich.richInterview.common.BaseResponse;
@@ -12,14 +18,20 @@ import com.rich.richInterview.model.dto.question.QuestionAddRequest;
 import com.rich.richInterview.model.dto.question.QuestionEditRequest;
 import com.rich.richInterview.model.dto.question.QuestionQueryRequest;
 import com.rich.richInterview.model.dto.question.QuestionUpdateRequest;
+import com.rich.richInterview.model.dto.questionBank.QuestionBankQueryRequest;
 import com.rich.richInterview.model.entity.Question;
+import com.rich.richInterview.model.vo.QuestionBankVO;
 import com.rich.richInterview.model.vo.QuestionVO;
 import com.rich.richInterview.service.QuestionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 // 不使用改热点探测服务注销即可
 //import com.jd.platform.hotkey.client.callback.JdHotKeyStore;
 
@@ -138,14 +150,18 @@ public class QuestionController {
 
     /**
      * 分页获取题目列表（封装类）
-     *
+     * 源：https://sentinelguard.io/zh-cn/docs/annotation-support.html
      * @param questionQueryRequest
      * @param request
      * @return
      */
     @PostMapping("/list/page/vo")
+    @SentinelResource(value = "listQuestionVOByPage",
+            blockHandler = "handleBlockException",
+            fallback = "handleFallback")
     public BaseResponse<Page<QuestionVO>> listQuestionVOByPage(@RequestBody QuestionQueryRequest questionQueryRequest,
                                                                HttpServletRequest request) {
+        initFlowRules();
         long size = questionQueryRequest.getPageSize();
         // TODO 安全性配置
         // 限制爬虫
@@ -154,6 +170,76 @@ public class QuestionController {
         Page<Question> questionPage = questionService.getQuestionPage(questionQueryRequest);
         // 获取封装类
         return ResultUtils.success(questionService.getQuestionVOPage(questionPage, request));
+    }
+
+    /**
+     * Sintel 流控：触发异常熔断后的降级服务
+     *
+     * @param questionQueryRequest
+     * @param request
+     * @param ex
+     * @author DuRuiChi
+     * @create 2025/5/27
+     **/
+    public BaseResponse<Page<QuestionVO>> handleFallback(@RequestBody QuestionQueryRequest questionQueryRequest, HttpServletRequest request, Throwable ex) {
+        // TODO 调取缓存真实数据或其他方案
+        // 生成模拟数据
+        Page<QuestionVO> simulateQuestionVOPage = new Page<>();
+        List<QuestionVO> simulateQuestionVOList = new ArrayList<>();
+        QuestionVO simulateQuestionVO = new QuestionVO();
+        simulateQuestionVO.setId(404L);
+        simulateQuestionVO.setTitle("您的数据丢了！请检查网络或通知管理员。");
+        simulateQuestionVO.setContent("您的数据丢了！请检查网络或通知管理员。");
+        simulateQuestionVO.setAnswer("您的数据丢了！请检查网络或通知管理员。");
+        simulateQuestionVO.setTags("数据丢失");
+        simulateQuestionVO.setCreateTime(new Date(System.currentTimeMillis()));
+        simulateQuestionVO.setUpdateTime(new Date(System.currentTimeMillis()));
+        simulateQuestionVOList.add(simulateQuestionVO);
+        simulateQuestionVOPage.setRecords(simulateQuestionVOList);
+        
+        // TODO 降级响应设定好的数据，不影响正常显示
+        return ResultUtils.success(simulateQuestionVOPage);
+    }
+
+    /**
+     * 限流规则
+     * @return void
+     * @author DuRuiChi
+     * @PostConstruct 依赖注入后自动执行
+     * @create 2025/5/27
+     **/
+        private void initFlowRules() {
+        List<FlowRule> rules = new ArrayList<>(FlowRuleManager.getRules());
+        FlowRule rule = new FlowRule();
+        // 指定资源名称，此处是要监测的方法
+        rule.setResource("listQuestionVOByPage");
+        // QPS 模式
+        rule.setGrade(RuleConstant.FLOW_GRADE_QPS);
+        // 阈值：5次/秒
+        rule.setCount(2);
+        // 添加规则
+        rules.add(rule);
+        // 加载规则
+        FlowRuleManager.loadRules(rules);
+    }
+
+    /**
+     * Sintel 流控： 触发流量过大阻塞后响应的服务
+     *
+     * @param questionQueryRequest
+     * @param request
+     * @param ex
+     * @author DuRuiChi
+     * @create 2025/5/27
+     **/
+    public BaseResponse<Page<QuestionVO>> handleBlockException(@RequestBody QuestionQueryRequest questionQueryRequest,
+                                                                   HttpServletRequest request, BlockException ex) {
+        // 过滤普通降级操作
+        if (ex instanceof DegradeException) {
+            return handleFallback(questionQueryRequest, request, ex);
+        }
+        // 系统高压限流降级操作
+        return ResultUtils.error(ErrorCode.SYSTEM_ERROR, "系统压力稍大，请耐心等待哟~");
     }
 
     /**

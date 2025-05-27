@@ -39,7 +39,7 @@ public class sentinelTest {
 
     private static void initFlowRules(){
         // 配置规则
-        List<FlowRule> rules = new ArrayList<>();
+        List<FlowRule> rules = new ArrayList<>(FlowRuleManager.getRules());
         // 配置流控规则
         FlowRule rule = new FlowRule();
         // set limit resource name to HelloWorld.
