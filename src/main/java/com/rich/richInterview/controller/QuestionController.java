@@ -253,26 +253,40 @@ public class QuestionController {
         // 限流规则
         // 单 IP 查看题目列表限流规则
         ParamFlowRule rule = new ParamFlowRule("listQuestionVOByPage")
-                .setParamIdx(0) // 对第 0 个参数限流，即 IP 地址
-                .setCount(60) // 每分钟最多 60 次
-                .setDurationInSec(60); // 规则的统计周期为 60 秒
+                // 对 IP 地址参数限流
+                .setParamIdx(0)
+                // 每分钟最多 60 次
+                .setCount(60)
+                // 规则的统计周期为 60 秒
+                .setDurationInSec(60);
         ParamFlowRuleManager.loadRules(Collections.singletonList(rule));
 
         // 熔断规则
+        // 慢调用比例
         DegradeRule slowCallRule = new DegradeRule("listQuestionVOByPage")
                 .setGrade(CircuitBreakerStrategy.SLOW_REQUEST_RATIO.getType())
-                .setCount(0.2) // 慢调用比例大于 20%
-                .setTimeWindow(60) // 熔断持续时间 60 秒
-                .setStatIntervalMs(30 * 1000) // 统计时长 30 秒
-                .setMinRequestAmount(10) // 最小请求数
-                .setSlowRatioThreshold(3); // 响应时间超过 3 秒
+                // 慢调用比例大于 20%，触发熔断
+                .setCount(0.2)
+                // 熔断持续时间 60 秒
+                .setTimeWindow(60)
+                // 统计时长 30 秒
+                .setStatIntervalMs(30 * 1000)
+                // 最小请求数，小于该值的请求不会触发熔断
+                .setMinRequestAmount(10)
+                // 响应时间超过 3 秒
+                .setSlowRatioThreshold(3);
 
+        // 异常比例熔断规则
         DegradeRule errorRateRule = new DegradeRule("listQuestionVOByPage")
                 .setGrade(CircuitBreakerStrategy.ERROR_RATIO.getType())
-                .setCount(0.1) // 异常率大于 10%
-                .setTimeWindow(60) // 熔断持续时间 60 秒
-                .setStatIntervalMs(30 * 1000) // 统计时长 30 秒
-                .setMinRequestAmount(10); // 最小请求数
+                // 异常率大于 10%
+                .setCount(0.1)
+                // 熔断持续时间 60 秒
+                .setTimeWindow(60)
+                // 统计时长 30 秒
+                .setStatIntervalMs(30 * 1000)
+                // 最小请求数
+                .setMinRequestAmount(10);
 
         // 加载规则
         DegradeRuleManager.loadRules(Arrays.asList(slowCallRule, errorRateRule));
