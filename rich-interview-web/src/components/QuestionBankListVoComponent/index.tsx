@@ -18,7 +18,7 @@ const questionBankListVo = (props: Props) => {
 
   const questionBankView = (questionBank: API.QuestionBankVO) => {
     return (
-      <Link href={`/bank/${questionBank.id}`}>
+      <Link href={`/bank/${questionBank.id}`} target={"_blank"}>
         <div className="bank-card">
           <Card
             cover={

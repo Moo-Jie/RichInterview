@@ -92,6 +92,11 @@ export const sysMenus = [
         name: "学习路线管理",
         access: AccessEnumeration.ADMIN,
       },
+      {
+        path: "/admin/sentinelDashboard",
+        name: "哨兵流控管理",
+        access: AccessEnumeration.ADMIN,
+      }
     ],
   },
 

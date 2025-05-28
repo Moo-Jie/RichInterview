@@ -47,7 +47,7 @@ export default function RecentStudy() {
           {user?.previousQuestionID ? (
             questionData ? (
               <Flex vertical gap={8}>
-                <Link href={`/question/${questionData.id}`}>
+                <Link href={`/question/${questionData.id}`} target={"_blank"}>
                   <Button
                     type="link"
                     icon={<RightOutlined />}

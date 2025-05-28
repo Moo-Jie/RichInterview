@@ -25,6 +25,7 @@ export default function DailyPracticeComponent({
               <Link
                 href={`/question/${dailyQuestion.id}`}
                 className={styles.itemLink}
+                target={"_blank"}
               >
                 <div className={styles.dailyTitle}>#{dailyQuestion.title}</div>
                 <div className={styles.dailyTags}>

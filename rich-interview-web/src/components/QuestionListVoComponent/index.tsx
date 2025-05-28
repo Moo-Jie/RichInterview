@@ -33,6 +33,7 @@ const QuestionListVo = (props: Props) => {
                       ? `/question/${item.id}`
                       : `/question/${item.id}`
                   }
+                  target={"_blank"}
                 >
                   {item.title}
                 </Link>

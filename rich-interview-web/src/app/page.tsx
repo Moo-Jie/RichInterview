@@ -109,7 +109,7 @@ export default async function HomePage() {
               <Title level={3} className="card-title">
                 最新题库
               </Title>
-              <Link href={"/banks"} className="more-link">
+              <Link href={"/banks"} className="more-link" target={"_blank"}>
                 更多题库 <RightOutlined />
               </Link>
             </Flex>
@@ -124,7 +124,7 @@ export default async function HomePage() {
               <Title level={3} className="section-title">
                 题目上新！
               </Title>
-              <Link href={"/questions"} className="more-link">
+              <Link href={"/questions"} className="more-link" target={"_blank"}>
                 查看更多热门题目
                 <RightOutlined />
               </Link>
@@ -156,6 +156,7 @@ export default async function HomePage() {
                       href={`/question/${item.questionId}`}
                       className={styles.itemLink}
                       title={item.title}
+                      target={"_blank"}
                     >
                       <div className={styles.hotStats}>
                         <span className={styles.itemTitle}>{item.title}</span>
@@ -189,6 +190,7 @@ export default async function HomePage() {
                       href={`/bank/${item.questionBankId}`}
                       className={styles.itemLink}
                       title={item.title}
+                      target={"_blank"}
                     >
                       <div className={styles.hotStats}>
                         <span className={styles.itemTitle}>{item.title}</span>
