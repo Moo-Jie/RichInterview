@@ -1,9 +1,11 @@
 "use server";
-import {Alert, Flex} from "antd";
-import {getLearnPathVoByIdUsingGet,} from "@/api/learnPathController";
+import { Alert, Card, Flex, Layout, Menu } from "antd";
+import { getLearnPathVoByIdUsingGet } from "@/api/learnPathController";
 import LearnPathMsgComponent from "../../../components/LearnPathMsgComponent";
-import {Content} from "antd/es/layout/layout";
+import { Content } from "antd/es/layout/layout";
+import Link from "next/link";
 import "./index.css";
+import { ConstantPathMsg } from "@/constant/ConstantPathMsg";
 
 /**
  * 学习路线详情页
@@ -11,15 +13,15 @@ import "./index.css";
  */
 // @ts-ignore
 export default async function LearnPathPage({ params }) {
-  const { learnPathId  } = params;
+  const { learnPathId } = params;
 
   // 获取学习路线详情
-  let learnPathData  = undefined;
+  let learnPathData = undefined;
   try {
     const res = await getLearnPathVoByIdUsingGet({
       id: learnPathId,
     });
-    learnPathData  = res.data;
+    learnPathData = res.data;
     // 获取学习路线异常
     if (!learnPathData) {
       return <div>获取学习路线详情失败，请刷新重试</div>;
@@ -38,9 +40,68 @@ export default async function LearnPathPage({ params }) {
   return (
     <div id="learnPathPage" className="learnPath-container">
       <Flex gap={24}>
+        {/* 主要内容 */}
         <Content>
           <LearnPathMsgComponent learnPath={learnPathData} />
         </Content>
+
+        {/* 侧边栏 */}
+        <Card title="📚 热门学习路线" bordered={false}>
+          <Menu
+            mode="vertical"
+            selectedKeys={[learnPathId]}
+            items={[
+              {
+                key: ConstantPathMsg.LEARN_PATH_JAVA_ID,
+                label: (
+                  <Link
+                    href={`/learnPath/${ConstantPathMsg.LEARN_PATH_JAVA_ID}`}
+                  >
+                    JAVA 学习路线
+                  </Link>
+                ),
+              },
+              {
+                key: ConstantPathMsg.LEARN_PATH_CPP_ID,
+                label: (
+                  <Link
+                    href={`/learnPath/${ConstantPathMsg.LEARN_PATH_CPP_ID}`}
+                  >
+                    C++ 学习路线
+                  </Link>
+                ),
+              },
+              {
+                key: ConstantPathMsg.LEARN_PATH_PYTHON_ID,
+                label: (
+                  <Link
+                    href={`/learnPath/${ConstantPathMsg.LEARN_PATH_PYTHON_ID}`}
+                  >
+                    Python 学习路线
+                  </Link>
+                ),
+              },
+              {
+                key: ConstantPathMsg.LEARN_PATH_AI_ID,
+                label: (
+                  <Link href={`/learnPath/${ConstantPathMsg.LEARN_PATH_AI_ID}`}>
+                    人工智能 学习路线
+                  </Link>
+                ),
+              },
+              {
+                key: ConstantPathMsg.LEARN_PATH_CPP_QT_ID,
+                label: (
+                  <Link
+                    href={`/learnPath/${ConstantPathMsg.LEARN_PATH_CPP_QT_ID}`}
+                  >
+                    C++ Qt 学习路线
+                  </Link>
+                ),
+              },
+            ]}
+          />
+        </Card>
       </Flex>
     </div>
   );

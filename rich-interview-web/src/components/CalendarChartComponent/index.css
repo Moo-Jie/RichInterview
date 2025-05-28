@@ -1,0 +1,72 @@
+:root {
+  --primary-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --hover-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+  --container-padding: 24px;
+  --mobile-padding: 16px;
+  --tooltip-bg: #ffffff;
+  --tooltip-border: #eee;
+  --text-primary: #2c3e50;
+  --text-secondary: #34495e;
+}
+
+.calendar-container {
+  padding: var(--container-padding);
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: var(--primary-shadow);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.3s ease;
+}
+
+.calendar-container:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--hover-shadow);
+}
+
+.toolbar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.year-display {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: 0.5px;
+}
+
+.calendar-chart {
+  width: 100%;
+  min-height: 300px;
+}
+
+.echarts-tooltip {
+  padding: 12px !important;
+  background: var(--tooltip-bg) !important;
+  border: 1px solid var(--tooltip-border) !important;
+  box-shadow: var(--primary-shadow) !important;
+}
+
+.echarts-tooltip span {
+  color: var(--text-secondary) !important;
+  font-size: 14px !important;
+}
+
+@media (max-width: 768px) {
+  .calendar-container {
+    padding: var(--mobile-padding);
+    border-radius: 8px;
+  }
+
+  .year-display {
+    font-size: 16px;
+  }
+
+  .toolbar {
+    gap: 12px;
+  }
+}

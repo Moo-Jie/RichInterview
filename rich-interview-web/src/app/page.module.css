@@ -1,229 +1,242 @@
 .section-card {
-    margin-bottom: 10px;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  margin-bottom: 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .section-card:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 }
 
 .section-title {
-    margin-bottom: 0 !important;
-    color: rgba(0, 0, 0, 0.85);
+  margin-bottom: 0 !important;
+  color: rgba(0, 0, 0, 0.85);
 }
 
 .more-link {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
 }
 
 .section-divider {
-    margin: 32px 0;
+  margin: 32px 0;
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .homeContainer {
-    max-width: 1600px;
-    margin: 0 auto;
-    padding: 24px;
-    animation: fadeIn 0.6s ease-out;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 24px;
+  animation: fadeIn 0.6s ease-out;
 }
 
 .mainContent {
-    flex: 1;
-    min-width: 0;
+  flex: 1;
+  min-width: 0;
 }
 
 .sidebar {
-    width: 360px;
-    position: sticky;
-    top: 24px;
+  width: 360px;
+  position: sticky;
+  top: 24px;
 }
 
 .sectionCard {
-    margin-top: 24px;
-    border-radius: 16px !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-top: 24px;
+  border-radius: 16px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .aiInput {
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #fff;
-    border-radius: 8px;
-    padding: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  border-radius: 8px;
+  padding: 12px;
 }
 
 .hotList {
-    padding: 8px 0;
+  padding: 8px 0;
 }
 
 .listItem {
-    padding: 12px;
-    margin: 4px 0;
-    border-radius: 6px;
-    transition: all 0.3s;
-    display: flex;
-    align-items: center;
-    background: rgba(255, 255, 255, 0.05);
+  padding: 12px;
+  margin: 4px 0;
+  border-radius: 6px;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .listItem:hover {
-    background: rgba(255, 255, 255, 0.1);
-    transform: translateX(4px);
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateX(4px);
 }
 
 .rankIndex {
-    width: 28px;
-    color: #4a90e2;
-    font-weight: 600;
-    margin-right: 12px;
+  width: 28px;
+  color: #4a90e2;
+  font-weight: 600;
+  margin-right: 12px;
 }
 
 /* 响应式处理 */
 @media (max-width: 1200px) {
-    .sidebar {
-        width: 300px;
-    }
+  .sidebar {
+    width: 300px;
+  }
 }
 
 @media (max-width: 992px) {
-    .homeContainer {
-        padding: 16px;
-    }
+  .homeContainer {
+    padding: 16px;
+  }
 
-    .sidebar {
-        display: none;
-    }
+  .sidebar {
+    display: none;
+  }
 }
-
 
 /* 侧边栏卡片 */
 .sideCard {
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .sideCardHeader {
-    padding: 12px 16px;
-    border-bottom: 1px solid #f0f0f0;
+  padding: 12px 16px;
+  border-bottom: 1px solid #f0f0f0;
 }
 
 .cardTitle {
-    font-weight: 600;
-    color: #2c3e50;
+  font-weight: 600;
+  color: #2c3e50;
 }
 
 .hotItems {
-    padding: 8px 0;
+  padding: 8px 0;
 }
 
 .hotItem {
-    display: flex;
-    align-items: center;
-    padding: 10px 16px;
-    transition: background 0.3s;
-    min-width: 0;
-    overflow: hidden;
+  display: flex;
+  align-items: center;
+  padding: 10px 16px;
+  transition: background 0.3s;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .hotItem:hover {
-    background: #f8f9fa;
+  background: #f8f9fa;
 }
 
 .rank {
-    width: 24px;
-    color: #1890ff;
-    font-weight: 500;
+  width: 24px;
+  color: #1890ff;
+  font-weight: 500;
 }
 
 .itemLink {
-    flex: 1;
-    color: #2c3e50;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: block;
-    min-width: 0;
-    max-width: 100%;
+  flex: 1;
+  color: #2c3e50;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  min-width: 0;
+  max-width: 100%;
 }
 
 /* 每日一刷样式 */
 .dailyQuestion {
-    padding: 12px;
-    background: #fffbe6;
-    border-radius: 8px;
-    border: 1px solid #ffe58f;
-    /* 宽度限制 */
-    max-width: 1000px;
-    overflow: hidden;
+  padding: 12px;
+  background: #fffbe6;
+  border-radius: 8px;
+  border: 1px solid #ffe58f;
+  /* 宽度限制 */
+  max-width: 1000px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* 垂直居中 */
 }
 
 .dailyTitle {
-    font-weight: 500;
-    color: #1d1d1d;
-    margin-bottom: 15px;
-    /* 文本截断 */
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 260px; /* 根据侧边栏宽度调整 */
+  font-weight: 500;
+  color: #1d1d1d;
+  margin-bottom: 15px;
+  /* 文本截断 */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 260px; /* 根据侧边栏宽度调整 */
+  width: 100%;
+  text-align: center;
 }
 
 .dailyTags {
-    display: flex;
-    gap: 4px;
-    flex-wrap: wrap;
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .tag {
-    background: #f0f2f5;
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-size: 12px;
-    color: #595959;
+  background: #f0f2f5;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  color: #595959;
 }
 
 .emptyTip {
-    color: #8c8c8c;
-    text-align: center;
-    padding: 16px 0;
+  color: #8c8c8c;
+  text-align: center;
+  padding: 16px 0;
+  display: flex;
+  justify-content: center;
 }
 
 /* 在现有样式基础上新增 */
 .hotStats {
-    display: flex;
-    gap: 8px;
-    margin-top: 4px;
-    font-size: 13px;
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+  font-size: 13px;
 }
 
 .statItem {
-    display: flex;
-    align-items: center;
-    gap: 2px;
-    color: #e8aaff;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  color: #e8aaff;
 }
 
 .statItem2 {
-    display: flex;
-    align-items: center;
-    gap: 2px;
-    color: #8b6cf0;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  color: #8b6cf0;
 }
 
 .itemTitle {
-    display: -webkit-box;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

@@ -16,6 +16,7 @@ import AiCallComponent from "@/components/aiCallComponent";
 import { listQuestionBankHotspotVoByPageUsingPost } from "@/api/questionBankHotspotController";
 import { listQuestionHotspotVoByPageUsingPost } from "@/api/questionHotspotController";
 import RecentStudy from "@/components/RecentStudyComponent";
+import DailyPracticeComponent from "@/components/DailyPracticeComponent";
 import styles from "./page.module.css";
 
 /**
@@ -134,48 +135,10 @@ export default async function HomePage() {
 
         {/* 右侧边栏 */}
         <Sider width={350} theme="light" className={styles.sidebar}>
+          {/* 上次刷题 */}
           <RecentStudy />
           {/* 每日一刷 */}
-          <Card className={styles.sideCard} style={{ marginTop: 24 }}>
-            <div className={styles.sideCardHeader}>
-              <span className={styles.cardTitle}>
-                <BulbOutlined style={{ color: "#faad14", marginRight: 8 }} />
-                每日一刷
-              </span>
-            </div>
-            {questionListVo.length > 0 ? (
-              <div className={styles.dailyQuestion}>
-                {(() => {
-                  const randomIndex = Math.floor(
-                    Math.random() * questionListVo.length,
-                  );
-                  const dailyQuestion = questionListVo[randomIndex];
-                  return (
-                    <Link
-                      href={`/question/${dailyQuestion.id}`}
-                      className={styles.itemLink}
-                    >
-                      <div className={styles.dailyTitle}>
-                        #{dailyQuestion.title}
-                      </div>
-                      <div className={styles.dailyTags}>
-                        {(dailyQuestion.tagList || [])
-                          .slice(0, 3)
-                          /* @ts-ignore */
-                          .map((tag, index) => (
-                            <span key={index} className={styles.tag}>
-                              {tag}
-                            </span>
-                          ))}
-                      </div>
-                    </Link>
-                  );
-                })()}
-              </div>
-            ) : (
-              <div className={styles.emptyTip}>今日题目加载中...</div>
-            )}
-          </Card>
+          <DailyPracticeComponent questionList={questionListVo} />
 
           {/* 热门题目 */}
           <Card className={styles.sideCard} style={{ marginTop: 24 }}>

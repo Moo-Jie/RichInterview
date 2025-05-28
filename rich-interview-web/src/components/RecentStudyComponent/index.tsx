@@ -1,11 +1,11 @@
 "use client";
-import {useEffect, useState} from "react";
-import {useSelector} from "react-redux";
-import {RootState} from "@/store";
-import {Button, Card, Flex, Spin, Tag, Typography} from "antd";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
+import { Button, Card, Flex, Spin, Tag, Typography } from "antd";
 import Link from "next/link";
-import {RightOutlined} from "@ant-design/icons";
-import {getQuestionVoByIdUsingGet} from "@/api/questionController";
+import { RightOutlined } from "@ant-design/icons";
+import { getQuestionVoByIdUsingGet } from "@/api/questionController";
 import "./index.css";
 
 export default function RecentStudy() {
@@ -26,11 +26,18 @@ export default function RecentStudy() {
   }, [user?.previousQuestionID]);
 
   return (
-      <Card
-          className="side-card"
-          styles={{ body: { padding: "12px 16px" } }}
-          style={{ marginBottom: 24 }}
-      >
+    <Card
+      className="side-card"
+      styles={{
+        body: {
+          padding: "12px 16px",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        },
+      }}
+      style={{ marginBottom: 24 }}
+    >
       <div className="side-card-header">
         <span className="card-title">🕒 继续上次的刷题</span>
       </div>
@@ -42,18 +49,18 @@ export default function RecentStudy() {
               <Flex vertical gap={8}>
                 <Link href={`/question/${questionData.id}`}>
                   <Button
-                      type="link"
-                      icon={<RightOutlined />}
-                      style={{
-                        padding: 0,
-                        textAlign: "left",
-                        maxWidth: "250px",
-                        whiteSpace: "nowrap",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        display: "block",
-                        width: "100%"
-                      }}
+                    type="link"
+                    icon={<RightOutlined />}
+                    style={{
+                      padding: 0,
+                      textAlign: "left",
+                      maxWidth: "250px",
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      display: "block",
+                      width: "100%",
+                    }}
                   >
                     {questionData.title}
                   </Button>

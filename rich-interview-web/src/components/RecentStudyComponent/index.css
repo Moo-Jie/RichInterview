@@ -1,95 +1,97 @@
-/* 侧边卡片基础样式 */
 .side-card {
-    background: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-    transition: box-shadow 0.3s ease;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.3s ease;
+  max-width: 600px;
+  margin: 0 auto;
+  width: 100%;
 }
 
 .side-card:hover {
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
 }
 
 /* 卡片标题区域 */
 .side-card-header {
-    padding: 12px 0;
-    margin-bottom: 16px;
-    border-bottom: 2px solid #f0f0f0;
-    display: flex;
-    align-items: center;
+  padding: 12px 0;
+  margin-bottom: 16px;
+  border-bottom: 2px solid #f0f0f0;
+  display: flex;
+  align-items: center;
 }
 
 .card-title {
-    font-size: 16px;
-    font-weight: 600;
-    color: #2c3e50;
-    margin-left: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-left: 8px;
 }
 
-/* 最近项目列表 */
 .recent-items {
-    width: 100%;
-    min-height: 80px;
+  width: 100%;
+  min-height: 80px;
+  text-align: center;
 }
 
 .recent-items a {
-    display: block;
-    width: 100%;
+  display: block;
+  width: 100%;
 }
 
 .recent-items .ant-btn-link {
-    color: #1890ff;
-    font-size: 14px;
-    padding: 4px 0;
-    height: auto;
+  color: #1890ff;
+  font-size: 14px;
+  padding: 4px 0;
+  height: auto;
 }
 
 .recent-items .ant-btn-link:hover {
-    color: #40a9ff;
-    text-decoration: underline;
+  color: #40a9ff;
+  text-decoration: underline;
 }
 
 /* 标签容器 */
 .tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
 }
 
 .tags .ant-tag {
-    margin-right: 0;
-    border-radius: 16px;
-    font-size: 12px;
-    padding: 2px 8px;
+  margin-right: 0;
+  border-radius: 16px;
+  font-size: 12px;
+  padding: 2px 8px;
 }
 
 /* 加载状态 */
 .ant-spin-blur {
-    opacity: 0.5;
-    transition: opacity 0.3s;
+  opacity: 0.5;
+  transition: opacity 0.3s;
 }
 
 /* 响应式处理 */
 @media (max-width: 768px) {
-    .side-card {
-        margin-bottom: 16px;
-    }
+  .side-card {
+    margin-bottom: 16px;
+  }
 
-    .card-title {
-        font-size: 14px;
-    }
+  .card-title {
+    font-size: 14px;
+  }
 
-    .recent-items .ant-btn-link {
-        font-size: 13px;
-    }
+  .recent-items .ant-btn-link {
+    font-size: 13px;
+  }
 }
 
 /* 空状态提示 */
 .ant-typography-secondary {
-    display: block;
-    padding: 16px 0;
-    color: #8c8c8c !important;
-    font-size: 13px;
-    text-align: center;
+  display: block;
+  padding: 16px 0;
+  color: #8c8c8c !important;
+  font-size: 13px;
+  text-align: center;
 }

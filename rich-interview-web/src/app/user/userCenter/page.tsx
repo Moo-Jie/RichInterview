@@ -1,14 +1,16 @@
 "use client";
-import {App, Avatar, Card, Col, Modal, Row} from "antd";
-import {useSelector} from "react-redux";
-import {RootState} from "@/store";
+import { App, Avatar, Card, Col, Modal, Row } from "antd";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store";
 import Title from "antd/es/typography/Title";
 import Paragraph from "antd/es/typography/Paragraph";
-import {useState} from "react";
-import {updateMyUserUsingPost} from "@/api/userController";
-import {ProColumns, ProTable} from "@ant-design/pro-components";
-import CalendarChart from "@/app/user/userCenter/components/CalendarChartComponent";
+import { useState } from "react";
+import { updateMyUserUsingPost } from "@/api/userController";
+import { ProColumns, ProTable } from "@ant-design/pro-components";
+import CalendarChart from "@/components/CalendarChartComponent";
 import RecentStudy from "@/components/RecentStudyComponent";
+import UpdateUserAvatarModal from "@/components/UpdatePictureComponent";
+import { setUserLogin } from "@/store/userLogin";
 import "./index.css";
 
 /**
@@ -36,6 +38,10 @@ export default function UserCenterPage() {
     }
   };
 
+  // 更新头像
+  const [updateAvatarVisible, setUpdateAvatarVisible] = useState(false);
+  const dispatch = useDispatch();
+
   // 获取登录用户信息
   const loginUser = useSelector((state: RootState) => state.userLogin);
   const user = loginUser;
@@ -56,6 +62,7 @@ export default function UserCenterPage() {
       title: "用户头像",
       dataIndex: "userAvatar",
       valueType: "avatar",
+      hideInForm: true,
     },
     {
       title: "个人简介",
@@ -73,7 +80,14 @@ export default function UserCenterPage() {
             style={{ textAlign: "center" }}
             extra={<a onClick={() => setEditVisible(true)}>编辑资料</a>}
           >
-            <Avatar src={user.userAvatar} size={72} />
+            <Avatar
+              src={user.userAvatar}
+              shape="square"
+              size={200}
+              alt={"头像:" + user.userName}
+              onClick={() => setUpdateAvatarVisible(true)}
+              className="user-avatar"
+            />
             <div className="avatar-margin" />
             <Card.Meta
               title={
@@ -104,7 +118,13 @@ export default function UserCenterPage() {
                   </h5>
                   <h5>注册时间：{user.createTime}</h5>
                   <h5>最后操作时间：{user.updateTime}</h5>
-                  <Card>
+                  <Card
+                    style={{
+                      maxWidth: 600,
+                      margin: "0 auto",
+                      width: "100%",
+                    }}
+                  >
                     <RecentStudy />
                   </Card>
                 </Paragraph>
@@ -189,6 +209,17 @@ export default function UserCenterPage() {
           }}
         />
       </Modal>
+
+      {/*更新头像弹窗*/}
+      <UpdateUserAvatarModal
+        visible={updateAvatarVisible}
+        onCancel={() => setUpdateAvatarVisible(false)}
+        onSubmit={(updatedUser) => {
+          dispatch(setUserLogin({ ...user, ...updatedUser }));
+          setUpdateAvatarVisible(false);
+        }}
+        oldData={user}
+      />
     </div>
   );
 }
