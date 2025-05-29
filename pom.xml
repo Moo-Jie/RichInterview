@@ -162,6 +162,13 @@
             <version>2021.0.5.0</version>
         </dependency>
 
+        <!-- Nacos 适配 Spring Boot 2 的 starter，从而使用注册配置中心 -->
+        <!-- 源：https://nacos.io/docs/next/ecology/use-nacos-with-spring-boot/ -->
+        <dependency>
+            <groupId>com.alibaba.boot</groupId>
+            <artifactId>nacos-config-spring-boot-starter</artifactId>
+            <version>0.2.12</version>
+        </dependency>
 
         <!-- Lombok -->
         <dependency>

@@ -1,11 +1,11 @@
 import {MenuDataItem} from "@ant-design/pro-layout";
 import {
-    BookOutlined,
-    CrownOutlined,
-    HomeOutlined,
-    MoreOutlined,
-    QuestionCircleOutlined,
-    StockOutlined,
+  BookOutlined,
+  CrownOutlined,
+  HomeOutlined,
+  MoreOutlined,
+  QuestionCircleOutlined,
+  StockOutlined,
 } from "@ant-design/icons";
 import AccessEnumeration from "@/access/accessEnumeration";
 import {ConstantPathMsg} from "@/constant/ConstantPathMsg";
@@ -63,7 +63,7 @@ export const sysMenus = [
         path: "/learnPath/" + ConstantPathMsg.LEARN_PATH_CPP_QT_ID,
         name: "C++ Qt 学习路线",
         access: AccessEnumeration.USER,
-      }
+      },
     ],
   },
   {
@@ -107,8 +107,13 @@ export const sysMenus = [
             name: "服务器接口调试文档",
             access: AccessEnumeration.ADMIN,
           },
-        ]
-      }
+          {
+            path: "/admin/server/nacosDashboard",
+            name: "服务器 IP 黑名单管理",
+            access: AccessEnumeration.ADMIN,
+          },
+        ],
+      },
     ],
   },
 

@@ -33,3 +33,21 @@ knife4j:
     enable: true
     username: RichInterview
     password: SwaggerDocs
+
+
+# Nacos 配置中心，用于链接 nacos 服务
+nacos:
+  config:
+    # nacos 地址
+    server-addr: 49.233.207.238:8848
+    bootstrap:
+      # 开启预加载
+      enable: true
+    # 控制台 Data ID
+    data-id: RichInterview
+    # 控制台 Group Name
+    group: RICH_INTERVIEW_GROUP
+    # 选择的文件格式
+    type: yaml
+    # 开启自动刷新
+    auto-refresh: true

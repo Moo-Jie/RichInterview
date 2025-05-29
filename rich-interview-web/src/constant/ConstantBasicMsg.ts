@@ -36,6 +36,9 @@ export const ConstantBasicMsg = {
   // 服务器 Swagger 接口文档地址
   // SERVER_API_URL_DOCS_URL: "http://localhost/api/doc.html#/home",
   SERVER_API_SWAGGER_DOCS_URL: "http://49.233.207.238/api/doc.html#/home",
+  // Nacos-Dashboard 地址
+  NACOS_DASHBOARD_URL: "http://localhost:8848/nacos/index.html#/",
+  // NACOS_DASHBOARD_URL: "http://49.233.207.238:8848/nacos/index.html#/",
   // 云服务器性能
   SERVER_PERFORMANCE:{
     "cpu": "CPU - 2核",
