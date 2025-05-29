@@ -1,7 +1,7 @@
 "use client";
-import {Card, Col, Row} from "antd";
-import {ConstantBasicMsg} from "@/constant/ConstantBasicMsg";
-import {GithubFilled} from "@ant-design/icons";
+import { Card, Col, Row } from "antd";
+import { ConstantBasicMsg } from "@/constant/ConstantBasicMsg";
+import { GithubFilled } from "@ant-design/icons";
 import React from "react";
 import styles from "../components/page.module.css";
 
@@ -21,7 +21,8 @@ const interviewData = [
   },
   {
     direction: "后端",
-    technologyStackRow01: "SpringBoot + MySql + MyBatis - Plus + MyBatis X+ Elasticsearch 搜索引擎",
+    technologyStackRow01:
+      "SpringBoot + MySql + MyBatis - Plus + MyBatis X+ Elasticsearch 搜索引擎",
     technologyStackRow02:
       "Sa-Token 权限控制 +HotKey 热点探测 + Sentinel 流量控制 + Nacos 配置中心 + Druid 并发",
     technologyStackRow03: "DeepSeek API",
@@ -80,6 +81,19 @@ export default function Home() {
             </Col>
             <Col span={12} className={styles.itemBorder}>
               更新日期：{ConstantBasicMsg.PROJECT_LAST_UPDATE_TIME}
+            </Col>
+          </Row>
+          <Row>
+            <Col span={12} className={styles.itemBorder}>
+              云服务器性能：
+              <br />
+              {ConstantBasicMsg.SERVER_PERFORMANCE.cpu}
+              <br />
+              {ConstantBasicMsg.SERVER_PERFORMANCE.memory}
+              <br />
+              {ConstantBasicMsg.SERVER_PERFORMANCE.disk}
+              <br />
+              {ConstantBasicMsg.SERVER_PERFORMANCE.bandwidth}
             </Col>
           </Row>
         </Card>

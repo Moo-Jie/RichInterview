@@ -8,29 +8,33 @@
  */
 
 import {
-    GithubFilled,
-    InfoCircleFilled,
-    LoginOutlined,
-    LogoutOutlined,
-    QuestionCircleFilled,
-    UserOutlined,
-    UserSwitchOutlined,
+  GithubFilled,
+  InfoCircleFilled,
+  LoginOutlined,
+  LogoutOutlined,
+  QuestionCircleFilled, QuestionCircleOutlined,
+  UserOutlined,
+  UserSwitchOutlined,
 } from "@ant-design/icons";
-import {ProLayout, WaterMark} from "@ant-design/pro-components";
-import {App, Dropdown, Popover} from "antd";
-import React, {useEffect, useState} from "react";
+import {
+  ProDescriptions,
+  ProLayout,
+  WaterMark,
+} from "@ant-design/pro-components";
+import {App, Collapse, Dropdown, Popover, Typography} from "antd";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import {usePathname, useRouter} from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import GlobalFooter from "@/components/GlobalFooterComponent";
-import {sysMenus} from "../../../config/menu";
-import {ConstantBasicMsg} from "@/constant/ConstantBasicMsg";
-import {useDispatch, useSelector} from "react-redux";
-import {AppDispatch, RootState} from "@/store";
+import { sysMenus } from "../../../config/menu";
+import { ConstantBasicMsg } from "@/constant/ConstantBasicMsg";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/store";
 import showMenuByUserAccess from "@/app/Forbidden/showMenuByUserAccess";
-import {userLogoutUsingPost} from "@/api/userController";
-import {DEFAULT_USER} from "@/constant/ConstantUserMsg";
-import {setUserLogin} from "@/store/userLogin";
+import { userLogoutUsingPost } from "@/api/userController";
+import { DEFAULT_USER } from "@/constant/ConstantUserMsg";
+import { setUserLogin } from "@/store/userLogin";
 import AccessEnumeration from "@/access/accessEnumeration";
 import SearchInputComponent from "@/components/SearchInputComponent";
 
@@ -202,11 +206,34 @@ export default function MainLayout({ children }: Props) {
               <Popover
                 key="about"
                 content={
-                  <div style={{ maxWidth: 300 }}>
-                    <h2>系统信息</h2>
-                    <h4>当前版本：{ConstantBasicMsg.PROJECT_VERSION}</h4>
-                    <h4>维护者：{ConstantBasicMsg.AUTHOR_NAME}</h4>
-                    <h4>更新日期：{ConstantBasicMsg.PROJECT_LAST_UPDATE_TIME}</h4>
+                  <div style={{ maxWidth: 500 }}>
+                    <ProDescriptions
+                      column={{ xs: 1, sm: 2 }}
+                      title="系统配置"
+                      dataSource={{
+                        version: ConstantBasicMsg.PROJECT_VERSION,
+                        maintainer: ConstantBasicMsg.AUTHOR_NAME,
+                        updateTime: ConstantBasicMsg.PROJECT_LAST_UPDATE_TIME,
+                        ...ConstantBasicMsg.SERVER_PERFORMANCE,
+                      }}
+                      columns={[
+                        {
+                          title: "当前版本",
+                          dataIndex: "version",
+                          tooltip: "系统版本号",
+                        },
+                        {
+                          title: "维护人员",
+                          dataIndex: "maintainer",
+                          ellipsis: true,
+                        },
+                        { title: "最后更新", dataIndex: "updateTime" },
+                        { title: "云CPU配置", dataIndex: "cpu" },
+                        { title: "云内存容量", dataIndex: "memory" },
+                        { title: "云磁盘空间", dataIndex: "disk" },
+                        { title: "云网络带宽", dataIndex: "bandwidth" },
+                      ]}
+                    />
                   </div>
                 }
               >
@@ -215,22 +242,53 @@ export default function MainLayout({ children }: Props) {
               <Popover
                 key="help"
                 content={
-                  <div>
-                    <div>
-                      <h2>常见问题解答</h2>
-                      <h3> 1. 如何搜索题目？</h3>
-                      <h4>1.1 搜索框搜索：输入关键词进行搜索</h4>
-                      <h4>1.2 题库搜索：进入对应主题题库进行查找</h4>
-                      <h4>1.3 标签搜索：点击标签进行筛选</h4>
-                      <h3>2. 题库更新频率？</h3>
-                      <h4>题库会定期更新，将尽量保持内容的最新和全面</h4>
-                      <h3>3. 反馈渠道</h3>
-                      <h4>
-                        请前往
-                        <a href="/other/aboutAuthor">【关于作者】</a>
-                        查看联系方式，若有侵权内容请联系我
-                      </h4>
-                    </div>
+                  <div style={{ maxWidth: 400, padding: 16 }}>
+                    <Typography.Title level={4} style={{ marginBottom: 16 }}>
+                      <QuestionCircleOutlined /> 帮助中心
+                    </Typography.Title>
+
+                    <Collapse
+                      ghost
+                      expandIconPosition="end"
+                      items={[
+                        {
+                          key: "1",
+                          label: "如何搜索题目？",
+                          children: (
+                            <ProDescriptions
+                              column={1}
+                              dataSource={{
+                                method1: "搜索框搜索：输入关键词进行搜索",
+                                method2: "题库搜索：进入对应主题题库",
+                                method3: "主页栏目搜索：点击最新或热门题目",
+                              }}
+                              columns={[
+                                { valueType: "text", dataIndex: "method1" },
+                                { valueType: "text", dataIndex: "method2" },
+                                { valueType: "text", dataIndex: "method3" },
+                              ]}
+                            />
+                          ),
+                        },
+                        {
+                          key: "2",
+                          label: "题库更新频率？",
+                          children:
+                            "题库会定期更新，将尽量保持内容的最新和全面",
+                        },
+                        {
+                          key: "3",
+                          label: "反馈渠道",
+                          children: (
+                            <Typography.Text>
+                              请前往
+                              <a href="/other/aboutAuthor">【关于作者】</a>
+                              查看联系方式，若有侵权内容请联系我
+                            </Typography.Text>
+                          ),
+                        },
+                      ]}
+                    />
                   </div>
                 }
               >

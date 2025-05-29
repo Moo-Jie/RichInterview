@@ -31,5 +31,5 @@ mybatis-plus:
 knife4j:
   basic:
     enable: true
-    username: root
-    password: 123456
+    username: RichInterview
+    password: SwaggerDocs

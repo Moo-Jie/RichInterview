@@ -36,4 +36,11 @@ export const ConstantBasicMsg = {
   // 服务器 Swagger 接口文档地址
   // SERVER_API_URL_DOCS_URL: "http://localhost/api/doc.html#/home",
   SERVER_API_SWAGGER_DOCS_URL: "http://49.233.207.238/api/doc.html#/home",
+  // 云服务器性能
+  SERVER_PERFORMANCE:{
+    "cpu": "CPU - 2核",
+    "memory": "内存 - 2GB",
+    "disk": "SSD云硬盘 40GB",
+    "bandwidth": " 200GB/月（带宽 3Mbps）",
+  }
 } as const;
