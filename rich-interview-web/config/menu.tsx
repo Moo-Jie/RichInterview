@@ -93,9 +93,21 @@ export const sysMenus = [
         access: AccessEnumeration.ADMIN,
       },
       {
-        path: "/admin/sentinelDashboard",
-        name: "哨兵流控管理",
+        path: "/admin/server",
+        name: "服务器管理",
         access: AccessEnumeration.ADMIN,
+        children: [
+          {
+            path: "/admin/server/sentinelDashboard",
+            name: "服务器哨兵流量监控",
+            access: AccessEnumeration.ADMIN,
+          },
+          {
+            path: "/admin/server/swaggerDocs",
+            name: "服务器接口调试文档",
+            access: AccessEnumeration.ADMIN,
+          },
+        ]
       }
     ],
   },

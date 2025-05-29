@@ -3,6 +3,7 @@
  */
 export const ConstantBasicMsg = {
   // 主页地址
+  // HOME_URL: "http://localhost/",
   HOME_URL: "http://49.233.207.238/",
   // 项目名称
   PROJECT_NAME: "RichInterview",
@@ -29,4 +30,10 @@ export const ConstantBasicMsg = {
   // 默认题库图片
   DEFAULT_QUESTION_BANK_IMAGE:
     "https://rich-tams.oss-cn-beijing.aliyuncs.com/LOGO.jpg",
+  // Sentinel-Dashboard 地址
+  // SENTINEL_DASHBOARD_URL: "http://localhost:8151/#/dashboard",
+  SENTINEL_DASHBOARD_URL: "http://49.233.207.238:8151/#/dashboard",
+  // 服务器 Swagger 接口文档地址
+  // SERVER_API_URL_DOCS_URL: "http://localhost/api/doc.html#/home",
+  SERVER_API_SWAGGER_DOCS_URL: "http://49.233.207.238/api/doc.html#/home",
 } as const;
