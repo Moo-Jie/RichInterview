@@ -219,6 +219,7 @@ const UserAdminPage: React.FC = () => {
           items: [{ title: "管理" }, { title: "用户管理" }],
         },
       }}
+      style={{   paddingBottom: 110 }}
     >
       <ProTable<API.User>
         actionRef={actionRef}
@@ -311,7 +312,7 @@ const UserAdminPage: React.FC = () => {
           },
         }} // 本地化文本
       />
-      /* 新建/编辑弹窗组件 */
+       
       <CreateModal
         visible={createModalVisible}
         columns={filteredColumns}

@@ -74,7 +74,7 @@ export default function Home() {
               类型：刷题/学习/文档/资源/交流
             </Col>
             <Col span={12} className={styles.itemBorder}>
-              维护者：{ConstantBasicMsg.AUTHOR_NAME}
+              维护者：<a href="/other/aboutAuthor" target={"_blank"}>{ConstantBasicMsg.AUTHOR_NAME}</a>
             </Col>
             <Col span={12} className={styles.itemBorder}>
               当前版本：{ConstantBasicMsg.PROJECT_VERSION}

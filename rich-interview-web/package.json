@@ -10,6 +10,7 @@
     "openapi": "ts-node openapi.config.ts"
   },
   "dependencies": {
+    "@alex_xu/react-slider-vertify": "^1.2.0",
     "@ant-design/nextjs-registry": "^1.0.1",
     "@ant-design/pro-components": "^2.7.15",
     "@ant-design/pro-form": "^2.29.0",

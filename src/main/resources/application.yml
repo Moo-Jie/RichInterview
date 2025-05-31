@@ -117,8 +117,8 @@ knife4j:
         api-rule-resources:
           - com.rich.richInterview.controller
   basic:
-    username: root
-    password: 123456
+    username: RichInterview
+    password: SwaggerDocs
 # JD - Hotkey 探测中间件链接相关配置
 #hotkey:
 #  app-name: RichInterview

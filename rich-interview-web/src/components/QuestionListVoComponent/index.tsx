@@ -1,5 +1,5 @@
 "use client";
-import {Card, List} from "antd";
+import { Card, List } from "antd";
 import TagList from "@/components/TagListComponent/index";
 import Link from "next/link";
 import "./index.css";
@@ -35,7 +35,8 @@ const QuestionListVo = (props: Props) => {
                   }
                   target={"_blank"}
                 >
-                  {item.title}
+                  <div style={{ color: "#438cff" }}>{item.title}</div>
+                  {item.content}
                 </Link>
               }
             />

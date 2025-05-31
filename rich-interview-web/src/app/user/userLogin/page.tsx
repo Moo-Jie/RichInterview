@@ -1,31 +1,34 @@
 // 模板来源：https://procomponents.ant.design/components/login-form
 "use client";
 
-import React from "react";
-import {LoginForm, ProForm, ProFormText} from "@ant-design/pro-form";
-import {App, Col, Row, Space} from "antd";
+import React, { useState } from "react";
+import { LoginForm, ProForm, ProFormText } from "@ant-design/pro-form";
+import { App, Button, Card, Col, Row, Space } from "antd";
 import {
-    BarChartOutlined,
-    BugOutlined,
-    ClockCircleOutlined,
-    CrownOutlined,
-    LockOutlined,
-    RightCircleTwoTone,
-    RiseOutlined,
-    SafetyOutlined,
-    SearchOutlined,
-    TeamOutlined,
-    UpOutlined,
-    UserOutlined,
+  BarChartOutlined,
+  BugOutlined,
+  CheckCircleTwoTone,
+  ClockCircleOutlined,
+  CrownOutlined,
+  LockOutlined,
+  RightCircleTwoTone,
+  RiseOutlined,
+  RobotOutlined,
+  SafetyOutlined,
+  SearchOutlined,
+  TeamOutlined,
+  UpOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
-import {userLoginUsingPost} from "@/api/userController";
-import {useRouter} from "next/navigation";
+import { userLoginUsingPost } from "@/api/userController";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import {AppDispatch} from "@/store";
-import {setUserLogin} from "@/store/userLogin";
-import {useDispatch} from "react-redux";
-import {ConstantBasicMsg} from "@/constant/ConstantBasicMsg";
+import { AppDispatch } from "@/store";
+import { setUserLogin } from "@/store/userLogin";
+import { useDispatch } from "react-redux";
+import { ConstantBasicMsg } from "@/constant/ConstantBasicMsg";
+import { Vertify } from "@alex_xu/react-slider-vertify";
 import "./index.css";
 
 /**
@@ -33,10 +36,18 @@ import "./index.css";
  * @param props
  */
 const UserLoginPage: React.FC = (props) => {
+  // 表单状态管理
   const [form] = ProForm.useForm();
+  // 验证状态管理
+  const [isVerified, setIsVerified] = useState(false);
+
+  // 路由管理
   const router = useRouter();
+  // redux 管理
   const dispatch = useDispatch<AppDispatch>();
+  // 提示消息
   const { message } = App.useApp();
+
   /**
    * 提交
    * @param values
@@ -44,6 +55,10 @@ const UserLoginPage: React.FC = (props) => {
   const doSubmit = async (values: any) => {
     try {
       const res = await userLoginUsingPost(values);
+      if (!isVerified) {
+        message.error("请先完成滑动验证");
+        return;
+      }
       if (res.data) {
         message.success("登录成功！");
         // 保存用户登录态
@@ -58,7 +73,14 @@ const UserLoginPage: React.FC = (props) => {
 
   return (
     <div id="userLoginPage" className="login-container">
-      <Row gutter={100} justify="center" style={{ height: "90vh" }}>
+      <Row
+        gutter={100}
+        justify="center"
+        style={{
+          minHeight: "80vh",
+          paddingBottom: 60,
+        }}
+      >
         {/* 左侧信息展示 */}
         <Col xs={24} md={12} lg={14}>
           <BenefitsShowcase />
@@ -113,6 +135,56 @@ const UserLoginPage: React.FC = (props) => {
                 },
               ]}
             />
+            {/* 是否进行验证按钮 */}
+            {!isVerified && (
+              <div style={{ marginBottom: 24 }}>
+                <Button
+                  style={{
+                    paddingLeft: 0,
+                    paddingRight: 0,
+                    width: "110%",
+                    height: 50,
+                  }}
+                >
+                  <RobotOutlined />
+                  请进行登录验证
+                </Button>
+                {/* 滑动验证框 */}
+                {/* https://juejin.cn/post/7007615666609979400 */}
+                <Card style={{ width: "110%" }}>
+                  <Vertify
+                    width={300}
+                    height={200}
+                    text="请按住滑块拖动"
+                    onSuccess={() => {
+                      setIsVerified(true);
+                      message.success("验证成功！");
+                    }}
+                    // https://picsum.photos/ 随机获取图片
+                    // 格式 https://picsum.photos/${width}/${height}
+                    // TODO 若响应过慢，尝试降低图片像素
+                    imgUrl={"https://picsum.photos/150/100"}
+                    onFail={() => message.error("验证失败，请重试")}
+                    onRefresh={() => setIsVerified(false)}
+                  />
+                </Card>
+              </div>
+            )}
+            {isVerified && (
+              <div style={{ marginBottom: 24 }}>
+                <Button
+                  style={{
+                    paddingLeft: 0,
+                    paddingRight: 0,
+                    width: "100%",
+                    height: 50,
+                  }}
+                >
+                  <CheckCircleTwoTone /> 验证成功！
+                </Button>
+              </div>
+            )}
+
             <div
               style={{
                 marginBlockEnd: 24,

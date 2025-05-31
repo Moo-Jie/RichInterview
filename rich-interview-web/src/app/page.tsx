@@ -1,23 +1,22 @@
-import { listQuestionBankVoByPageUsingPost } from "@/api/questionBankController";
-import { listQuestionVoByPageUsingPost } from "@/api/questionController";
+import {listQuestionBankVoByPageUsingPost} from "@/api/questionBankController";
+import {listQuestionVoByPageUsingPost} from "@/api/questionController";
 import Title from "antd/es/typography/Title";
-import { Card, Flex, message } from "antd";
+import {Card, Flex, message} from "antd";
 import Link from "next/link";
 import QuestionBankListVoComponent from "../components/QuestionBankListVoComponent";
-import {
-  BulbOutlined,
-  EyeFilled,
-  LikeFilled,
-  RightOutlined,
-} from "@ant-design/icons";
+import {EyeFilled, LikeFilled, RightOutlined} from "@ant-design/icons";
 import Sider from "antd/es/layout/Sider";
 import QuestionListVo from "@/components/QuestionListVoComponent";
 import AiCallComponent from "@/components/aiCallComponent";
-import { listQuestionBankHotspotVoByPageUsingPost } from "@/api/questionBankHotspotController";
-import { listQuestionHotspotVoByPageUsingPost } from "@/api/questionHotspotController";
+import {listQuestionBankHotspotVoByPageUsingPost} from "@/api/questionBankHotspotController";
+import {listQuestionHotspotVoByPageUsingPost} from "@/api/questionHotspotController";
 import RecentStudy from "@/components/RecentStudyComponent";
 import DailyPracticeComponent from "@/components/DailyPracticeComponent";
 import styles from "./page.module.css";
+import MiniQuestionBankHotspotChart
+  from "@/components/hotspotchartsComponents/questionBankHotspotchartsComponents/MiniQuestionBankHotspotChart";
+import MiniQuestionHotspotChart
+  from "@/components/hotspotchartsComponents/questionHotspotchartsComponents/MiniQuestionHotspotChart";
 
 /**
  * 主页
@@ -103,14 +102,23 @@ export default async function HomePage() {
             <AiCallComponent />
           </Card>
 
+          {/* 热门题库图表 */}
+          <Card className={`section-card ${styles.sectionCard}`}>
+            <Title level={3} className="card-title">
+              热门题库排行
+            </Title>
+            <MiniQuestionBankHotspotChart data={questionBankHotspotListVo} />
+          </Card>
+
           {/* 题库列表 */}
           <Card className={`section-card ${styles.sectionCard}`}>
             <Flex justify="space-between" align="center">
               <Title level={3} className="card-title">
-                最新题库
+                题库上新！
               </Title>
               <Link href={"/banks"} className="more-link" target={"_blank"}>
-                更多题库 <RightOutlined />
+                查看更多热门题库
+                <RightOutlined />
               </Link>
             </Flex>
             <QuestionBankListVoComponent
@@ -118,8 +126,17 @@ export default async function HomePage() {
             />
           </Card>
 
+          {/* 热门题目图表 */}
+          <Card className={`section-card ${styles.sectionCard}`}>
+            <Title level={3} className="card-title">
+              热门题目排行
+            </Title>
+            <MiniQuestionHotspotChart data={questionHotspotListVo} />
+          </Card>
+
+
           {/*题目列表*/}
-          <Card className="section-card">
+          <Card className={`section-card ${styles.sectionCard}`}>
             <Flex justify="space-between" align="center">
               <Title level={3} className="section-title">
                 题目上新！

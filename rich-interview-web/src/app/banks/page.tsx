@@ -44,11 +44,11 @@ export default async function QuestionBankPage() {
   }
 
   return (
-      <div id="questionBankPage" className="page">
+      <div id="questionBankPage" className="page" style={{ paddingBottom: 60 }}>
         {/* 热门题库图表 */}
         <Card className="section-card">
           <Flex justify="space-between" align="center">
-            <Title level={3} className="section-title">
+            <Title level={2} className="section-title">
               热门TOP
             </Title>
           </Flex>

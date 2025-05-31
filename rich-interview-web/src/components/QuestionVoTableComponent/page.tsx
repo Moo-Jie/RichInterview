@@ -76,7 +76,7 @@ const QuestionTablePage: React.FC = (tableProps: Props) => {
             valueType: "text",
             ellipsis: true,
             render: (_, record) => {
-                return <Link href={`/question/${record.id}`}>{record.title}</Link>;
+                return <Link href={`/question/${record.id}`} target={"_blank"}>{record.title}</Link>;
             },
         },
         {

@@ -1,24 +1,30 @@
 "use client";
 
-import React from "react";
+import React, {useState} from "react";
 import {LoginForm, ProForm, ProFormText} from "@ant-design/pro-form";
-import {App} from "antd";
-import {LockOutlined, RightCircleTwoTone, UserOutlined,} from "@ant-design/icons";
+import {App, Button, Card} from "antd";
+import {CheckCircleTwoTone, LockOutlined, RightCircleTwoTone, RobotOutlined, UserOutlined,} from "@ant-design/icons";
 import {userRegisterUsingPost} from "@/api/userController";
 import Link from "next/link";
 import {useRouter} from "next/navigation";
 import Image from "next/image";
 import {ConstantBasicMsg} from "@/constant/ConstantBasicMsg";
 import "./index.css";
+import {Vertify} from "@alex_xu/react-slider-vertify";
 
 /**
  * 用户注册页面
  * @param props
  */
 const UserRegisterPage: React.FC = (props) => {
+  // 表单状态管理
   const [form] = ProForm.useForm();
+  // 路由管理
   const router = useRouter();
+  // 提示消息
   const { message } = App.useApp();
+  // 验证状态管理
+  const [isVerified, setIsVerified] = useState(false);
 
   /**
    * 提交
@@ -27,6 +33,10 @@ const UserRegisterPage: React.FC = (props) => {
   const doSubmit = async (values: any) => {
     try {
       const res = await userRegisterUsingPost(values);
+      if (!isVerified) {
+        message.error("请先完成滑动验证");
+        return;
+      }
       if (res.data) {
         message.success("注册成功，请登录");
         // 前往登录页
@@ -114,6 +124,56 @@ const UserRegisterPage: React.FC = (props) => {
             },
           ]}
         />
+
+        {/* 是否进行验证按钮 */}
+        {!isVerified && (
+            <div style={{ marginBottom: 24 }}>
+              <Button
+                  style={{
+                    paddingLeft: 0,
+                    paddingRight: 0,
+                    width: "110%",
+                    height: 50,
+                  }}
+              >
+                <RobotOutlined />
+                请进行登录验证
+              </Button>
+              {/* 滑动验证框 */}
+              {/* https://juejin.cn/post/7007615666609979400 */}
+              <Card style={{ width: "110%" }}>
+                <Vertify
+                    width={300}
+                    height={200}
+                    text="请按住滑块拖动"
+                    onSuccess={() => {
+                      setIsVerified(true);
+                      message.success("验证成功！");
+                    }}
+                    // https://picsum.photos/ 随机获取图片
+                    // 格式 https://picsum.photos/${width}/${height}
+                    // TODO 若响应过慢，尝试降低图片像素
+                    imgUrl={"https://picsum.photos/150/100"}
+                    onFail={() => message.error("验证失败，请重试")}
+                    onRefresh={() => setIsVerified(false)}
+                />
+              </Card>
+            </div>
+        )}
+        {isVerified && (
+            <div style={{ marginBottom: 24 }}>
+              <Button
+                  style={{
+                    paddingLeft: 0,
+                    paddingRight: 0,
+                    width: "100%",
+                    height: 50,
+                  }}
+              >
+                <CheckCircleTwoTone /> 验证成功！
+              </Button>
+            </div>
+        )}
 
         <div
           style={{

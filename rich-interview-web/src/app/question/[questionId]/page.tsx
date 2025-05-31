@@ -120,12 +120,12 @@ export default async function QuestionPage({ params }) {
           <Space style={{ marginBottom: 24 }}>
             {/*若为第一题和最后一题，上一题和下一题为null*/}
             {prevQuestion && (
-              <Link href={`/question/${prevQuestion.id}`}>
+              <Link href={`/question/${prevQuestion.id}`} target={"_blank"}>
                 <Button icon={<LeftOutlined />}>上一题</Button>
               </Link>
             )}
             {nextQuestion && (
-              <Link href={`/question/${nextQuestion.id}`}>
+              <Link href={`/question/${nextQuestion.id}`} target={"_blank"}>
                 <Button icon={<RightOutlined />}>下一题</Button>
               </Link>
             )}

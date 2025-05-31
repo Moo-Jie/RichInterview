@@ -3,10 +3,13 @@
  */
 export const ConstantBasicMsg = {
   // 主页地址
-  // HOME_URL: "http://localhost/",
-  HOME_URL: "http://49.233.207.238/",
+  HOME_URL: "http://localhost:3000/",
+  // HOME_URL: "http://49.233.207.238/",
   // 项目名称
   PROJECT_NAME: "RichInterview",
+  // 默认项目LOGO
+  DEFAULT_PROJECT_LOGO:
+      "https://rich-tams.oss-cn-beijing.aliyuncs.com/LOGO.jpg",
   // 项目版本号
   PROJECT_VERSION: "1.5.0",
   // 项目最近更新时间
@@ -31,11 +34,11 @@ export const ConstantBasicMsg = {
   DEFAULT_QUESTION_BANK_IMAGE:
     "https://rich-tams.oss-cn-beijing.aliyuncs.com/LOGO.jpg",
   // Sentinel-Dashboard 地址
-  // SENTINEL_DASHBOARD_URL: "http://localhost:8151/#/dashboard",
-  SENTINEL_DASHBOARD_URL: "http://49.233.207.238:8151/#/dashboard",
+  SENTINEL_DASHBOARD_URL: "http://localhost:8151/#/dashboard",
+  // SENTINEL_DASHBOARD_URL: "http://49.233.207.238:8151/#/dashboard",
   // 服务器 Swagger 接口文档地址
-  // SERVER_API_URL_DOCS_URL: "http://localhost/api/doc.html#/home",
-  SERVER_API_SWAGGER_DOCS_URL: "http://49.233.207.238/api/doc.html#/home",
+  SERVER_API_SWAGGER_DOCS_URL: "http://localhost:8101/api/doc.html#/home",
+  // SERVER_API_SWAGGER_DOCS_URL: "http://49.233.207.238/api/doc.html#/home",
   // Nacos-Dashboard 地址
   NACOS_DASHBOARD_URL: "http://localhost:8848/nacos/index.html#/",
   // NACOS_DASHBOARD_URL: "http://49.233.207.238:8848/nacos/index.html#/",

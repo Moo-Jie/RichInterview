@@ -325,6 +325,7 @@ const QuestionAdminPage: React.FC = () => {
           items: [{ title: "管理" }, { title: "题目管理" }],
         },
       }}
+      style={{   paddingBottom: 110 }}
     >
       <ProTable<API.Question>
         actionRef={actionRef}

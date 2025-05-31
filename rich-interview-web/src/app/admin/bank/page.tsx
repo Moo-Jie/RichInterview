@@ -198,6 +198,7 @@ const QuestionBankAdminPage: React.FC = () => {
           items: [{ title: "管理" }, { title: "题库管理" }],
         },
       }}
+      style={{   paddingBottom: 110 }}
     >
       <ProTable<API.QuestionBank>
         actionRef={actionRef}

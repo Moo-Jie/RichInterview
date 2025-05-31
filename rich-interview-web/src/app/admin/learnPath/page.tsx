@@ -228,6 +228,7 @@ const LearnPathAdminPage: React.FC = () => {
           items: [{ title: "管理" }, { title: "学习路线管理" }],
         },
       }}
+      style={{   paddingBottom: 110 }}
     >
       <ProTable<API.LearnPath>
         actionRef={actionRef}

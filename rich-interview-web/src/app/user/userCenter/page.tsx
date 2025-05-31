@@ -72,7 +72,7 @@ export default function UserCenterPage() {
   ];
 
   return (
-    <div id="userCenterPage" className="max-width-content">
+    <div id="userCenterPage" className="max-width-content" style={{ paddingBottom: 100 }}>
       {/*个人信息标签*/}
       <Row gutter={[0, 24]}>
         <Col xs={24}>
