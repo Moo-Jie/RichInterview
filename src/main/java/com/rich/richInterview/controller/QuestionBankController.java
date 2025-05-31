@@ -226,8 +226,8 @@ public class QuestionBankController {
         rule.setResource("listQuestionBankVOByPage");
         // QPS 模式
         rule.setGrade(RuleConstant.FLOW_GRADE_QPS);
-        // 阈值：10次/秒
-        rule.setCount(10);
+        // 阈值：5次/秒
+        rule.setCount(5);
         // 添加规则
         rules.add(rule);
         // 加载规则

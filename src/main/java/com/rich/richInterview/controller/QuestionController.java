@@ -163,9 +163,6 @@ public class QuestionController {
      * @param request
      * @return
      */
-    @SentinelResource(value = "listQuestionVOByPage",
-            blockHandler = "handleBlockException",
-            fallback = "handleFallback")
     @PostMapping("/list/page/vo")
     public BaseResponse<Page<QuestionVO>> listQuestionVOByPage(@RequestBody QuestionQueryRequest questionQueryRequest,
                                                                HttpServletRequest request) {
