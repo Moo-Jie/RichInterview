@@ -12,12 +12,12 @@ export default function GlobalFooter() {
   return (
     <div className="global-footer">
       <div>
-        © {currentYear} {ConstantBasicMsg.PROJECT_CHINESE_NAME}
+        © {currentYear} {ConstantBasicMsg.PROJECT_CHINESE_NAME}&nbsp;v{ConstantBasicMsg.PROJECT_VERSION}
       </div>
       <div>
         关注我：
-        <a href="https://github.com/Moo-Jie" target="_blank">
-          莫桀
+        <a href="/other/aboutAuthor" target="_blank">
+            {ConstantBasicMsg.AUTHOR_NAME}
         </a>
       </div>
     </div>

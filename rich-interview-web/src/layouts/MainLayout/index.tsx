@@ -12,29 +12,26 @@ import {
   InfoCircleFilled,
   LoginOutlined,
   LogoutOutlined,
-  QuestionCircleFilled, QuestionCircleOutlined,
+  QuestionCircleFilled,
+  QuestionCircleOutlined,
   UserOutlined,
   UserSwitchOutlined,
 } from "@ant-design/icons";
-import {
-  ProDescriptions,
-  ProLayout,
-  WaterMark,
-} from "@ant-design/pro-components";
+import {ProDescriptions, ProLayout, WaterMark,} from "@ant-design/pro-components";
 import {App, Collapse, Dropdown, Popover, Typography} from "antd";
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import Image from "next/image";
-import { usePathname, useRouter } from "next/navigation";
+import {usePathname, useRouter} from "next/navigation";
 import Link from "next/link";
 import GlobalFooter from "@/components/GlobalFooterComponent";
-import { sysMenus } from "../../../config/menu";
-import { ConstantBasicMsg } from "@/constant/ConstantBasicMsg";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "@/store";
+import {sysMenus} from "../../../config/menu";
+import {ConstantBasicMsg} from "@/constant/ConstantBasicMsg";
+import {useDispatch, useSelector} from "react-redux";
+import {AppDispatch, RootState} from "@/store";
 import showMenuByUserAccess from "@/app/Forbidden/showMenuByUserAccess";
-import { userLogoutUsingPost } from "@/api/userController";
-import { DEFAULT_USER } from "@/constant/ConstantUserMsg";
-import { setUserLogin } from "@/store/userLogin";
+import {userLogoutUsingPost} from "@/api/userController";
+import {DEFAULT_USER} from "@/constant/ConstantUserMsg";
+import {setUserLogin} from "@/store/userLogin";
 import AccessEnumeration from "@/access/accessEnumeration";
 import SearchInputComponent from "@/components/SearchInputComponent";
 
@@ -89,6 +86,8 @@ export default function MainLayout({ children }: Props) {
         style={{
           height: "100vh",
           overflow: "auto",
+          paddingBottom: "64px",
+          boxSizing: "border-box",
         }}
       >
         <ProLayout
@@ -103,6 +102,16 @@ export default function MainLayout({ children }: Props) {
               height={35}
             />
           }
+          // 主题配置
+          token={{
+            // 头部导航栏配置
+            header: {
+              colorBgHeader: "#edf5ff",
+              colorHeaderTitle: "rgba(0,0,0,0.9)",
+              colorTextMenuActive: "#4569ba",
+              heightLayoutHeader: 80,
+            },
+          }}
           location={{
             pathname,
           }}
@@ -202,7 +211,16 @@ export default function MainLayout({ children }: Props) {
           actionsRender={(props) => {
             if (props.isMobile) return [];
             return [
-              <SearchInputComponent key="search" />,
+              <div
+                key="search-wrapper"
+                style={{
+                  marginLeft: "auto",
+                  paddingRight: 24,
+                  width: 300,
+                }}
+              >
+                <SearchInputComponent key="search" />
+              </div>,
               <Popover
                 key="about"
                 content={

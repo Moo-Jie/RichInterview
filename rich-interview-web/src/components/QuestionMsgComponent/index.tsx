@@ -239,7 +239,7 @@ const QuestionMsgComponent = (props: Props) => {
         {!aiLoading && aiResponse && (
           <div className="ai-response">
               <div style={{ display: "flex", gap: 8 }}>
-                  <SpeechButton text={aiResponse || "为获取到文本内容，请检查网络"}  className="copy-button" />
+                  <SpeechButton text={aiResponse || "未获取到文本内容，请检查网络"}  className="copy-button" />
                   <Button
                       icon={<CopyOutlined />}
                       onClick={() => {
@@ -308,7 +308,7 @@ const QuestionMsgComponent = (props: Props) => {
         {showAnswer && (
           <div className="ai-response">
               <div style={{ display: "flex", gap: 8 }}>
-                  <SpeechButton text={question.answer || "为获取到文本内容，请检查网络"}  className="copy-button" />
+                  <SpeechButton text={question.answer || "未获取到文本内容，请检查网络"}  className="copy-button" />
                   <Button
                       icon={<CopyOutlined />}
                       onClick={() => {

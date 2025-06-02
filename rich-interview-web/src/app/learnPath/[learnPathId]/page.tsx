@@ -46,7 +46,7 @@ export default async function LearnPathPage({ params }) {
         </Content>
 
         {/* 侧边栏 */}
-        <Card title="📚 热门学习路线" bordered={false}>
+        <Card title="📚 热门学习路线" variant="borderless">
           <Menu
             mode="vertical"
             selectedKeys={[learnPathId]}

@@ -1,12 +1,13 @@
 "use client";
-import {Button, Card} from "antd";
+import { App, Button, Card } from "antd";
 import Title from "antd/es/typography/Title";
 import TagList from "@/components/TagListComponent";
 import MarkdownViewer from "@/components/MarkdownComponent/MarkdownViewer";
 import useAddUserSignInRecordHook from "@/hooks/useAddUserSignInRecordHook";
-import {CopyOutlined} from "@ant-design/icons";
+import { CopyOutlined } from "@ant-design/icons";
 import "./index.css";
 import React from "react";
+import SpeechButton from "@/components/SpeechButtonComponent";
 
 interface Props {
   learnPath: API.LearnPathVO;
@@ -19,6 +20,8 @@ interface Props {
  */
 const LearnPathMsgComponent = (props: Props) => {
   const { learnPath } = props;
+
+  const { message } = App.useApp();
 
   // TODO 学习达半分钟以上才记为签到
   useAddUserSignInRecordHook();
@@ -54,7 +57,7 @@ const LearnPathMsgComponent = (props: Props) => {
   return (
     <div className="learnPath-card">
       {/* 学习路线基本信息 */}
-      <Card className="learnPath-header-card">
+      <Card variant="borderless">
         <div className="header-content">
           <Title level={1} className="learnPath-title">
             # {learnPath.title}
@@ -63,7 +66,7 @@ const LearnPathMsgComponent = (props: Props) => {
             {metaItems.map((item, index) => (
               <div key={index} className="meta-item">
                 <span className="meta-label">{item.label}:</span>
-                  <br/> <br/>
+                <br /> <br />
                 <span className="meta-value">{item.value}</span>
               </div>
             ))}
@@ -81,6 +84,7 @@ const LearnPathMsgComponent = (props: Props) => {
       {/*学习路线展示*/}
       <Card
         className="ask-ai-card"
+        variant="borderless"
         title={
           <span className="card-title02">
             学习路线{" "}
@@ -90,16 +94,49 @@ const LearnPathMsgComponent = (props: Props) => {
       >
         {
           <div className="ai-response">
-            <MarkdownViewer value={learnPath.answer} />
+            <SpeechButton
+              text={learnPath.answer || "未获取到文本内容，请检查网络"}
+              className="copy-button"
+            />
+            &nbsp;
             <Button
               icon={<CopyOutlined />}
-              onClick={() =>
-                navigator.clipboard.writeText(learnPath.answer || "")
-              }
+              onClick={() => {
+                try {
+                  // 现代浏览器API（需要HTTPS）
+                  // navigator 是  window 的全局属性，它包含了浏览器的一些信息和方法，包括剪贴板操作。
+                  // clipboard 是 navigator 的一个属性，它包含了剪贴板相关的方法，例如 writeText() 用于写入文本到剪贴板。
+                  // writeText() 是 clipboard 的一个方法，它用于将指定的文本写入剪贴板。
+                  navigator.clipboard.writeText(learnPath.answer || "");
+                  message.success("复制成功！");
+                } catch (err) {
+                  try {
+                    // 降级方案：传统复制方法（兼容HTTP）
+                    // 创建隐藏的文本域作为临时复制载体
+                    const textArea = document.createElement("textarea");
+                    // 设置文本域的内容为要复制的文本
+                    textArea.value = learnPath.answer || "";
+                    // 将文本域添加到文档中，准备复制
+                    document.body.appendChild(textArea);
+                    // 选择文本域中的内容
+                    textArea.select();
+                    // 执行复制操作
+                    document.execCommand("copy");
+                    // 移除文本域，防止内存泄漏
+                    document.body.removeChild(textArea);
+                    message.success("复制成功！");
+                  } catch (error) {
+                    message.error("自动复制失败，请手动选择文本复制");
+                  }
+                }
+              }}
               className="copy-button"
             >
               复制学习路线
             </Button>
+            <br />
+            <br />
+            <MarkdownViewer value={learnPath.answer} />
           </div>
         }
       </Card>

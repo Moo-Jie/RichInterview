@@ -475,3 +475,46 @@
         opacity: 0.8;
     }
 }
+
+
+/* 复制按钮美化 */
+.copy-button {
+    background: linear-gradient(135deg, #4a90e2 0%, #8b6cf0 100%) !important;
+    border: none !important;
+    color: white !important;
+    border-radius: 24px !important;
+    padding: 8px 24px !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.copy-button::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 300%;
+    height: 300%;
+    background: rgba(255, 255, 255, 0.1);
+    transform: translate(-50%, -50%) rotate(45deg);
+    transition: all 0.5s;
+}
+
+.copy-button:hover::after {
+    width: 0;
+    height: 0;
+}
+
+.copy-button:hover {
+    box-shadow: 0 4px 15px rgba(74, 144, 226, 0.4);
+    transform: translateY(-2px);
+}
+
+.copy-button .anticon {
+    transition: transform 0.3s;
+}
+
+.copy-button:hover .anticon {
+    transform: translateX(3px);
+}
