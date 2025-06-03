@@ -1,5 +1,6 @@
 package com.rich.richInterview.service.impl;
 
+import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -14,6 +15,7 @@ import com.rich.richInterview.model.enums.UserRoleEnum;
 import com.rich.richInterview.model.vo.LoginUserVO;
 import com.rich.richInterview.model.vo.UserVO;
 import com.rich.richInterview.service.UserService;
+import com.rich.richInterview.utils.SaTokenLoginDeviceUtils;
 import com.rich.richInterview.utils.SqlUtils;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.bean.WxOAuth2UserInfo;
@@ -30,14 +32,18 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static com.rich.richInterview.constant.UserConstant.USER_LOGIN_STATE;
 
 /**
- * 用户服务实现
+ * 用户服务实现类
  *
- */
+ * @author DuRuiChi
+ * @return
+ * @create 2025/3/20
+ **/
 @Service
 @Slf4j
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
@@ -47,7 +53,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private RedissonClient redissonClient;
 
     /**
-     * 盐值，混淆密码
+     * 加密盐值
      */
     public static final String SALT = "rich";
 
@@ -63,7 +69,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (userPassword.length() < 8 || checkPassword.length() < 8) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户密码过短");
         }
-        if (userProfile.length() >=100) {
+        if (userProfile.length() >= 100) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户简介过长");
         }
         // 密码和校验密码相同
@@ -95,6 +101,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
     }
 
+    /**
+     * 用户登录
+     * Sa-Token:https://sa-token.cc/doc.html#/use/login-auth
+     * @param userAccount
+     * @param userPassword
+     * @param request
+     * @return com.rich.richInterview.model.vo.LoginUserVO
+     * @author DuRuiChi
+     * @create 2025/6/3
+     **/
     @Override
     public LoginUserVO userLogin(String userAccount, String userPassword, HttpServletRequest request) {
         // 1. 校验
@@ -120,10 +136,25 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户不存在或密码错误");
         }
         // 3. 记录用户的登录态
-        request.getSession().setAttribute(USER_LOGIN_STATE, user);
+        // 弃用 severlet 方式存储登录态
+//        request.getSession().setAttribute(USER_LOGIN_STATE, user);
+        // Sa-Token 框架存储登录态,并指定登录设备类型，实现同端登录互斥
+        // TODO 设备类型多样化：PC端、移动端、小程序端
+        StpUtil.login(user.getId(), SaTokenLoginDeviceUtils.getUserDevice(request));
+        // 将当前用户数据存入 Sa-Token 提供的缓存 Session 中，用于后续操作
+        StpUtil.getSession().set(USER_LOGIN_STATE, user);
         return this.getLoginUserVO(user);
     }
 
+    /**
+     * 用户登录（微信开放平台）
+     * Sa-Token:https://sa-token.cc/doc.html#/use/login-auth
+     * @param wxOAuth2UserInfo
+     * @param request
+     * @return com.rich.richInterview.model.vo.LoginUserVO
+     * @author DuRuiChi
+     * @create 2025/6/3
+     **/
     @Override
     public LoginUserVO userLoginByMpOpen(WxOAuth2UserInfo wxOAuth2UserInfo, HttpServletRequest request) {
         String unionId = wxOAuth2UserInfo.getUnionId();
@@ -151,63 +182,73 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 }
             }
             // 记录用户的登录态
-            request.getSession().setAttribute(USER_LOGIN_STATE, user);
+            StpUtil.getSession().set(USER_LOGIN_STATE, user);
             return getLoginUserVO(user);
         }
     }
 
     /**
      * 获取当前登录用户
-     *
+     * Sa-Token:https://sa-token.cc/doc.html#/use/login-auth
      * @param request
      * @return
      */
     @Override
     public User getLoginUser(HttpServletRequest request) {
-        // 先判断是否已登录
-        Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);
-        User currentUser = (User) userObj;
-        if (currentUser == null || currentUser.getId() == null) {
+        // 从 Sa-Token 提供的方法中获取当前用户 id
+        Object loginId = StpUtil.getLoginIdDefaultNull();
+        if (Objects.isNull(loginId)) {
             throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
         }
-        // 从数据库查询（追求性能的话可以注释，直接走缓存）
-        long userId = currentUser.getId();
-        currentUser = this.getById(userId);
-        if (currentUser == null) {
-            throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
-        }
-        return currentUser;
+
+        // 由于用户数据变更不频繁，暂不从数据库查询
+//        return  this.getById((String) loginId);
+
+        // 返回缓存中的用户数据
+        // 通过 Sa - Token 提供的工具类 StpUtil 获取当前用户登陆时存储的 SaSession 本地缓存对象
+        // 通过 get 获取 dataMap 属性中存放的当前登录的用户的 User 对象
+        return (User) StpUtil.getSessionByLoginId(loginId).get(USER_LOGIN_STATE);
     }
 
     /**
      * 获取当前登录用户（允许未登录）
-     *
+     * Sa-Token:https://sa-token.cc/doc.html#/use/login-auth
      * @param request
      * @return
      */
     @Override
     public User getLoginUserPermitNull(HttpServletRequest request) {
-        // 先判断是否已登录
-        Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);
-        User currentUser = (User) userObj;
-        if (currentUser == null || currentUser.getId() == null) {
+        // 从 Sa-Token 提供的方法中获取当前用户 id
+        Object loginId = StpUtil.getLoginIdDefaultNull();
+        if (Objects.isNull(loginId)) {
             return null;
         }
-        // 从数据库查询（追求性能的话可以注释，直接走缓存）
-        long userId = currentUser.getId();
-        return this.getById(userId);
+
+        // 由于用户数据变更不频繁，暂不从数据库查询
+//        return  this.getById((String) loginId);
+
+        // 返回缓存中的用户数据
+        // 通过 Sa - Token 提供的工具类 StpUtil 获取当前用户登陆时存储的 SaSession 本地缓存对象
+        // 通过 get 获取 dataMap 属性中存放的当前登录的用户的 User 对象
+        User user = (User) StpUtil.getSessionByLoginId(loginId).get(USER_LOGIN_STATE);
+        if (user == null || user.getId() == null) {
+            return null;
+        }
+        return user;
     }
 
     /**
      * 是否为管理员
-     *
+     * Sa-Token:https://sa-token.cc/doc.html#/use/login-auth
      * @param request
      * @return
      */
     @Override
     public boolean isAdmin(HttpServletRequest request) {
         // 仅管理员可查询
-        Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);
+        // Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);
+        Object userObj = StpUtil.getSession().get(USER_LOGIN_STATE);
+
         User user = (User) userObj;
         return isAdmin(user);
     }
@@ -219,16 +260,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     /**
      * 用户注销
-     *
+     * Sa-Token:https://sa-token.cc/doc.html#/use/login-auth
      * @param request
      */
     @Override
     public boolean userLogout(HttpServletRequest request) {
-        if (request.getSession().getAttribute(USER_LOGIN_STATE) == null) {
-            throw new BusinessException(ErrorCode.OPERATION_ERROR, "未登录");
-        }
-        // 移除登录态
-        request.getSession().removeAttribute(USER_LOGIN_STATE);
+        // 检查登录
+        StpUtil.checkLogin();
+        // 执行注销
+        StpUtil.logout();
         return true;
     }
 
@@ -280,14 +320,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         queryWrapper.eq(StringUtils.isNotBlank(userRole), "userRole", userRole);
         queryWrapper.like(StringUtils.isNotBlank(userProfile), "userProfile", userProfile);
         queryWrapper.like(StringUtils.isNotBlank(userName), "userName", userName);
-        queryWrapper.orderBy(SqlUtils.validSortField(sortField), sortOrder.equals(CommonConstant.SORT_ORDER_ASC),
-                sortField);
+        queryWrapper.orderBy(SqlUtils.validSortField(sortField), sortOrder.equals(CommonConstant.SORT_ORDER_ASC), sortField);
         return queryWrapper;
     }
 
     /**
-     *
      * 添加用户签到记录
+     *
      * @param userId
      * @return boolean
      * @author DuRuiChi
@@ -312,6 +351,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     /**
      * 获取用户签到记录
+     *
      * @param userId
      * @param year
      * @return java.util.List<java.lang.Integer>

@@ -1,5 +1,6 @@
 package com.rich.richInterview.controller;
 
+import cn.dev33.satoken.annotation.SaCheckRole;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.rich.richInterview.annotation.AuthCheck;
 import com.rich.richInterview.common.BaseResponse;
@@ -102,7 +103,7 @@ public class LearnPathController {
      * @return
      */
     @PostMapping("/update")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    @SaCheckRole(UserConstant.ADMIN_ROLE)
     public BaseResponse<Boolean> updateLearnPath(@RequestBody LearnPathUpdateRequest learnPathUpdateRequest) {
         if (learnPathUpdateRequest == null || learnPathUpdateRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
@@ -145,7 +146,7 @@ public class LearnPathController {
      * @return
      */
     @PostMapping("/list/page")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    @SaCheckRole(UserConstant.ADMIN_ROLE)
     public BaseResponse<Page<LearnPath>> listLearnPathByPage(@RequestBody LearnPathQueryRequest learnPathQueryRequest) {
         long current = learnPathQueryRequest.getCurrent();
         long size = learnPathQueryRequest.getPageSize();

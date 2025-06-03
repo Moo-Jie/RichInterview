@@ -2,14 +2,16 @@
 
 server:
   port: 8101
+
+
 spring:
   # 数据库配置
-  # todo 需替换配置
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://49.233.207.238:3306/richinterview
     username: richInterviewUser
     password: 5Fse3fNPkYFz6Bef
+
   # Redis 配置
   redis:
     database: 1
@@ -17,16 +19,22 @@ spring:
     port: 6379
     password: 123456
     timeout: 5000
-  # Elasticsearch 配置
-  # ES 对服务器内存要求较高，建议使用 8G 以上的服务器
+
+
+# Elasticsearch 配置
+# ES 对服务器内存要求较高，建议使用 8G 以上的服务器
 #  elasticsearch:
 #    uris: http://localhost:9200
 #    username: root
 #    password: 123456
+
+
 mybatis-plus:
   configuration:
     # 生产环境关闭日志
     log-impl: ''
+
+
 # 接口文档配置
 knife4j:
   basic:
@@ -51,3 +59,22 @@ nacos:
     type: yaml
     # 开启自动刷新
     auto-refresh: true
+
+
+# Sa-Token 配置
+# https://sa-token.cc/doc.html#/start/example
+sa-token:
+  # token 名称（同时也是 cookie 名称）
+  token-name: satoken
+  # token 有效期（单位：秒） 默认30天，-1 代表永久有效
+  timeout: 2592000
+  # token 最低活跃频率（单位：秒），如果 token 超过此时间没有访问系统就会被冻结，默认-1 代表不限制，永不冻结
+  active-timeout: -1
+  # 是否允许同一账号多地同时登录 （为 true 时允许一起登录, 为 false 时新登录挤掉旧登录）
+  is-concurrent: false
+  # 在多人登录同一账号时，是否共用一个 token （为 true 时所有登录共用一个 token, 为 false 时每次登录新建一个 token）
+  is-share: false
+  # token 风格（默认可取值：uuid、simple-uuid、random-32、random-64、random-128、tik）
+  token-style: uuid
+  # 是否输出操作日志
+  is-log: true

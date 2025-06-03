@@ -170,6 +170,15 @@
             <version>0.2.12</version>
         </dependency>
 
+        <!-- Sa-Token 权限认证 -->
+        <!-- 源：https://sa-token.cc/doc.html#/start/example -->
+        <dependency>
+            <groupId>cn.dev33</groupId>
+            <artifactId>sa-token-spring-boot-starter</artifactId>
+            <version>1.43.0</version>
+        </dependency>
+
+
         <!-- Lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>

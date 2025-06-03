@@ -2,52 +2,57 @@
 spring:
   application:
     name: RichInterview
+
   # 默认 dev 环境
   profiles:
     active: dev
 #    active: prod
+
   # 支持 swagger3
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+
   # session 配置
   session:
     # todo 取消注释开启分布式 session（须先配置 Redis）
     # store-type: redis
     # 30 天过期
     timeout: 2592000
+
   # 数据库配置
-  # 本地库
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/rich_interview
     username: root
     password: 12345
-    # 线上库
 #    url: jdbc:mysql://49.233.207.238:3306/richinterview
 #    username: richInterviewUser
 #    password: 5Fse3fNPkYFz6Bef
+
   # Redis 配置
-#       本地库
-#     线上库
   redis:
     database: 1
-#    host: 49.233.207.238
     port: 6379
-#    password: 123456
     timeout: 5000
     host: localhost
+#    host: 49.233.207.238
+#    password: 123456
+
   # Elasticsearch 配置
   # 已实现接口降级服务，不使用时注销即可
   #  elasticsearch:
   #    uris: http://localhost:9200
   #    username: root
   #    password: 123456
+
   # 文件上传
   servlet:
     multipart:
       # 大小限制
       max-file-size: 10MB
+
+
 server:
   address: 0.0.0.0
   port: 8101
@@ -57,15 +62,20 @@ server:
     session:
       cookie:
         max-age: 2592000
+
+
 mybatis-plus:
   configuration:
     map-underscore-to-camel-case: false
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
   global-config:
     db-config:
       logic-delete-field: isDelete # 全局逻辑删除的实体字段名
       logic-delete-value: 1 # 逻辑已删除值（默认为 1）
       logic-not-delete-value: 0 # 逻辑未删除值（默认为 0）
+
+
 # 微信相关
 wx:
   # 微信公众平台
@@ -82,14 +92,15 @@ wx:
         host: 127.0.0.1
         port: 6379
       type: Memory
+
   # 微信开放平台
   # todo 需替换配置
   open:
     appId: xxx
     appSecret: xxx
+
+
 # 对象存储
-# todo 需替换配置
-# 文件上传
 dromara:
   x-file-storage: #文件存储配置
     default-platform: aliyun-oss-1 #默认使用的存储平台
@@ -105,6 +116,7 @@ dromara:
         domain: https://rich-tams.oss-cn-beijing.aliyuncs.com/ # 访问域名，注意“/”结尾，例如：https://abc.oss-cn-shanghai.aliyuncs.com/
         base-path: RichInterview/ # 基础路径
 
+
 # 接口文档配置
 knife4j:
   enable: true
@@ -119,12 +131,15 @@ knife4j:
   basic:
     username: RichInterview
     password: SwaggerDocs
+
+
 # JD - Hotkey 探测中间件链接相关配置
 #hotkey:
 #  app-name: RichInterview
 #  caffeine-size: 10000
 #  push-period: 1000
 #  etcd-server: http://localhost:2379
+
 
 # Nacos 配置中心，用于链接 nacos 服务
 nacos:
@@ -142,3 +157,22 @@ nacos:
     type: yaml
     # 开启自动刷新
     auto-refresh: true
+
+
+# Sa-Token 配置
+# https://sa-token.cc/doc.html#/start/example
+sa-token:
+  # token 名称（同时也是 cookie 名称）
+  token-name: satoken
+  # token 有效期（单位：秒） 默认30天，-1 代表永久有效
+  timeout: 2592000
+  # token 最低活跃频率（单位：秒），如果 token 超过此时间没有访问系统就会被冻结，默认-1 代表不限制，永不冻结
+  active-timeout: -1
+  # 是否允许同一账号多地同时登录 （为 true 时允许一起登录, 为 false 时新登录挤掉旧登录）
+  is-concurrent: false
+  # 在多人登录同一账号时，是否共用一个 token （为 true 时所有登录共用一个 token, 为 false 时每次登录新建一个 token）
+  is-share: false
+  # token 风格（默认可取值：uuid、simple-uuid、random-32、random-64、random-128、tik）
+  token-style: uuid
+  # 是否输出操作日志
+  is-log: true

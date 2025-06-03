@@ -18,13 +18,14 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 /**
+ * 权限校验 AOP ，拦截所有带有 @AuthCheck 注解的方法并鉴权
+ * （已淘汰，现使用 Sa-Token 实现）
  *
- * 权限校验 AOP
  * @author DuRuiChi
  * @create 2025/3/20
  **/
-@Aspect
-@Component
+//@Aspect
+//@Component
 public class AuthInterceptor {
 
     @Resource
@@ -32,6 +33,7 @@ public class AuthInterceptor {
 
     /**
      * 执行拦截
+     *
      * @param joinPoint
      * @param authCheck
      * @return java.lang.Object
