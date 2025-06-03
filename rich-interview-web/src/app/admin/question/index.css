@@ -42,15 +42,15 @@
 }
 
 /* 分页样式 */
-.question-admin-page .ant-pagination {
-    margin: 24px 0 16px;
-    padding: 12px 24px;
-    background: #fff;
-    border-top: 1px solid #f0f0f0;
-    position: sticky;
-    bottom: 60px;
-    z-index: 1;
-}
+/*.question-admin-page .ant-pagination {*/
+/*    margin: 24px 0 16px;*/
+/*    padding: 12px 24px;*/
+/*    background: #fff;*/
+/*    border-top: 1px solid #f0f0f0;*/
+/*    position: sticky;*/
+/*    bottom: 60px;*/
+/*    z-index: 1;*/
+/*}*/
 
 /* 搜索栏样式 */
 .question-admin-page .ant-pro-table-search {
