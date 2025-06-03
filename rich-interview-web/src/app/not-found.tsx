@@ -1,6 +1,6 @@
-import {Button, Result} from "antd";
+import { Button, Result } from "antd";
 import styles from "@/app/Forbidden/Forbidden.module.css";
-import {LoginOutlined} from "@ant-design/icons";
+import { LoginOutlined } from "@ant-design/icons";
 
 export default function NotFound() {
   return (
@@ -20,7 +20,7 @@ export default function NotFound() {
             您暂时无法访问此内容，请先登录后再试。{" "}
           </span>
         }
-        subTitle="该页面被拦截，您可能尚未登录！"
+        subTitle="若您已经登录，则有其他设备异端登录，为了保证您的账号安全，请及时修改密码，以防泄露！"
         extra={
           <Button
             type="primary"
