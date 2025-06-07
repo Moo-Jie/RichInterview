@@ -4,7 +4,7 @@ import cn.dev33.satoken.exception.NotLoginException;
 import cn.dev33.satoken.exception.NotRoleException;
 import com.rich.richInterview.common.BaseResponse;
 import com.rich.richInterview.common.ErrorCode;
-import com.rich.richInterview.common.ResultUtils;
+import com.rich.richInterview.utils.ResultUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -27,7 +27,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NotRoleException.class)
     public BaseResponse<?> notRoleExceptionHandler(RuntimeException e) {
         log.error("NotRoleException", e);
-        return ResultUtils.error(ErrorCode.NO_AUTH_ERROR, "您无权请求当前内容");
+        return ResultUtils.error(ErrorCode.NO_AUTH_ERROR, "您无权请求当前内容,可能访问了限制内容，或已被封号处理");
     }
 
     /**

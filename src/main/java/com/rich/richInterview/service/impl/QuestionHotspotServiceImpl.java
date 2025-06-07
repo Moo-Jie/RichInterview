@@ -175,15 +175,16 @@ public class QuestionHotspotServiceImpl extends ServiceImpl<QuestionHotspotMappe
     public QuestionHotspotVO getQuestionHotspotVO(QuestionHotspot questionHotspot, HttpServletRequest request) {
         QuestionHotspotVO questionHotspotVO = QuestionHotspotVO.objToVo(questionHotspot);
         // 设置题目信息
-        Question question = questionService.getById(questionHotspot.getQuestionId());
-        if (question != null) {
-            // 填充题目基础信息
-            questionHotspotVO.setTitle(question.getTitle());
-            questionHotspotVO.setContent(question.getContent());
-            questionHotspotVO.setAnswer(question.getAnswer());
-            questionHotspotVO.setTagList(JSONUtil.toList(question.getTags(), String.class));
-            return questionHotspotVO;
-        }
+        // TODO 与题目信息重复，冗余响应，此处关闭
+//        Question question = questionService.getById(questionHotspot.getQuestionId());
+//        if (question != null) {
+//            // 填充题目基础信息
+//            questionHotspotVO.setTitle(question.getTitle());
+//            questionHotspotVO.setContent(question.getContent());
+//            questionHotspotVO.setAnswer(question.getAnswer());
+//            questionHotspotVO.setTagList(JSONUtil.toList(question.getTags(), String.class));
+//            return questionHotspotVO;
+//        }
         // 对象转封装类
         return questionHotspotVO;
     }

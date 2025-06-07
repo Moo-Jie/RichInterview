@@ -19,5 +19,7 @@ const ACCESS_ENUM = {
   NOT_LOGIN: "notLogin",
   // 无权限
   NOT_ACCESS: "notAccess",
+  // 被封号
+  BAN: "ban",
 };
 export default ACCESS_ENUM;

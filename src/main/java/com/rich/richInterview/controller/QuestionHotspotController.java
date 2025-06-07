@@ -1,43 +1,38 @@
 package com.rich.richInterview.controller;
 
 import cn.dev33.satoken.annotation.SaCheckRole;
+import cn.dev33.satoken.annotation.SaMode;
 import com.alibaba.csp.sentinel.Entry;
 import com.alibaba.csp.sentinel.EntryType;
 import com.alibaba.csp.sentinel.SphU;
 import com.alibaba.csp.sentinel.Tracer;
-import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
-import com.alibaba.csp.sentinel.slots.block.RuleConstant;
 import com.alibaba.csp.sentinel.slots.block.degrade.DegradeException;
 import com.alibaba.csp.sentinel.slots.block.degrade.DegradeRule;
 import com.alibaba.csp.sentinel.slots.block.degrade.DegradeRuleManager;
 import com.alibaba.csp.sentinel.slots.block.degrade.circuitbreaker.CircuitBreakerStrategy;
-import com.alibaba.csp.sentinel.slots.block.flow.FlowRule;
-import com.alibaba.csp.sentinel.slots.block.flow.FlowRuleManager;
 import com.alibaba.csp.sentinel.slots.block.flow.param.ParamFlowRule;
 import com.alibaba.csp.sentinel.slots.block.flow.param.ParamFlowRuleManager;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.rich.richInterview.annotation.AuthCheck;
 import com.rich.richInterview.common.BaseResponse;
 import com.rich.richInterview.common.ErrorCode;
-import com.rich.richInterview.common.ResultUtils;
+import com.rich.richInterview.utils.ResultUtils;
 import com.rich.richInterview.constant.IncrementField;
 import com.rich.richInterview.constant.UserConstant;
 import com.rich.richInterview.exception.BusinessException;
 import com.rich.richInterview.exception.ThrowUtils;
-import com.rich.richInterview.model.dto.questionBank.QuestionBankQueryRequest;
 import com.rich.richInterview.model.dto.questionHotspot.QuestionHotspotQueryRequest;
 import com.rich.richInterview.model.dto.questionHotspot.QuestionHotspotUpdateRequest;
-import com.rich.richInterview.model.entity.Question;
 import com.rich.richInterview.model.entity.QuestionHotspot;
+import com.rich.richInterview.model.entity.User;
 import com.rich.richInterview.model.vo.QuestionHotspotVO;
-import com.rich.richInterview.model.vo.QuestionVO;
 import com.rich.richInterview.service.QuestionHotspotService;
+import com.rich.richInterview.service.UserService;
+import com.rich.richInterview.utils.DetectCrawlersUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
@@ -52,6 +47,12 @@ public class QuestionHotspotController {
 
     @Resource
     private QuestionHotspotService questionHotspotService;
+
+    @Resource
+    private UserService userService;
+
+    @Resource
+    private DetectCrawlersUtils detectCrawlersUtils;
 
     /**
      * 热点字段递增接口（自动初始化）
@@ -78,10 +79,18 @@ public class QuestionHotspotController {
      * @return QuestionHotspotVO
      */
     @GetMapping("/get/vo/byQuestionId")
+    //    只要具有其中一个权限即可通过校验
+    @SaCheckRole(value = {UserConstant.ADMIN_ROLE, UserConstant.DEFAULT_ROLE}, mode = SaMode.OR)
     public BaseResponse<QuestionHotspotVO> getQuestionHotspotVOByQuestionId(
             @RequestParam Long questionId,
             HttpServletRequest request) {
         ThrowUtils.throwIf(questionId == null || questionId <= 0, ErrorCode.PARAMS_ERROR);
+        // 1.反爬虫处理，针对用户 ID 控制访问次数
+        User loginUser = userService.getLoginUser(request);
+        if (!loginUser.getUserRole().equals(UserConstant.ADMIN_ROLE))
+        {
+            detectCrawlersUtils.detectCrawler(loginUser.getId());
+        }
         // 获取用户 IP
         String remoteAddr = request.getRemoteAddr();
         // 非注解方式，手动针对用户 IP 进行流控
@@ -90,12 +99,12 @@ public class QuestionHotspotController {
         initFlowAndDegradeRules("getQuestionHotspotVOByQuestionId");
         try {
             // SphU.entry() 方法用于创建一个流控入口，该方法接受三个参数：
-            // 1. 资源名称：用于标识流控规则的资源名称。
-            // 2. 入口类型：表示流控入口的类型，EntryType.IN 表示类型为入口。
-            // 3. 入口数量：表示流控入口的数量，设置为 1。
-            // 4. 额外参数：用于传递额外的参数，此处传入用户 IP 地址等。
+            // 资源名称：用于标识流控规则的资源名称。
+            // 入口类型：表示流控入口的类型，EntryType.IN 表示类型为入口。
+            // 入口数量：表示流控入口的数量，设置为 1。
+            // 额外参数：用于传递额外的参数，此处传入用户 IP 地址等。
             entry = SphU.entry("getQuestionHotspotVOByQuestionId", EntryType.IN, 1, remoteAddr);
-            // 查询数据库
+            // 2.查询数据库
             // 根据题目 id 获取题库热点信息，不存在时初始化
             QuestionHotspot questionHotspot = questionHotspotService.getByQuestionId(questionId);
             ThrowUtils.throwIf(questionHotspot == null, ErrorCode.NOT_FOUND_ERROR);

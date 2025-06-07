@@ -1,7 +1,7 @@
 package com.rich.richInterview.controller;
 
 import com.rich.richInterview.common.BaseResponse;
-import com.rich.richInterview.common.ResultUtils;
+import com.rich.richInterview.utils.ResultUtils;
 import org.dromara.x.file.storage.core.FileInfo;
 import org.dromara.x.file.storage.core.FileStorageService;
 import org.springframework.beans.factory.annotation.Autowired;

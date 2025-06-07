@@ -47,8 +47,8 @@ export default function BankActionComponent(props: Props) {
         setStarCount(res.data?.starNum || 0);
         // @ts-ignore
         setViewCount(res.data?.viewNum || 0);
-      } catch (e) {
-        console.error("获取题库热点数据失败", e);
+      } catch (e : any) {
+        message.error("获取题库热点数据失败", e);
       }
     };
     fetchHotspot();

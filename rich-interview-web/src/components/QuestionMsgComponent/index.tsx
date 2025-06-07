@@ -96,12 +96,12 @@ const QuestionMsgComponent = (props: Props) => {
           // @ts-ignore
           setViewCount(res.data.viewNum || 0);
         }
-      } catch (e) {
-        console.error("获取热点数据失败", e);
+      } catch (e : any) {
+          message.error(`获取热点数据失败: ${e?.response?.data?.message || e?.message || '未知错误'}`);
       }
     };
     fetchHotspot();
-  }, [questionId]);
+  }, []);
 
   // 其他信息标签
   const metaItems = [

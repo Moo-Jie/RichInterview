@@ -8,8 +8,9 @@ const Forbidden = () => {
       {/*  源：https://3x.ant.design/components/result-cn/ */}
       <Result
         status="403"
-        title={<span className={styles.title}>您的权限无法访问该界面哦！</span>}
-        subTitle="您暂时无法访问此内容，请先登录后再试。"
+        title={<span className={styles.title}>{" "}
+            您暂时无法访问此内容，请先登录后再试。{" "}</span>}
+        subTitle="若您已经登录，则可能您的账号已被系统封禁，请遵守社区规则，等待解封。"
         extra={
           <Button
             type="primary"

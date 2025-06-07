@@ -1,42 +1,38 @@
 package com.rich.richInterview.controller;
 
 import cn.dev33.satoken.annotation.SaCheckRole;
+import cn.dev33.satoken.annotation.SaMode;
 import com.alibaba.csp.sentinel.Entry;
 import com.alibaba.csp.sentinel.EntryType;
 import com.alibaba.csp.sentinel.SphU;
 import com.alibaba.csp.sentinel.Tracer;
-import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
-import com.alibaba.csp.sentinel.slots.block.RuleConstant;
 import com.alibaba.csp.sentinel.slots.block.degrade.DegradeException;
 import com.alibaba.csp.sentinel.slots.block.degrade.DegradeRule;
 import com.alibaba.csp.sentinel.slots.block.degrade.DegradeRuleManager;
 import com.alibaba.csp.sentinel.slots.block.degrade.circuitbreaker.CircuitBreakerStrategy;
-import com.alibaba.csp.sentinel.slots.block.flow.FlowRule;
-import com.alibaba.csp.sentinel.slots.block.flow.FlowRuleManager;
 import com.alibaba.csp.sentinel.slots.block.flow.param.ParamFlowRule;
 import com.alibaba.csp.sentinel.slots.block.flow.param.ParamFlowRuleManager;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.rich.richInterview.annotation.AuthCheck;
 import com.rich.richInterview.common.BaseResponse;
 import com.rich.richInterview.common.DeleteRequest;
 import com.rich.richInterview.common.ErrorCode;
-import com.rich.richInterview.common.ResultUtils;
+import com.rich.richInterview.model.entity.User;
+import com.rich.richInterview.service.UserService;
+import com.rich.richInterview.utils.DetectCrawlersUtils;
+import com.rich.richInterview.utils.ResultUtils;
 import com.rich.richInterview.constant.UserConstant;
 import com.rich.richInterview.exception.ThrowUtils;
 import com.rich.richInterview.model.dto.question.QuestionAddRequest;
 import com.rich.richInterview.model.dto.question.QuestionEditRequest;
 import com.rich.richInterview.model.dto.question.QuestionQueryRequest;
 import com.rich.richInterview.model.dto.question.QuestionUpdateRequest;
-import com.rich.richInterview.model.dto.questionBank.QuestionBankQueryRequest;
 import com.rich.richInterview.model.entity.Question;
-import com.rich.richInterview.model.vo.QuestionBankVO;
 import com.rich.richInterview.model.vo.QuestionVO;
 import com.rich.richInterview.service.QuestionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
@@ -53,6 +49,12 @@ public class QuestionController {
 
     @Resource
     private QuestionService questionService;
+
+    @Resource
+    private UserService userService;
+
+    @Resource
+    private DetectCrawlersUtils detectCrawlersUtils;
 
     /**
      * 创建题目（仅管理员可用）
@@ -101,8 +103,23 @@ public class QuestionController {
     @GetMapping("/get/vo")
     public BaseResponse<QuestionVO> getQuestionVOById(Long id, HttpServletRequest request) {
         ThrowUtils.throwIf(id == null || id <= 0, ErrorCode.PARAMS_ERROR);
+        // 获取用户 IP
+        String remoteAddr = request.getRemoteAddr();
+        // 非注解方式，手动针对用户 IP 进行流控
+        // 源：https://sentinelguard.io/zh-cn/docs/parameter-flow-control.html
+        Entry entry = null;
+        initFlowAndDegradeRules("getQuestionVOById");
+        try {
+            // SphU.entry() 方法用于创建一个流控入口，该方法接受三个参数：
+            // 资源名称：用于标识流控规则的资源名称。
+            // 入口类型：表示流控入口的类型，EntryType.IN 表示类型为入口。
+            // 入口数量：表示流控入口的数量，设置为 1。
+            // 额外参数：用于传递额外的参数，此处传入用户 IP 地址等。
+            entry = SphU.entry("getQuestionVOById", EntryType.IN, 1, remoteAddr);
 
-        // 生成 question_detail_ 开头的 key ，应当与数据库内设定好的热点探测规则匹配
+
+            // HotKey
+            // 生成 question_detail_ 开头的 key ，应当与数据库内设定好的热点探测规则匹配
 //         规则备份：
 //                [
 //                  {
@@ -114,11 +131,11 @@ public class QuestionController {
 //                        "desc": "热门题目 HotKey 缓存：首先判断 question_detail_ 开头的 key，如果 5 秒访问次数达到 10 次，就会指认为HotKey 被添加到缓存中，为期10 分钟，到期后从 JVM 中清除，变回普通 Key"
 //                  }
 //                ]
-        // 不使用改热点探测服务注销即可
+            // 不使用改热点探测服务注销即可
 //        String key = "question_detail_" + id;
 
-        // 响应缓存内容
-        // 通过 JD-HotKey-Client 内置方法，判断是否被指认为 HotKey
+            // 响应缓存内容
+            // 通过 JD-HotKey-Client 内置方法，判断是否被指认为 HotKey
 //        if (JdHotKeyStore.isHotKey(key)) {
 //            // 尝试从本地缓存中获取缓存值
 //            Object cachedQuestionVO = JdHotKeyStore.get(key);
@@ -127,19 +144,51 @@ public class QuestionController {
 //                return ResultUtils.success((QuestionVO) cachedQuestionVO);
 //            }
 //        }
-        // TODO 校验是否会员题目
-        ThrowUtils.throwIf(id <= 0, ErrorCode.PARAMS_ERROR);
-        // 查询数据库
-        Question question = questionService.getById(id);
-        ThrowUtils.throwIf(question == null, ErrorCode.NOT_FOUND_ERROR);
-        // 获取封装类
-        QuestionVO questionVO = questionService.getQuestionVO(question, request);
-        // 缓存查询结果
-        // 通过 JD-HotKey-Client 内置方法，直接将查询结果缓存到本地 Caffeine 缓存中
+
+
+            // TODO 校验是否会员题目
+            ThrowUtils.throwIf(id <= 0, ErrorCode.PARAMS_ERROR);
+            // 查询数据库
+            Question question = questionService.getById(id);
+            ThrowUtils.throwIf(question == null, ErrorCode.NOT_FOUND_ERROR);
+            // 获取封装类
+            QuestionVO questionVO = questionService.getQuestionVO(question, request);
+
+
+            // 缓存查询结果
+            // 通过 JD-HotKey-Client 内置方法，直接将查询结果缓存到本地 Caffeine 缓存中
 //        JdHotKeyStore.smartSet(key, questionVO);
 
-        // 获取封装类
-        return ResultUtils.success(questionVO);
+
+            // 获取封装类
+            return ResultUtils.success(questionVO);
+        } catch (Throwable ex) {
+            // 当限流时，抛出 BlockException
+            // 普通业务异常后逻辑
+            if (!BlockException.isBlockException(ex)) {
+                // 记录日志
+                Tracer.trace(ex);
+                return ResultUtils.error(ErrorCode.SYSTEM_ERROR, "系统错误");
+            }
+            // 降级后逻辑
+            if (ex instanceof DegradeException) {
+                QuestionVO simulateQuestionVO = new QuestionVO();
+                simulateQuestionVO.setId(404L);
+                simulateQuestionVO.setTitle("您的数据丢了！请检查网络或通知管理员。");
+                simulateQuestionVO.setContent("您的数据丢了！请检查网络或通知管理员。");
+                simulateQuestionVO.setAnswer("您的数据丢了！请检查网络或通知管理员。");
+                simulateQuestionVO.setCreateTime(new Date(System.currentTimeMillis()));
+                simulateQuestionVO.setUpdateTime(new Date(System.currentTimeMillis()));
+                return ResultUtils.success(simulateQuestionVO);
+            }
+            // 限流后逻辑
+            return ResultUtils.error(ErrorCode.SYSTEM_ERROR, "您访问过于频繁，系统压力稍大，请耐心等待哟~");
+        } finally {
+            if (entry != null) {
+                // 退出流控
+                entry.exit(1, remoteAddr);
+            }
+        }
     }
 
     /**
@@ -165,8 +214,7 @@ public class QuestionController {
      * @return
      */
     @PostMapping("/list/page/vo")
-    public BaseResponse<Page<QuestionVO>> listQuestionVOByPage(@RequestBody QuestionQueryRequest questionQueryRequest,
-                                                               HttpServletRequest request) {
+    public BaseResponse<Page<QuestionVO>> listQuestionVOByPage(@RequestBody QuestionQueryRequest questionQueryRequest, HttpServletRequest request) {
         long size = questionQueryRequest.getPageSize();
         // TODO 安全性配置
         // 限制爬虫
@@ -176,6 +224,7 @@ public class QuestionController {
         // 非注解方式，手动针对用户 IP 进行流控
         // 源：https://sentinelguard.io/zh-cn/docs/parameter-flow-control.html
         Entry entry = null;
+        initFlowAndDegradeRules("listQuestionVOByPage");
         try {
             // SphU.entry() 方法用于创建一个流控入口，该方法接受三个参数：
             // 1. 资源名称：用于标识流控规则的资源名称。
@@ -246,11 +295,10 @@ public class QuestionController {
      * @PostConstruct 依赖注入后自动执行
      * @create 2025/5/27
      **/
-    @PostConstruct
-    private void initFlowAndDegradeRules() {
+    private void initFlowAndDegradeRules(String resourceName) {
         // 限流规则
         // 单 IP 查看题目列表限流规则
-        ParamFlowRule rule = new ParamFlowRule("listQuestionVOByPage")
+        ParamFlowRule rule = new ParamFlowRule(resourceName)
                 // 对 IP 地址参数限流
                 .setParamIdx(0)
                 // 每分钟最多 60 次
@@ -261,8 +309,7 @@ public class QuestionController {
 
         // 熔断规则
         // 慢调用比例
-        DegradeRule slowCallRule = new DegradeRule("listQuestionVOByPage")
-                .setGrade(CircuitBreakerStrategy.SLOW_REQUEST_RATIO.getType())
+        DegradeRule slowCallRule = new DegradeRule(resourceName).setGrade(CircuitBreakerStrategy.SLOW_REQUEST_RATIO.getType())
                 // 慢调用比例大于 20%，触发熔断
                 .setCount(0.2)
                 // 熔断持续时间 60 秒
@@ -275,8 +322,7 @@ public class QuestionController {
                 .setSlowRatioThreshold(3);
 
         // 异常比例熔断规则
-        DegradeRule errorRateRule = new DegradeRule("listQuestionVOByPage")
-                .setGrade(CircuitBreakerStrategy.ERROR_RATIO.getType())
+        DegradeRule errorRateRule = new DegradeRule(resourceName).setGrade(CircuitBreakerStrategy.ERROR_RATIO.getType())
                 // 异常率大于 10%
                 .setCount(0.1)
                 // 熔断持续时间 60 秒
@@ -298,8 +344,7 @@ public class QuestionController {
      * @return
      */
     @PostMapping("/my/list/page/vo")
-    public BaseResponse<Page<QuestionVO>> listMyQuestionVOByPage(@RequestBody QuestionQueryRequest questionQueryRequest,
-                                                                 HttpServletRequest request) {
+    public BaseResponse<Page<QuestionVO>> listMyQuestionVOByPage(@RequestBody QuestionQueryRequest questionQueryRequest, HttpServletRequest request) {
         return ResultUtils.success(questionService.listMyQuestionVOByPage(questionQueryRequest, request));
     }
 
@@ -339,8 +384,7 @@ public class QuestionController {
      * @create 2025/5/2
      **/
     @PostMapping("/search/page/vo")
-    public BaseResponse<Page<QuestionVO>> searchQuestionVOByPage(@RequestBody QuestionQueryRequest questionQueryRequest,
-                                                                 HttpServletRequest request) {
+    public BaseResponse<Page<QuestionVO>> searchQuestionVOByPage(@RequestBody QuestionQueryRequest questionQueryRequest, HttpServletRequest request) {
         long size = questionQueryRequest.getPageSize();
         // 限制爬虫
         ThrowUtils.throwIf(size > 200, ErrorCode.PARAMS_ERROR);

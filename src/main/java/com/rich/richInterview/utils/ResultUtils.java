@@ -1,4 +1,7 @@
-package com.rich.richInterview.common;
+package com.rich.richInterview.utils;
+
+import com.rich.richInterview.common.BaseResponse;
+import com.rich.richInterview.common.ErrorCode;
 
 /**
  * 返回类

@@ -11,25 +11,29 @@ const accessChecker = (
 ) => {
   // 获取并校验权限
   const loginUserAccess = loginUser?.userRole ?? ACCESS_ENUM.NOT_LOGIN;
-  // 1.未登录即可访问
+  // 1.被系统封号处理
+  if (loginUserAccess === ACCESS_ENUM.BAN) {
+    return false;
+  }
+  // 2.未登录即可访问
   if (needAccess === ACCESS_ENUM.NOT_LOGIN) {
     return true;
   }
-  // 2.登录即可访问
+  // 3.登录即可访问
   if (needAccess === ACCESS_ENUM.USER) {
     // 未登录
     if (loginUserAccess === ACCESS_ENUM.NOT_LOGIN) {
       return false;
     }
   }
-  // 3.VIP用户即可即可访问
+  // 4.VIP用户即可即可访问
   if (needAccess === ACCESS_ENUM.VIP) {
     // 未登录
     if (loginUserAccess === ACCESS_ENUM.VIP) {
       return false;
     }
   }
-  // 4.管理员即可访问
+  // 5.管理员即可访问
   if (needAccess === ACCESS_ENUM.ADMIN) {
     // 非管理员
     if (loginUserAccess !== ACCESS_ENUM.ADMIN) {

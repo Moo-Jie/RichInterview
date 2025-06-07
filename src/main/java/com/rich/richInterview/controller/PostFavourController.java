@@ -3,7 +3,7 @@ package com.rich.richInterview.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.rich.richInterview.common.BaseResponse;
 import com.rich.richInterview.common.ErrorCode;
-import com.rich.richInterview.common.ResultUtils;
+import com.rich.richInterview.utils.ResultUtils;
 import com.rich.richInterview.exception.BusinessException;
 import com.rich.richInterview.exception.ThrowUtils;
 import com.rich.richInterview.model.dto.post.PostQueryRequest;

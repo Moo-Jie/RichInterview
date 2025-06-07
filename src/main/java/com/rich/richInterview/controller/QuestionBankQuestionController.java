@@ -2,11 +2,10 @@ package com.rich.richInterview.controller;
 
 import cn.dev33.satoken.annotation.SaCheckRole;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.rich.richInterview.annotation.AuthCheck;
 import com.rich.richInterview.common.BaseResponse;
 import com.rich.richInterview.common.DeleteRequest;
 import com.rich.richInterview.common.ErrorCode;
-import com.rich.richInterview.common.ResultUtils;
+import com.rich.richInterview.utils.ResultUtils;
 import com.rich.richInterview.constant.UserConstant;
 import com.rich.richInterview.exception.ThrowUtils;
 import com.rich.richInterview.model.dto.questionBankQuestion.*;

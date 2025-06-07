@@ -20,7 +20,7 @@ export default function NotFound() {
             您暂时无法访问此内容，请先登录后再试。{" "}
           </span>
         }
-        subTitle="若您已经登录，则有其他设备异端登录，为了保证您的账号安全，请及时修改密码，以防泄露！"
+        subTitle="若您已经登录，则可能有其他设备异端登录，为了保证您的账号安全，请及时修改密码，以防泄露！"
         extra={
           <Button
             type="primary"

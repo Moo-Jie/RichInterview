@@ -8,7 +8,7 @@ import com.alibaba.dashscope.exception.ApiException;
 import com.alibaba.dashscope.exception.InputRequiredException;
 import com.alibaba.dashscope.exception.NoApiKeyException;
 import com.rich.richInterview.common.BaseResponse;
-import com.rich.richInterview.common.ResultUtils;
+import com.rich.richInterview.utils.ResultUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;

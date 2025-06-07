@@ -1,5 +1,5 @@
 "use server";
-import {Alert, Button, Flex, Menu, message, Space} from "antd";
+import {Alert, Button, Flex, Menu, Space} from "antd";
 import {getQuestionBankId, getQuestionVoByIdUsingGet,} from "@/api/questionController";
 import QuestionMsgComponent from "../../../components/QuestionMsgComponent";
 
@@ -31,7 +31,7 @@ export default async function QuestionPage({ params }) {
       return <div>获取题目详情失败，请刷新重试</div>;
     }
   } catch (e: any) {
-    message.error("获取题目详情失败，" + e.message);
+    console.error("获取题目详情失败，" + e.message);
     return (
       <Alert
         type="error"
