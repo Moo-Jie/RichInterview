@@ -161,7 +161,7 @@ const UserAdminPage: React.FC = () => {
       }
     },
     {
-      title: "年级",
+      title: "教育阶段",
       dataIndex: "grade",
       width: 120,
       valueType: "text",
