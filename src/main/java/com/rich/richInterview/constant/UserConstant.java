@@ -40,4 +40,9 @@ public interface UserConstant {
      * 默认用户简介
      */
     String DEFAULT_USER_PROFILE = "当前用户很懒，什么都没留下";
+
+    /**
+     * 默认用户信息
+     */
+    String DEFAULT_USER_MSG = "待完善";
 }

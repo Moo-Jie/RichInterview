@@ -32,6 +32,36 @@ public class UserUpdateMyRequest implements Serializable {
     private String userPassword;
 
     /**
+     * 检查密码
+     */
+    private String checkPassword;
+
+    /**
+     * 手机号
+     */
+    private String phoneNumber;
+
+    /**
+     * 邮箱
+     */
+    private String email;
+
+    /**
+     * 年级
+     */
+    private String grade;
+
+    /**
+     * 工作经验
+     */
+    private String workExperience;
+
+    /**
+     * 擅长方向
+     */
+    private String expertiseDirection;
+
+    /**
      * 最近刷题ID
      */
     private Long previousQuestionID;

@@ -3,6 +3,8 @@ package com.rich.richInterview.service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.rich.richInterview.model.dto.user.UserQueryRequest;
+import com.rich.richInterview.model.dto.user.UserRegisterRequest;
+import com.rich.richInterview.model.dto.user.UserUpdateMyRequest;
 import com.rich.richInterview.model.entity.User;
 import com.rich.richInterview.model.vo.LoginUserVO;
 import com.rich.richInterview.model.vo.UserVO;
@@ -19,13 +21,9 @@ public interface UserService extends IService<User> {
 
     /**
      * 用户注册
-     *
-     * @param userAccount   用户账户
-     * @param userPassword  用户密码
-     * @param checkPassword 校验密码
      * @return 新用户 id
      */
-    long userRegister(String userAccount, String userPassword, String checkPassword, String userAavatar, String userProfile, String userName);
+    long userRegister(UserRegisterRequest userRegisterRequest);
 
     /**
      * 用户登录
@@ -138,4 +136,15 @@ public interface UserService extends IService<User> {
      * @create 2025/4/18
      **/
     List<Integer> getUserSignInRecord(long userId, Integer year);
+
+    /**
+     *  更新用户信息
+     * @param userUpdateMyRequest
+     * @param request
+     * @return boolean
+     * @author DuRuiChi
+     * @create 2025/6/8
+     **/
+    boolean updateUserById(UserUpdateMyRequest userUpdateMyRequest,
+                           HttpServletRequest request);
 }

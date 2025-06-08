@@ -19,6 +19,11 @@ public class UserQueryRequest extends PageRequest implements Serializable {
     private Long id;
 
     /**
+     * 用户简介
+     */
+    private String userProfile;
+
+    /**
      * 开放平台id
      */
     private String unionId;
@@ -34,9 +39,29 @@ public class UserQueryRequest extends PageRequest implements Serializable {
     private String userName;
 
     /**
-     * 简介
+     * 手机号
      */
-    private String userProfile;
+    private String phoneNumber;
+
+    /**
+     * 邮箱
+     */
+    private String email;
+
+    /**
+     * 年级
+     */
+    private String grade;
+
+    /**
+     * 工作经验
+     */
+    private String workExperience;
+
+    /**
+     * 擅长方向
+     */
+    private String expertiseDirection;
 
     /**
      * 用户角色：user/admin/ban

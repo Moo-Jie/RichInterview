@@ -19,6 +19,11 @@
         <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
         <result property="isDelete" column="isDelete" jdbcType="TINYINT"/>
         <result property="previousQuestionID" column="previousQuestionID" jdbcType="BIGINT"/>
+        <result property="phoneNumber" column="phoneNumber" jdbcType="VARCHAR"/>
+        <result property="email" column="email" jdbcType="VARCHAR"/>
+        <result property="grade" column="grade" jdbcType="VARCHAR"/>
+        <result property="workExperience" column="workExperience" jdbcType="VARCHAR"/>
+        <result property="expertiseDirection" column="expertiseDirection" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -28,6 +33,7 @@
         editTime,createTime,updateTime,
         isDelete,vipExpireTime,vipCode,
         vipNumber,shareCode,inviteUser,
-          previousQuestionID
+          previousQuestionID,phoneNumber,email,
+          grade,workExperience,expertiseDirection
     </sql>
 </mapper>

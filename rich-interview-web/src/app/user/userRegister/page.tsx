@@ -3,14 +3,25 @@
 import React, {useState} from "react";
 import {LoginForm, ProForm, ProFormText} from "@ant-design/pro-form";
 import {App, Button, Card} from "antd";
-import {CheckCircleTwoTone, LockOutlined, RightCircleTwoTone, RobotOutlined, UserOutlined,} from "@ant-design/icons";
+import {
+  CheckCircleTwoTone, ExperimentOutlined,
+  LockOutlined, MailOutlined,
+  MobileOutlined, ReadOutlined,
+  RightCircleTwoTone,
+  RobotOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
 import {userRegisterUsingPost} from "@/api/userController";
 import Link from "next/link";
 import {useRouter} from "next/navigation";
 import Image from "next/image";
 import {ConstantBasicMsg} from "@/constant/ConstantBasicMsg";
 import "./index.css";
-import {Vertify} from "@alex_xu/react-slider-vertify";
+import { Vertify } from "@alex_xu/react-slider-vertify";
+
+function BriefcaseOutlined() {
+  return null;
+}
 
 /**
  * 用户注册页面
@@ -32,11 +43,11 @@ const UserRegisterPage: React.FC = (props) => {
    */
   const doSubmit = async (values: any) => {
     try {
+        if (!isVerified) {
+            message.error("请先完成滑动验证");
+            return;
+        }
       const res = await userRegisterUsingPost(values);
-      if (!isVerified) {
-        message.error("请先完成滑动验证");
-        return;
-      }
       if (res.data) {
         message.success("注册成功，请登录");
         // 前往登录页
@@ -96,6 +107,20 @@ const UserRegisterPage: React.FC = (props) => {
             },
           ]}
         />
+        <ProFormText
+            fieldProps={{
+              size: "large",
+              prefix: <MobileOutlined />,
+            }}
+            name="phoneNumber"
+            placeholder={"请输入合法手机号"}
+            rules={[
+              {
+                required: true,
+                message: "请输入合法手机号！",
+              },
+            ]}
+        />
         <ProFormText.Password
           name="userPassword"
           fieldProps={{
@@ -124,6 +149,63 @@ const UserRegisterPage: React.FC = (props) => {
             },
           ]}
         />
+        <ProFormText
+            fieldProps={{
+              size: "large",
+              prefix: <MailOutlined />,
+            }}
+            name="email"
+            placeholder={"请输入邮箱（选填）"}
+            rules={[
+              {
+                required: false,
+                message: "请输入邮箱（选填）",
+              },
+            ]}
+        />
+        <ProFormText
+            fieldProps={{
+              size: "large",
+              prefix: <ReadOutlined />,
+            }}
+            name="grade"
+            placeholder={"请输入年级（选填）"}
+            rules={[
+              {
+                required: false,
+                message: "请输入您的年级（选填）",
+              },
+            ]}
+        />
+        <ProFormText
+            fieldProps={{
+              size: "large",
+              prefix: <BriefcaseOutlined />,
+            }}
+            name="workExperience"
+            placeholder={"请输入您的工作经历（选填）"}
+            rules={[
+              {
+                required: false,
+                message: "请输入您的工作经历（选填）",
+              },
+            ]}
+        />
+        <ProFormText
+            fieldProps={{
+              size: "large",
+              prefix: <ExperimentOutlined />,
+            }}
+            name="expertiseDirection"
+            placeholder={"请输入您的主攻方向（选填）"}
+            rules={[
+              {
+                required: false,
+                message: "请输入您的主攻方向（选填）",
+              },
+            ]}
+        />
+
 
         {/* 是否进行验证按钮 */}
         {!isVerified && (

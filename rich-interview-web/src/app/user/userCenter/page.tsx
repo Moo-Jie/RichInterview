@@ -1,16 +1,16 @@
 "use client";
-import { App, Avatar, Card, Col, Modal, Row } from "antd";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/store";
+import {App, Avatar, Card, Col, Modal, Row} from "antd";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "@/store";
 import Title from "antd/es/typography/Title";
 import Paragraph from "antd/es/typography/Paragraph";
-import { useState } from "react";
-import { updateMyUserUsingPost } from "@/api/userController";
-import { ProColumns, ProTable } from "@ant-design/pro-components";
+import {useState} from "react";
+import {updateMyUserUsingPost} from "@/api/userController";
+import {ProColumns, ProTable} from "@ant-design/pro-components";
 import CalendarChart from "@/components/CalendarChartComponent";
 import RecentStudy from "@/components/RecentStudyComponent";
 import UpdateUserAvatarModal from "@/components/UpdatePictureComponent";
-import { setUserLogin } from "@/store/userLogin";
+import {setUserLogin} from "@/store/userLogin";
 import "./index.css";
 
 /**
@@ -29,7 +29,7 @@ export default function UserCenterPage() {
     try {
       await updateMyUserUsingPost(fields);
       hide();
-      message.success("更新成功");
+      message.success("更新成功,重新登录可刷新用户数据");
       return true;
     } catch (error: any) {
       hide();
@@ -59,6 +59,10 @@ export default function UserCenterPage() {
       },
     },
     {
+      title: "手机号",
+      dataIndex: "phoneNumber",
+    },
+    {
       title: "用户头像",
       dataIndex: "userAvatar",
       valueType: "avatar",
@@ -69,16 +73,36 @@ export default function UserCenterPage() {
       dataIndex: "userProfile",
       valueType: "textarea",
     },
+    {
+      title: "年级",
+      dataIndex: "grade",
+    },
+    {
+      title: "主攻方向",
+      dataIndex: "expertiseDirection",
+    },
+    {
+      title: "工作经历",
+      dataIndex: "workExperience",
+    },
+    {
+      title: "邮箱",
+      dataIndex: "email",
+    }
   ];
 
   return (
-    <div id="userCenterPage" className="max-width-content" style={{ paddingBottom: 100 }}>
+    <div
+      id="userCenterPage"
+      className="max-width-content"
+      style={{ paddingBottom: 100 }}
+    >
       {/*个人信息标签*/}
       <Row gutter={[0, 24]}>
         <Col xs={24}>
           <Card
             style={{ textAlign: "center" }}
-            extra={<a onClick={() => setEditVisible(true)}>编辑资料</a>}
+            extra={<a onClick={() => setEditVisible(true)}>编辑个人资料</a>}
           >
             <Avatar
               src={user.userAvatar}
@@ -97,36 +121,23 @@ export default function UserCenterPage() {
               }
               description={
                 <Paragraph type="secondary" className="user-profile">
-                  {user.userProfile}
-                </Paragraph>
-              }
-            />
-          </Card>
-
-          <Card style={{ textAlign: "center" }}>
-            <div className="avatar-margin" />
-            <Card.Meta
-              title={
-                <Title level={4} className="username">
-                  其他信息
-                </Title>
-              }
-              description={
-                <Paragraph type="secondary" className="user-profile">
+                  <h5>{user.userProfile}</h5>
+                  <h5>ID：{user.id}</h5>
                   <h5>
-                    身份：{user.userRole === user ? "普通用户" : "管理员"}
+                    手机号：{user.phoneNumber? (user.phoneNumber?.substring(0, 3) + "****" + user.phoneNumber?.substring(7)) : "待完善"}
                   </h5>
-                  <h5>注册时间：{user.createTime}</h5>
-                  <h5>最后操作时间：{user.updateTime}</h5>
-                  <Card
-                    style={{
-                      maxWidth: 600,
-                      margin: "0 auto",
-                      width: "100%",
-                    }}
-                  >
-                    <RecentStudy />
-                  </Card>
+                  <h5>
+                    邮箱：{user.email ? (user.email?.substring(0, 3) + "****" + user.email?.substring(7)) : "待完善"}
+                  </h5>
+                  <h5>
+                    年级：{user.grade|| "待完善"}
+                  </h5>
+                  <h5>
+                    主攻方向：{user.expertiseDirection || "待完善"}
+                  </h5>
+                  <h5>
+                    工作经历：{user.workExperience|| "待完善"}
+                  </h5>
                 </Paragraph>
               }
             />
@@ -147,8 +158,12 @@ export default function UserCenterPage() {
                 label: "编辑资料",
               },
               {
+                key: "recentStudy",
+                label: "上次刷题",
+              },
+              {
                 key: "userMsg",
-                label: "其他信息",
+                label: "更多信息",
               },
             ]}
             activeTabKey={activeTabKey}
@@ -179,7 +194,25 @@ export default function UserCenterPage() {
                 }}
               />
             )}
-            {activeTabKey === "userMsg" && <>暂无</>}
+            {activeTabKey === "recentStudy" && (
+              <Card
+                style={{
+                  maxWidth: 600,
+                  margin: "0 auto",
+                  width: "100%",
+                }}
+              >
+                <RecentStudy />
+              </Card>
+            )}
+            {activeTabKey === "userMsg" && <Paragraph type="secondary" className="user-profile">
+              <h5>
+                注册时间：{user.createTime?.toString().substring(0, 10)}
+              </h5>
+              <h5>
+                最后操作时间：{user.updateTime?.toString().substring(0, 10)}
+              </h5>
+            </Paragraph>}
           </Card>
         </Col>
       </Row>

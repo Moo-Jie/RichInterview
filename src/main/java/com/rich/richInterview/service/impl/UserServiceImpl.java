@@ -7,9 +7,12 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.rich.richInterview.common.ErrorCode;
 import com.rich.richInterview.constant.CommonConstant;
 import com.rich.richInterview.constant.RedisConstant;
+import com.rich.richInterview.constant.UserConstant;
 import com.rich.richInterview.exception.BusinessException;
 import com.rich.richInterview.mapper.UserMapper;
 import com.rich.richInterview.model.dto.user.UserQueryRequest;
+import com.rich.richInterview.model.dto.user.UserRegisterRequest;
+import com.rich.richInterview.model.dto.user.UserUpdateMyRequest;
 import com.rich.richInterview.model.entity.User;
 import com.rich.richInterview.model.enums.UserRoleEnum;
 import com.rich.richInterview.model.vo.LoginUserVO;
@@ -58,9 +61,43 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public static final String SALT = "rich";
 
     @Override
-    public long userRegister(String userAccount, String userPassword, String checkPassword, String userAavatar, String userProfile, String userName) {
-        // 1. 校验
-        if (StringUtils.isAnyBlank(userAccount, userPassword, checkPassword, userName)) {
+    public long userRegister(UserRegisterRequest userRegisterRequest) {
+        String userAccount = userRegisterRequest.getUserAccount();
+        String userPassword = userRegisterRequest.getUserPassword();
+        String checkPassword = userRegisterRequest.getCheckPassword();
+        String userAavatar = userRegisterRequest.getUserAavatar();
+        String userProfile = userRegisterRequest.getUserProfile();
+        String userName = userRegisterRequest.getUserName();
+        String phoneNumber = userRegisterRequest.getPhoneNumber();
+        String email = userRegisterRequest.getEmail();
+        String grade = userRegisterRequest.getGrade();
+        String workExperience = userRegisterRequest.getWorkExperience();
+        String expertiseDirection = userRegisterRequest.getExpertiseDirection();
+
+        // 非空校验
+        if (StringUtils.isAnyBlank(userAccount, userPassword, checkPassword, userName, phoneNumber)) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        if (StringUtils.isAnyBlank(userAavatar)) {
+            userAavatar = UserConstant.DEFAULT_USER_PICTURE;
+        }
+        if (StringUtils.isAnyBlank(userProfile)) {
+            userProfile = UserConstant.DEFAULT_USER_PROFILE;
+        }
+        if (StringUtils.isAnyBlank(email)) {
+            email = UserConstant.DEFAULT_USER_MSG;
+        }
+        if (StringUtils.isAnyBlank(grade)) {
+            grade = UserConstant.DEFAULT_USER_MSG;
+        }
+        if (StringUtils.isAnyBlank(workExperience)) {
+            workExperience = UserConstant.DEFAULT_USER_MSG;
+        }
+        if (StringUtils.isAnyBlank(expertiseDirection)) {
+            expertiseDirection = UserConstant.DEFAULT_USER_MSG;
+        }
+        // 合法校验
+        if (StringUtils.isAnyBlank(userAccount, userPassword, checkPassword, userName, phoneNumber)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "参数为空");
         }
         if (userAccount.length() < 4) {
@@ -72,10 +109,25 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (userProfile.length() >= 100) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户简介过长");
         }
-        // 密码和校验密码相同
+        if (email.length() > 20) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "邮箱过长");
+        }
+        if (grade.length() > 10) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "请正确输入年级，如：大学二年级");
+        }
+        if (workExperience.length() > 50) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "工作经验过长");
+        }
+        if (expertiseDirection.length() > 50) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "擅长方向过长");
+        }
         if (!userPassword.equals(checkPassword)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "两次输入的密码不一致");
         }
+        if (!phoneNumber.matches("^1[3-9]\\d{9}$")) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "手机号格式错误");
+        }
+        // 注册，防止并发
         synchronized (userAccount.intern()) {
             // 账户不能重复
             QueryWrapper<User> queryWrapper = new QueryWrapper<>();
@@ -84,15 +136,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             if (count > 0) {
                 throw new BusinessException(ErrorCode.PARAMS_ERROR, "账号重复");
             }
-            // 2. 加密
+            // 密码加密
             String encryptPassword = DigestUtils.md5DigestAsHex((SALT + userPassword).getBytes());
-            // 3. 插入数据
+            // 操作数据库
             User user = new User();
             user.setUserAccount(userAccount);
             user.setUserPassword(encryptPassword);
             user.setUserAvatar(userAavatar);
             user.setUserProfile(userProfile);
             user.setUserName(userName);
+            user.setPhoneNumber(phoneNumber);
+            user.setEmail(email);
+            user.setGrade(grade);
+            user.setWorkExperience(workExperience);
+            user.setExpertiseDirection(expertiseDirection);
             boolean saveResult = this.save(user);
             if (!saveResult) {
                 throw new BusinessException(ErrorCode.SYSTEM_ERROR, "注册失败，数据库错误");
@@ -104,6 +161,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     /**
      * 用户登录
      * Sa-Token:https://sa-token.cc/doc.html#/use/login-auth
+     *
      * @param userAccount
      * @param userPassword
      * @param request
@@ -149,6 +207,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     /**
      * 用户登录（微信开放平台）
      * Sa-Token:https://sa-token.cc/doc.html#/use/login-auth
+     *
      * @param wxOAuth2UserInfo
      * @param request
      * @return com.rich.richInterview.model.vo.LoginUserVO
@@ -190,6 +249,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     /**
      * 获取当前登录用户
      * Sa-Token:https://sa-token.cc/doc.html#/use/login-auth
+     *
      * @param request
      * @return
      */
@@ -213,6 +273,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     /**
      * 获取当前登录用户（允许未登录）
      * Sa-Token:https://sa-token.cc/doc.html#/use/login-auth
+     *
      * @param request
      * @return
      */
@@ -240,6 +301,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     /**
      * 是否为管理员
      * Sa-Token:https://sa-token.cc/doc.html#/use/login-auth
+     *
      * @param request
      * @return
      */
@@ -261,6 +323,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     /**
      * 用户注销
      * Sa-Token:https://sa-token.cc/doc.html#/use/login-auth
+     *
      * @param request
      */
     @Override
@@ -313,6 +376,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         String userRole = userQueryRequest.getUserRole();
         String sortField = userQueryRequest.getSortField();
         String sortOrder = userQueryRequest.getSortOrder();
+
+        String phoneNumber = userQueryRequest.getPhoneNumber();
+        String email = userQueryRequest.getEmail();
+        String grade = userQueryRequest.getGrade();
+        String workExperience = userQueryRequest.getWorkExperience();
+        String expertiseDirection = userQueryRequest.getExpertiseDirection();
+
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(id != null, "id", id);
         queryWrapper.eq(StringUtils.isNotBlank(unionId), "unionId", unionId);
@@ -320,6 +390,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         queryWrapper.eq(StringUtils.isNotBlank(userRole), "userRole", userRole);
         queryWrapper.like(StringUtils.isNotBlank(userProfile), "userProfile", userProfile);
         queryWrapper.like(StringUtils.isNotBlank(userName), "userName", userName);
+        queryWrapper.like(StringUtils.isNotBlank(phoneNumber), "phoneNumber", phoneNumber);
+        queryWrapper.like(StringUtils.isNotBlank(email), "email", email);
+        queryWrapper.like(StringUtils.isNotBlank(grade), "grade", grade);
+        queryWrapper.like(StringUtils.isNotBlank(workExperience), "workExperience", workExperience);
+        queryWrapper.like(StringUtils.isNotBlank(expertiseDirection), "expertiseDirection", expertiseDirection);
         queryWrapper.orderBy(SqlUtils.validSortField(sortField), sortOrder.equals(CommonConstant.SORT_ORDER_ASC), sortField);
         return queryWrapper;
     }
@@ -382,5 +457,82 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             index = bitSet.nextSetBit(index + 1);
         }
         return dayList;
+    }
+
+    /**
+     * 更新用户信息
+     *
+     * @param userUpdateMyRequest
+     * @param request
+     * @return boolean
+     * @author DuRuiChi
+     * @create 2025/6/8
+     **/
+    @Override
+    public boolean updateUserById(UserUpdateMyRequest userUpdateMyRequest,
+                                  HttpServletRequest request) {
+        String userName = userUpdateMyRequest.getUserName();
+        String userProfile = userUpdateMyRequest.getUserProfile();
+        String userPassword = userUpdateMyRequest.getUserPassword();
+        String phoneNumber = userUpdateMyRequest.getPhoneNumber();
+        String email = userUpdateMyRequest.getEmail();
+        String grade = userUpdateMyRequest.getGrade();
+        String workExperience = userUpdateMyRequest.getWorkExperience();
+        String expertiseDirection = userUpdateMyRequest.getExpertiseDirection();
+        String checkPassword = userUpdateMyRequest.getCheckPassword();
+
+        // 若填写了数据，则进行合法校验
+        if (userName != null) {
+            if (userName.length() > 20) {
+                throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户昵称过长");
+            }
+        }
+        if (userPassword != null) {
+            if (checkPassword == null) {
+                throw new BusinessException(ErrorCode.PARAMS_ERROR, "请输入确认密码");
+            }
+            if (!userPassword.equals(checkPassword)) {
+                throw new BusinessException(ErrorCode.PARAMS_ERROR, "两次输入的密码不一致");
+            }
+            if (userPassword.length() < 8 || checkPassword.length() < 8) {
+                throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户密码过短");
+            }
+        }
+        if (userProfile != null) {
+            if (userProfile.length() >= 100) {
+                throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户简介过长");
+            }
+        }
+        if (email != null) {
+            if (email.length() > 20) {
+                throw new BusinessException(ErrorCode.PARAMS_ERROR, "邮箱过长");
+            }
+        }
+        if (grade != null) {
+            if (grade.length() > 10) {
+                throw new BusinessException(ErrorCode.PARAMS_ERROR, "请正确输入年级，如：大学二年级");
+            }
+        }
+        if (workExperience != null) {
+            if (workExperience.length() > 50) {
+                throw new BusinessException(ErrorCode.PARAMS_ERROR, "工作经验过长");
+            }
+        }
+        if (expertiseDirection != null) {
+            if (expertiseDirection.length() > 50) {
+                throw new BusinessException(ErrorCode.PARAMS_ERROR, "擅长方向过长");
+            }
+        }
+        if (phoneNumber != null) {
+            if (!phoneNumber.matches("^1[3-9]\\d{9}$")) {
+                throw new BusinessException(ErrorCode.PARAMS_ERROR, "手机号格式错误");
+            }
+        }
+
+        User loginUser = this.getLoginUser(request);
+        User user = new User();
+        BeanUtils.copyProperties(userUpdateMyRequest, user);
+        user.setId(loginUser.getId());
+        return this.updateById(user);
     }
 }

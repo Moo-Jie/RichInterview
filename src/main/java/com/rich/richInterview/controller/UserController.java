@@ -33,7 +33,6 @@ import static com.rich.richInterview.service.impl.UserServiceImpl.SALT;
 
 /**
  * 用户接口
-  *
  */
 @RestController
 @RequestMapping("/user")
@@ -58,22 +57,7 @@ public class UserController {
         if (userRegisterRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        String userAccount = userRegisterRequest.getUserAccount();
-        String userPassword = userRegisterRequest.getUserPassword();
-        String checkPassword = userRegisterRequest.getCheckPassword();
-        String userAavatar = userRegisterRequest.getUserAavatar();
-        String userProfile = userRegisterRequest.getUserProfile();
-        String userName = userRegisterRequest.getUserName();
-        if (StringUtils.isAnyBlank(userAccount, userPassword, checkPassword, userName)) {
-            return null;
-        }
-        if (StringUtils.isAnyBlank(userAavatar)) {
-            userAavatar = UserConstant.DEFAULT_USER_PICTURE;
-        }
-        if (StringUtils.isAnyBlank(userProfile)) {
-            userProfile = UserConstant.DEFAULT_USER_PROFILE;
-        }
-        long result = userService.userRegister(userAccount, userPassword, checkPassword, userAavatar, userProfile, userName);
+        long result = userService.userRegister(userRegisterRequest);
         return ResultUtils.success(result);
     }
 
@@ -103,7 +87,7 @@ public class UserController {
      */
     @GetMapping("/login/wx_open")
     public BaseResponse<LoginUserVO> userLoginByWxOpen(HttpServletRequest request, HttpServletResponse response,
-            @RequestParam("code") String code) {
+                                                       @RequestParam("code") String code) {
         WxOAuth2AccessToken accessToken;
         try {
             WxMpService wxService = wxOpenConfig.getWxMpService();
@@ -147,10 +131,6 @@ public class UserController {
         User user = userService.getLoginUser(request);
         return ResultUtils.success(userService.getLoginUserVO(user));
     }
-
-     
-
-     
 
     /**
      * 创建用户
@@ -203,7 +183,7 @@ public class UserController {
     @PostMapping("/update")
     @SaCheckRole(UserConstant.ADMIN_ROLE)
     public BaseResponse<Boolean> updateUser(@RequestBody UserUpdateRequest userUpdateRequest,
-            HttpServletRequest request) {
+                                            HttpServletRequest request) {
         if (userUpdateRequest == null || userUpdateRequest.getId() == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -256,7 +236,7 @@ public class UserController {
     @PostMapping("/list/page")
     @SaCheckRole(UserConstant.ADMIN_ROLE)
     public BaseResponse<Page<User>> listUserByPage(@RequestBody UserQueryRequest userQueryRequest,
-            HttpServletRequest request) {
+                                                   HttpServletRequest request) {
         long current = userQueryRequest.getCurrent();
         long size = userQueryRequest.getPageSize();
         Page<User> userPage = userService.page(new Page<>(current, size),
@@ -273,7 +253,7 @@ public class UserController {
      */
     @PostMapping("/list/page/vo")
     public BaseResponse<Page<UserVO>> listUserVOByPage(@RequestBody UserQueryRequest userQueryRequest,
-            HttpServletRequest request) {
+                                                       HttpServletRequest request) {
         if (userQueryRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -289,7 +269,6 @@ public class UserController {
         return ResultUtils.success(userVOPage);
     }
 
-     
 
     /**
      * 更新个人信息
@@ -300,21 +279,19 @@ public class UserController {
      */
     @PostMapping("/update/my")
     public BaseResponse<Boolean> updateMyUser(@RequestBody UserUpdateMyRequest userUpdateMyRequest,
-            HttpServletRequest request) {
+                                              HttpServletRequest request) {
         if (userUpdateMyRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        User loginUser = userService.getLoginUser(request);
-        User user = new User();
-        BeanUtils.copyProperties(userUpdateMyRequest, user);
-        user.setId(loginUser.getId());
-        boolean result = userService.updateById(user);
+
+        boolean result = userService.updateUserById(userUpdateMyRequest,request);
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
         return ResultUtils.success(true);
     }
 
     /**
      * 添加用户签到记录
+     *
      * @param request
      * @return com.rich.richInterview.common.BaseResponse<java.lang.Boolean>
      * @author DuRuiChi
@@ -333,11 +310,11 @@ public class UserController {
     }
 
     /**
-     *
      * 获取用户签到记录
+     *
      * @param year
      * @param request
-     * @return com.rich.richInterview.common.BaseResponse<java.util.List<java.lang.Integer>>
+     * @return com.rich.richInterview.common.BaseResponse<java.util.List < java.lang.Integer>>
      * @author DuRuiChi
      * @create 2025/4/18
      **/

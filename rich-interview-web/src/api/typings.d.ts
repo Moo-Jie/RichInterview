@@ -214,6 +214,11 @@ declare namespace API {
     userName?: string;
     userProfile?: string;
     userRole?: string;
+    phoneNumber?: string;
+    email?: string;
+    grade?: string;
+    workExperience?: string;
+    expertiseDirection?: string;
     previousQuestionID ?: number;
   };
 
@@ -923,6 +928,11 @@ declare namespace API {
     userPassword?: string;
     userProfile?: string;
     userRole?: string;
+    phoneNumber?: string;
+    email?: string;
+    grade?: string;
+    workExperience?: string;
+    expertiseDirection?: string;
   };
 
   type UserAddRequest = {
@@ -930,6 +940,11 @@ declare namespace API {
     userAvatar?: string;
     userName?: string;
     userRole?: string;
+    phoneNumber?: string;
+    email?: string;
+    grade?: string;
+    workExperience?: string;
+    expertiseDirection?: string;
   };
 
   type userLoginByWxOpenUsingGETParams = {
@@ -953,6 +968,11 @@ declare namespace API {
     userName?: string;
     userProfile?: string;
     userRole?: string;
+    phoneNumber?: string;
+    email?: string;
+    grade?: string;
+    workExperience?: string;
+    expertiseDirection?: string;
   };
 
   type UserRegisterRequest = {
@@ -962,6 +982,11 @@ declare namespace API {
     userAavatar?: string;
     userName?: string;
     userRole?: string;
+    phoneNumber?: string;
+    email?: string;
+    grade?: string;
+    workExperience?: string;
+    expertiseDirection?: string;
   };
 
   type UserUpdateMyRequest = {
@@ -970,6 +995,11 @@ declare namespace API {
     userProfile?: string;
     userPassword?: string;
     previousQuestionID?: number;
+    phoneNumber?: string;
+    email?: string;
+    grade?: string;
+    workExperience?: string;
+    expertiseDirection?: string;
   };
 
   type UserUpdateRequest = {
@@ -978,6 +1008,11 @@ declare namespace API {
     userName?: string;
     userProfile?: string;
     userRole?: string;
+    phoneNumber?: string;
+    email?: string;
+    grade?: string;
+    workExperience?: string;
+    expertiseDirection?: string;
   };
 
   type UserVO = {
@@ -987,6 +1022,11 @@ declare namespace API {
     userName?: string;
     userProfile?: string;
     userRole?: string;
+    phoneNumber?: string;
+    email?: string;
+    grade?: string;
+    workExperience?: string;
+    expertiseDirection?: string;
     previousQuestionID ?: number;
   };
 

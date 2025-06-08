@@ -125,13 +125,14 @@ const UserAdminPage: React.FC = () => {
       ),
     },
     {
-      title: "用户角色",
+      title: "用户权限",
       dataIndex: "userRole",
-      width: 120,
+      width: 200,
       valueEnum: {
-        user: { text: "普通用户", status: "Default" },
-        admin: { text: "管理员", status: "Success" },
-        VIP: { text: "VIP用户", status: "Processing" },
+        user: { text: "普通用户"},
+        admin: { text: "管理员"},
+        VIP: { text: "VIP用户"},
+        ban: { text: "封禁用户"},
       },
       filters: true,
     },
@@ -140,6 +141,43 @@ const UserAdminPage: React.FC = () => {
       dataIndex: "userProfile",
       width: 150,
       ellipsis: true,
+    },
+    {
+      title: "手机号",
+      dataIndex: "phoneNumber",
+      width: 150,
+      hideInSearch: false,
+      formItemProps: {
+        rules: [{ pattern: /^1[3-9]\d{9}$/, message: "请输入有效手机号" }]
+      }
+    },
+    {
+      title: "邮箱",
+      dataIndex: "email",
+      width: 180,
+      valueType: "text",
+      formItemProps: {
+        rules: [{ type: 'email', message: "请输入有效邮箱" }]
+      }
+    },
+    {
+      title: "年级",
+      dataIndex: "grade",
+      width: 120,
+      valueType: "text",
+    },
+    {
+      title: "工作经历",
+      dataIndex: "workExperience",
+      width: 200,
+      valueType: "textarea",
+      hideInSearch: true
+    },
+    {
+      title: "主攻方向",
+      dataIndex: "expertiseDirection",
+      width: 150,
+      valueType: "textarea",
     },
     {
       title: "创建时间",
@@ -206,7 +244,7 @@ const UserAdminPage: React.FC = () => {
 
   // 过滤掉图片列的配置（用于创建/编辑表单）
   const filteredColumns = columns.filter(
-    (col) => col.dataIndex !== "userAvatar",
+      col => !['userAvatar', 'phoneNumber', 'email', 'grade', 'workExperience', 'expertiseDirection'].includes(col.dataIndex as string)
   );
 
   return (
@@ -283,6 +321,11 @@ const UserAdminPage: React.FC = () => {
             userName: params.userName,
             userRole: params.userRole,
             userProfile: params.userProfile,
+            phoneNumber: params.phoneNumber,
+            email: params.email,
+            grade: params.grade,
+            workExperience: params.workExperience,
+            expertiseDirection: params.expertiseDirection,
             // 排序参数
             sortField: sortField,
             sortOrder: sortOrder,
