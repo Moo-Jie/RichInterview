@@ -2,6 +2,7 @@ package com.rich.richInterview.service.impl;
 
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.Validator;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.rich.richInterview.common.ErrorCode;
@@ -109,13 +110,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (userProfile.length() >= 100) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户简介过长");
         }
-        if (email.length() > 20) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR, "邮箱过长");
-        }
         if (grade.length() > 10) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "请正确输入年级，如：大学二年级");
         }
-        if (workExperience.length() > 50) {
+        if (workExperience.length() > 100) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "工作经验过长");
         }
         if (expertiseDirection.length() > 50) {
@@ -124,8 +122,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (!userPassword.equals(checkPassword)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "两次输入的密码不一致");
         }
-        if (!phoneNumber.matches("^1[3-9]\\d{9}$")) {
+        if (!Validator.isMobile(phoneNumber)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "手机号格式错误");
+        }
+        if (!Validator.isEmail(email)) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "邮箱格式错误");
         }
         // 注册，防止并发
         synchronized (userAccount.intern()) {
@@ -503,18 +504,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户简介过长");
             }
         }
-        if (email != null) {
-            if (email.length() > 20) {
-                throw new BusinessException(ErrorCode.PARAMS_ERROR, "邮箱过长");
-            }
-        }
         if (grade != null) {
             if (grade.length() > 10) {
-                throw new BusinessException(ErrorCode.PARAMS_ERROR, "请正确输入年级，如：大学二年级");
+                throw new BusinessException(ErrorCode.PARAMS_ERROR, "请正确输入年级");
             }
         }
         if (workExperience != null) {
-            if (workExperience.length() > 50) {
+            if (workExperience.length() > 100) {
                 throw new BusinessException(ErrorCode.PARAMS_ERROR, "工作经验过长");
             }
         }
@@ -524,11 +520,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             }
         }
         if (phoneNumber != null) {
-            if (!phoneNumber.matches("^1[3-9]\\d{9}$")) {
+            if (!Validator.isMobile(phoneNumber)) {
                 throw new BusinessException(ErrorCode.PARAMS_ERROR, "手机号格式错误");
             }
         }
-
+        if (email != null) {
+            if (!Validator.isEmail(email)) {
+                throw new BusinessException(ErrorCode.PARAMS_ERROR, "邮箱格式错误");
+            }
+        }
         User loginUser = this.getLoginUser(request);
         User user = new User();
         BeanUtils.copyProperties(userUpdateMyRequest, user);

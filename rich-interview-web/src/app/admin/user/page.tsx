@@ -146,7 +146,6 @@ const UserAdminPage: React.FC = () => {
       title: "手机号",
       dataIndex: "phoneNumber",
       width: 150,
-      hideInSearch: false,
       formItemProps: {
         rules: [{ pattern: /^1[3-9]\d{9}$/, message: "请输入有效手机号" }]
       }
@@ -244,7 +243,7 @@ const UserAdminPage: React.FC = () => {
 
   // 过滤掉图片列的配置（用于创建/编辑表单）
   const filteredColumns = columns.filter(
-      col => !['userAvatar', 'phoneNumber', 'email', 'grade', 'workExperience', 'expertiseDirection'].includes(col.dataIndex as string)
+      col => !['userAvatar'].includes(col.dataIndex as string)
   );
 
   return (

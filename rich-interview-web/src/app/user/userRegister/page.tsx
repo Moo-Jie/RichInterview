@@ -181,29 +181,12 @@ const UserRegisterPage: React.FC = (props) => {
           name="grade"
           placeholder={"选择教育阶段（选填）"}
           options={[
-            { label: "大学一年级", value: "大学一年级" },
-            { label: "大学二年级", value: "大学二年级" },
-            { label: "大学三年级", value: "大学三年级" },
-            { label: "大学四年级", value: "大学四年级" },
-            { label: "研一", value: "研一" },
-            { label: "研二", value: "研二" },
-            { label: "研三", value: "研三" },
-            { label: "高中一年级", value: "高中一年级" },
-            { label: "高中二年级", value: "高中二年级" },
-            { label: "高中三年级", value: "高中三年级" },
-            { label: "初中一年级", value: "初中一年级" },
-            { label: "初中二年级", value: "初中二年级" },
-            { label: "初中三年级", value: "初中三年级" },
-            { label: "初中四年级", value: "初中四年级" },
-            { label: "初中五年级", value: "初中五年级" },
-            { label: "初中六年级", value: "初中六年级" },
-            { label: "硕士毕业", value: "硕士毕业" },
-            { label: "小学一年级", value: "小学一年级" },
-            { label: "小学二年级", value: "小学二年级" },
-            { label: "小学三年级", value: "小学三年级" },
-            { label: "小学四年级", value: "小学四年级" },
-            { label: "小学五年级", value: "小学五年级" },
-            { label: "小学六年级", value: "小学六年级" },
+            { label: "毕业在职", value: "毕业在职" },
+            { label: "毕业离职", value: "毕业离职" },
+            { label: "大学", value: "大学" },
+            { label: "研究生", value: "研究生" },
+            { label: "硕士", value: "硕士" },
+            { label: "高中及以下", value: "高中及以下" },
           ]}
         />
           <ProFormTextArea
