@@ -1,4 +1,4 @@
-package com.rich.richInterview.constant;
+package com.rich.richInterview.model.enums;
 
 import com.rich.richInterview.common.ErrorCode;
 import com.rich.richInterview.exception.BusinessException;
@@ -8,7 +8,7 @@ import com.rich.richInterview.exception.BusinessException;
  * @author DuRuiChi
  * @create 2025/5/22
  **/
-public enum IncrementField {
+public enum IncrementFieldEnum {
     VIEW_NUM("viewNum"),
     STAR_NUM("starNum"),
     FORWARD_NUM("forwardNum"),
@@ -17,7 +17,7 @@ public enum IncrementField {
 
     private final String fieldName;
 
-    IncrementField(String fieldName) {
+    IncrementFieldEnum(String fieldName) {
         this.fieldName = fieldName;
     }
 
@@ -28,12 +28,12 @@ public enum IncrementField {
     /**
      * 添加根据字段名获取枚举
      * @param fieldName
-     * @return com.rich.richInterview.constant.IncrementField
+     * @return com.rich.richInterview.model.enums.IncrementField
      * @author DuRuiChi
      * @create 2025/5/22
      **/
-    public static IncrementField fromFieldName(String fieldName) {
-        for (IncrementField value : values()) {
+    public static IncrementFieldEnum fromFieldName(String fieldName) {
+        for (IncrementFieldEnum value : values()) {
             if (value.fieldName.equals(fieldName)) {
                 return value;
             }
@@ -49,7 +49,7 @@ public enum IncrementField {
      * @create 2025/5/25
      **/
     public static void validateField(String fieldName) {
-        for (IncrementField value : values()) {
+        for (IncrementFieldEnum value : values()) {
             if (value.fieldName.equals(fieldName)) {
                 return;
             }

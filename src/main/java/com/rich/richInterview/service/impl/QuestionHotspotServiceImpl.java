@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.rich.richInterview.common.ErrorCode;
 import com.rich.richInterview.constant.CommonConstant;
-import com.rich.richInterview.constant.IncrementField;
+import com.rich.richInterview.model.enums.IncrementFieldEnum;
 import com.rich.richInterview.exception.ThrowUtils;
 import com.rich.richInterview.mapper.QuestionHotspotMapper;
 import com.rich.richInterview.model.dto.questionHotspot.QuestionHotspotQueryRequest;
@@ -80,7 +80,7 @@ public class QuestionHotspotServiceImpl extends ServiceImpl<QuestionHotspotMappe
      * @create 2025/5/22
      **/
     @Override
-    public boolean incrementField(Long questionId, IncrementField field) {
+    public boolean incrementField(Long questionId, IncrementFieldEnum field) {
         // 参数校验
         ThrowUtils.throwIf(questionId == null || field == null, ErrorCode.PARAMS_ERROR);
         // 题库合法

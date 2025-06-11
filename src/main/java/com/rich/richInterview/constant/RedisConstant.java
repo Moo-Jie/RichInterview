@@ -4,7 +4,6 @@ package com.rich.richInterview.constant;
  *
  * 由于刷题签到记录的 Redission 读写 Redis 使用的是相同的 key
  * 故此处用 1.常量 key  2.拼接 key 的方法
- * @param null
  * @return
  * @author DuRuiChi
  * @create 2025/4/18

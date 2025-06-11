@@ -11,7 +11,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.rich.richInterview.common.BaseResponse;
 import com.rich.richInterview.common.ErrorCode;
 import com.rich.richInterview.utils.ResultUtils;
-import com.rich.richInterview.constant.IncrementField;
+import com.rich.richInterview.model.enums.IncrementFieldEnum;
 import com.rich.richInterview.constant.UserConstant;
 import com.rich.richInterview.exception.BusinessException;
 import com.rich.richInterview.exception.ThrowUtils;
@@ -58,7 +58,7 @@ public class QuestionBankHotspotController {
         ThrowUtils.throwIf(questionBankId == null, ErrorCode.PARAMS_ERROR);
 
         // 使用字段名查找对应的枚举
-        IncrementField field = IncrementField.fromFieldName(fieldType);
+        IncrementFieldEnum field = IncrementFieldEnum.fromFieldName(fieldType);
 
         boolean result = questionBankHotspotService.incrementField(questionBankId, field);
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);

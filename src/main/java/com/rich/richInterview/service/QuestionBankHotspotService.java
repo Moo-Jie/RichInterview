@@ -3,7 +3,7 @@ package com.rich.richInterview.service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.rich.richInterview.constant.IncrementField;
+import com.rich.richInterview.model.enums.IncrementFieldEnum;
 import com.rich.richInterview.model.dto.questionBankHotspot.QuestionBankHotspotQueryRequest;
 import com.rich.richInterview.model.entity.QuestionBankHotspot;
 import com.rich.richInterview.model.vo.QuestionBankHotspotVO;
@@ -57,7 +57,7 @@ public interface QuestionBankHotspotService extends IService<QuestionBankHotspot
      * @param field
      * @return
      */
-    boolean incrementField(Long questionBankId, IncrementField field);
+    boolean incrementField(Long questionBankId, IncrementFieldEnum field);
 
     /**
      * 根据题库 id 获取题库热点信息，不存在时初始化
