@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.rich.richInterview.common.BaseResponse;
 import com.rich.richInterview.common.DeleteRequest;
 import com.rich.richInterview.common.ErrorCode;
-import com.rich.richInterview.utils.ResultUtils;
 import com.rich.richInterview.constant.UserConstant;
 import com.rich.richInterview.exception.ThrowUtils;
 import com.rich.richInterview.model.dto.questionBankQuestion.*;
@@ -14,6 +13,7 @@ import com.rich.richInterview.model.entity.User;
 import com.rich.richInterview.model.vo.QuestionBankQuestionVO;
 import com.rich.richInterview.service.QuestionBankQuestionService;
 import com.rich.richInterview.service.UserService;
+import com.rich.richInterview.utils.ResultUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 

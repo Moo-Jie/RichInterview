@@ -16,8 +16,6 @@ import com.alibaba.csp.sentinel.slots.block.flow.param.ParamFlowRuleManager;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.rich.richInterview.common.BaseResponse;
 import com.rich.richInterview.common.ErrorCode;
-import com.rich.richInterview.utils.ResultUtils;
-import com.rich.richInterview.model.enums.IncrementFieldEnum;
 import com.rich.richInterview.constant.UserConstant;
 import com.rich.richInterview.exception.BusinessException;
 import com.rich.richInterview.exception.ThrowUtils;
@@ -25,10 +23,12 @@ import com.rich.richInterview.model.dto.questionHotspot.QuestionHotspotQueryRequ
 import com.rich.richInterview.model.dto.questionHotspot.QuestionHotspotUpdateRequest;
 import com.rich.richInterview.model.entity.QuestionHotspot;
 import com.rich.richInterview.model.entity.User;
+import com.rich.richInterview.model.enums.IncrementFieldEnum;
 import com.rich.richInterview.model.vo.QuestionHotspotVO;
 import com.rich.richInterview.service.QuestionHotspotService;
 import com.rich.richInterview.service.UserService;
 import com.rich.richInterview.utils.DetectCrawlersUtils;
+import com.rich.richInterview.utils.ResultUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
@@ -191,6 +191,7 @@ public class QuestionHotspotController {
                                                                              HttpServletRequest request) {
         long current = questionHotspotQueryRequest.getCurrent();
         long size = questionHotspotQueryRequest.getPageSize();
+
         // 限制爬虫
         ThrowUtils.throwIf(size > 20, ErrorCode.PARAMS_ERROR);
         // 获取用户 IP

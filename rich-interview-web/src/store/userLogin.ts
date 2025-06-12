@@ -1,5 +1,5 @@
-import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {DEFAULT_USER} from "@/constant/ConstantUserMsg";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { DEFAULT_USER } from "@/constant/ConstantUserMsg";
 
 /**
  * 登录用户全局状态切片

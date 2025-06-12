@@ -1,7 +1,7 @@
 "use client";
-import {Card, Col, Row} from "antd";
-import {ConstantBasicMsg} from "@/constant/ConstantBasicMsg";
-import {GithubFilled} from "@ant-design/icons";
+import { Card, Col, Row } from "antd";
+import { ConstantBasicMsg } from "@/constant/ConstantBasicMsg";
+import { GithubFilled } from "@ant-design/icons";
 import React from "react";
 import styles from "../components/page.module.css";
 
@@ -11,7 +11,8 @@ const interviewData = [
     direction: "后端",
     technologyStackRow01:
       "• JAVA 基础知识、常用 API 、主流集合特性与底层机制、异常、 IO 流、多线程及分布式锁、网络编程基础、反射等。",
-    technologyStackRow02: "熟悉 JVM 工作原理，包括内存结构、运行数据区、垃圾回收机制、类加载机制、对象创建过程、JVM 调优等",
+    technologyStackRow02:
+      "熟悉 JVM 工作原理，包括内存结构、运行数据区、垃圾回收机制、类加载机制、对象创建过程、JVM 调优等",
     technologyStackRow03:
       "• 熟练使用 MySQL数据库，掌握索引使用规则和运行细节，熟悉事务、MVCC、锁机制、SQL的执行分析与优化、日志等",
     technologyStackRow04:
@@ -22,14 +23,17 @@ const interviewData = [
   {
     direction: "前端",
     technologyStackRow01: "•熟悉 HTML、CSS、JavaScript、TypeScript等前端语言",
-    technologyStackRow02: "•熟悉 Vue 框架+ element Plus 组件、React 框架+ Ant Design 组件，可以基于后端业务进行快速地Web页面搭建",
+    technologyStackRow02:
+      "•熟悉 Vue 框架+ element Plus 组件、React 框架+ Ant Design 组件，可以基于后端业务进行快速地Web页面搭建",
   },
   {
     direction: "其他",
     technologyStackRow01:
       "• 了解常见的数据结构与算法,并根据实际应用场景对功能进行优化",
-    technologyStackRow02: "• 计算机组成原理、计算机网络、计算机操作系统、数据库原理",
-    technologyStackRow03: "• 熟练使用 IDEA、Maven、ApiPfox等项目管理和构建工具；熟悉 Git 的使用、Linux 常用命令和 Docker 基本操作。",
+    technologyStackRow02:
+      "• 计算机组成原理、计算机网络、计算机操作系统、数据库原理",
+    technologyStackRow03:
+      "• 熟练使用 IDEA、Maven、ApiPfox等项目管理和构建工具；熟悉 Git 的使用、Linux 常用命令和 Docker 基本操作。",
   },
 ];
 
@@ -88,8 +92,8 @@ export default function Home() {
                   styles={{
                     header: {
                       background: "#f0f5ff",
-                      borderRadius: "8px 8px 0 0"
-                    }
+                      borderRadius: "8px 8px 0 0",
+                    },
                   }}
                   className={styles.boxShadowHover}
                 >

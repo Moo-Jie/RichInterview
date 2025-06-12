@@ -96,8 +96,10 @@ const QuestionMsgComponent = (props: Props) => {
           // @ts-ignore
           setViewCount(res.data.viewNum || 0);
         }
-      } catch (e : any) {
-          message.error(`获取热点数据失败: ${e?.response?.data?.message || e?.message || '未知错误'}`);
+      } catch (e: any) {
+        message.error(
+          `获取热点数据失败: ${e?.response?.data?.message || e?.message || "未知错误"}`,
+        );
       }
     };
     fetchHotspot();
@@ -238,45 +240,49 @@ const QuestionMsgComponent = (props: Props) => {
         )}
         {!aiLoading && aiResponse && (
           <div className="ai-response">
-              <div style={{ display: "flex", gap: 8 }}>
-                  <SpeechButton text={aiResponse || "未获取到文本内容，请检查网络"}  className="copy-button" />
-                  <Button
-                      icon={<CopyOutlined />}
-                      onClick={() => {
-                          try {
-                              // 现代浏览器API（需要HTTPS）
-                              // navigator 是  window 的全局属性，它包含了浏览器的一些信息和方法，包括剪贴板操作。
-                              // clipboard 是 navigator 的一个属性，它包含了剪贴板相关的方法，例如 writeText() 用于写入文本到剪贴板。
-                              // writeText() 是 clipboard 的一个方法，它用于将指定的文本写入剪贴板。
-                              navigator.clipboard.writeText(aiResponse || "");
-                              message.success("复制成功！");
-                          } catch (err) {
-                              try {
-                                  // 降级方案：传统复制方法（兼容HTTP）
-                                  // 创建隐藏的文本域作为临时复制载体
-                                  const textArea = document.createElement("textarea");
-                                  // 设置文本域的内容为要复制的文本
-                                  textArea.value = aiResponse || "";
-                                  // 将文本域添加到文档中，准备复制
-                                  document.body.appendChild(textArea);
-                                  // 选择文本域中的内容
-                                  textArea.select();
-                                  // 执行复制操作
-                                  document.execCommand("copy");
-                                  // 移除文本域，防止内存泄漏
-                                  document.body.removeChild(textArea);
-                                  message.success("复制成功！");
-                              } catch (error) {
-                                  message.error("自动复制失败，请手动选择文本复制");
-                              }
-                          }
-                      }}
-                      className="copy-button"
-                  >
-                      复制参考答案
-                  </Button>
-              </div>
-              <br/><br/>
+            <div style={{ display: "flex", gap: 8 }}>
+              <SpeechButton
+                text={aiResponse || "未获取到文本内容，请检查网络"}
+                className="copy-button"
+              />
+              <Button
+                icon={<CopyOutlined />}
+                onClick={() => {
+                  try {
+                    // 现代浏览器API（需要HTTPS）
+                    // navigator 是  window 的全局属性，它包含了浏览器的一些信息和方法，包括剪贴板操作。
+                    // clipboard 是 navigator 的一个属性，它包含了剪贴板相关的方法，例如 writeText() 用于写入文本到剪贴板。
+                    // writeText() 是 clipboard 的一个方法，它用于将指定的文本写入剪贴板。
+                    navigator.clipboard.writeText(aiResponse || "");
+                    message.success("复制成功！");
+                  } catch (err) {
+                    try {
+                      // 降级方案：传统复制方法（兼容HTTP）
+                      // 创建隐藏的文本域作为临时复制载体
+                      const textArea = document.createElement("textarea");
+                      // 设置文本域的内容为要复制的文本
+                      textArea.value = aiResponse || "";
+                      // 将文本域添加到文档中，准备复制
+                      document.body.appendChild(textArea);
+                      // 选择文本域中的内容
+                      textArea.select();
+                      // 执行复制操作
+                      document.execCommand("copy");
+                      // 移除文本域，防止内存泄漏
+                      document.body.removeChild(textArea);
+                      message.success("复制成功！");
+                    } catch (error) {
+                      message.error("自动复制失败，请手动选择文本复制");
+                    }
+                  }
+                }}
+                className="copy-button"
+              >
+                复制参考答案
+              </Button>
+            </div>
+            <br />
+            <br />
             <MarkdownViewer value={aiResponse} />
           </div>
         )}
@@ -307,45 +313,49 @@ const QuestionMsgComponent = (props: Props) => {
 
         {showAnswer && (
           <div className="ai-response">
-              <div style={{ display: "flex", gap: 8 }}>
-                  <SpeechButton text={question.answer || "未获取到文本内容，请检查网络"}  className="copy-button" />
-                  <Button
-                      icon={<CopyOutlined />}
-                      onClick={() => {
-                          try {
-                              // 现代浏览器API（需要HTTPS）
-                              // navigator 是  window 的全局属性，它包含了浏览器的一些信息和方法，包括剪贴板操作。
-                              // clipboard 是 navigator 的一个属性，它包含了剪贴板相关的方法，例如 writeText() 用于写入文本到剪贴板。
-                              // writeText() 是 clipboard 的一个方法，它用于将指定的文本写入剪贴板。
-                              navigator.clipboard.writeText(question.answer || "");
-                              message.success("复制成功！");
-                          } catch (err) {
-                              try {
-                                  // 降级方案：传统复制方法（兼容HTTP）
-                                  // 创建隐藏的文本域作为临时复制载体
-                                  const textArea = document.createElement("textarea");
-                                  // 设置文本域的内容为要复制的文本
-                                  textArea.value = question.answer || "";
-                                  // 将文本域添加到文档中，准备复制
-                                  document.body.appendChild(textArea);
-                                  // 选择文本域中的内容
-                                  textArea.select();
-                                  // 执行复制操作
-                                  document.execCommand("copy");
-                                  // 移除文本域，防止内存泄漏
-                                  document.body.removeChild(textArea);
-                                  message.success("复制成功！");
-                              } catch (error) {
-                                  message.error("自动复制失败，请手动选择文本复制");
-                              }
-                          }
-                      }}
-                      className="copy-button"
-                  >
-                      复制参考答案
-                  </Button>
-              </div>
-              <br/><br/>
+            <div style={{ display: "flex", gap: 8 }}>
+              <SpeechButton
+                text={question.answer || "未获取到文本内容，请检查网络"}
+                className="copy-button"
+              />
+              <Button
+                icon={<CopyOutlined />}
+                onClick={() => {
+                  try {
+                    // 现代浏览器API（需要HTTPS）
+                    // navigator 是  window 的全局属性，它包含了浏览器的一些信息和方法，包括剪贴板操作。
+                    // clipboard 是 navigator 的一个属性，它包含了剪贴板相关的方法，例如 writeText() 用于写入文本到剪贴板。
+                    // writeText() 是 clipboard 的一个方法，它用于将指定的文本写入剪贴板。
+                    navigator.clipboard.writeText(question.answer || "");
+                    message.success("复制成功！");
+                  } catch (err) {
+                    try {
+                      // 降级方案：传统复制方法（兼容HTTP）
+                      // 创建隐藏的文本域作为临时复制载体
+                      const textArea = document.createElement("textarea");
+                      // 设置文本域的内容为要复制的文本
+                      textArea.value = question.answer || "";
+                      // 将文本域添加到文档中，准备复制
+                      document.body.appendChild(textArea);
+                      // 选择文本域中的内容
+                      textArea.select();
+                      // 执行复制操作
+                      document.execCommand("copy");
+                      // 移除文本域，防止内存泄漏
+                      document.body.removeChild(textArea);
+                      message.success("复制成功！");
+                    } catch (error) {
+                      message.error("自动复制失败，请手动选择文本复制");
+                    }
+                  }
+                }}
+                className="copy-button"
+              >
+                复制参考答案
+              </Button>
+            </div>
+            <br />
+            <br />
             <MarkdownViewer value={question.answer} />
           </div>
         )}

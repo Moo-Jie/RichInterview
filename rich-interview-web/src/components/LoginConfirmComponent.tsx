@@ -1,7 +1,7 @@
 "use client";
-import {Modal} from "antd";
-import {useRouter} from "next/navigation";
-import {memo} from "react";
+import { Modal } from "antd";
+import { useRouter } from "next/navigation";
+import { memo } from "react";
 
 interface LoginConfirmModalProps {
   visible: boolean;

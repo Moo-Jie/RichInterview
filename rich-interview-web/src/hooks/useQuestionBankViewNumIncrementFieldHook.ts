@@ -2,7 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { incrementFieldUsingPost } from "@/api/questionBankHotspotController";
 import { message } from "antd";
 
-export default function useQuestionBankViewNumIncrementFieldHook(questionBankId?: number) {
+export default function useQuestionBankViewNumIncrementFieldHook(
+  questionBankId?: number,
+) {
   const [loading, setLoading] = useState(true);
   const hasFetched = useRef(false);
 

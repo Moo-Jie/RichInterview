@@ -1,8 +1,8 @@
 "use client";
-import {Avatar, Card, List, Typography} from "antd";
+import { Avatar, Card, List, Typography } from "antd";
 import Link from "next/link";
 import "./index.css";
-import {ClockCircleOutlined, UserOutlined} from "@ant-design/icons";
+import { ClockCircleOutlined, UserOutlined } from "@ant-design/icons";
 
 interface Props {
   questionBankList: API.QuestionBankVO[];

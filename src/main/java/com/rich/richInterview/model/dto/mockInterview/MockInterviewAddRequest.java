@@ -3,7 +3,6 @@ package com.rich.richInterview.model.dto.mockInterview;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * 创建模拟面试请求 (用户填写的用于创建 AI 对话的初始化信息)

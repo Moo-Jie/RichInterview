@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from "react";
-import { incrementFieldUsingPost } from "@/api/questionHotspotController";
-import { message } from "antd";
+import {useRef, useState} from "react";
+import {incrementFieldUsingPost} from "@/api/questionHotspotController";
+import {message} from "antd";
 
 /**
  * 点赞数自增钩子

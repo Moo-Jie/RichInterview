@@ -1,5 +1,5 @@
 import accessChecker from "@/access/accessChecker";
-import {sysMenus} from "../../../config/menu";
+import { sysMenus } from "../../../config/menu";
 import AccessEnumeration from "@/access/accessEnumeration";
 
 /**

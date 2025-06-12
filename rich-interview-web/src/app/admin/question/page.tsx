@@ -2,19 +2,16 @@
 "use client";
 import CreateModal from "./components/CreateModal";
 import UpdateModal from "./components/UpdateModal";
-import {
-  deleteQuestionUsingPost,
-  listQuestionVoByPageUsingPost,
-} from "@/api/questionController";
-import { DeleteOutlined, PlusOutlined, SwapOutlined } from "@ant-design/icons";
-import type { ActionType, ProColumns } from "@ant-design/pro-components";
-import { PageContainer, ProTable } from "@ant-design/pro-components";
-import { App, Button, Modal, Select, Table, Typography } from "antd";
-import React, { useRef, useState } from "react";
+import {deleteQuestionUsingPost, listQuestionVoByPageUsingPost,} from "@/api/questionController";
+import {DeleteOutlined, PlusOutlined, SwapOutlined} from "@ant-design/icons";
+import type {ActionType, ProColumns} from "@ant-design/pro-components";
+import {PageContainer, ProTable} from "@ant-design/pro-components";
+import {App, Button, Modal, Select, Table, Typography} from "antd";
+import React, {useRef, useState} from "react";
 import TagListComponent from "@/components/TagListComponent";
 import MarkdownEditor from "@/components/MarkdownComponent/MarkdownEditor";
-import { listQuestionBankVoByPageUsingPost } from "@/api/questionBankController";
-import { batchAddOrUpdateQuestionsToBankUsingPost } from "@/api/questionBankQuestionController";
+import {listQuestionBankVoByPageUsingPost} from "@/api/questionBankController";
+import {batchAddOrUpdateQuestionsToBankUsingPost} from "@/api/questionBankQuestionController";
 
 import "./index.css";
 

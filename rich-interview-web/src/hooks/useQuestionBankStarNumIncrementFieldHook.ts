@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { incrementFieldUsingPost } from "@/api/questionBankHotspotController";
 import { message } from "antd";
 
@@ -6,7 +6,9 @@ import { message } from "antd";
  * 题库点赞钩子
  * @param questionBankId 题库ID
  */
-export default function useQuestionBankStarNumIncrementFieldHook(questionBankId?: number) {
+export default function useQuestionBankStarNumIncrementFieldHook(
+  questionBankId?: number,
+) {
   const [loading, setLoading] = useState(true);
   const hasFetched = useRef(false);
 

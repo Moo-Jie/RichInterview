@@ -2,12 +2,15 @@
 "use client";
 import CreateModal from "./components/CreateModal";
 import UpdateModal from "./components/UpdateModal";
-import {deleteUserUsingPost, listUserByPageUsingPost,} from "@/api/userController";
-import {DeleteOutlined, PlusOutlined} from "@ant-design/icons";
-import type {ActionType, ProColumns} from "@ant-design/pro-components";
-import {PageContainer, ProTable} from "@ant-design/pro-components";
-import {App, Button, Table, Typography} from "antd";
-import React, {useRef, useState} from "react";
+import {
+  deleteUserUsingPost,
+  listUserByPageUsingPost,
+} from "@/api/userController";
+import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
+import type { ActionType, ProColumns } from "@ant-design/pro-components";
+import { PageContainer, ProTable } from "@ant-design/pro-components";
+import { App, Button, Table, Typography } from "antd";
+import React, { useRef, useState } from "react";
 import UpdateUserAvatarModal from "@/components/UpdatePictureComponent";
 import "./index.css";
 
@@ -129,10 +132,10 @@ const UserAdminPage: React.FC = () => {
       dataIndex: "userRole",
       width: 200,
       valueEnum: {
-        user: { text: "普通用户"},
-        admin: { text: "管理员"},
-        VIP: { text: "VIP用户"},
-        ban: { text: "封禁用户"},
+        user: { text: "普通用户" },
+        admin: { text: "管理员" },
+        VIP: { text: "VIP用户" },
+        ban: { text: "封禁用户" },
       },
       filters: true,
     },
@@ -147,8 +150,8 @@ const UserAdminPage: React.FC = () => {
       dataIndex: "phoneNumber",
       width: 150,
       formItemProps: {
-        rules: [{ pattern: /^1[3-9]\d{9}$/, message: "请输入有效手机号" }]
-      }
+        rules: [{ pattern: /^1[3-9]\d{9}$/, message: "请输入有效手机号" }],
+      },
     },
     {
       title: "邮箱",
@@ -156,8 +159,8 @@ const UserAdminPage: React.FC = () => {
       width: 180,
       valueType: "text",
       formItemProps: {
-        rules: [{ type: 'email', message: "请输入有效邮箱" }]
-      }
+        rules: [{ type: "email", message: "请输入有效邮箱" }],
+      },
     },
     {
       title: "教育阶段",
@@ -170,7 +173,7 @@ const UserAdminPage: React.FC = () => {
       dataIndex: "workExperience",
       width: 200,
       valueType: "textarea",
-      hideInSearch: true
+      hideInSearch: true,
     },
     {
       title: "主攻方向",
@@ -243,7 +246,7 @@ const UserAdminPage: React.FC = () => {
 
   // 过滤掉图片列的配置（用于创建/编辑表单）
   const filteredColumns = columns.filter(
-      col => !['userAvatar'].includes(col.dataIndex as string)
+    (col) => !["userAvatar"].includes(col.dataIndex as string),
   );
 
   return (
@@ -256,7 +259,7 @@ const UserAdminPage: React.FC = () => {
           items: [{ title: "管理" }, { title: "用户管理" }],
         },
       }}
-      style={{   paddingBottom: 110 }}
+      style={{ paddingBottom: 110 }}
     >
       <ProTable<API.User>
         actionRef={actionRef}
@@ -354,7 +357,7 @@ const UserAdminPage: React.FC = () => {
           },
         }} // 本地化文本
       />
-       
+
       <CreateModal
         visible={createModalVisible}
         columns={filteredColumns}

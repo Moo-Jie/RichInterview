@@ -8,7 +8,6 @@ import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 /**
  * 查询模拟面试请求

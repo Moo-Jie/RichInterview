@@ -1,16 +1,9 @@
 "use client";
 import { App, Button, Card } from "antd";
 import useQuestionBankStarNumIncrementFieldHook from "@/hooks/useQuestionBankStarNumIncrementFieldHook";
-import {
-  EyeFilled,
-  LikeFilled,
-  LikeOutlined,
-  PushpinFilled,
-  QuestionCircleFilled,
-} from "@ant-design/icons";
+import { EyeFilled, LikeFilled, LikeOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { getQuestionBankHotspotVoByQuestionBankIdUsingGet } from "@/api/questionBankHotspotController";
-import Paragraph from "antd/es/typography/Paragraph";
 import useQuestionBankViewNumIncrementFieldHook from "@/hooks/useQuestionBankViewNumIncrementFieldHook";
 import "../../app/bank/[questionBankId]/index.css";
 
@@ -47,7 +40,7 @@ export default function BankActionComponent(props: Props) {
         setStarCount(res.data?.starNum || 0);
         // @ts-ignore
         setViewCount(res.data?.viewNum || 0);
-      } catch (e : any) {
+      } catch (e: any) {
         message.error("获取题库热点数据失败", e);
       }
     };
@@ -60,13 +53,13 @@ export default function BankActionComponent(props: Props) {
         <Card className={"stat-item"}>
           <span className="stat-label">
             浏览量 &nbsp;&nbsp;
-            <EyeFilled style={{color : "#e8aaff"}} />
+            <EyeFilled style={{ color: "#e8aaff" }} />
           </span>
           <span className="stat-value">{viewCount}</span>
           <br />
           <span className="stat-label">
             点赞量 &nbsp;&nbsp;
-            <LikeFilled style={{color : "#8b6cf0"}} />
+            <LikeFilled style={{ color: "#8b6cf0" }} />
           </span>
           <span className="stat-value">{starCount}</span>
         </Card>

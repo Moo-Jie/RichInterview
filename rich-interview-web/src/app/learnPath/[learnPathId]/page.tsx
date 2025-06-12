@@ -1,10 +1,10 @@
 "use server";
-import { Alert, Card, Flex, Layout, Menu } from "antd";
-import { getLearnPathVoByIdUsingGet } from "@/api/learnPathController";
+import {Alert, Card, Flex, Menu} from "antd";
+import {getLearnPathVoByIdUsingGet} from "@/api/learnPathController";
 import LearnPathMsgComponent from "../../../components/LearnPathMsgComponent";
-import { Content } from "antd/es/layout/layout";
+import {Content} from "antd/es/layout/layout";
 import Link from "next/link";
-import { ConstantPathMsg } from "@/constant/ConstantPathMsg";
+import {ConstantPathMsg} from "@/constant/ConstantPathMsg";
 import "./index.css";
 
 /**

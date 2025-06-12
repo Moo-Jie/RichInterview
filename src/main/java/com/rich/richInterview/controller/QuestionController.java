@@ -32,8 +32,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
-// 不使用改热点探测服务注销即可
-//import com.jd.platform.hotkey.client.callback.JdHotKeyStore;
 
 /**
  * 题目接口
@@ -106,52 +104,8 @@ public class QuestionController {
             // 入口数量：表示流控入口的数量，设置为 1。
             // 额外参数：用于传递额外的参数，此处传入用户 IP 地址等。
             entry = SphU.entry("getQuestionVOById", EntryType.IN, 1, remoteAddr);
-
-
-            // HotKey
-            // 生成 question_detail_ 开头的 key ，应当与数据库内设定好的热点探测规则匹配
-//         规则备份：
-//                [
-//                  {
-//                    "duration": 600,
-//                        "key": "question_detail_",
-//                        "prefix": true,
-//                        "interval": 5,
-//                        "threshold": 10,
-//                        "desc": "热门题目 HotKey 缓存：首先判断 question_detail_ 开头的 key，如果 5 秒访问次数达到 10 次，就会指认为HotKey 被添加到缓存中，为期10 分钟，到期后从 JVM 中清除，变回普通 Key"
-//                  }
-//                ]
-            // 不使用改热点探测服务注销即可
-//        String key = "question_detail_" + id;
-
-            // 响应缓存内容
-            // 通过 JD-HotKey-Client 内置方法，判断是否被指认为 HotKey
-//        if (JdHotKeyStore.isHotKey(key)) {
-//            // 尝试从本地缓存中获取缓存值
-//            Object cachedQuestionVO = JdHotKeyStore.get(key);
-//            // 如果缓存值存在，响应缓存的值
-//            if (cachedQuestionVO != null) {
-//                return ResultUtils.success((QuestionVO) cachedQuestionVO);
-//            }
-//        }
-
-
-            // TODO 校验是否会员题目
-            ThrowUtils.throwIf(id <= 0, ErrorCode.PARAMS_ERROR);
-            // 查询数据库
-            Question question = questionService.getById(id);
-            ThrowUtils.throwIf(question == null, ErrorCode.NOT_FOUND_ERROR);
-            // 获取封装类
-            QuestionVO questionVO = questionService.getQuestionVO(question, request);
-
-
-            // 缓存查询结果
-            // 通过 JD-HotKey-Client 内置方法，直接将查询结果缓存到本地 Caffeine 缓存中
-//        JdHotKeyStore.smartSet(key, questionVO);
-
-
-            // 获取封装类
-            return ResultUtils.success(questionVO);
+            // 核心业务
+            return ResultUtils.success(questionService.getQuestionVOById(id, request));
         } catch (Throwable ex) {
             // 当限流时，抛出 BlockException
             // 普通业务异常后逻辑

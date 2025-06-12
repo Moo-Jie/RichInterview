@@ -1,23 +1,23 @@
 // 基于ant design 组件库：https://procomponents.ant.design/components/table
 "use client";
 
-import type {ActionType, ProColumns} from "@ant-design/pro-components";
-import {PageContainer, ProTable} from "@ant-design/pro-components";
-import React, {useRef, useState} from "react";
+import type { ActionType, ProColumns } from "@ant-design/pro-components";
+import { PageContainer, ProTable } from "@ant-design/pro-components";
+import React, { useRef, useState } from "react";
 import TagListComponent from "@/components/TagListComponent";
 import Link from "next/link";
-import {searchQuestionVoByPageUsingPost} from "@/api/questionController";
-import {TablePaginationConfig} from "antd";
-import {useSearchParams} from "next/navigation";
+import { searchQuestionVoByPageUsingPost } from "@/api/questionController";
+import { TablePaginationConfig } from "antd";
+import { useSearchParams } from "next/navigation";
 import "./index.css";
-import {listQuestionBankVoByPageUsingPost} from "@/api/questionBankController";
+import { listQuestionBankVoByPageUsingPost } from "@/api/questionBankController";
 
 interface Props {
-    // 服务端渲染时，默认数据
-    defaultQuestionList?: API.QuestionVO[];
-    defaultTotal?: number;
-    // 默认搜索条件
-    defaultSearchParams?: API.QuestionQueryRequest;
+  // 服务端渲染时，默认数据
+  defaultQuestionList?: API.QuestionVO[];
+  defaultTotal?: number;
+  // 默认搜索条件
+  defaultSearchParams?: API.QuestionQueryRequest;
 }
 
 /**

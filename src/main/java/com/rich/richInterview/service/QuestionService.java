@@ -129,4 +129,13 @@ public interface QuestionService extends IService<Question> {
      **/
     Page<Question> searchFromEs(QuestionQueryRequest questionQueryRequest);
 
+    /**
+     * 根据题目id查询题目封装类
+     * @param id
+     * @param request
+     * @return com.rich.richInterview.model.vo.QuestionVO
+     * @author DuRuiChi
+     * @create 2025/5/2
+     **/
+    QuestionVO getQuestionVOById(Long id, HttpServletRequest request);
 }

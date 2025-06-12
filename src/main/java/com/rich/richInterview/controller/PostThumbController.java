@@ -2,12 +2,12 @@ package com.rich.richInterview.controller;
 
 import com.rich.richInterview.common.BaseResponse;
 import com.rich.richInterview.common.ErrorCode;
-import com.rich.richInterview.utils.ResultUtils;
 import com.rich.richInterview.exception.BusinessException;
 import com.rich.richInterview.model.dto.postthumb.PostThumbAddRequest;
 import com.rich.richInterview.model.entity.User;
 import com.rich.richInterview.service.PostThumbService;
 import com.rich.richInterview.service.UserService;
+import com.rich.richInterview.utils.ResultUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

@@ -8,8 +8,8 @@ import com.rich.richInterview.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.concurrent.TimeUnit;
 import javax.annotation.Resource;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 基于计数器记录访问次数实现反爬虫的工具包

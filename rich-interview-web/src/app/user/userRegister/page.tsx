@@ -2,10 +2,11 @@
 
 import React, { useState } from "react";
 import {
-    LoginForm,
-    ProForm,
-    ProFormSelect,
-    ProFormText, ProFormTextArea,
+  LoginForm,
+  ProForm,
+  ProFormSelect,
+  ProFormText,
+  ProFormTextArea,
 } from "@ant-design/pro-form";
 import { App, Button, Card } from "antd";
 import {
@@ -189,17 +190,17 @@ const UserRegisterPage: React.FC = (props) => {
             { label: "高中及以下", value: "高中及以下" },
           ]}
         />
-          <ProFormTextArea
-              fieldProps={{
-                  size: "large",
-                  rows: 4,
-                  showCount: true,
-                  maxLength: 100
-              }}
-              name="workExperience"
-              placeholder="请输入您的工作经历（选填，最多100字）"
-              rules={[{ required: false }]}
-          />
+        <ProFormTextArea
+          fieldProps={{
+            size: "large",
+            rows: 4,
+            showCount: true,
+            maxLength: 100,
+          }}
+          name="workExperience"
+          placeholder="请输入您的工作经历（选填，最多100字）"
+          rules={[{ required: false }]}
+        />
         <ProFormSelect
           fieldProps={{
             size: "large",
@@ -257,7 +258,7 @@ const UserRegisterPage: React.FC = (props) => {
                 // https://picsum.photos/ 随机获取图片
                 // 格式 https://picsum.photos/${width}/${height}
                 // TODO 若响应过慢，尝试降低图片像素
-                imgUrl={"https://picsum.photos/150/100"}
+                imgUrl={"https://picsum.photos/120/90"}
                 onFail={() => message.error("验证失败，请重试")}
                 onRefresh={() => setIsVerified(false)}
               />

@@ -1,22 +1,16 @@
 "use client";
-import { App, Avatar, Card, Col, Modal, Row } from "antd";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/store";
+import {App, Avatar, Card, Col, Modal, Row} from "antd";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "@/store";
 import Title from "antd/es/typography/Title";
 import Paragraph from "antd/es/typography/Paragraph";
-import { useState } from "react";
-import { updateMyUserUsingPost } from "@/api/userController";
-import { ProColumns, ProTable } from "@ant-design/pro-components";
+import {useState} from "react";
+import {updateMyUserUsingPost} from "@/api/userController";
+import {ProColumns, ProTable} from "@ant-design/pro-components";
 import CalendarChart from "@/components/CalendarChartComponent";
 import RecentStudy from "@/components/RecentStudyComponent";
 import UpdateUserAvatarModal from "@/components/UpdatePictureComponent";
-import { setUserLogin } from "@/store/userLogin";
-import {
-  ProForm,
-  ProFormSelect,
-  ProFormText,
-  ProFormTextArea,
-} from "@ant-design/pro-form";
+import {setUserLogin} from "@/store/userLogin";
 import "./index.css";
 
 /**

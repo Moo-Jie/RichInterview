@@ -66,7 +66,7 @@ export default async function QuestionsPage({ searchParams }) {
           style={{ flex: 1 }}
         >
           <Card className="section-card">
-          <Title level={2}>热门TOP</Title>
+            <Title level={2}>热门TOP</Title>
           </Card>
           <QuestionHotspotChartComponent data={questionHotspotList} />
           <br />

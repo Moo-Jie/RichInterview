@@ -1,9 +1,9 @@
 // 模板来源：https://procomponents.ant.design/components/login-form
 "use client";
 
-import React, { useState } from "react";
-import { LoginForm, ProForm, ProFormText } from "@ant-design/pro-form";
-import { App, Button, Card, Col, Row, Space } from "antd";
+import React, {useState} from "react";
+import {LoginForm, ProForm, ProFormText} from "@ant-design/pro-form";
+import {App, Button, Card, Col, Row, Space} from "antd";
 import {
   BarChartOutlined,
   BugOutlined,
@@ -20,15 +20,15 @@ import {
   UpOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { userLoginUsingPost } from "@/api/userController";
-import { useRouter } from "next/navigation";
+import {userLoginUsingPost} from "@/api/userController";
+import {useRouter} from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { AppDispatch } from "@/store";
-import { setUserLogin } from "@/store/userLogin";
-import { useDispatch } from "react-redux";
-import { ConstantBasicMsg } from "@/constant/ConstantBasicMsg";
-import { Vertify } from "@alex_xu/react-slider-vertify";
+import {AppDispatch} from "@/store";
+import {setUserLogin} from "@/store/userLogin";
+import {useDispatch} from "react-redux";
+import {ConstantBasicMsg} from "@/constant/ConstantBasicMsg";
+import {Vertify} from "@alex_xu/react-slider-vertify";
 import "./index.css";
 
 /**
@@ -163,7 +163,7 @@ const UserLoginPage: React.FC = (props) => {
                     // https://picsum.photos/ 随机获取图片
                     // 格式 https://picsum.photos/${width}/${height}
                     // TODO 若响应过慢，尝试降低图片像素
-                    imgUrl={"https://picsum.photos/150/100"}
+                    imgUrl={"https://picsum.photos/90/60"}
                     onFail={() => message.error("验证失败，请重试")}
                     onRefresh={() => setIsVerified(false)}
                   />

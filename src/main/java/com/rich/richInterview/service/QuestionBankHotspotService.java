@@ -3,9 +3,9 @@ package com.rich.richInterview.service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.rich.richInterview.model.enums.IncrementFieldEnum;
 import com.rich.richInterview.model.dto.questionBankHotspot.QuestionBankHotspotQueryRequest;
 import com.rich.richInterview.model.entity.QuestionBankHotspot;
+import com.rich.richInterview.model.enums.IncrementFieldEnum;
 import com.rich.richInterview.model.vo.QuestionBankHotspotVO;
 
 import javax.servlet.http.HttpServletRequest;

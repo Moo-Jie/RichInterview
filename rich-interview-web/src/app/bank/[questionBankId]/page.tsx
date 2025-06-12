@@ -1,5 +1,5 @@
 "use server";
-import {Alert, App, Avatar, Card} from "antd";
+import { Alert, Avatar, Card, message } from "antd";
 import { getQuestionBankVoByIdUsingGet } from "@/api/questionBankController";
 import Meta from "antd/es/card/Meta";
 import Title from "antd/es/typography/Title";
@@ -7,10 +7,8 @@ import QuestionList from "@/components/QuestionListVoComponent";
 import BankActionComponent from "@/components/BankActionComponent";
 import "./index.css";
 
-
 // @ts-ignore
 export default async function BankPage({ params }) {
-  const { message } = App.useApp();
   // 从 url 中获取 questionBankId
   const { questionBankId } = params;
   let bank = undefined as any;

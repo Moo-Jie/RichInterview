@@ -20,7 +20,6 @@ import com.rich.richInterview.model.entity.Question;
 import com.rich.richInterview.model.entity.QuestionBankQuestion;
 import com.rich.richInterview.model.entity.User;
 import com.rich.richInterview.model.enums.ReviewStatusEnum;
-import com.rich.richInterview.model.enums.UserRoleEnum;
 import com.rich.richInterview.model.vo.QuestionVO;
 import com.rich.richInterview.model.vo.UserVO;
 import com.rich.richInterview.service.QuestionBankQuestionService;
@@ -50,6 +49,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
+
+// 不使用改热点探测服务注销即可
+//import com.jd.platform.hotkey.client.callback.JdHotKeyStore;
 
 /**
  * 题目服务实现
@@ -136,7 +138,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         if (StringUtils.isNotBlank(searchText)) {
             // 需要拼接查询条件
             queryWrapper.and(qw -> qw.like("title", searchText)
-                    .or().like("tags", searchText)
+                            .or().like("tags", searchText)
 //                    .or().like("content", searchText)
 //                    .or().like("answer", searchText)
             );
@@ -599,16 +601,67 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
                     "若使用 ES 服务，请打开配置并启动服务器", e.getMessage());
             // 降级到数据库查询
             // ES 排序方式和数据库排序方式不一致，需要重新设置排序字段
-            if (! CommonConstant.SORT_ORDER_ASC.equals(questionQueryRequest.getSortOrder())
-            && ! CommonConstant.SORT_ORDER_DESC.equals(questionQueryRequest.getSortOrder())) {
+            if (!CommonConstant.SORT_ORDER_ASC.equals(questionQueryRequest.getSortOrder())
+                    && !CommonConstant.SORT_ORDER_DESC.equals(questionQueryRequest.getSortOrder())) {
                 questionQueryRequest.setSortOrder(CommonConstant.SORT_ORDER_ASC);
             }
-            if (! "id".equals(questionQueryRequest.getSortField())) {
+            if (!"id".equals(questionQueryRequest.getSortField())) {
                 questionQueryRequest.setSortField("id");
             }
             // ES 分页方式和数据库分页方式不一致，需要重新设置分页参数
             return getQuestionPage(questionQueryRequest);
         }
+    }
+
+    /**
+     * 根据题目id查询题目封装类
+     * @param id
+     * @param request
+     * @return com.rich.richInterview.model.vo.QuestionVO
+     * @author DuRuiChi
+     * @create 2025/5/2
+     **/
+    @Override
+    public QuestionVO getQuestionVOById(Long id, HttpServletRequest request) {
+        // HotKey
+        // 生成 question_detail_ 开头的 key ，应当与数据库内设定好的热点探测规则匹配
+//         规则备份：
+//                [
+//                  {
+//                    "duration": 600,
+//                        "key": "question_detail_",
+//                        "prefix": true,
+//                        "interval": 5,
+//                        "threshold": 10,
+//                        "desc": "热门题目 HotKey 缓存：首先判断 question_detail_ 开头的 key，如果 5 秒访问次数达到 10 次，就会指认为HotKey 被添加到缓存中，为期10 分钟，到期后从 JVM 中清除，变回普通 Key"
+//                  }
+//                ]
+        // 不使用改热点探测服务注销即可
+//        String key = "question_detail_" + id;
+
+        // 响应缓存内容
+        // 通过 JD-HotKey-Client 内置方法，判断是否被指认为 HotKey
+//        if (JdHotKeyStore.isHotKey(key)) {
+//            // 尝试从本地缓存中获取缓存值
+//            Object cachedQuestionVO = JdHotKeyStore.get(key);
+//            // 如果缓存值存在，响应缓存的值
+//            if (cachedQuestionVO != null) {
+//                return (QuestionVO) cachedQuestionVO;
+//            }
+//        }
+
+
+        // TODO 校验是否会员题目
+        ThrowUtils.throwIf(id <= 0, ErrorCode.PARAMS_ERROR);
+        // 查询数据库
+        Question question = this.getById(id);
+        ThrowUtils.throwIf(question == null, ErrorCode.NOT_FOUND_ERROR);
+        // 获取封装类
+
+        // 缓存查询结果
+        // 通过 JD-HotKey-Client 内置方法，直接将查询结果缓存到本地 Caffeine 缓存中
+//        JdHotKeyStore.smartSet(key, questionVO);
+        return this.getQuestionVO(question, request);
     }
 
     /**
