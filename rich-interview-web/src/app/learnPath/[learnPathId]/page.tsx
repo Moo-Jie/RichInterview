@@ -4,8 +4,8 @@ import { getLearnPathVoByIdUsingGet } from "@/api/learnPathController";
 import LearnPathMsgComponent from "../../../components/LearnPathMsgComponent";
 import { Content } from "antd/es/layout/layout";
 import Link from "next/link";
-import "./index.css";
 import { ConstantPathMsg } from "@/constant/ConstantPathMsg";
+import "./index.css";
 
 /**
  * 学习路线详情页

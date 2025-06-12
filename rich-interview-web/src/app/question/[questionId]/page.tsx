@@ -118,14 +118,14 @@ export default async function QuestionPage({ params }) {
         </Sider>
         <Content>
           <Space style={{ marginBottom: 24 }}>
-            {/*若为第一题和最后一题，上一题和下一题为null*/}
+            {/*若为第一题和最后一题，上一题和下一题为 null*/}
             {prevQuestion && (
-              <Link href={`/question/${prevQuestion.id}`} target={"_blank"}>
+              <Link href={`/question/${prevQuestion.id}`}>
                 <Button icon={<LeftOutlined />}>上一题</Button>
               </Link>
             )}
             {nextQuestion && (
-              <Link href={`/question/${nextQuestion.id}`} target={"_blank"}>
+              <Link href={`/question/${nextQuestion.id}`}>
                 <Button icon={<RightOutlined />}>下一题</Button>
               </Link>
             )}

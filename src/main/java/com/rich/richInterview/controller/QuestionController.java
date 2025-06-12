@@ -1,7 +1,6 @@
 package com.rich.richInterview.controller;
 
 import cn.dev33.satoken.annotation.SaCheckRole;
-import cn.dev33.satoken.annotation.SaMode;
 import com.alibaba.csp.sentinel.Entry;
 import com.alibaba.csp.sentinel.EntryType;
 import com.alibaba.csp.sentinel.SphU;
@@ -17,10 +16,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.rich.richInterview.common.BaseResponse;
 import com.rich.richInterview.common.DeleteRequest;
 import com.rich.richInterview.common.ErrorCode;
-import com.rich.richInterview.model.entity.User;
-import com.rich.richInterview.service.UserService;
-import com.rich.richInterview.utils.DetectCrawlersUtils;
-import com.rich.richInterview.utils.ResultUtils;
 import com.rich.richInterview.constant.UserConstant;
 import com.rich.richInterview.exception.ThrowUtils;
 import com.rich.richInterview.model.dto.question.QuestionAddRequest;
@@ -30,6 +25,7 @@ import com.rich.richInterview.model.dto.question.QuestionUpdateRequest;
 import com.rich.richInterview.model.entity.Question;
 import com.rich.richInterview.model.vo.QuestionVO;
 import com.rich.richInterview.service.QuestionService;
+import com.rich.richInterview.utils.ResultUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,12 +45,6 @@ public class QuestionController {
 
     @Resource
     private QuestionService questionService;
-
-    @Resource
-    private UserService userService;
-
-    @Resource
-    private DetectCrawlersUtils detectCrawlersUtils;
 
     /**
      * 创建题目（仅管理员可用）

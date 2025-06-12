@@ -2,16 +2,19 @@
 "use client";
 import CreateModal from "./components/CreateModal";
 import UpdateModal from "./components/UpdateModal";
-import {deleteQuestionUsingPost, listQuestionVoByPageUsingPost,} from "@/api/questionController";
-import {DeleteOutlined, PlusOutlined, SwapOutlined} from "@ant-design/icons";
-import type {ActionType, ProColumns} from "@ant-design/pro-components";
-import {PageContainer, ProTable} from "@ant-design/pro-components";
-import {App, Button, Modal, Select, Table, Typography} from "antd";
-import React, {useRef, useState} from "react";
+import {
+  deleteQuestionUsingPost,
+  listQuestionVoByPageUsingPost,
+} from "@/api/questionController";
+import { DeleteOutlined, PlusOutlined, SwapOutlined } from "@ant-design/icons";
+import type { ActionType, ProColumns } from "@ant-design/pro-components";
+import { PageContainer, ProTable } from "@ant-design/pro-components";
+import { App, Button, Modal, Select, Table, Typography } from "antd";
+import React, { useRef, useState } from "react";
 import TagListComponent from "@/components/TagListComponent";
 import MarkdownEditor from "@/components/MarkdownComponent/MarkdownEditor";
-import {listQuestionBankVoByPageUsingPost} from "@/api/questionBankController";
-import {batchAddOrUpdateQuestionsToBankUsingPost} from "@/api/questionBankQuestionController";
+import { listQuestionBankVoByPageUsingPost } from "@/api/questionBankController";
+import { batchAddOrUpdateQuestionsToBankUsingPost } from "@/api/questionBankQuestionController";
 
 import "./index.css";
 
@@ -129,7 +132,7 @@ const QuestionAdminPage: React.FC = () => {
     });
   };
   // 表格列配置
-  const columns: ProColumns<API.Question>[] = [
+  const columns: ProColumns<API.QuestionVO>[] = [
     {
       title: "序号",
       width: 120,
@@ -237,36 +240,86 @@ const QuestionAdminPage: React.FC = () => {
     },
     {
       title: "标签",
-      tooltip: "本系统标签规范：首部为难度标签",
+      tooltip: "本系统标签规范：首部为难度标签（简单/中等/困难）",
       dataIndex: "tags",
       width: 200,
       valueType: "select",
       hideInSearch: true,
       fieldProps: {
         mode: "tags",
+        options: [
+          { label: "简单", value: "简单" },
+          { label: "中等", value: "中等" },
+          { label: "困难", value: "困难" },
+        ],
+        tokenSeparators: [","],
       },
       align: "left",
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: "必须包含难度标签（简单/中等/困难）",
+            validator: (_, value) =>
+              value?.some((v: string) => ["简单", "中等", "困难"].includes(v))
+                ? Promise.resolve()
+                : Promise.reject(new Error("必须包含难度标签")),
+          },
+        ],
+      },
       render: (_, record) => {
         const tagList = JSON.parse(record.tags || "[]");
         return <TagListComponent tagList={tagList} />;
       },
     },
-
     {
-      title: "创建时间",
-      dataIndex: "createTime",
+      title: "来源",
+      width: 150,
+      dataIndex: "source",
+      valueType: "text",
+      ellipsis: true,
+    },
+    {
+      title: "创建人",
+      dataIndex: ["user", "userName"],
+      width: 120,
+      hideInForm: true,
+      ellipsis: true,
+      render: (_, record) => record.user?.userName || record.userId,
+    },
+    {
+      title: "审批人 ID",
+      dataIndex: "reviewerId",
+      width: 120,
+      hideInForm: true,
+      ellipsis: true,
+    },
+    {
+      title: "审批状态",
+      dataIndex: "reviewStatus",
+      width: 200,
+      valueEnum: {
+        0: { text: "待审核" },
+        1: { text: "通过" },
+        2: { text: "未通过" },
+      },
+      filters: true,
+    },
+    {
+      title: "通过审批时间",
+      dataIndex: "reviewTime",
       valueType: "dateTime",
       hideInForm: true,
       hideInSearch: true,
       width: 180,
       sorter: true,
       search: {
-        transform: (value) => ({ createTimeRange: value }),
+        transform: (value) => ({ updateTimeRange: value }),
       },
     },
     {
-      title: "用户操作时间",
-      dataIndex: "editTime",
+      title: "创建时间",
+      dataIndex: "createTime",
       valueType: "dateTime",
       hideInForm: true,
       hideInSearch: true,
@@ -325,7 +378,7 @@ const QuestionAdminPage: React.FC = () => {
           items: [{ title: "管理" }, { title: "题目管理" }],
         },
       }}
-      style={{   paddingBottom: 110 }}
+      style={{ paddingBottom: 110 }}
     >
       <ProTable<API.Question>
         actionRef={actionRef}

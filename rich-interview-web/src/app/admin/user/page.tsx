@@ -8,8 +8,8 @@ import type {ActionType, ProColumns} from "@ant-design/pro-components";
 import {PageContainer, ProTable} from "@ant-design/pro-components";
 import {App, Button, Table, Typography} from "antd";
 import React, {useRef, useState} from "react";
-import "./index.css";
 import UpdateUserAvatarModal from "@/components/UpdatePictureComponent";
+import "./index.css";
 
 const UserAdminPage: React.FC = () => {
   // 组件状态管理

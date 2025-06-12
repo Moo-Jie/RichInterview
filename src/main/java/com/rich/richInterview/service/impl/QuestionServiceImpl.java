@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.rich.richInterview.common.DeleteRequest;
 import com.rich.richInterview.common.ErrorCode;
 import com.rich.richInterview.constant.CommonConstant;
+import com.rich.richInterview.constant.SourceConstant;
 import com.rich.richInterview.exception.BusinessException;
 import com.rich.richInterview.exception.ThrowUtils;
 import com.rich.richInterview.mapper.QuestionMapper;
@@ -18,6 +19,8 @@ import com.rich.richInterview.model.dto.questionBankQuestion.QuestionBankQuestio
 import com.rich.richInterview.model.entity.Question;
 import com.rich.richInterview.model.entity.QuestionBankQuestion;
 import com.rich.richInterview.model.entity.User;
+import com.rich.richInterview.model.enums.ReviewStatusEnum;
+import com.rich.richInterview.model.enums.UserRoleEnum;
 import com.rich.richInterview.model.vo.QuestionVO;
 import com.rich.richInterview.model.vo.UserVO;
 import com.rich.richInterview.service.QuestionBankQuestionService;
@@ -115,7 +118,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         if (questionQueryRequest == null) {
             return queryWrapper;
         }
-        // todo 从对象中取值
+        // todo 从对象中取值question_review
         Long id = questionQueryRequest.getId();
         Long notId = questionQueryRequest.getNotId();
         String title = questionQueryRequest.getTitle();
@@ -304,6 +307,10 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         // todo 填充默认值
         User loginUser = userService.getLoginUser(request);
         question.setUserId(loginUser.getId());
+        question.setSource(SourceConstant.ADMIN_CREATE);
+        // 管理员提供的题目默认通过审批
+        question.setReviewerId(loginUser.getId());
+        question.setReviewStatus(ReviewStatusEnum.PASS.getCode());
         // 写入数据库
         boolean result = this.save(question);
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
@@ -314,6 +321,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
             addQBQRequest.setQuestionId(question.getId());
             questionBankQuestionService.addQuestionBankQuestion(addQBQRequest, request);
         }
+
         // 返回新写入的数据 id
         return question.getId();
     }

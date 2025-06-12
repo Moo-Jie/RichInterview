@@ -908,6 +908,86 @@ declare namespace API {
     user?: UserVO;
     userId?: number;
     questionBankId?: number;
+    tags?: string;
+    reviewMessage?: string;
+    reviewStatus?: number;
+    reviewTime?: string;
+    reviewerId?: number;
+    source?: string;
+  };
+
+  type QuestionReview = {
+    answer?: string;
+    content?: string;
+    createTime?: string;
+    editTime?: string;
+    id?: number;
+    isDelete?: number;
+    reviewStatus?: number;
+    tags?: string;
+    title?: string;
+    updateTime?: string;
+    userId?: number;
+  };
+
+  type QuestionReviewAddRequest = {
+    answer?: string;
+    content?: string;
+    tags?: string[];
+    title?: string;
+  };
+
+  type approveQuestionReviewUsingPOSTParams = {
+    /** reviewId */
+    reviewId: number;
+  };
+
+  type BaseResponsePageQuestionReview_ = {
+    code?: number;
+    data?: PageQuestionReview_;
+    message?: string;
+  };
+
+  type PageQuestionReview_ = {
+    countId?: string;
+    current?: number;
+    maxLimit?: number;
+    optimizeCountSql?: boolean;
+    orders?: OrderItem[];
+    pages?: number;
+    records?: QuestionReview[];
+    searchCount?: boolean;
+    size?: number;
+    total?: number;
+  };
+
+  type rejectQuestionReviewUsingPOSTParams = {
+    /** reviewId */
+    reviewId: number;
+  };
+
+  type QuestionReviewQueryRequest = {
+    answer?: string;
+    content?: string;
+    current?: number;
+    id?: number;
+    notId?: number;
+    pageSize?: number;
+    reviewStatus?: number;
+    searchText?: string;
+    sortField?: string;
+    sortOrder?: string;
+    tags?: string[];
+    title?: string;
+    userId?: number;
+  };
+
+  type QuestionReviewUpdateRequest = {
+    answer?: string;
+    content?: string;
+    id?: number;
+    tags?: string[];
+    title?: string;
   };
 
   type uploadFileUsingPOSTParams = {

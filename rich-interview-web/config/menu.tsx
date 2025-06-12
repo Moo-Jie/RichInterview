@@ -1,6 +1,6 @@
 import {MenuDataItem} from "@ant-design/pro-layout";
 import {
-  BookOutlined,
+  BookOutlined, CoffeeOutlined,
   CrownOutlined,
   HomeOutlined,
   MoreOutlined,
@@ -12,7 +12,6 @@ import {ConstantPathMsg} from "@/constant/ConstantPathMsg";
 
 /**
  * 菜单列表
- * TODO: 具体菜单待完善
  */
 export const sysMenus = [
   {
@@ -67,6 +66,24 @@ export const sysMenus = [
     ],
   },
   {
+    path: "/communityCoConstruction",
+    name: "社区共建",
+    icon: <CoffeeOutlined />,
+    access: AccessEnumeration.USER,
+    children: [
+      {
+        path: "/communityCoConstruction/contributionQuestion",
+        name: "贡献新面试题",
+        access: AccessEnumeration.USER,
+      },
+      {
+        path: "/communityCoConstruction/feedback",
+        name: "建言献策",
+        access: AccessEnumeration.ADMIN,
+      },
+    ],
+  },
+  {
     path: "/admin",
     name: "管理",
     icon: <CrownOutlined />,
@@ -91,6 +108,18 @@ export const sysMenus = [
         path: "/admin/learnPath",
         name: "学习路线管理",
         access: AccessEnumeration.ADMIN,
+      },
+      {
+        path: "/admin/review",
+        name: "审核管理",
+        access: AccessEnumeration.ADMIN,
+        children: [
+          {
+            path: "/admin/review/contributionReview",
+            name: "题目贡献审批",
+            access: AccessEnumeration.ADMIN,
+          },
+        ]
       },
       {
         path: "/admin/server",
