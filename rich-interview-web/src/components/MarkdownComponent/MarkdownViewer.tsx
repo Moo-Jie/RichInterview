@@ -6,7 +6,7 @@ import "highlight.js/styles/vs.css";
 import "./MarkdownViewer.css";
 // 源：https://github.com/sindresorhus/github-markdown-css 引入GITHUB MD样式
 import "github-markdown-css/github-markdown-light.css";
-
+import "./MarkdownViewer.css";
 interface Props {
   value?: string;
 }

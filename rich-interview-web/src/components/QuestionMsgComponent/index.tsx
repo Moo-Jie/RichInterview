@@ -11,8 +11,17 @@ import useAddUserPreviousQuestionRecordHook from "@/hooks/useAddUserPreviousQues
 import useQuestionViewNumIncrementFieldHook from "@/hooks/useQuestionViewNumIncrementFieldHook";
 import { getQuestionHotspotVoByQuestionIdUsingGet } from "@/api/questionHotspotController";
 import useQuestionStarNumIncrementFieldHook from "@/hooks/useQuestionStarNumIncrementFieldHook";
-import "./index.css";
+import { starCommentUsingPost } from "@/api/commentController";
 import SpeechButton from "@/components/SpeechButtonComponent";
+import {
+  addCommentUsingPost,
+  deleteCommentUsingPost,
+  listCommentVoByPageUsingPost,
+} from "@/api/commentController";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
+import { ConstantBasicMsg } from "@/constant/ConstantBasicMsg";
+import "./index.css";
 
 interface Props {
   question: API.QuestionVO;
@@ -47,8 +56,134 @@ const QuestionMsgComponent = (props: Props) => {
   const questionId = question?.id;
   // 客户端组件消息组件
   const { message } = App.useApp();
+  // 评论点赞数
+  const [likedComments, setLikedComments] = useState<Set<number>>(new Set());
   // 点赞钩子
   const { incrementStar } = useQuestionStarNumIncrementFieldHook(questionId);
+  // 评论相关状态
+  const [comments, setComments] = useState<API.CommentVO[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize] = useState(5);
+  const [sortType, setSortType] = useState<"latest" | "hot">("latest");
+  const [commentContent, setCommentContent] = useState("");
+  const [isCommentLoading, setIsCommentLoading] = useState(false);
+  const [deletingCommentId, setDeletingCommentId] = useState<number | null>(
+    null,
+  );
+  // 评论删除确认框状态
+  const [deleteConfirmVisible, setDeleteConfirmVisible] = useState(false);
+  const [selectedCommentId, setSelectedCommentId] = useState<number | null>(
+    null,
+  );
+
+  // 在Redux状态中获取当前登录用户信息(在其他勾子之前，注意hooks的调用顺序)
+  const loginUser = useSelector((state: RootState) => state.userLogin);
+  // 添加点赞处理函数
+  const handleCommentStar = async (commentId: number) => {
+    try {
+      const res = await starCommentUsingPost({ id: commentId });
+      if (res != null) {
+        setComments(
+          comments.map((c) =>
+            c.id === commentId
+              ? {
+                  ...c,
+                  thumbNum: (c.thumbNum || 0) + 1,
+                }
+              : c,
+          ),
+        );
+        setLikedComments(new Set([...likedComments, commentId]));
+        message.success("点赞成功！");
+      }
+    } catch (e) {
+      message.error("操作失败，请稍后重试");
+    }
+  };
+
+  // 获取评论列表
+  const fetchComments = async () => {
+    setIsCommentLoading(true);
+    try {
+      const res = await listCommentVoByPageUsingPost({
+        questionId: questionId,
+        current: currentPage,
+        pageSize: pageSize,
+        sortField: sortType === "latest" ? "createTime" : "thumbNum", // 根据排序类型切换字段
+        sortOrder: "desc",
+      } as API.CommentQueryRequest);
+
+      // @ts-ignore
+      if (res.data?.records) {
+        // @ts-ignore
+        setComments(res.data.records);
+      }
+    } catch (e: any) {
+      message.error(
+        `获取评论失败: ${e?.response?.data?.message || e?.message || "未知错误"}`,
+      );
+    } finally {
+      setIsCommentLoading(false);
+    }
+  };
+
+  // 添加评论
+  const handleAddComment = async () => {
+    if (!commentContent.trim()) {
+      message.warning("请输入评论内容");
+      return;
+    }
+
+    try {
+      setIsCommentLoading(true);
+      const res = await addCommentUsingPost({
+        content: commentContent.trim(),
+        questionId: questionId,
+      } as API.CommentAddRequest);
+
+      if (res != null) {
+        message.success("评论成功，期待成为热评哦~");
+        setCommentContent("");
+        // 发布后回到第一页
+        setCurrentPage(1);
+        // 刷新评论列表
+        await fetchComments();
+      } else {
+        message.error("评论失败");
+      }
+    } catch (e: any) {
+      message.error(
+        `评论失败: ${e?.response?.data?.message || e?.message || "未知错误"}`,
+      );
+    } finally {
+      // 重置加载状态
+      setIsCommentLoading(false);
+    }
+  };
+
+  // 删除评论
+  const handleDeleteConfirm = async () => {
+    if (!selectedCommentId) return;
+
+    setDeletingCommentId(selectedCommentId);
+    try {
+      const res = await deleteCommentUsingPost({
+        id: selectedCommentId,
+      } as API.DeleteRequest);
+      if (res != null) {
+        message.success("删除评论成功");
+        setComments(comments.filter((c) => c.id !== selectedCommentId));
+      }
+    } catch (e: any) {
+      message.error(
+        `删除失败: ${e?.response?.data?.message || e?.message || "未知错误"}`,
+      );
+    } finally {
+      setDeletingCommentId(null);
+      setDeleteConfirmVisible(false);
+      setSelectedCommentId(null);
+    }
+  };
 
   // 调用AI接口
   const handleAskAI = async () => {
@@ -104,6 +239,11 @@ const QuestionMsgComponent = (props: Props) => {
     };
     fetchHotspot();
   }, []);
+
+  // 排序类型变化监听
+  useEffect(() => {
+    if (questionId) fetchComments();
+  }, [currentPage, sortType]);
 
   // 其他信息标签
   const metaItems = [
@@ -360,6 +500,145 @@ const QuestionMsgComponent = (props: Props) => {
           </div>
         )}
       </Card>
+      {/* 评论区 */}
+      <Card
+        className="ask-ai-card"
+        title={
+          <div className="comment-header">
+            <span>用户评论</span>
+            <div className="comment-sort">
+              <Button
+                type={sortType === "latest" ? "primary" : "default"}
+                onClick={() => setSortType("latest")}
+                size="small"
+              >
+                最新
+              </Button>
+              <Button
+                type={sortType === "hot" ? "primary" : "default"}
+                onClick={() => setSortType("hot")}
+                size="small"
+                style={{ marginLeft: 8 }}
+              >
+                最热
+              </Button>
+            </div>
+          </div>
+        }
+      >
+        {/* 评论输入区域 */}
+        <div>
+          <textarea
+            value={commentContent}
+            onChange={(e) => setCommentContent(e.target.value)}
+            placeholder="写下你的见解（支持Markdown）"
+            rows={3}
+            style={{
+              width: "100%",
+              padding: "8px",
+              border: "1px solid #d9d9d9",
+              borderRadius: "8px",
+              resize: "vertical",
+              outline: "none",
+              fontSize: "18px",
+              fontFamily: "'Comic Sans MS', '楷体', cursive",
+              backgroundColor: "#fff9fb",
+              color: "#6d6d6d",
+            }}
+          />
+          <Button
+            type="primary"
+            onClick={() => handleAddComment()}
+            disabled={!commentContent.trim()}
+            style={{ marginTop: "8px", float: "right" }}
+            className="copy-button"
+          >
+            发布评论
+          </Button>
+          <div style={{ clear: "both" }} />
+        </div>
+
+        {/* 评论列表 */}
+        {isCommentLoading ? (
+          <div className="custom-loading" style={{ padding: 16 }}>
+            <LoadingOutlined spin /> 加载评论中...
+          </div>
+        ) : comments.length === 0 ? (
+          <div style={{ padding: 16, textAlign: "center" }}>
+            暂无评论，快来发表你的看法吧~
+          </div>
+        ) : (
+          comments.map((comment) => (
+            <div key={comment.id} className="comment-item">
+              {/* 用户信息 */}
+              <div className="user-info">
+                <img
+                  src={
+                    comment.user?.userAvatar || ConstantBasicMsg.AUTHOR_AVATAR
+                  }
+                  alt="用户头像"
+                  className="avatar"
+                />
+                <span className="username">
+                  {comment.user?.userName || "匿名用户"}
+                </span>
+                <span className="time">
+                  {new Date(comment.createTime || 0).toLocaleString()}
+                </span>
+                {/* 点赞 */}
+                <Button
+                  type="text"
+                  icon={<LikeOutlined />}
+                  onClick={() => handleCommentStar(comment.id!)}
+                  className="comment-like"
+                  disabled={likedComments.has(comment.id!)}
+                >
+                  {comment.thumbNum || 0}
+                </Button>
+                {/* 删除 */}
+                {comment.userId === loginUser?.id && (
+                  <Button
+                    type="text"
+                    onClick={() => {
+                      setSelectedCommentId(comment.id!);
+                      setDeleteConfirmVisible(true);
+                    }}
+                    disabled={deletingCommentId === comment.id}
+                    style={{ marginLeft: "auto" }}
+                    className="comment-delete-btn"
+                  >
+                    {deletingCommentId === comment.id ? "删除中..." : "删除"}
+                  </Button>
+                )}
+              </div>
+              <div className="comment-content">
+                <MarkdownViewer value={comment.content || "未获取"} />
+              </div>
+            </div>
+          ))
+        )}
+
+        {/* 分页 */}
+        {comments.length > 0 && (
+          <div className="comment-pagination" style={{ marginTop: 16 }}>
+            <Button
+              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+              className="copy-button"
+              disabled={currentPage === 1}
+            >
+              上一页
+            </Button>
+            <span style={{ margin: "0 16px" }}>第 {currentPage} 页</span>
+            <Button
+              onClick={() => setCurrentPage((p) => p + 1)}
+              className="copy-button"
+              disabled={comments.length < pageSize}
+            >
+              下一页
+            </Button>
+          </div>
+        )}
+      </Card>
       {/* 确认执行框 */}
       <Modal
         title="RICH 提示您"
@@ -377,6 +656,19 @@ const QuestionMsgComponent = (props: Props) => {
         <div style={{ padding: "16px 0", fontSize: 16 }}>
           💡 先尝试独立回答，再查看题解或问AI哦！
         </div>
+      </Modal>
+      <Modal
+        title="确认删除"
+        open={deleteConfirmVisible}
+        onOk={handleDeleteConfirm}
+        onCancel={() => {
+          setDeleteConfirmVisible(false);
+          setSelectedCommentId(null);
+        }}
+        okText="确定删除"
+        cancelText="取消"
+      >
+        <p>确定要删您的条评论吗？</p>
       </Modal>
     </div>
   );

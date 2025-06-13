@@ -132,4 +132,18 @@ public class CommentController {
         // 获取封装类
         return ResultUtils.success(commentService.getCommentVOPage(commentPage, request));
     }
+
+    /**
+     * 点赞评论
+     * @param idRequest 评论ID
+     * @param request   用户登录态
+     * @return com.rich.richInterview.common.BaseResponse<java.lang.Boolean>
+     * @author DuRuiChi
+     * @create 2025/6/13
+     **/
+    @PostMapping("/like")
+    public BaseResponse<Boolean> starComment(@RequestBody DeleteRequest idRequest, HttpServletRequest request) {
+        ThrowUtils.throwIf(idRequest == null || idRequest.getId() == null, ErrorCode.PARAMS_ERROR);
+        return ResultUtils.success(commentService.starComment(idRequest.getId(), request));
+    }
 }

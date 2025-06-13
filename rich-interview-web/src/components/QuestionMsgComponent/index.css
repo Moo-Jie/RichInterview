@@ -194,6 +194,36 @@
     transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
+.comment-body-textarea {
+    width: 100%;
+    font-size: 20px;
+    line-height: 1.6;
+    padding: 16px;
+    border: 2px solid #e8e8e8;
+    border-radius: 12px;
+    transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    font-weight: 500;
+    color: #2c3e50;
+}
+
+.comment-like[disabled] {
+    color: #ff6b6b !important;
+    background: rgba(255, 107, 107, 0.1) !important;
+    cursor: not-allowed;
+}
+
+.comment-body-textarea:focus {
+    border-color: #4a90e2;
+    box-shadow: 0 0 12px rgba(74, 144, 226, 0.2);
+}
+
+.comment-body-textarea::placeholder {
+    color: #a8a8a8;
+    font-weight: 400;
+}
+
 /* 发光边框效果 */
 .ask-ai-card::before {
     content: '';
@@ -207,13 +237,16 @@
             rgba(139, 108, 240, 0.6) 50%,
             rgba(74, 144, 226, 0.6) 100%
     );
-    -webkit-mask: linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
-    mask: linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
+    /* 修复 -webkit-mask 语法：分开设置 image 和 origin */
+    -webkit-mask-image: linear-gradient(#fff 0 0), linear-gradient(#fff 0 0);
+    -webkit-mask-origin: content-box;
+    /* 同步修复标准 mask 属性 */
+    mask-image: linear-gradient(#fff 0 0), linear-gradient(#fff 0 0);
+    mask-origin: content-box;
     -webkit-mask-composite: xor;
     mask-composite: exclude;
     animation: borderGlow 4s linear infinite;
+    pointer-events: none;
 }
 
 @keyframes borderGlow {
@@ -517,4 +550,146 @@
 
 .copy-button:hover .anticon {
     transform: translateX(3px);
+}
+
+/* 评论模块样式 */
+.comment-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.comment-sort {
+    display: flex;
+    gap: 8px;
+}
+
+/* 评论输入框美化 */
+.comment-input textarea {
+    font-size: 16px;
+    padding: 12px;
+    border: 2px solid #e8e8e8 !important;
+    border-radius: 8px;
+    transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+    background: rgba(255, 255, 255, 0.9);
+}
+
+.comment-input textarea:focus {
+    border-color: #4a90e2 !important;
+    box-shadow: 0 0 8px rgba(74, 144, 226, 0.2);
+}
+
+/* 发布按钮复用复制按钮样式 */
+.comment-input .ant-btn-primary {
+    @extend .copy-button;
+    width: auto;
+    padding: 8px 32px;
+    margin-top: 12px;
+}
+
+/* 删除按钮美化 */
+.comment-item .ant-btn-text {
+    color: #999;
+    transition: all 0.3s;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+.comment-item .ant-btn-text:hover {
+    color: #ff4d4f !important;
+    background: rgba(255, 77, 79, 0.1);
+}
+
+/* 用户信息增强 */
+.user-info {
+    position: relative;
+    padding: 8px;
+    background: rgba(240, 242, 245, 0.3);
+    border-radius: 6px;
+}
+
+.user-info .avatar {
+    width: 32px;
+    height: 32px;
+    border: 2px solid #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+}
+
+.user-info .avatar:hover {
+    transform: scale(1.1);
+}
+
+.username {
+    font-weight: 600;
+    background: linear-gradient(45deg, #4a90e2, #8b6cf0);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+/* 评论内容区域 */
+.comment-content {
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: box-shadow 0.3s;
+}
+
+.comment-content:hover {
+    box-shadow: 0 4px 12px rgba(74, 144, 226, 0.15);
+}
+
+/* 分页按钮复用样式 */
+.comment-pagination .ant-btn {
+    @extend .copy-button;
+    background: linear-gradient(135deg, #f0f2f5 0%, #e8e8e8 100%) !important;
+    color: #666 !important;
+}
+
+.comment-pagination .ant-btn[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.comment-item {
+    margin: 16px 0;
+    padding: 12px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.user-info .avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.user-info .username {
+    font-weight: 500;
+    color: #333;
+}
+
+.user-info .time {
+    color: #999;
+    font-size: 12px;
+}
+
+.comment-content {
+    line-height: 1.6;
+    color: #666;
+}
+
+.comment-pagination {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
 }

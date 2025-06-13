@@ -2,6 +2,7 @@ package com.rich.richInterview.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.rich.richInterview.common.ErrorCode;
@@ -12,7 +13,6 @@ import com.rich.richInterview.mapper.CommentMapper;
 import com.rich.richInterview.model.dto.comment.CommentAddRequest;
 import com.rich.richInterview.model.dto.comment.CommentQueryRequest;
 import com.rich.richInterview.model.entity.Comment;
-import com.rich.richInterview.model.entity.QuestionHotspot;
 import com.rich.richInterview.model.entity.User;
 import com.rich.richInterview.model.enums.IncrementFieldEnum;
 import com.rich.richInterview.model.vo.CommentVO;
@@ -29,7 +29,10 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -71,6 +74,27 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     }
 
     /**
+     * 点赞评论
+     * @param id      评论ID
+     * @param request 用户登录态
+     * @return java.lang.Boolean
+     * @author DuRuiChi
+     * @create 2025/6/13
+     **/
+    @Override
+    public Boolean starComment(Long id, HttpServletRequest request) {
+        // 校验评论存在性
+        Comment comment = this.getById(id);
+        ThrowUtils.throwIf(comment == null, ErrorCode.NOT_FOUND_ERROR);
+
+        // 原子操作更新点赞数
+        UpdateWrapper<Comment> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("id", id)
+                .setSql("thumbNum = thumbNum + 1");
+        return this.update(updateWrapper);
+    }
+
+    /**
      * 获取查询条件
      *
      * @param commentQueryRequest
@@ -93,7 +117,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         // 模糊查询
         queryWrapper.like(StringUtils.isNotBlank(content), "content", content);
         // 精确查询
-        queryWrapper.ne(ObjectUtils.isNotEmpty(questionId), "questionId", questionId);
+        queryWrapper.eq(ObjectUtils.isNotEmpty(questionId), "questionId", questionId);
         queryWrapper.eq(ObjectUtils.isNotEmpty(id), "id", id);
         queryWrapper.eq(ObjectUtils.isNotEmpty(userId), "userId", userId);
         // 排序规则
@@ -220,6 +244,8 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
 
         return true;
     }
+
+
 
     /**
      *

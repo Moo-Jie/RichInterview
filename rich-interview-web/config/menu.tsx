@@ -80,7 +80,12 @@ export const sysMenus = [
       {
         path: "/communityCoConstruction/feedback",
         name: "建言献策",
-        access: AccessEnumeration.ADMIN,
+        access: AccessEnumeration.USER,
+      },
+      {
+        path: "/communityCoConstruction/hotComment",
+        name: "刷友热评",
+        access: AccessEnumeration.USER,
       },
     ],
   },

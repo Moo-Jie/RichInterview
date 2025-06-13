@@ -1262,4 +1262,66 @@ declare namespace API {
     user?: UserVO;
     userId?: number;
   };
+
+
+  type BaseResponseListCommentVO_ = {
+    code?: number;
+    data?: CommentVO[];
+    message?: string;
+  };
+
+  type CommentAddRequest = {
+    content?: string;
+    questionId?: number;
+  };
+
+  type CommentQueryRequest = {
+    content?: string;
+    createTime?: string;
+    current?: number;
+    id?: number;
+    pageSize?: number;
+    questionId?: number;
+    sortField?: string;
+    sortOrder?: string;
+    thumbNum?: number;
+    userId?: number;
+  };
+
+  type CommentVO = {
+    content?: string;
+    createTime?: string;
+    editTime?: string;
+    id?: number;
+    questionId?: number;
+    thumbNum?: number;
+    updateTime?: string;
+    user?: UserVO;
+    userId?: number;
+  };
+
+  type getCommentVOByQuestionIdUsingGETParams = {
+    /** questionId */
+    questionId?: number;
+  };
+
+  type PageCommentVO_ = {
+    countId?: string;
+    current?: number;
+    maxLimit?: number;
+    optimizeCountSql?: boolean;
+    orders?: OrderItem[];
+    pages?: number;
+    records?: CommentVO[];
+    searchCount?: boolean;
+    size?: number;
+    total?: number;
+  };
+
+  type BaseResponsePageCommentVO_ = {
+    code?: number;
+    data?: PageCommentVO_;
+    message?: string;
+  };
+
 }

@@ -81,4 +81,14 @@ public interface CommentService extends IService<Comment> {
      * @create 2025/6/13
      **/
     List<CommentVO> getCommentVOListByQuestionId(long questionId, HttpServletRequest request);
+
+    /**
+     * 点赞评论
+     * @param id
+     * @param request
+     * @return java.lang.Boolean
+     * @author DuRuiChi
+     * @create 2025/6/13
+     **/
+    Boolean starComment(Long id, HttpServletRequest request);
 }

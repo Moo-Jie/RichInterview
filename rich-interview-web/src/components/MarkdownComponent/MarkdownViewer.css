@@ -1,21 +1,11 @@
-.md-viewer td,
-.md-viewer th {
-    border: 1px solid #dfe2e5;
-    padding: 0.6em 1em;
+.md-viewer {
+    font-family: '楷体', serif;
+    background-color: #fff9fb;
+    padding: 12px;
+    border-radius: 8px;
 }
 
-/* 代码块样式增强 */
-.md-viewer pre {
-    border-radius: 6px;
-    padding: 16px;
-    margin: 1em 0;
-    background: #f6f8fa;
-}
-
-/* 引用块样式 */
-.md-viewer blockquote {
-    border-left: 4px solid #dfe2e5;
-    margin: 1em 0;
-    padding: 0 1em;
-    color: #6a737d;
+/* 确保所有子元素继承字体 */
+.md-viewer * {
+    font-family: inherit !important;
 }
