@@ -12,11 +12,13 @@ import {listQuestionBankHotspotVoByPageUsingPost} from "@/api/questionBankHotspo
 import {listQuestionHotspotVoByPageUsingPost} from "@/api/questionHotspotController";
 import RecentStudy from "@/components/RecentStudyComponent";
 import DailyPracticeComponent from "@/components/DailyPracticeComponent";
-import styles from "./page.module.css";
 import MiniQuestionBankHotspotChart
   from "@/components/hotspotchartsComponents/questionBankHotspotchartsComponents/MiniQuestionBankHotspotChart";
 import MiniQuestionHotspotChart
   from "@/components/hotspotchartsComponents/questionHotspotchartsComponents/MiniQuestionHotspotChart";
+import { Carousel } from 'antd';
+import Image from 'next/image';
+import styles from "./page.module.css";
 
 /**
  * 主页
@@ -97,6 +99,71 @@ export default async function HomePage() {
       <Flex gap={24} align="flex-start">
         {/* 主内容区 */}
         <div className={styles.mainContent}>
+          {/* 走马灯模块 */}
+          <div className={styles.carouselContainer}>
+            <Carousel
+                autoplay={{ dotDuration: true }}
+                effect="fade"
+                dots={{ className: styles.dots }}
+                arrows
+                draggable
+                infinite
+                autoplaySpeed={5000}
+                speed={800}
+                easing="ease-in-out"
+                adaptiveHeight
+            >
+              <Link href="/banks" className={styles.carouselItem}>
+                <div className={styles.slideContent}>
+                  <Image
+                      src="/assets/pictures/carousel/carousel01.png"
+                      alt="题库推荐"
+                      fill
+                      priority
+                      sizes="100vw"
+                      className={styles.carouselImage}
+                  />
+                  <div className={styles.slideText}>
+                    <h3>精选面试题库</h3>
+                    <p>覆盖大厂最新高频考题</p>
+                  </div>
+                </div>
+              </Link>
+              <Link href="/questions" className={styles.carouselItem}>
+                <div className={styles.slideContent}>
+                  <Image
+                      src="/assets/pictures/carousel/carousel02.png"
+                      alt="题目推荐"
+                      fill
+                      priority
+                      sizes="100vw"
+                      className={styles.carouselImage}
+                  />
+                  <div className={styles.slideText}>
+                    <h3>每日刷题挑战</h3>
+                    <p>保持你的编程手感</p>
+                  </div>
+                </div>
+              </Link>
+              <Link href="/TODO" className={styles.carouselItem}>
+                <div className={styles.slideContent}>
+                  <Image
+                      src="/assets/pictures/carousel/carousel03.png"
+                      alt="模拟面试"
+                      fill
+                      priority
+                      sizes="100vw"
+                      className={styles.carouselImage}
+                  />
+                  <div className={styles.slideText}>
+                    <h3>AI模拟面试</h3>
+                    <p>真实面试环境演练</p>
+                  </div>
+                </div>
+              </Link>
+            </Carousel>
+          </div>
+
           {/* RICH AI 模块 */}
           <Card>
             <AiCallComponent />
