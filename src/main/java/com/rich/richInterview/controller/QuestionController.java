@@ -152,7 +152,6 @@ public class QuestionController {
     /**
      * 分页获取题目列表（封装类）
      * 源：https://sentinelguard.io/zh-cn/docs/annotation-support.html
-     *
      * @param questionQueryRequest
      * @param request
      * @return

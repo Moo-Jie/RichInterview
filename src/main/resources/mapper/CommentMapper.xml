@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rich.richInterview.mapper.CommentMapper">
+
+    <resultMap id="BaseResultMap" type="com.rich.richInterview.model.entity.Comment">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="content" column="content" jdbcType="VARCHAR"/>
+            <result property="userId" column="userId" jdbcType="BIGINT"/>
+            <result property="questionId" column="questionId" jdbcType="BIGINT"/>
+            <result property="thumbNum" column="thumbNum" jdbcType="INTEGER"/>
+            <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
+            <result property="editTime" column="editTime" jdbcType="TIMESTAMP"/>
+            <result property="isDelete" column="isDelete" jdbcType="TINYINT"/>
+            <result property="reviewStatus" column="reviewStatus" jdbcType="TINYINT"/>
+            <result property="reviewMessage" column="reviewMessage" jdbcType="VARCHAR"/>
+            <result property="reviewerId" column="reviewerId" jdbcType="BIGINT"/>
+            <result property="reviewTime" column="reviewTime" jdbcType="TIMESTAMP"/>
+            <result property="replyCount" column="replyCount" jdbcType="INTEGER"/>
+            <result property="topStatus" column="topStatus" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,content,userId,
+        questionId,thumbNum,createTime,
+        updateTime,editTime,isDelete,
+        reviewStatus,reviewMessage,reviewerId,
+        reviewTime,replyCount,topStatus
+    </sql>
+</mapper>

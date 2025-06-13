@@ -72,7 +72,7 @@ public class QuestionHotspotServiceImpl extends ServiceImpl<QuestionHotspotMappe
     }
 
     /**
-     * 热点字段递增接口（自动初始化）
+     * 热点字段递增接口
      * @param questionId
      * @param field
      * @return boolean
@@ -83,10 +83,10 @@ public class QuestionHotspotServiceImpl extends ServiceImpl<QuestionHotspotMappe
     public boolean incrementField(Long questionId, IncrementFieldEnum field) {
         // 参数校验
         ThrowUtils.throwIf(questionId == null || field == null, ErrorCode.PARAMS_ERROR);
-        // 题库合法
+        // 题目合法
         Question q = questionService.getById(questionId);
         ThrowUtils.throwIf(q == null, ErrorCode.NOT_FOUND_ERROR);
-        // 题库是否已被记录在热点表
+        // 题目是否已被记录在热点表
         QueryWrapper<QuestionHotspot> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(ObjectUtils.isNotEmpty(q.getId()), "questionId", questionId);
         QuestionHotspot questionHotspot = this.getOne(queryWrapper);
@@ -107,11 +107,56 @@ public class QuestionHotspotServiceImpl extends ServiceImpl<QuestionHotspotMappe
                 // 忽略重复键异常，并停止本次保存，防止前端因 SSR 和 CSR 渲染差异而并发插入
             }
         }
+        // 更新热点字段
         UpdateWrapper<QuestionHotspot> updateWrapper = new UpdateWrapper<>();
         updateWrapper.eq("questionId", questionId)
                 .setSql(field.getFieldName() + " = " + field.getFieldName() + " + 1");
         return this.update(updateWrapper);
     }
+
+    /**
+     * 热点字段递减接口
+     * @param questionId
+     * @param field
+     * @return boolean
+     * @author DuRuiChi
+     * @create 2025/5/22
+     **/
+    @Override
+    public boolean decrementField(Long questionId, IncrementFieldEnum field) {
+        // 题目合法
+        ThrowUtils.throwIf(questionId == null || field == null, ErrorCode.PARAMS_ERROR);
+        Question q = questionService.getById(questionId);
+        ThrowUtils.throwIf(q == null, ErrorCode.NOT_FOUND_ERROR);
+
+        // 题目是否已被记录在热点表
+        QueryWrapper<QuestionHotspot> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("questionId", questionId);
+        QuestionHotspot questionHotspot = this.getOne(queryWrapper);
+
+        // 原子操作逻辑
+        if (questionHotspot == null) {
+            try {
+                QuestionHotspot newRecord = new QuestionHotspot();
+                newRecord.setQuestionId(questionId);
+                newRecord.setViewNum(0);
+                newRecord.setStarNum(0);
+                newRecord.setForwardNum(0);
+                newRecord.setCollectNum(0);
+                newRecord.setCommentNum(0);
+                this.save(newRecord);
+            } catch (DuplicateKeyException ignored) {
+                // 忽略重复键异常，并停止本次保存，防止前端因 SSR 和 CSR 渲染差异而并发插入
+            }
+        }
+
+        // 更新热点字段
+        UpdateWrapper<QuestionHotspot> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("questionId", questionId)
+                .setSql(field.getFieldName() + " = " + field.getFieldName() + " - 1");
+        return this.update(updateWrapper);
+    }
+
     /**
      * 校验数据
      *

@@ -2,54 +2,42 @@ package com.rich.richInterview.model.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
+import java.util.Date;
 import lombok.Data;
 
-import java.util.Date;
-
 /**
- * 题目
- * @TableName question
+ * 评论表
+ * @TableName comment
  */
-@TableName(value ="question")
+@TableName(value ="comment")
 @Data
-public class Question {
+public class Comment {
     /**
-     * id
+     * id（雪花指定防爬）
      */
     @TableId(type = IdType.ASSIGN_ID)
     private Long id;
 
     /**
-     * 标题
-     */
-    private String title;
-
-    /**
-     * 内容
+     * 评论内容
      */
     private String content;
 
     /**
-     * 标签列表（json 数组）
-     */
-    private String tags;
-
-    /**
-     * 推荐答案
-     */
-    private String answer;
-
-    /**
-     * 创建用户 id
+     * 用户ID
      */
     private Long userId;
 
     /**
-     * 编辑时间
+     * 题目ID
      */
-    private Date editTime;
+    private Long questionId;
+
+    /**
+     * 点赞量
+     */
+    private Integer thumbNum;
 
     /**
      * 创建时间
@@ -62,13 +50,17 @@ public class Question {
     private Date updateTime;
 
     /**
-     * 是否删除
+     * 编辑时间
      */
-    @TableLogic
+    private Date editTime;
+
+    /**
+     * 是否删除(0-正常,1-删除)
+     */
     private Integer isDelete;
 
     /**
-     * 状态：0-待审核, 1-通过, 2-拒绝
+     * 审核状态(0-待审核,1-通过,2-拒绝)
      */
     private Integer reviewStatus;
 
@@ -78,7 +70,7 @@ public class Question {
     private String reviewMessage;
 
     /**
-     * 审核人 id
+     * 审核人ID
      */
     private Long reviewerId;
 
@@ -88,17 +80,12 @@ public class Question {
     private Date reviewTime;
 
     /**
-     * 优先级
+     * 回复数量
      */
-    private Integer priority;
+    private Integer replyCount;
 
     /**
-     * 题目来源
+     * 置顶状态(0-普通,1-置顶)
      */
-    private String source;
-
-    /**
-     * 仅会员可见（1 表示仅会员可见）
-     */
-    private Integer needVip;
+    private Integer topStatus;
 }

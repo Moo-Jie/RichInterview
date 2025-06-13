@@ -68,4 +68,14 @@ public interface QuestionHotspotService extends IService<QuestionHotspot> {
      * @return
      */
     QuestionHotspot getByQuestionId(Long questionId);
+
+    /**
+     * 热点字段递减接口（自动初始化）
+     * @param questionId
+     * @param field
+     * @return boolean
+     * @author DuRuiChi
+     * @create 2025/5/22
+     **/
+    boolean decrementField(Long questionId, IncrementFieldEnum field);
 }
