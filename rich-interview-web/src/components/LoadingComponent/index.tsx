@@ -7,7 +7,7 @@ export default function Loading() {
     <div className="loading-overlay">
       <div className="loading-content">
         <Spin indicator={<LoadingOutlined className="loading-icon" />} />
-        <p className="loading-text">加载中...</p>
+        <p className="loading-text">加载中... </p>
       </div>
     </div>
   );

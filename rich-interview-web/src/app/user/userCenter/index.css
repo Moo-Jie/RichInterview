@@ -20,9 +20,17 @@
   font-size: 1.5rem !important;
 }
 
+@media (max-width: 768px) {
+  .user-profile .ant-col {
+    width: 100%;
+    max-width: 100%;
+    flex: 0 0 100%;
+  }
+}
+
 /* 内容卡片 */
 .content-card {
-  min-height: 150px;
+  margin: 0 auto;
 }
 
 /* 移除原有栅格响应式 */
@@ -45,4 +53,104 @@
 .user-avatar:hover {
   transform: scale(1.05);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* 标签页美化 */
+.tab-label {
+  font-size: 15px;
+  color: #2c3e50;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 统一内容容器 */
+.content-container {
+  background: rgba(255,255,255,0.9);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s;
+  margin: 0 auto;
+  max-width: 1400px;
+}
+
+/* 表格美化 */
+.custom-pro-table {
+  max-width: 800px;
+  .ant-pro-table-search {
+    margin-bottom: 0;
+  }
+
+  .ant-table-thead > tr > th {
+    background: #f8f9fa !important;
+    color: #4a90e2;
+  }
+
+  .ant-table-row {
+    transition: all 0.3s;
+
+    &:hover {
+      transform: translateX(4px);
+      box-shadow: 0 2px 8px rgba(74, 144, 226, 0.1);
+    }
+  }
+}
+
+/* 学习卡片 */
+.study-card {
+  border: 1px solid #e8f4ff;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 12px rgba(74, 144, 226, 0.08) !important;
+  margin: 0 auto;
+}
+
+/* 信息展示 */
+.info-container {
+  padding: 16px 24px;
+
+  .info-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid #f0f0f0;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    .info-icon {
+      font-size: 20px;
+      color: #8cc269;
+    }
+
+    h5 {
+      margin: 0;
+      color: #595959;
+      font-weight: 500;
+    }
+  }
+}
+
+.ant-tabs-tab-active .tab-label {
+  color: #4a90e2;
+  text-shadow: 0 2px 8px rgba(74, 144, 226, 0.1);
+}
+
+.ant-tabs-ink-bar {
+  background: linear-gradient(90deg, #4a90e2 0%, #8b6cf0 100%) !important;
+  height: 3px !important;
+  border-radius: 2px;
+}
+
+.ant-tabs-tab:hover .tab-label {
+  color: #8b6cf0;
+  transform: translateY(-2px);
+}
+
+/* 卡片内容区域 */
+.content-card .ant-card-body {
+  padding: 24px;
+  background: rgba(255,255,255,0.8);
+  border-radius: 0 0 16px 16px;
+  min-height: 400px;
 }

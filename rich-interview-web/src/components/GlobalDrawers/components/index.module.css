@@ -1,0 +1,106 @@
+/* 抽屉公共样式 */
+.drawerHeader {
+    padding: 16px 24px;
+    border-bottom: 1px solid rgba(5, 5, 5, 0.06);
+    font-size: 18px;
+    font-weight: 600;
+    color: #1f1f1f;
+}
+
+.configContent {
+    padding: 24px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    margin: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+/* 帮助中心专属样式 */
+.helpItem {
+    transition: all 0.3s;
+    margin-bottom: 12px;
+    background: white;
+    border-radius: 8px;
+    padding: 12px;
+    border: 1px solid #f0f0f0;
+}
+
+.helpItem:hover {
+    transform: translateX(5px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.feedbackLink {
+    color: #1677ff;
+    transition: color 0.3s;
+}
+
+.feedbackLink:hover {
+    color: #0958d9;
+}
+
+/* 系统配置专属样式 */
+.configItem {
+    margin-bottom: 16px;
+    padding: 12px;
+    background: white;
+    border-radius: 8px;
+    border: 1px solid #f0f0f0;
+}
+
+.configLabel {
+    color: #8c8c8c;
+    font-size: 14px;
+}
+
+.configValue {
+    color: #1f1f1f;
+    font-weight: 500;
+}
+
+
+/* 按钮美化 */
+.configButton {
+    background: linear-gradient(135deg, #4a90e2 0%, #8b6cf0 100%) !important;
+    border: none !important;
+    color: white !important;
+    border-radius: 24px !important;
+    padding: 8px 16px !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    min-width: 70px;
+    max-height: 50px;
+    font-family: '楷体', serif!important;
+    font-size : 14px!important;
+}
+
+.configButton::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 300%;
+    height: 300%;
+    background: rgba(255, 255, 255, 0.1);
+    transform: translate(-50%, -50%) rotate(45deg);
+    transition: all 0.5s;
+}
+
+.configButton:hover::after {
+    width: 0;
+    height: 0;
+}
+
+.configButton:hover {
+    box-shadow: 0 4px 15px rgba(74, 144, 226, 0.4);
+    transform: translateY(-2px);
+}
+
+.configButton .anticon {
+    transition: transform 0.3s;
+}
+
+.configButton:hover .anticon {
+    transform: translateX(3px);
+}

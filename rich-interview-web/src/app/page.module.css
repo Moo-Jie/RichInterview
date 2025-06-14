@@ -268,14 +268,14 @@
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  height: 250px;
+  height: 280px;
 }
 
 /* 轮播项 */
 .carouselItem {
   display: block;
   position: relative;
-  height: 250px;
+  height: 280px;
 }
 
 /* 图片容器 */
@@ -295,18 +295,28 @@
   position: absolute;
   bottom: 20%;
   left: 10%;
-  color: white;
+  color: #ffffff;
   text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+  font-family: 'Comic Sans MS', '楷体', cursive;
   animation: textSlide 0.8s ease-out;
+/*  添加白色圆角透明背景  */
+  background: rgba(255, 255, 255, 0.2);
+  padding: 10px 20px;
+  border-radius: 10px;
+  backdrop-filter: blur(5px);
 }
 
 .slideText h3 {
   font-size: 2.5rem;
   margin-bottom: 1rem;
+  display: inline-block;
+  transform: skew(-5deg);
+  -webkit-background-clip: text;
+  background-clip: text;
 }
 
 .slideText p {
-  font-size: 1.2rem;
+  font-size: 1.8rem;
 }
 
 /* 响应式调整 */

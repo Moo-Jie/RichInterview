@@ -24,7 +24,7 @@ export default async function QuestionBankPage() {
     // @ts-ignore
     questionBankListVo = res.data.records ?? [];
   } catch (e: any) {
-    message.error("无法获取题库信息，因为" + e.message);
+    message.error("无法获取题库信息");
   }
 
   // 热点题库列表

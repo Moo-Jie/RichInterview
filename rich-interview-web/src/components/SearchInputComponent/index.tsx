@@ -17,7 +17,6 @@ const SearchInputComponent = (props: Props) => {
 
   return (
     <div
-      className="search-input"
       aria-hidden
       style={{
         display: "flex",

@@ -1,0 +1,34 @@
+.githubLink {
+  display: flex;
+  height: 40px;
+  align-items: center;
+  margin: 0 8px;
+  padding: 12px 12px;
+  background: linear-gradient(135deg, #2b3137 0%, #0d1117 100%);
+  border-radius: 24px;
+  border: 1px solid rgba(255,255,255,0.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-decoration: none !important;
+}
+
+.icon {
+  font-size: 20px;
+  color: white;
+  margin-right: 8px;
+  transition: transform 0.3s;
+}
+
+.text {
+  color: white;
+  font-weight: 500;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.githubLink:hover .icon {
+  transform: scale(1.1);
+}
+
+.githubLink:hover {
+  box-shadow: 0 4px 12px rgba(43, 49, 55, 0.3);
+  transform: translateY(-2px);
+}

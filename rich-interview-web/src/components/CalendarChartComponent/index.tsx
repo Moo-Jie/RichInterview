@@ -1,9 +1,18 @@
 import React, { useEffect, useState } from "react";
 import ReactECharts from "echarts-for-react";
 import dayjs from "dayjs";
-import { Button, message, Skeleton } from "antd";
+import {
+  Button,
+  message,
+  Skeleton,
+  Progress,
+  Flex,
+  Typography,
+  Tooltip,
+} from "antd";
 import { getUserSignInRecordUsingGet } from "@/api/userController";
 import "./index.css";
+import { CrownFilled, RocketFilled } from "@ant-design/icons";
 
 interface Props {}
 
@@ -17,7 +26,7 @@ interface Props {}
  */
 const CalendarChart = (props: Props) => {
   const {} = props;
-
+  const { Text } = Typography;
   // 状态添加
   const [loading, setLoading] = useState(true);
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
@@ -105,13 +114,58 @@ const CalendarChart = (props: Props) => {
     },
   };
 
+  // 在组件状态后新增等级计算逻辑
+  const totalDays = dataList.length;
+  const maxLevel = 10;
+  // 每 73 天升一级
+  const level = Math.min(maxLevel, Math.floor(totalDays / 73) + 1);
+  // 730天满级（2年）
+  const progress = (totalDays / 730) * 100;
+
   return (
     <div className="calendar-container">
+      {/* 等级信息模块 */}
+      {!loading && (
+        <div className="level-container">
+          <Flex align="center" gap={16}>
+            <Tooltip title="当前学习等级，满级需要坚持签到呦">
+              <div className="level-badge">
+                <CrownFilled className="crown-icon" />
+                <Text strong className="level-text" style={{ whiteSpace: 'nowrap' }}>
+                  LV.{level}
+                </Text>
+                {level === 10 && <RocketFilled className="rocket-icon" />}
+              </div>
+            </Tooltip>
+            <Progress
+              percent={progress}
+              strokeColor={{
+                "0%": "#ffd666",
+                "100%": "#8cc269",
+              }}
+              trailColor="#f0f0f0"
+              strokeWidth={12}
+              format={() => (
+                <div className="progress-text">
+                  <div>已签到 {dataList.length} 天</div>
+                </div>
+              )}
+            />
+          </Flex>
+          <div className="level-hint">
+            {level < 5 && "保持每日学习，快速升级！"}
+            {level >= 5 && level < 8 && "持续进步，即将进入高手阶段！"}
+            {level >= 8 && "精英级别，坚持就是胜利！"}
+          </div>
+        </div>
+      )}
+      {/* 切换按钮 */}
       <div className="toolbar">
         <Button onClick={() => handleYearChange(-1)}>{"<"}</Button>
         <span className="year-display">{selectedYear}</span>
         <Button onClick={() => handleYearChange(1)}>{">"}</Button>
       </div>
+      {/* 签到记录 */}
       {loading ? (
         <Skeleton active paragraph={{ rows: 6 }} />
       ) : (

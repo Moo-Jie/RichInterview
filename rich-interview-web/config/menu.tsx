@@ -1,12 +1,13 @@
 import {MenuDataItem} from "@ant-design/pro-layout";
 import {
-    BookOutlined,
-    CoffeeOutlined,
-    CrownOutlined,
-    HomeOutlined,
-    MoreOutlined,
-    QuestionCircleOutlined,
-    StockOutlined,
+  AuditOutlined,
+  BookOutlined,
+  CoffeeOutlined,
+  CrownOutlined,
+  HomeOutlined,
+  MoreOutlined,
+  QuestionCircleOutlined,
+  StockOutlined,
 } from "@ant-design/icons";
 import AccessEnumeration from "@/access/accessEnumeration";
 import {ConstantPathMsg} from "@/constant/ConstantPathMsg";
@@ -31,6 +32,12 @@ export const sysMenus = [
     path: "/questions",
     name: "题目",
     icon: <QuestionCircleOutlined />,
+    access: AccessEnumeration.USER,
+  },
+  {
+    path: "/aiInterview",
+    name: "AI 面试官",
+    icon: <AuditOutlined />,
     access: AccessEnumeration.USER,
   },
   {
@@ -83,7 +90,7 @@ export const sysMenus = [
         access: AccessEnumeration.USER,
       },
       {
-        path: "/communityCoConstruction/hotComment",
+        path: "/communityCoConstruction/hotComments",
         name: "刷友热评",
         access: AccessEnumeration.USER,
       },

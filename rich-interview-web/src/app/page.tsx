@@ -16,9 +16,8 @@ import MiniQuestionBankHotspotChart
   from "@/components/hotspotchartsComponents/questionBankHotspotchartsComponents/MiniQuestionBankHotspotChart";
 import MiniQuestionHotspotChart
   from "@/components/hotspotchartsComponents/questionHotspotchartsComponents/MiniQuestionHotspotChart";
-import { Carousel } from 'antd';
-import Image from 'next/image';
 import styles from "./page.module.css";
+import CarouselComponent from "@/components/CarouselComponents";
 
 /**
  * 主页
@@ -32,6 +31,45 @@ export const metadata = {
 
 // 服务端渲染，禁用静态生成
 export const dynamic = "force-dynamic";
+
+const carouselItems = [
+  {
+    href: "/aiInterview",
+    imgSrc: "/assets/pictures/carousel/carousel08.png",
+    alt: "模拟面试",
+    title: "AI模拟面试",
+    description: "真实面试环境演练"
+  },
+  {
+    href: "/banks",
+    imgSrc: "/assets/pictures/carousel/carousel05.png",
+    alt: "精选题库",
+    title: "精选面试题库",
+    description: "覆盖大厂高频考题"
+  },
+  {
+    href: "/questions",
+    imgSrc: "/assets/pictures/carousel/carousel09.png",
+    alt: "题目大全",
+    title: "每日刷题挑战",
+    description: "保持你的刷题手感"
+  },
+  {
+    href: "/communityCoConstruction/contributionQuestion",
+    imgSrc: "/assets/pictures/carousel/carousel02.png",
+    alt: "贡献面试题",
+    title: "贡献你遇到的全新面试题",
+    description: "刷友面试新题互享"
+  },
+  {
+    href: "/communityCoConstruction/hotComments",
+    imgSrc: "/assets/pictures/carousel/carousel03.png",
+    alt: "刷友热评",
+    title: "刷友热评",
+    description: "积极讨论百家争鸣"
+  }
+];
+
 export default async function HomePage() {
   // 并行获取题库和题目信息
   // 题库列表
@@ -47,7 +85,7 @@ export default async function HomePage() {
     // @ts-ignore
     questionBankListVo = res.data.records ?? [];
   } catch (e: any) {
-    message.error("无法获取题库信息，因为" + e.message);
+    console.error("无法获取题库信息");
   }
 
   // 题目列表
@@ -61,7 +99,7 @@ export default async function HomePage() {
     // @ts-ignore
     questionListVo = res.data.records ?? [];
   } catch (e: any) {
-    message.error("无法获取题目信息，因为" + e.message);
+    console.error("无法获取题目信息，因为" , e);
   }
 
   // 热点题目列表
@@ -75,7 +113,7 @@ export default async function HomePage() {
     // @ts-ignore
     questionHotspotListVo = res.data.records ?? [];
   } catch (e: any) {
-    message.error("无法获取热点题目信息，因为" + e.message);
+    console.error("无法获取热点题目信息，因为" , e);
   }
 
   // 热点题库列表
@@ -91,7 +129,7 @@ export default async function HomePage() {
     // @ts-ignore
     questionBankHotspotListVo = res.data.records ?? [];
   } catch (e: any) {
-    message.error("无法获取热门题库信息，因为" + e.message);
+    console.error("无法获取热门题库信息，因为" , e);
   }
 
   return (
@@ -99,70 +137,8 @@ export default async function HomePage() {
       <Flex gap={24} align="flex-start">
         {/* 主内容区 */}
         <div className={styles.mainContent}>
-          {/* 走马灯模块 */}
-          <div className={styles.carouselContainer}>
-            <Carousel
-                autoplay={{ dotDuration: true }}
-                effect="fade"
-                dots={{ className: styles.dots }}
-                arrows
-                draggable
-                infinite
-                autoplaySpeed={5000}
-                speed={800}
-                easing="ease-in-out"
-                adaptiveHeight
-            >
-              <Link href="/banks" className={styles.carouselItem}>
-                <div className={styles.slideContent}>
-                  <Image
-                      src="/assets/pictures/carousel/carousel01.png"
-                      alt="题库推荐"
-                      fill
-                      priority
-                      sizes="100vw"
-                      className={styles.carouselImage}
-                  />
-                  <div className={styles.slideText}>
-                    <h3>精选面试题库</h3>
-                    <p>覆盖大厂最新高频考题</p>
-                  </div>
-                </div>
-              </Link>
-              <Link href="/questions" className={styles.carouselItem}>
-                <div className={styles.slideContent}>
-                  <Image
-                      src="/assets/pictures/carousel/carousel02.png"
-                      alt="题目推荐"
-                      fill
-                      priority
-                      sizes="100vw"
-                      className={styles.carouselImage}
-                  />
-                  <div className={styles.slideText}>
-                    <h3>每日刷题挑战</h3>
-                    <p>保持你的编程手感</p>
-                  </div>
-                </div>
-              </Link>
-              <Link href="/TODO" className={styles.carouselItem}>
-                <div className={styles.slideContent}>
-                  <Image
-                      src="/assets/pictures/carousel/carousel03.png"
-                      alt="模拟面试"
-                      fill
-                      priority
-                      sizes="100vw"
-                      className={styles.carouselImage}
-                  />
-                  <div className={styles.slideText}>
-                    <h3>AI模拟面试</h3>
-                    <p>真实面试环境演练</p>
-                  </div>
-                </div>
-              </Link>
-            </Carousel>
-          </div>
+          {/* 走马灯模块 https://ant-design.antgroup.com/components/carousel-cn */}
+          <CarouselComponent items={carouselItems} />
 
           {/* RICH AI 模块 */}
           <Card>
@@ -200,7 +176,6 @@ export default async function HomePage() {
             </Title>
             <MiniQuestionHotspotChart data={questionHotspotListVo} />
           </Card>
-
 
           {/*题目列表*/}
           <Card className={`section-card ${styles.sectionCard}`}>

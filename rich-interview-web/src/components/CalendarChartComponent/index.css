@@ -70,3 +70,75 @@
     gap: 12px;
   }
 }
+
+/* 等级容器 */
+.level-container {
+  background: rgba(255,255,255,0.9);
+  border-radius: 12px;
+  padding: 16px 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* 等级徽章 */
+.level-badge {
+  position: relative;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, #8cc269 0%, #4a90e2 100%);
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s;
+}
+
+.level-badge:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(140, 194, 105, 0.3);
+}
+
+/* 等级文字 */
+.level-text {
+  font-size: 18px;
+  color: #fff !important;
+  letter-spacing: 1px;
+  white-space: nowrap;
+  display: inline-block;
+}
+
+/* 图标样式 */
+.crown-icon {
+  color: #ffd666;
+  font-size: 20px;
+}
+
+.rocket-icon {
+  color: #ff6b6b;
+  margin-left: 8px;
+  animation: float 2s ease-in-out infinite;
+}
+
+/* 进度条文字 */
+.progress-text {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #666;
+  text-align: center;
+}
+
+/* 等级提示 */
+.level-hint {
+  margin-top: 12px;
+  padding: 8px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  text-align: center;
+  color: #4a90e2;
+  font-weight: 500;
+}
+
+/* 悬浮动画 */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}

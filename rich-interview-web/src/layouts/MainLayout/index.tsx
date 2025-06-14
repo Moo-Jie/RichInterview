@@ -7,18 +7,9 @@
  *  TODO 通用组件进一步抽取
  */
 
-import {
-    GithubFilled,
-    InfoCircleFilled,
-    LoginOutlined,
-    LogoutOutlined,
-    QuestionCircleFilled,
-    QuestionCircleOutlined,
-    UserOutlined,
-    UserSwitchOutlined,
-} from "@ant-design/icons";
-import {ProDescriptions, ProLayout, WaterMark,} from "@ant-design/pro-components";
-import {App, Collapse, Dropdown, Popover, Typography} from "antd";
+import {GithubFilled, LoginOutlined, LogoutOutlined, UserOutlined, UserSwitchOutlined,} from "@ant-design/icons";
+import {ProLayout, WaterMark,} from "@ant-design/pro-components";
+import {App, Dropdown} from "antd";
 import React, {useEffect, useState} from "react";
 import Image from "next/image";
 import {usePathname, useRouter} from "next/navigation";
@@ -34,6 +25,9 @@ import {DEFAULT_USER} from "@/constant/ConstantUserMsg";
 import {setUserLogin} from "@/store/userLogin";
 import AccessEnumeration from "@/access/accessEnumeration";
 import SearchInputComponent from "@/components/SearchInputComponent";
+import HelpCenterDrawer from "@/components/GlobalDrawers/HelpCenterDrawer";
+import SystemConfigDrawer from "@/components/GlobalDrawers/SystemConfigDrawer";
+import GitHubLink from "@/components/GitHubLinkComponent";
 
 /**
  * 子组件内容，用于渲染布局主体区域
@@ -221,105 +215,12 @@ export default function MainLayout({ children }: Props) {
               >
                 <SearchInputComponent key="search" />
               </div>,
-              <Popover
-                key="about"
-                content={
-                  <div style={{ maxWidth: 500 }}>
-                    <ProDescriptions
-                      column={{ xs: 1, sm: 2 }}
-                      title="系统配置"
-                      dataSource={{
-                        version: ConstantBasicMsg.PROJECT_VERSION,
-                        maintainer: ConstantBasicMsg.AUTHOR_NAME,
-                        updateTime: ConstantBasicMsg.PROJECT_LAST_UPDATE_TIME,
-                        ...ConstantBasicMsg.SERVER_PERFORMANCE,
-                      }}
-                      columns={[
-                        {
-                          title: "当前版本",
-                          dataIndex: "version",
-                          tooltip: "系统版本号",
-                        },
-                        {
-                          title: "维护人员",
-                          dataIndex: "maintainer",
-                          ellipsis: true,
-                        },
-                        { title: "最后更新", dataIndex: "updateTime" },
-                        { title: "云CPU配置", dataIndex: "cpu" },
-                        { title: "云内存容量", dataIndex: "memory" },
-                        { title: "云磁盘空间", dataIndex: "disk" },
-                        { title: "云网络带宽", dataIndex: "bandwidth" },
-                      ]}
-                    />
-                  </div>
-                }
-              >
-                <InfoCircleFilled />
-              </Popover>,
-              <Popover
-                key="help"
-                content={
-                  <div style={{ maxWidth: 400, padding: 16 }}>
-                    <Typography.Title level={4} style={{ marginBottom: 16 }}>
-                      <QuestionCircleOutlined /> 帮助中心
-                    </Typography.Title>
-
-                    <Collapse
-                      ghost
-                      expandIconPosition="end"
-                      items={[
-                        {
-                          key: "1",
-                          label: "如何搜索题目？",
-                          children: (
-                            <ProDescriptions
-                              column={1}
-                              dataSource={{
-                                method1: "搜索框搜索：输入关键词进行搜索",
-                                method2: "题库搜索：进入对应主题题库",
-                                method3: "主页栏目搜索：点击最新或热门题目",
-                              }}
-                              columns={[
-                                { valueType: "text", dataIndex: "method1" },
-                                { valueType: "text", dataIndex: "method2" },
-                                { valueType: "text", dataIndex: "method3" },
-                              ]}
-                            />
-                          ),
-                        },
-                        {
-                          key: "2",
-                          label: "题库更新频率？",
-                          children:
-                            "题库会定期更新，将尽量保持内容的最新和全面",
-                        },
-                        {
-                          key: "3",
-                          label: "反馈渠道",
-                          children: (
-                            <Typography.Text>
-                              请前往
-                              <a href="/other/aboutAuthor">【关于作者】</a>
-                              查看联系方式，若有侵权内容请联系我
-                            </Typography.Text>
-                          ),
-                        },
-                      ]}
-                    />
-                  </div>
-                }
-              >
-                <QuestionCircleFilled />
-              </Popover>,
-              <a
-                href={ConstantBasicMsg.REPO_URL}
-                key="github"
-                title="项目源码"
-                target="_blank"
-              >
-                <GithubFilled key="GithubFilled" />
-              </a>,
+              <SystemConfigDrawer key="about" />,
+              <HelpCenterDrawer key="help" />,
+              <GitHubLink
+                  key="github"
+                  href={ConstantBasicMsg.REPO_URL}
+              />,
             ];
           }}
           // 头部标题渲染

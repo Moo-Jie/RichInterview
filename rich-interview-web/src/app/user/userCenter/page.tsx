@@ -1,16 +1,16 @@
 "use client";
-import {App, Avatar, Card, Col, Modal, Row} from "antd";
-import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "@/store";
+import { App, Avatar, Card, Col, Modal, Row } from "antd";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store";
 import Title from "antd/es/typography/Title";
 import Paragraph from "antd/es/typography/Paragraph";
-import {useState} from "react";
-import {updateMyUserUsingPost} from "@/api/userController";
-import {ProColumns, ProTable} from "@ant-design/pro-components";
+import { useState } from "react";
+import { updateMyUserUsingPost } from "@/api/userController";
+import { ProColumns, ProTable } from "@ant-design/pro-components";
 import CalendarChart from "@/components/CalendarChartComponent";
 import RecentStudy from "@/components/RecentStudyComponent";
 import UpdateUserAvatarModal from "@/components/UpdatePictureComponent";
-import {setUserLogin} from "@/store/userLogin";
+import { setUserLogin } from "@/store/userLogin";
 import "./index.css";
 
 /**
@@ -89,7 +89,7 @@ export default function UserCenterPage() {
           { label: "研究生", value: "研究生" },
           { label: "硕士", value: "硕士" },
           { label: "高中及以下", value: "高中及以下" },
-        ]
+        ],
       },
     },
     {
@@ -116,7 +116,7 @@ export default function UserCenterPage() {
           { label: "DevOps", value: "DevOps" },
           { label: "嵌入式开发", value: "嵌入式开发" },
           { label: "区块链开发", value: "区块链开发" },
-        ]
+        ],
       },
     },
     {
@@ -145,7 +145,7 @@ export default function UserCenterPage() {
       className="max-width-content"
       style={{ paddingBottom: 100 }}
     >
-      {/*个人信息标签*/}
+      {/* 个人信息标签 */}
       <Row gutter={[0, 24]}>
         <Col xs={24}>
           <Card
@@ -163,109 +163,144 @@ export default function UserCenterPage() {
             <div className="avatar-margin" />
             <Card.Meta
               title={
-                <Title level={4} className="username">
+                <Title level={5} className="username">
                   {user.userName}
                 </Title>
               }
               description={
                 <Paragraph type="secondary" className="user-profile">
-                  <h5>{user.userProfile}</h5>
-                  <h5>ID：{user.id}</h5>
-                  <h5>
-                    手机号：
-                    {user.phoneNumber
-                      ? user.phoneNumber?.substring(0, 3) +
-                        "****" +
-                        user.phoneNumber?.substring(7)
-                      : "待完善"}
-                  </h5>
-                  <h5>
-                    邮箱：
-                    {user.email
-                      ? user.email?.substring(0, 3) +
-                        "****" +
-                        user.email?.substring(7)
-                      : "待完善"}
-                  </h5>
-                  <h5>教育阶段：{user.grade || "待完善"}</h5>
-                  <h5>主攻方向：{user.expertiseDirection || "待完善"}</h5>
-                  <h5>工作经历：{user.workExperience || "待完善"}</h5>
+                  <h5>—— {user.userProfile} ——</h5>
+                  <br/>
+                  <Row gutter={[16, 16]}>
+                    <Col span={8}>
+                      <h5>ID：{user.id}</h5>
+                    </Col>
+                    <Col span={8}>
+                      <h5>
+                        手机号：
+                        {user.phoneNumber
+                          ? user.phoneNumber?.substring(0, 3) +
+                            "****" +
+                            user.phoneNumber?.substring(7)
+                          : "待完善"}
+                      </h5>
+                    </Col>
+                    <Col span={8}>
+                      <h5>
+                        邮箱：
+                        {user.email
+                          ? user.email?.substring(0, 3) +
+                            "****" +
+                            user.email?.substring(7)
+                          : "待完善"}
+                      </h5>
+                    </Col>
+                    <Col span={8}>
+                      <h5>教育阶段：{user.grade || "待完善"}</h5>
+                    </Col>
+                    <Col span={8}>
+                      <h5>主攻方向：{user.expertiseDirection || "待完善"}</h5>
+                    </Col>
+                    <Col span={24}>
+                      <h5>工作经历：{user.workExperience || "待完善"}</h5>
+                    </Col>
+                  </Row>
                 </Paragraph>
               }
             />
           </Card>
         </Col>
 
+        {/* 个人主页标签项 */}
         <Col xs={24}>
-          {/* TODO 刷题记录表格、详细信息卡片*/}
           <Card
             className="content-card"
             tabList={[
               {
                 key: "record",
-                label: "刷题记录",
+                label: <span className="tab-label">📊 学情分析</span>,
               },
               {
                 key: "updateUserMsg",
-                label: "编辑资料",
+                label: <span className="tab-label">✏️ 编辑资料</span>,
               },
               {
                 key: "recentStudy",
-                label: "上次刷题",
+                label: <span className="tab-label">🚀 上次刷题</span>,
               },
               {
                 key: "userMsg",
-                label: "更多信息",
+                label: <span className="tab-label">ℹ️ 更多信息</span>,
               },
             ]}
             activeTabKey={activeTabKey}
             onTabChange={(key: string) => {
               setActiveTabKey(key);
             }}
+            tabProps={{
+              tabBarGutter: 24,
+              tabBarStyle: {
+                padding: "0 24px",
+                background: "rgba(255,255,255,0.6)",
+                borderRadius: 12,
+              },
+            }}
           >
+            {/* 动力热点图 */}
             {activeTabKey === "record" && (
-              <>
+              <div className="content-container">
                 <CalendarChart />
-              </>
+              </div>
             )}
+            {/* 更新数据 */}
             {activeTabKey === "updateUserMsg" && (
-              <ProTable
-                type="form"
-                columns={editColumns}
-                form={{
-                  initialValues: user,
-                }}
-                onSubmit={async (values) => {
-                  const success = await handleUpdateMy(
-                    values as API.UserUpdateMyRequest,
-                  );
-                  if (success) {
-                    setEditVisible(false);
-                    // 这里可以添加刷新用户数据的逻辑
-                  }
-                }}
-              />
+              <div className="content-container">
+                <ProTable
+                  type="form"
+                  className="custom-pro-table"
+                  columns={editColumns}
+                  form={{
+                    initialValues: user,
+                  }}
+                  onSubmit={async (values) => {
+                    const success = await handleUpdateMy(
+                      values as API.UserUpdateMyRequest,
+                    );
+                    if (success) {
+                      setEditVisible(false);
+                      // 这里可以添加刷新用户数据的逻辑
+                    }
+                  }}
+                />
+              </div>
             )}
+            {/* 继续刷题 */}
             {activeTabKey === "recentStudy" && (
-              <Card
-                style={{
-                  maxWidth: 600,
-                  margin: "0 auto",
-                  width: "100%",
-                }}
-              >
-                <RecentStudy />
-              </Card>
+              <div className="content-container">
+                <Card className="study-card">
+                  <RecentStudy />
+                </Card>
+              </div>
             )}
+            {/* 更多信息 */}
             {activeTabKey === "userMsg" && (
-              <Paragraph type="secondary" className="user-profile">
-                <h5>
-                  注册时间：{user.createTime?.toString().substring(0, 10)}
-                </h5>
-                <h5>
-                  最后操作时间：{user.updateTime?.toString().substring(0, 10)}
-                </h5>
-              </Paragraph>
+              <div className="content-container">
+                <Paragraph className="info-container">
+                  <div className="info-item">
+                    <span className="info-icon">📅</span>
+                    <h5>
+                      注册时间：{user.createTime?.toString().substring(0, 10)}
+                    </h5>
+                  </div>
+                  <div className="info-item">
+                    <span className="info-icon">⏰</span>
+                    <h5>
+                      最后操作时间：
+                      {user.updateTime?.toString().substring(0, 10)}
+                    </h5>
+                  </div>
+                </Paragraph>
+              </div>
             )}
           </Card>
         </Col>
@@ -279,21 +314,24 @@ export default function UserCenterPage() {
         footer={null}
         onCancel={() => setEditVisible(false)}
       >
-        <ProTable
-          type="form"
-          columns={editColumns}
-          form={{
-            initialValues: user,
-          }}
-          onSubmit={async (values) => {
-            const success = await handleUpdateMy(
-              values as API.UserUpdateMyRequest,
-            );
-            if (success) {
-              setEditVisible(false);
-            }
-          }}
-        />
+        <div className="content-container">
+          <ProTable
+            type="form"
+            columns={editColumns}
+            className="custom-pro-table"
+            form={{
+              initialValues: user,
+            }}
+            onSubmit={async (values) => {
+              const success = await handleUpdateMy(
+                values as API.UserUpdateMyRequest,
+              );
+              if (success) {
+                setEditVisible(false);
+              }
+            }}
+          />
+        </div>
       </Modal>
 
       {/*更新头像弹窗*/}
