@@ -80,6 +80,11 @@ export const sysMenus = [
     access: AccessEnumeration.USER,
     children: [
       {
+        path: "/communityCoConstruction/hotComments",
+        name: "刷友热评",
+        access: AccessEnumeration.USER,
+      },
+      {
         path: "/communityCoConstruction/contributionQuestion",
         name: "贡献新面试题",
         access: AccessEnumeration.USER,
@@ -87,11 +92,6 @@ export const sysMenus = [
       {
         path: "/communityCoConstruction/feedback",
         name: "建言献策",
-        access: AccessEnumeration.USER,
-      },
-      {
-        path: "/communityCoConstruction/hotComments",
-        name: "刷友热评",
         access: AccessEnumeration.USER,
       },
     ],

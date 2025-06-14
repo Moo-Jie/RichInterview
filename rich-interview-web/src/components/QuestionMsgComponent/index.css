@@ -208,6 +208,7 @@
     color: #2c3e50;
 }
 
+
 .comment-like[disabled] {
     color: #ff6b6b !important;
     background: rgba(255, 107, 107, 0.1) !important;
@@ -587,6 +588,15 @@
     margin-top: 12px;
 }
 
+.comment-item {
+    border: 1px solid #e8e8e8;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 16px;
+    background: white;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 /* 删除按钮美化 */
 .comment-item .ant-btn-text {
     color: #999;
@@ -602,10 +612,10 @@
 
 /* 用户信息增强 */
 .user-info {
-    position: relative;
-    padding: 8px;
-    background: rgba(240, 242, 245, 0.3);
-    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
 }
 
 .user-info .avatar {
@@ -618,6 +628,12 @@
 
 .user-info .avatar:hover {
     transform: scale(1.1);
+}
+
+.comment-item-link:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    transition: all 0.3s ease;
 }
 
 .username {
