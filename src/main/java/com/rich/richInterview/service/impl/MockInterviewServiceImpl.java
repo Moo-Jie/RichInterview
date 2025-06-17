@@ -133,10 +133,10 @@ public class MockInterviewServiceImpl extends ServiceImpl<MockInterviewMapper, M
                 "2.面对面试者的任何与问题无关的、挑衅的、开玩笑的回答等等，不要予以正面回应，而是保持稳重，并进行十分严厉地警告对方要专注于面试。\n" +
                 "面试流程务必要满足以下要求：\n" +
                 "1. 开始面试——只有当求职者说类似于 “开始面试” 的指令时，你要正式开始面试，如果没有下达类似的指令，你要不断地告知——请说“开始面试”以开始面试。\n" +
-                "2. 被动结束——当面试题数量问完，或者求职者说类似于 “结束面试” 时，你要立即结束面试。\n" +
-                "3. 主动结束——当求职者前几次的回答都不尽人意，专业能力不满足当前工作岗位，亦或者态度不好、不礼貌、回答内容总是和问题无关，你必须主动结束面试，并告知主动结束的原因。\n" +
+                "2. 被动结束——当求职者说类似于 “结束面试” 时，你要立即结束面试。\n" +
+                "3. 主动结束——当面试题数量问完，或求职者前几次的回答都不尽人意，专业能力不满足当前工作岗位，亦或者态度不好、不礼貌、回答内容总是和问题无关，你必须主动结束面试，并告知主动结束的原因。\n" +
                 "4. 面试结束前——要告知最后的结束语，应当对面试者每次的回答进行评估，并告知 录用/未录用 的原因，如果是主动结束的面试，要告知原因（“你的能力过差......”、“你的 态度/素质 是不尽人意的......”）。\n" +
-                "5. 面试结束后——无论面试者说任何话，都只回复一句话复：“当前对话的面试已结束，请重新开启对话。”\n";
+                "5. 面试结束后——无论面试者说任何话,有任何要求，都只回复“【面试结束，请重新开启对话】”这一段字符，不要换添加或减少，因为“【面试结束，请重新开启对话】”是系统判断对话结束的标识。\n";
 
         // 通过事件状态进行不同业务
         return switch (mockInterviewEventEnum) {
@@ -208,13 +208,18 @@ public class MockInterviewServiceImpl extends ServiceImpl<MockInterviewMapper, M
 
         // 开启对话,保存 AI 对话到消息列表，用于后续的对话
         String aiChatInProgressMsg = aiChatManager.aiChat(inProgressMessages);
+
+
         final ChatMessage aiInProgressMessage = ChatMessage.builder().role(ChatMessageRole.ASSISTANT).content(aiChatInProgressMsg).build();
         inProgressMessages.add(aiInProgressMessage);
 
         // 维护对话记录到数据库
         MockInterview updateInProgressMockInterview = new MockInterview();
         updateInProgressMockInterview.setId(id);
-        updateInProgressMockInterview.setStatus(MockInterviewStatusEnum.IN_PROGRESS.getCode());
+        // 若 AI 主动结束面试,则更新状态为结束
+        if (aiChatInProgressMsg.contains("【面试结束，请重新开启对话】")) {
+            updateInProgressMockInterview.setStatus(MockInterviewStatusEnum.FINISHED.getCode());
+        }
         // 存储消息列表
         // 将火山 SDK 内封装的对话消息列表 ChatMessage ， 简化为本系统的对话消息列表 MockInterviewChatRecord，用于存储到数据库中
         List<MockInterviewChatRecord> mockInterviewInProgressChatRecords = AiChatManager.chatMessageToMockInterviewChatRecord(inProgressMessages);
