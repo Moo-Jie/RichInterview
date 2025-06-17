@@ -132,11 +132,11 @@ public class MockInterviewServiceImpl extends ServiceImpl<MockInterviewMapper, M
                 "1.说话要符合面试官严厉、凝练的口吻。" +
                 "2.面对面试者的任何与问题无关的、挑衅的、开玩笑的回答等等，不要予以正面回应，而是保持稳重，并进行十分严厉地警告对方要专注于面试。\n" +
                 "面试流程务必要满足以下要求：\n" +
-                "1. 只有当求职者说类似于 “开始面试” 的指令时，你要正式开始面试，如果没有下达类似的指令，你要不断地告知——请说“开始面试”以开始面试。\n" +
-                "2. 当面试题数量问完，或者求职者说类似于 “结束面试” 时，你要立即结束面试。\n" +
-                "3. 当求职者前几次的回答都不尽人意，专业能力不满足当前工作岗位，亦或者态度不好、不礼貌、回答内容总是和问题无关，你必须主动结束面试，并告知主动结束的原因。\n" +
-                "4. 面试结束后，要有结束语，应当对面试者每次的回答进行评估，并告知 录用/未录用 的原因，如果是主动结束的面试，要告知原因（“你的能力过差......”、“你的 态度/素质 是不尽人意的......”）。\n" +
-                "5. 当回复完结束语后，无论面试者说什么，都要统一回复：“当前对话的面试已结束，请重新开启对话。”\n";
+                "1. 开始面试——只有当求职者说类似于 “开始面试” 的指令时，你要正式开始面试，如果没有下达类似的指令，你要不断地告知——请说“开始面试”以开始面试。\n" +
+                "2. 被动结束——当面试题数量问完，或者求职者说类似于 “结束面试” 时，你要立即结束面试。\n" +
+                "3. 主动结束——当求职者前几次的回答都不尽人意，专业能力不满足当前工作岗位，亦或者态度不好、不礼貌、回答内容总是和问题无关，你必须主动结束面试，并告知主动结束的原因。\n" +
+                "4. 面试结束前——要告知最后的结束语，应当对面试者每次的回答进行评估，并告知 录用/未录用 的原因，如果是主动结束的面试，要告知原因（“你的能力过差......”、“你的 态度/素质 是不尽人意的......”）。\n" +
+                "5. 面试结束后——无论面试者说任何话，都只回复一句话复：“当前对话的面试已结束，请重新开启对话。”\n";
 
         // 通过事件状态进行不同业务
         return switch (mockInterviewEventEnum) {
@@ -157,10 +157,10 @@ public class MockInterviewServiceImpl extends ServiceImpl<MockInterviewMapper, M
     private String endChatEvent(MockInterview mockInterview, Long id) {
         // 从数据库中获取序列化后的历史消息，反序列化为 MockInterviewChatRecord，再转化为 ChatMessage 消息列表
         String endMessagesStr = mockInterview.getMessages();
-        List<ChatMessage> endMessages = AiChatManager
+        List<ChatMessage> endMessages = new ArrayList<>(AiChatManager
                 .mockInterviewChatRecordToChatMessage(JSONUtil
                         .parseArray(endMessagesStr)
-                        .toList(MockInterviewChatRecord.class));
+                        .toList(MockInterviewChatRecord.class)));
         // 构造结束对话，并添加到消息列表
         String endMsgPrompt = "结束面试";
         final ChatMessage endMessage = ChatMessage.builder().role(ChatMessageRole.USER).content(endMsgPrompt).build();
@@ -198,13 +198,12 @@ public class MockInterviewServiceImpl extends ServiceImpl<MockInterviewMapper, M
     private String inProgressEvent(MockInterview mockInterview, String mockInterviewEventRequest, Long id) {
         // 从数据库中获取序列化后的历史消息，反序列化为 MockInterviewChatRecord，再转化为 ChatMessage 消息列表
         String inProgressMessagesStr = mockInterview.getMessages();
-        List<ChatMessage> inProgressMessages = AiChatManager
+        List<ChatMessage> inProgressMessages = new ArrayList<>(AiChatManager
                 .mockInterviewChatRecordToChatMessage(JSONUtil
                         .parseArray(inProgressMessagesStr)
-                        .toList(MockInterviewChatRecord.class));
+                        .toList(MockInterviewChatRecord.class)));
         // 构造对话，并添加到消息列表
-        String inProgressMsgPrompt = mockInterviewEventRequest;
-        final ChatMessage inProgressMessage = ChatMessage.builder().role(ChatMessageRole.USER).content(inProgressMsgPrompt).build();
+        final ChatMessage inProgressMessage = ChatMessage.builder().role(ChatMessageRole.USER).content(mockInterviewEventRequest).build();
         inProgressMessages.add(inProgressMessage);
 
         // 开启对话,保存 AI 对话到消息列表，用于后续的对话

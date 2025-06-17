@@ -4,11 +4,13 @@ import cn.hutool.core.collection.CollUtil;
 import com.rich.richInterview.common.ErrorCode;
 import com.rich.richInterview.exception.BusinessException;
 import com.rich.richInterview.model.dto.mockInterview.MockInterviewChatRecord;
+import com.volcengine.StringUtil;
 import com.volcengine.ark.runtime.model.completion.chat.ChatCompletionChoice;
 import com.volcengine.ark.runtime.model.completion.chat.ChatCompletionRequest;
 import com.volcengine.ark.runtime.model.completion.chat.ChatMessage;
 import com.volcengine.ark.runtime.model.completion.chat.ChatMessageRole;
 import com.volcengine.ark.runtime.service.ArkService;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -129,7 +131,7 @@ public class AiChatManager {
     public static List<ChatMessage> mockInterviewChatRecordToChatMessage(List<MockInterviewChatRecord> mockInterviewChatRecords) {
         return mockInterviewChatRecords.stream().map(mockInterviewChatRecord -> {
             ChatMessage chatMessage = ChatMessage.builder()
-                    .role(ChatMessageRole.valueOf(mockInterviewChatRecord.getRole()))
+                    .role(ChatMessageRole.valueOf(StringUtils.upperCase(mockInterviewChatRecord.getRole())))
                     .content(mockInterviewChatRecord.getMessage()).build();
             return chatMessage;
         }).toList();
