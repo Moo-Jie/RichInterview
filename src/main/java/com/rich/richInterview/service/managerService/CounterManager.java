@@ -1,4 +1,4 @@
-package com.rich.richInterview.utils;
+package com.rich.richInterview.service.managerService;
 
 import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -13,14 +13,14 @@ import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 基于 Redis 的计数器工具包
+ * 基于 Redis 的计数器管理器
  * @return
  * @author DuRuiChi
  * @create 2025/6/6
  **/
 @Slf4j
 @Service
-public class CounterUtils {
+public class CounterManager {
 
     // 注入 RedissonClient 客户端对象，执行 Lua 脚本
     @Resource

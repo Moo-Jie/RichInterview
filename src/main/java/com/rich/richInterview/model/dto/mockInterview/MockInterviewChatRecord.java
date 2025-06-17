@@ -5,24 +5,22 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * 模拟面试事件请求
- */
+ * 模拟面试聊天记录
+ * @return
+ * @author DuRuiChi
+ * @create 2025/6/17
+ **/
 @Data
-public class MockInterviewEventRequest implements Serializable {
+public class MockInterviewChatRecord implements Serializable {
     /**
-     * 事件类型
+     * 角色
      */
-    private String event;
+    private String role;
 
     /**
-     * 消息
+     * 内容
      */
     private String message;
-
-    /**
-     * 事件房间 ID
-     */
-    private Long id;
 
     private static final long serialVersionUID = 1L;
 }

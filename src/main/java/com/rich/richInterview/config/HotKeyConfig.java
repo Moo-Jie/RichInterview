@@ -15,22 +15,22 @@ public class HotKeyConfig {
     /**
      * Etcd 服务器地址
      */
-    private String etcdServer = "http://127.0.0.1:2379";
+    private String etcdServer ;
 
     /**
      * 应用名称
      */
-    private String appName = "RichInterview";
+    private String appName ;
 
     /**
      * 本地缓存最大数量
      */
-    private int caffeineSize = 10000;
+    private int caffeineSize ;
 
     /**
      * 批量推送 key 的间隔时间
      */
-    private long pushPeriod = 1000L;
+    private long pushPeriod;
 
     /**
      * 初始化 hotkey

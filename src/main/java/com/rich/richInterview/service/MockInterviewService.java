@@ -36,5 +36,5 @@ public interface MockInterviewService extends IService<MockInterview> {
      * @param loginUser
      * @return
      */
-    String conductChatEvent(MockInterviewEventRequest mockInterviewEventRequest, User loginUser);
+    String doChatEvent(MockInterviewEventRequest mockInterviewEventRequest, User loginUser);
 }

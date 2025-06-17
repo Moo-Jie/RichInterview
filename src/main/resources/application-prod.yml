@@ -77,3 +77,6 @@ sa-token:
   token-style: uuid
   # 是否输出操作日志
   is-log: true
+
+huoshanai:
+  apikey: a8a15720-6982-41ea-9dce-8c9b5be82a5c

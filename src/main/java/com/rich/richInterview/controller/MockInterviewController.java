@@ -39,6 +39,25 @@ public class MockInterviewController {
     @Resource
     private UserService userService;
 
+    /**
+     * 进行模拟面试对话事件
+     *
+     * @param mockInterviewEventRequest
+     * @param request
+     * @return com.rich.richInterview.common.BaseResponse<java.lang.String>
+     * @author DuRuiChi
+     * @create 2025/6/11
+     **/
+    @PostMapping("/chatEvent")
+    @SaCheckRole(value = {UserConstant.ADMIN_ROLE, UserConstant.DEFAULT_ROLE}, mode = SaMode.OR)
+    public BaseResponse<String> doChatEvent(MockInterviewEventRequest mockInterviewEventRequest, HttpServletRequest request) {
+        // 获取当前登录用户
+        User loginUser = userService.getLoginUser(request);
+        // 执行对话事件
+        String aiResponseContent = mockInterviewService.doChatEvent(mockInterviewEventRequest, loginUser);
+        // 返回响应对话内容
+        return ResultUtils.success(aiResponseContent);
+    }
 
     /**
      * 创建模拟面试记录
@@ -164,24 +183,5 @@ public class MockInterviewController {
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
         }
         return ResultUtils.success(mockInterview);
-    }
-
-    /**
-     * 进行模拟面试对话事件
-     *
-     * @param mockInterviewEventRequest
-     * @param request
-     * @return com.rich.richInterview.common.BaseResponse<java.lang.String>
-     * @author DuRuiChi
-     * @create 2025/6/11
-     **/
-    @PostMapping("/cahtEvent")
-    @SaCheckRole(value = {UserConstant.ADMIN_ROLE, UserConstant.DEFAULT_ROLE}, mode = SaMode.OR)
-    public BaseResponse<String> conductChatEvent(MockInterviewEventRequest mockInterviewEventRequest, HttpServletRequest request) {
-        // 获取当前登录用户
-        User loginUser = userService.getLoginUser(request);
-
-        String aiResponseContent = mockInterviewService.conductChatEvent(mockInterviewEventRequest, loginUser);
-        return ResultUtils.success(aiResponseContent);
     }
 }

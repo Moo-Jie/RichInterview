@@ -3,6 +3,7 @@ package com.rich.richInterview.utils;
 import cn.dev33.satoken.stp.StpUtil;
 import com.rich.richInterview.common.ErrorCode;
 import com.rich.richInterview.exception.BusinessException;
+import com.rich.richInterview.service.managerService.CounterManager;
 import com.rich.richInterview.model.entity.User;
 import com.rich.richInterview.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class DetectCrawlersUtils {
     @Resource
-    private CounterUtils counterUtils;
+    private CounterManager counterManager;
     @Resource
     private UserService userService;
 
@@ -45,7 +46,7 @@ public class DetectCrawlersUtils {
         String key = String.format("user:access:%s", loginUserId);
         // 统计一分钟的窗口时间内访问次数
         // TODO 参数根据实际服务器负载调整
-        long count = counterUtils.incrAndGetCount(key, 1, TimeUnit.MINUTES);
+        long count = counterManager.incrAndGetCount(key, 1, TimeUnit.MINUTES);
         // 检测是否达到阈值
         // Ban
         if (count > BAN_COUNT) {

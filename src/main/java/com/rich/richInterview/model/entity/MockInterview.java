@@ -15,7 +15,7 @@ import java.util.Date;
 @Data
 public class MockInterview {
     /**
-     * id（雪花指定防爬）
+     * 对话房间 ID （雪花指定防爬）
      */
     @TableId(type = IdType.ASSIGN_ID)
     private Long id;
