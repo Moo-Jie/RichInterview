@@ -1,6 +1,6 @@
 .global-footer {
     position: fixed;
-    bottom: 0;
+    bottom: -100%;
     left: 0;
     right: 0;
     background: rgba(240, 240, 240, 0.3);
@@ -10,4 +10,27 @@
     box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.05);
     z-index: 1000;
     backdrop-filter: blur(8px);
+    font-size: 1.1rem;
+
+    transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* 延长动画时间并使用平滑曲线 */
+    will-change: bottom; /* 优化动画性能 */
+}
+
+.font-fm{
+    font-family: 'Comic Sans MS', '楷体', cursive;
+}
+
+.footer-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 80px;
+    z-index: 999;
+    overflow: visible;
+}
+
+.footer-container:hover .global-footer {
+    bottom: 0;
+    box-shadow: 0 -8px 25px rgba(0, 0, 0, 0.12); /* 增强阴影效果 */
 }

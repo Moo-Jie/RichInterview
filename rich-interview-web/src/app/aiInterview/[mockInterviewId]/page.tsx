@@ -271,7 +271,7 @@ export default function InterviewPage() {
           <div>
             <h1>
               <AuditOutlined />
-              {interviewData.jobPosition} 模拟面试
+              岗位 {interviewData.jobPosition} | RICH AI 模拟面试
             </h1>
             <br />
             <div className="flex items-center mt-4">
@@ -293,7 +293,135 @@ export default function InterviewPage() {
             </div>
           </div>
           <br />
+        </div>
+      </div>
 
+      {/* 聊天记录区域 - 现代化气泡设计 */}
+      <div className="id-header-section">
+        <div className="chat-container">
+          <div className="chat-header">
+            <h2>RICH AI 模拟面试对话</h2>
+            <div className="connection-status">
+              <div className="status-indicator connected"></div>
+              <span>已连接</span>
+            </div>
+          </div>
+
+          <div
+            id="chat-history"
+            className="chat-history"
+            ref={chatContainerRef}
+          >
+            {filteredMessages.length === 0 ? (
+              <div className="empty-state">
+                <div className="empty-state-icon">💬</div>
+                <h1>
+                  {interviewData.status === 0
+                    ? "面试尚未开始，请点击下方按钮开始面试"
+                    : interviewData.status === 1
+                      ? "请输入第一条消息开始对话"
+                      : "本次面试已结束"}
+                </h1>
+                <h3>准备好接受专业的技术面试挑战了吗？</h3>
+              </div>
+            ) : (
+              filteredMessages.map((msg, index) => (
+                <div
+                  key={index}
+                  className={`message-container ${
+                    msg.sender === "user" ? "user-message" : "ai-message"
+                  }`}
+                >
+                  <div className="message-bubble">
+                    <div className="message-sender">
+                      {msg.sender === "user" ? (
+                        <>
+                          <UserOutlined /> 您
+                        </>
+                      ) : (
+                        <>
+                          <AuditOutlined /> AI面试官
+                        </>
+                      )}
+                    </div>
+                    <div className="message-content">{msg.content}</div>
+                    <div className="message-time">
+                      {dayjs(msg.timestamp).isValid()
+                        ? dayjs(msg.timestamp).format("HH:mm")
+                        : "刚刚"}
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+
+        {/* 消息输入区域 - 玻璃态设计 */}
+
+        <div
+          className={`input-area ${interviewData.status !== 1 ? "input-disabled" : ""}`}
+        >
+          <Input.TextArea
+            value={newMessage}
+            onChange={(e) => setNewMessage(e.target.value)}
+            placeholder={
+              interviewData.status === 0
+                ? "面试尚未开始，请先开始面试"
+                : interviewData.status === 2
+                  ? "本次面试已结束"
+                  : "请输入您的回答..."
+            }
+            autoSize={{ minRows: 3, maxRows: 6 }}
+            disabled={interviewData.status !== 1 || sending}
+            onPressEnter={(e) => {
+              if (!e.shiftKey) {
+                e.preventDefault();
+                handleSendMessage();
+              }
+            }}
+            className="message-input"
+            allowClear
+            maxLength={500}
+            showCount={{
+              formatter: (info: { count: number; maxLength?: number }) =>
+                `${interviewData.status === 1 ? `${info.count}/${info.maxLength}` : ""}`,
+            }}
+            styles={{
+              textarea: {
+                transition: "all 0.3s",
+                scrollbarWidth: "thin",
+              },
+              count: {
+                color: "#ffffff",
+                background: "transparent",
+              },
+            }}
+          />
+          <br />
+          <br />
+          <div className="input-footer">
+            <span className="send-hint">
+              {interviewData.status === 1
+                ? "按Enter发送，Shift+Enter换行"
+                : "当前状态无法发送消息"}
+            </span>
+
+            <Button
+              type="primary"
+              onClick={handleSendMessage}
+              disabled={
+                !newMessage.trim() || interviewData.status !== 1 || sending
+              }
+              loading={sending}
+              className="send-button"
+            >
+              发送
+            </Button>
+          </div>
+        </div>
+      <br /><br /><br />
+        <div className="flex justify-between items-center flex-wrap">
           <div className="mt-4 md:mt-0">
             {interviewData.status === 0 && (
               <Button
@@ -317,130 +445,10 @@ export default function InterviewPage() {
                 className="id-copy-button"
                 style={{ fontSize: 20 }}
               >
-                提前结束面试
+                点击可提前结束面试
               </Button>
             )}
           </div>
-        </div>
-      </div>
-
-      {/* 聊天记录区域 - 现代化气泡设计 */}
-      <div className="chat-container">
-        <div className="chat-header">
-          <h2>AI模拟面试对话</h2>
-          <div className="connection-status">
-            <div className="status-indicator connected"></div>
-            <span>已连接</span>
-          </div>
-        </div>
-
-        <div id="chat-history" className="chat-history" ref={chatContainerRef}>
-          {filteredMessages.length === 0 ? (
-            <div className="empty-state">
-              <div className="empty-state-icon">💬</div>
-              <h2>
-                {interviewData.status === 0
-                  ? "面试尚未开始，请点击上方按钮开始面试"
-                  : interviewData.status === 1
-                    ? "请输入第一条消息开始对话"
-                    : "本次面试已结束"}
-              </h2>
-              <h4>准备好接受专业的技术面试挑战了吗？</h4>
-            </div>
-          ) : (
-            filteredMessages.map((msg, index) => (
-              <div
-                key={index}
-                className={`message-container ${
-                  msg.sender === "user" ? "user-message" : "ai-message"
-                }`}
-              >
-                <div className="message-bubble">
-                  <div className="message-sender">
-                    {msg.sender === "user" ? (
-                      <>
-                        <UserOutlined /> 您
-                      </>
-                    ) : (
-                      <>
-                        <AuditOutlined /> AI面试官
-                      </>
-                    )}
-                  </div>
-                  <div className="message-content">{msg.content}</div>
-                  <div className="message-time">
-                    {dayjs(msg.timestamp).isValid()
-                      ? dayjs(msg.timestamp).format("HH:mm")
-                      : "刚刚"}
-                  </div>
-                </div>
-              </div>
-            ))
-          )}
-        </div>
-      </div>
-
-      {/* 消息输入区域 - 玻璃态设计 */}
-      <div
-        className={`input-area ${interviewData.status !== 1 ? "input-disabled" : ""}`}
-      >
-        <Input.TextArea
-          value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
-          placeholder={
-            interviewData.status === 0
-              ? "面试尚未开始，请先开始面试"
-              : interviewData.status === 2
-                ? "本次面试已结束"
-                : "请输入您的回答..."
-          }
-          autoSize={{ minRows: 3, maxRows: 6 }}
-          disabled={interviewData.status !== 1 || sending}
-          onPressEnter={(e) => {
-            if (!e.shiftKey) {
-              e.preventDefault();
-              handleSendMessage();
-            }
-          }}
-          className="message-input"
-          allowClear
-          maxLength={500}
-          showCount={{
-            formatter: (info: { count: number; maxLength?: number }) =>
-              `${interviewData.status === 1 ? `${info.count}/${info.maxLength}` : ""}`,
-          }}
-          styles={{
-            textarea: {
-              transition: "all 0.3s",
-              scrollbarWidth: "thin",
-            },
-            count: {
-              color: "#ffffff",
-              background: "transparent",
-            },
-          }}
-        />
-        <br />
-        <br />
-        <br />
-        <div className="input-footer">
-          <span className="send-hint">
-            {interviewData.status === 1
-              ? "按Enter发送，Shift+Enter换行"
-              : "当前状态无法发送消息"}
-          </span>
-
-          <Button
-            type="primary"
-            onClick={handleSendMessage}
-            disabled={
-              !newMessage.trim() || interviewData.status !== 1 || sending
-            }
-            loading={sending}
-            className="send-button"
-          >
-            发送
-          </Button>
         </div>
       </div>
     </div>
