@@ -11,6 +11,69 @@ declare namespace API {
     message?: string;
   };
 
+  type getMockInterviewByIdUsingGETParams = {
+    /** id */
+    id: string;
+  };
+
+  type MockInterviewAddRequest = {
+    difficulty?: string;
+    jobPosition?: string;
+    workExperience?: string;
+  };
+
+  type BaseResponseMockInterview_ = {
+    code?: number;
+    data?: MockInterview;
+    message?: string;
+  };
+
+  type BaseResponsePageMockInterview_ = {
+    code?: number;
+    data?: PageMockInterview_;
+    message?: string;
+  };
+
+  type PageMockInterview_ = {
+    countId?: string;
+    current?: number;
+    maxLimit?: number;
+    optimizeCountSql?: boolean;
+    orders?: OrderItem[];
+    pages?: number;
+    records?: MockInterview[];
+    searchCount?: boolean;
+    size?: number;
+    total?: number;
+  };
+
+  type MockInterviewQueryRequest = {
+    createTime?: string;
+    current?: number;
+    difficulty?: string;
+    id?: number;
+    jobPosition?: string;
+    pageSize?: number;
+    sortField?: string;
+    sortOrder?: string;
+    updateTime?: string;
+    userId?: number;
+    workExperience?: string;
+  };
+
+  type MockInterview = {
+    createTime?: string;
+    difficulty?: string;
+    id?: number;
+    isDelete?: number;
+    jobPosition?: string;
+    messages?: string;
+    status?: number;
+    updateTime?: string;
+    userId?: number;
+    workExperience?: string;
+  };
+
   type setDefaultRoleUsingPUTParams = {
     /** role */
     role: string;
@@ -35,6 +98,12 @@ declare namespace API {
   type BaseResponseLong_ = {
     code?: number;
     data?: number;
+    message?: string;
+  };
+
+  type doChatEventUsingPOSTParams = {
+    event?: string;
+    id?: number;
     message?: string;
   };
 
@@ -219,7 +288,7 @@ declare namespace API {
     grade?: string;
     workExperience?: string;
     expertiseDirection?: string;
-    previousQuestionID ?: number;
+    previousQuestionID?: number;
   };
 
   type OrderItem = {
@@ -828,8 +897,6 @@ declare namespace API {
     title?: string;
   };
 
-
-
   type PageQuestionBankHotspotVO_ = {
     countId?: string;
     current?: number;
@@ -842,8 +909,6 @@ declare namespace API {
     size?: number;
     total?: number;
   };
-
-
 
   type getQuestionBankHotspotVOByIdUsingGETParams = {
     /** id */
@@ -1107,7 +1172,7 @@ declare namespace API {
     grade?: string;
     workExperience?: string;
     expertiseDirection?: string;
-    previousQuestionID ?: number;
+    previousQuestionID?: number;
   };
 
   type getUserSignInRecordUsingGETParams = {
@@ -1263,7 +1328,6 @@ declare namespace API {
     userId?: number;
   };
 
-
   type BaseResponseListCommentVO_ = {
     code?: number;
     data?: CommentVO[];
@@ -1323,5 +1387,4 @@ declare namespace API {
     data?: PageCommentVO_;
     message?: string;
   };
-
 }

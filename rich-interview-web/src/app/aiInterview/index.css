@@ -1,0 +1,271 @@
+/* 全局页面样式 - 增强科技感与专业性 */
+.ai-interview-page {
+    min-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f8fbff;
+}
+
+.table-title {
+    color: #1a2980;
+    font-weight: 600;
+    margin-bottom: 20px !important;
+    padding-left: 8px;
+    border-left: 4px solid #26d0ce;
+}
+
+/* 复制按钮美化 */
+.copy-button {
+    background: linear-gradient(135deg, #1a2980 0%, #26d0ce 100%) !important; /* 改为主题色 */
+    border: none !important;
+    color: white !important;
+    border-radius: 28px !important;
+    padding: 30px 52px !important;
+    font-size: 40px;
+    font-weight: 600;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    height: auto !important;
+    min-width: 600px;
+    min-height: 60px;
+    text-align: center;
+    margin: 0 auto;
+    box-shadow: 0 4px 20px rgba(26, 41, 128, 0.3);
+}
+
+.def-btn {
+    background: linear-gradient(135deg, #1a2980 0%, #26d0ce 100%) !important;
+    border: none !important;
+    color: white !important;
+    padding: 15px 18px !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    height: 25px !important;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(26, 41, 128, 0.3);
+}
+
+.copy-button::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 300%;
+    height: 300%;
+    background: rgba(255, 255, 255, 0.1);
+    transform: translate(-50%, -50%) rotate(45deg);
+    transition: all 0.5s;
+}
+
+.copy-button:hover {
+    box-shadow: 0 6px 25px rgba(26, 41, 128, 0.5);
+    transform: translateY(-3px) scale(1.05);
+    filter: brightness(1.2);
+}
+
+.copy-button .anticon {
+    transition: all 0.3s;
+    margin-left: 8px;
+    font-size: 18px;                   /* 放大图标 */
+}
+
+.copy-button:hover .anticon {
+    transform: translateX(5px) rotate(5deg); /* 增加旋转动画 */
+}
+
+
+.copy-button:hover {
+    box-shadow: 0 4px 15px rgba(74, 144, 226, 0.4);
+    transform: translateY(-2px);
+}
+
+.copy-button .anticon {
+    transition: transform 0.3s;
+}
+
+.copy-button:hover .anticon {
+    transform: translateX(3px);
+}
+
+
+.def-btn::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 300%;
+    height: 300%;
+    background: rgba(255, 255, 255, 0.1);
+    transform: translate(-50%, -50%) rotate(45deg);
+    transition: all 0.5s;
+}
+
+.def-btn:hover {
+    box-shadow: 0 6px 25px rgba(26, 41, 128, 0.5);
+    transform: translateY(-3px) scale(1.05);
+    filter: brightness(1.2);
+}
+
+.def-btn .anticon {
+    transition: all 0.3s;
+    margin-left: 8px;
+    font-size: 18px;                   /* 放大图标 */
+}
+
+.def-btn:hover .anticon {
+    transform: translateX(5px) rotate(5deg); /* 增加旋转动画 */
+}
+
+
+.def-btn:hover {
+    box-shadow: 0 4px 15px rgba(74, 144, 226, 0.4);
+    transform: translateY(-2px);
+}
+
+.def-btn .anticon {
+    transition: transform 0.3s;
+}
+
+.def-btn:hover .anticon {
+    transform: translateX(3px);
+}
+
+/* 头部区域样式 - 保持视觉冲击力 */
+.header-section {
+    text-align: center;
+    margin-bottom: 40px;
+    padding: 30px;
+    background: linear-gradient(135deg, #1a2980 0%, #26d0ce 100%);
+    border-radius: 16px;
+    color: white;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(26, 41, 128, 0.3);
+}
+
+/* 提示标签区域 - 新增样式 */
+.tips-section {
+    background: rgba(240, 249, 255, 0.8);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 25px;
+    border-left: 4px solid #1a2980;
+    backdrop-filter: blur(5px);
+    box-shadow: 0 4px 15px rgba(38, 208, 206, 0.1);
+    transition: all 0.3s ease;
+}
+
+.tips-section:hover {
+    box-shadow: 0 6px 20px rgba(38, 208, 206, 0.15);
+    transform: translateY(-2px);
+}
+
+.tips-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1a2980;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.tips-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.tip-tag {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(38, 208, 206, 0.3);
+    color: #1a2980;
+    padding: 6px 15px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(26, 41, 128, 0.05);
+}
+
+.tip-tag:hover {
+    background: linear-gradient(to right, rgba(26, 41, 128, 0.1), rgba(38, 208, 206, 0.1));
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(38, 208, 206, 0.2);
+}
+
+.tip-tag.active {
+    background: linear-gradient(to right, #1a2980, #26d0ce);
+    color: white;
+    border-color: transparent;
+}
+
+/* 特性卡片区域 - 优化间距 */
+.feature-highlights {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+    margin-bottom: 30px;
+}
+
+/* 主要内容区域 - 调整布局结构 */
+.content-card {
+    background: white;
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 8px 30px rgba(26, 41, 128, 0.1);
+    position: relative;
+    overflow: hidden;
+    transition: box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 操作区域 - 优化按钮样式 */
+.action-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.create-btn {
+    background: linear-gradient(to right, #1a2980, #26d0ce);
+    border: none;
+    border-radius: 30px;
+    padding: 10px 25px;
+    height: auto;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(26, 41, 128, 0.3);
+    transition: all 0.3s ease;
+    color: white;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* 表格区域 - 增强可读性 */
+.table-section {
+    margin-top: 15px;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .action-section {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .tips-content {
+        flex-direction: column;
+    }
+
+    .tip-tag {
+        width: 100%;
+    }
+}
