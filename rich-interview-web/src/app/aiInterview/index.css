@@ -16,7 +16,7 @@
 }
 
 /* 复制按钮美化 */
-.copy-button {
+.aiiw-copy-button {
     background: linear-gradient(135deg, #1a2980 0%, #26d0ce 100%) !important; /* 改为主题色 */
     border: none !important;
     color: white !important;
@@ -48,7 +48,7 @@
     box-shadow: 0 4px 20px rgba(26, 41, 128, 0.3);
 }
 
-.copy-button::after {
+.aiiw-copy-button::after {
     content: '';
     position: absolute;
     top: 50%;
@@ -60,33 +60,33 @@
     transition: all 0.5s;
 }
 
-.copy-button:hover {
+.aiiw-copy-button:hover {
     box-shadow: 0 6px 25px rgba(26, 41, 128, 0.5);
     transform: translateY(-3px) scale(1.05);
     filter: brightness(1.2);
 }
 
-.copy-button .anticon {
+.aiiw-copy-button .anticon {
     transition: all 0.3s;
     margin-left: 8px;
     font-size: 18px;                   /* 放大图标 */
 }
 
-.copy-button:hover .anticon {
+.aiiw-copy-button:hover .anticon {
     transform: translateX(5px) rotate(5deg); /* 增加旋转动画 */
 }
 
 
-.copy-button:hover {
+.aiiw-copy-button:hover {
     box-shadow: 0 4px 15px rgba(74, 144, 226, 0.4);
     transform: translateY(-2px);
 }
 
-.copy-button .anticon {
+.aiiw-copy-button .anticon {
     transition: transform 0.3s;
 }
 
-.copy-button:hover .anticon {
+.aiiw-copy-button:hover .anticon {
     transform: translateX(3px);
 }
 

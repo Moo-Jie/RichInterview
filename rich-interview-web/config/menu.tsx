@@ -89,11 +89,6 @@ export const sysMenus = [
         name: "贡献新面试题",
         access: AccessEnumeration.USER,
       },
-      {
-        path: "/communityCoConstruction/feedback",
-        name: "建言献策",
-        access: AccessEnumeration.USER,
-      },
     ],
   },
   {

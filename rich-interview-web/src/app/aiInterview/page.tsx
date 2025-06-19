@@ -38,22 +38,41 @@ export default function AIMockInterviewPage() {
   const [form] = Form.useForm();
   const { message } = App.useApp();
   const router = useRouter();
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 20,
+  });
 
   // 加载面试记录
-  const loadInterviews = async () => {
+  const loadInterviews = async (current = pagination.current, pageSize = pagination.pageSize) => {
     try {
       const res = await listMyMockInterviewByPageUsingPost({
-        pageSize: 10,
-        current: 1,
+        pageSize,
+        current,
       });
       // @ts-ignore
       if (res != null) {
         // @ts-ignore
         setInterviews(res.data?.records || []);
+        // 更新分页总数
+        setPagination(prev => ({
+          ...prev,
+          // @ts-ignore
+          total: res.data?.total || 0
+        }));
       }
     } catch (error) {
       message.error("加载面试记录失败");
     }
+  };
+
+  // 添加分页变化处理函数
+  const handlePaginationChange = (newPagination: any) => {
+    setPagination({
+      current: newPagination.current,
+      pageSize: newPagination.pageSize,
+    });
+    loadInterviews(newPagination.current, newPagination.pageSize);
   };
 
   // 删除面试记录
@@ -160,6 +179,7 @@ export default function AIMockInterviewPage() {
             type="primary"
             onClick={() => router.push(`/aiInterview/${record.id}`)}
             className="def-btn"
+            target="_blank"
           >
             进入面试
           </Button>
@@ -215,7 +235,7 @@ export default function AIMockInterviewPage() {
           <Button
             type="primary"
             onClick={() => setCreateModalVisible(true)}
-            className="copy-button"
+            className="aiiw-copy-button"
             icon={<RocketOutlined />}
           >
             点击开始面试
@@ -232,12 +252,18 @@ export default function AIMockInterviewPage() {
         </Typography.Title>
 
         <Table
-          columns={columns}
-          dataSource={interviews}
-          rowKey="id"
-          pagination={false}
-          className="interview-table"
-          rowClassName="interview-table-row"
+            columns={columns}
+            dataSource={interviews}
+            rowKey="id"
+            pagination={{
+              ...pagination,
+              showSizeChanger: true,
+              pageSizeOptions: ['5', '10', '20'],
+              showTotal: (total) => `共 ${total} 条`,
+              onChange: handlePaginationChange
+            }}
+            className="interview-table"
+            rowClassName="interview-table-row"
         />
 
         <Modal

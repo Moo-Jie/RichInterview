@@ -322,7 +322,7 @@ export default function InterviewPage() {
                       ? "请输入第一条消息开始对话"
                       : "本次面试已结束"}
                 </h1>
-                <h3>准备好接受专业的技术面试挑战了吗？</h3>
+                <h2>准备好接受专业的技术面试挑战了吗？</h2>
               </div>
             ) : (
               filteredMessages.map((msg, index) => (
@@ -391,7 +391,7 @@ export default function InterviewPage() {
               textarea: {
                 transition: "all 0.3s",
                 scrollbarWidth: "thin",
-              },
+            },
               count: {
                 color: "#ffffff",
                 background: "transparent",
@@ -407,30 +407,13 @@ export default function InterviewPage() {
                 : "当前状态无法发送消息"}
             </span>
 
-            <Button
-              type="primary"
-              onClick={handleSendMessage}
-              disabled={
-                !newMessage.trim() || interviewData.status !== 1 || sending
-              }
-              loading={sending}
-              className="send-button"
-            >
-              发送
-            </Button>
-          </div>
-        </div>
-      <br /><br /><br />
-        <div className="flex justify-between items-center flex-wrap">
-          <div className="mt-4 md:mt-0">
             {interviewData.status === 0 && (
               <Button
                 type="primary"
                 size="large"
                 onClick={() => handleChatEvent("start")}
                 loading={sending}
-                className="id-copy-button"
-                style={{ fontSize: 20 }}
+                className="send-button"
               >
                 开始面试
               </Button>
@@ -442,13 +425,31 @@ export default function InterviewPage() {
                 size="large"
                 onClick={() => handleChatEvent("end")}
                 loading={sending}
-                className="id-copy-button"
-                style={{ fontSize: 20 }}
+                className="send-button"
               >
                 点击可提前结束面试
               </Button>
             )}
+
+            <Button
+              danger
+              size="large"
+              onClick={handleSendMessage}
+              disabled={
+                !newMessage.trim() || interviewData.status !== 1 || sending
+              }
+              loading={sending}
+              className="send-button"
+            >
+              发送
+            </Button>
           </div>
+        </div>
+        <br />
+        <br />
+        <br />
+        <div className="flex justify-between items-center flex-wrap">
+          <div className="mt-4 md:mt-0"></div>
         </div>
       </div>
     </div>

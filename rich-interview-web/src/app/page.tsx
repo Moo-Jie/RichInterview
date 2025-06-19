@@ -34,18 +34,18 @@ export const dynamic = "force-dynamic";
 
 const carouselItems = [
   {
-    href: "/aiInterview",
-    imgSrc: "/assets/pictures/carousel/carousel08.png",
-    alt: "模拟面试",
-    title: "AI模拟面试",
-    description: "真实面试环境演练"
-  },
-  {
     href: "/banks",
     imgSrc: "/assets/pictures/carousel/carousel05.png",
     alt: "精选题库",
     title: "精选面试题库",
     description: "覆盖大厂高频考题"
+  },
+  {
+    href: "/aiInterview",
+    imgSrc: "/assets/pictures/carousel/carousel08.png",
+    alt: "模拟面试",
+    title: "AI模拟面试",
+    description: "真实面试环境演练"
   },
   {
     href: "/questions",
