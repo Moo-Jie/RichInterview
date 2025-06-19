@@ -35,35 +35,35 @@ export const dynamic = "force-dynamic";
 const carouselItems = [
   {
     href: "/banks",
-    imgSrc: "/assets/pictures/carousel/carousel05.png",
+    imgSrc: "https://rich-tams.oss-cn-beijing.aliyuncs.com/carousel/carousel05.png",
     alt: "精选题库",
     title: "精选面试题库",
     description: "覆盖大厂高频考题"
   },
   {
     href: "/aiInterview",
-    imgSrc: "/assets/pictures/carousel/carousel08.png",
+    imgSrc: "https://rich-tams.oss-cn-beijing.aliyuncs.com/carousel/carousel08.png",
     alt: "模拟面试",
     title: "AI模拟面试",
     description: "真实面试环境演练"
   },
   {
     href: "/questions",
-    imgSrc: "/assets/pictures/carousel/carousel09.png",
+    imgSrc: "https://rich-tams.oss-cn-beijing.aliyuncs.com/carousel/carousel09.png",
     alt: "题目大全",
     title: "每日刷题挑战",
     description: "保持你的刷题手感"
   },
   {
     href: "/communityCoConstruction/contributionQuestion",
-    imgSrc: "/assets/pictures/carousel/carousel02.png",
+    imgSrc: "https://rich-tams.oss-cn-beijing.aliyuncs.com/carousel/carousel02.png",
     alt: "贡献面试题",
     title: "贡献你遇到的全新面试题",
     description: "刷友面试新题互享"
   },
   {
     href: "/communityCoConstruction/hotComments",
-    imgSrc: "/assets/pictures/carousel/carousel03.png",
+    imgSrc: "https://rich-tams.oss-cn-beijing.aliyuncs.com/carousel/carousel03.png",
     alt: "刷友热评",
     title: "刷友热评",
     description: "积极讨论百家争鸣"
