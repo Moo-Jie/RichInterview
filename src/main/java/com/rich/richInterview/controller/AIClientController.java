@@ -57,17 +57,24 @@ public class AIClientController {
     public BaseResponse<String> queryAI(@RequestParam String question)
             throws ApiException, NoApiKeyException, InputRequiredException {
         Generation gen = new Generation();
+
+        // 系统角色消息（原 defaultRole 内容）
+        Message systemMsg = Message.builder()
+                .role(Role.SYSTEM.getValue())  // 使用预定义 SYSTEM 角色
+                .content(defaultRole)  // 将原角色设定移到 content
+                .build();
+
+
+        // 用户问题消息
         Message userMsg = Message.builder()
-                .role(defaultRole)
-                // 构建用户消息
-                .content("现在我要问你一个面试题，请你以面试者的身份简明扼要地、总结性地、在短时间内快速地回答我的问题 " +
-                        question)
+                .role(Role.USER.getValue())  // 使用预定义 USER 角色
+                .content("现在我要问你一个面试题，请你以面试者的身份简明扼要地、总结性地、在短时间内快速地回答我的问题 " + question)
                 .build();
 
         GenerationParam param = GenerationParam.builder()
                 .apiKey(API_KEY)
                 .model(AI_Model)
-                .messages(Arrays.asList(userMsg))
+                .messages(Arrays.asList(systemMsg, userMsg))  // 包含两条消息
                 .resultFormat(GenerationParam.ResultFormat.MESSAGE)
                 .build();
 

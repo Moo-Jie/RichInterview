@@ -110,12 +110,12 @@ const AiCallComponent = () => {
                   <div className="hint-content">
                     <span className="gradient-text">RICH</span>
                     <span className="animated-text">
-                      马上为您一次性构建完整全面的帮助文档
+                      &nbsp;&nbsp;&nbsp;马上为您一次性构建完整全面的帮助文档
                     </span>
                     <div className="shine"></div>
                   </div>
                 </div>
-                <div>RICH 正在思考中（已耗时 {thinkingSeconds} 秒）...</div>
+                  <div style={{ fontSize : 18 }}>&nbsp;&nbsp;&nbsp;&nbsp; RICH 正在思考中（已耗时 {thinkingSeconds} 秒）...</div>
                 {/* 20秒提示 */}
                 {thinkingSeconds >= 20 && (
                   <div className="long-time-hint">
