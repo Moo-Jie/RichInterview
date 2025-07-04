@@ -11,9 +11,9 @@ export const ConstantBasicMsg = {
   DEFAULT_PROJECT_LOGO:
       "https://rich-tams.oss-cn-beijing.aliyuncs.com/LOGO.jpg",
   // 项目版本号
-  PROJECT_VERSION: "1.8.0",
+  PROJECT_VERSION: "2.0.0",
   // 项目最近更新时间
-  PROJECT_LAST_UPDATE_TIME: "2025-05-25",
+  PROJECT_LAST_UPDATE_TIME: "2025-06-25",
   // 项目描述
   PROJECT_DESCRIPTION: "",
   // 项目中文名

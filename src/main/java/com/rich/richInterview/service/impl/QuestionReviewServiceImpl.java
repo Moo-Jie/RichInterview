@@ -29,6 +29,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -277,6 +278,7 @@ public class QuestionReviewServiceImpl extends ServiceImpl<QuestionReviewMapper,
         // 设置审核信息
         question.setReviewerId(reviewer.getId());
         question.setReviewStatus(ReviewStatusEnum.PASS.getCode());
+        question.setReviewTime(new Date());
 
         // 同步到题目表
         boolean saveResult = questionService.save(question);

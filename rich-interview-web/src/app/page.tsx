@@ -1,10 +1,19 @@
 import {listQuestionBankVoByPageUsingPost} from "@/api/questionBankController";
 import {listQuestionVoByPageUsingPost} from "@/api/questionController";
 import Title from "antd/es/typography/Title";
-import {Card, Flex, message} from "antd";
+import {Card, Flex} from "antd";
 import Link from "next/link";
 import QuestionBankListVoComponent from "../components/QuestionBankListVoComponent";
-import {EyeFilled, LikeFilled, RightOutlined} from "@ant-design/icons";
+import {
+    CalendarFilled,
+    EditFilled,
+    EyeFilled,
+    LikeFilled,
+    MessageFilled,
+    ReadFilled,
+    RightOutlined,
+    RobotFilled,
+} from "@ant-design/icons";
 import Sider from "antd/es/layout/Sider";
 import QuestionListVo from "@/components/QuestionListVoComponent";
 import AiCallComponent from "@/components/aiCallComponent";
@@ -13,9 +22,9 @@ import {listQuestionHotspotVoByPageUsingPost} from "@/api/questionHotspotControl
 import RecentStudy from "@/components/RecentStudyComponent";
 import DailyPracticeComponent from "@/components/DailyPracticeComponent";
 import MiniQuestionBankHotspotChart
-  from "@/components/hotspotchartsComponents/questionBankHotspotchartsComponents/MiniQuestionBankHotspotChart";
+    from "@/components/hotspotchartsComponents/questionBankHotspotchartsComponents/MiniQuestionBankHotspotChart";
 import MiniQuestionHotspotChart
-  from "@/components/hotspotchartsComponents/questionHotspotchartsComponents/MiniQuestionHotspotChart";
+    from "@/components/hotspotchartsComponents/questionHotspotchartsComponents/MiniQuestionHotspotChart";
 import styles from "./page.module.css";
 import CarouselComponent from "@/components/CarouselComponents";
 
@@ -35,39 +44,49 @@ export const dynamic = "force-dynamic";
 const carouselItems = [
   {
     href: "/banks",
-    imgSrc: "/assets/pictures/carousel/carousel05.png",
+    // imgSrc: "/assets/pictures/carousel/carousel05.png",
+    backgroundColor: "#e0f0ff", // 浅蓝色
     alt: "精选题库",
     title: "精选面试题库",
-    description: "覆盖大厂高频考题"
+    description: "覆盖大厂高频考题",
+    icon: <ReadFilled />,
   },
   {
     href: "/aiInterview",
-    imgSrc: "/assets/pictures/carousel/carousel08.png",
+    // imgSrc: "/assets/pictures/carousel/carousel08.png",
+    backgroundColor: "#ffe6cc", // 浅橙色
     alt: "模拟面试",
     title: "AI模拟面试",
-    description: "真实面试环境演练"
+    description: "真实面试环境演练",
+    icon: <RobotFilled />,
   },
   {
     href: "/questions",
-    imgSrc: "/assets/pictures/carousel/carousel09.png",
+    // imgSrc: "/assets/pictures/carousel/carousel09.png",
+    backgroundColor: "#d4fffe", // 浅绿色
     alt: "题目大全",
     title: "每日刷题挑战",
-    description: "保持你的刷题手感"
+    description: "保持你的刷题手感",
+    icon: <CalendarFilled />,
   },
   {
     href: "/communityCoConstruction/contributionQuestion",
-    imgSrc: "/assets/pictures/carousel/carousel02.png",
+    // imgSrc: "/assets/pictures/carousel/carousel02.png",
+    backgroundColor: "#ffe0ed", // 浅粉色
     alt: "贡献面试题",
     title: "贡献你遇到的全新面试题",
-    description: "刷友面试新题互享"
+    description: "刷友面试新题互享",
+    icon: <EditFilled />,
   },
   {
     href: "/communityCoConstruction/hotComments",
-    imgSrc: "/assets/pictures/carousel/carousel03.png",
+    // imgSrc: "/assets/pictures/carousel/carousel03.png",
+    backgroundColor: "#eee0ff", // 浅紫色
     alt: "刷友热评",
     title: "刷友热评",
-    description: "积极讨论百家争鸣"
-  }
+    description: "积极讨论百家争鸣",
+    icon: <MessageFilled />,
+  },
 ];
 
 export default async function HomePage() {
@@ -99,7 +118,7 @@ export default async function HomePage() {
     // @ts-ignore
     questionListVo = res.data.records ?? [];
   } catch (e: any) {
-    console.error("无法获取题目信息，因为" , e);
+    console.error("无法获取题目信息，因为", e);
   }
 
   // 热点题目列表
@@ -113,7 +132,7 @@ export default async function HomePage() {
     // @ts-ignore
     questionHotspotListVo = res.data.records ?? [];
   } catch (e: any) {
-    console.error("无法获取热点题目信息，因为" , e);
+    console.error("无法获取热点题目信息，因为", e);
   }
 
   // 热点题库列表
@@ -129,7 +148,7 @@ export default async function HomePage() {
     // @ts-ignore
     questionBankHotspotListVo = res.data.records ?? [];
   } catch (e: any) {
-    console.error("无法获取热门题库信息，因为" , e);
+    console.error("无法获取热门题库信息，因为", e);
   }
 
   return (

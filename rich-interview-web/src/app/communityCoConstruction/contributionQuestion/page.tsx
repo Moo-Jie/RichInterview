@@ -118,7 +118,7 @@ export default function ContributionPage() {
                 tokenSeparators: [","],
                 options: [
                   { label: "简单", value: "简单" },
-                  { label: "中等", value: "中等" },
+                  { label: "普通", value: "普通" },
                   { label: "困难", value: "困难" },
                   { label: "JAVA", value: "JAVA" },
                   { label: "JavaScript", value: "JavaScript" },
@@ -145,7 +145,7 @@ export default function ContributionPage() {
                   message: "至少包含一个难度标签",
                   validator: (_, value) =>
                     value?.some((v: string) =>
-                      ["简单", "中等", "困难"].includes(v),
+                      ["简单", "普通", "困难"].includes(v),
                     )
                       ? Promise.resolve()
                       : Promise.reject(),

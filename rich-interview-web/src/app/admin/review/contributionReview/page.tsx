@@ -180,7 +180,7 @@ const ContributionReviewPage: React.FC = () => {
     },
     {
       title: "标签",
-      tooltip: "本系统标签规范：首部为难度标签（简单/中等/困难）",
+      tooltip: "本系统标签规范：首部为难度标签（简单/普通/困难）",
       dataIndex: "tags",
       width: 200,
       valueType: "select",
@@ -189,7 +189,7 @@ const ContributionReviewPage: React.FC = () => {
         mode: "tags",
         options: [
           { label: "简单", value: "简单" },
-          { label: "中等", value: "中等" },
+          { label: "普通", value: "普通" },
           { label: "困难", value: "困难" },
         ],
         tokenSeparators: [","],
@@ -199,9 +199,9 @@ const ContributionReviewPage: React.FC = () => {
         rules: [
           {
             required: true,
-            message: "必须包含难度标签（简单/中等/困难）",
+            message: "必须包含难度标签（简单/普通/困难）",
             validator: (_, value) =>
-              value?.some((v: string) => ["简单", "中等", "困难"].includes(v))
+              value?.some((v: string) => ["简单", "普通", "困难"].includes(v))
                 ? Promise.resolve()
                 : Promise.reject(new Error("必须包含难度标签")),
           },

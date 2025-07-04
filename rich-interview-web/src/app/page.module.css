@@ -8,6 +8,19 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 }
 
+.iconWrapper {
+  font-size: 3.5rem;
+  margin-bottom: 1.5rem;
+  height: 60px;
+  filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.2));
+  transition: transform 0.5s ease;
+  align-items: center;
+}
+
+.carouselItem:hover .iconWrapper {
+  transform: scale(1.1) rotate(-5deg);
+}
+
 .section-title {
   margin-bottom: 0 !important;
   color: rgba(0, 0, 0, 0.85);
@@ -265,10 +278,14 @@
 /* 走马灯容器 */
 .carouselContainer {
   margin-bottom: 24px;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+
   height: 280px;
+
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
 }
 
 /* 轮播项 */
@@ -276,6 +293,44 @@
   display: block;
   position: relative;
   height: 280px;
+}
+
+/* 动态遮罩层 */
+.colorOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /*animation: stripeMove 20s linear infinite;*/
+  background: repeating-linear-gradient(
+          45deg,
+          rgba(0,0,0,0.08) 0px,
+          rgba(0,0,0,0.08) 216px,
+          rgba(255,255,255,0.1) 216px,
+          rgba(255,255,255,0.1) 448px
+  );
+  opacity: 0.6;
+}
+
+.slideContent::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(
+          circle at 50% 50%,
+          rgba(255,255,255,0.2) 0%,
+          rgba(255,255,255,0) 60%
+  );
+  pointer-events: none;
+}
+
+/* 悬浮动画 */
+.carouselItem:hover .colorOverlay {
+  opacity: 1;
 }
 
 /* 图片容器 */
@@ -293,8 +348,8 @@
 /* 文字内容 */
 .slideText {
   position: absolute;
-  bottom: 20%;
-  left: 10%;
+  bottom: 15%;
+  left: 20%;
   color: #ffffff;
   text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
   font-family: 'Comic Sans MS', '楷体', cursive;
@@ -317,6 +372,22 @@
 
 .slideText p {
   font-size: 1.8rem;
+}
+
+/* 斜纹动画 */
+@keyframes stripeMove {
+  0% { background-position: 0 0; }
+  100% { background-position: 40px 40px; }
+}
+
+/* 响应式优化 */
+@media (max-width: 768px) {
+  .slideText h3 {
+    font-size: 2rem !important;
+  }
+  .slideText p {
+    font-size: 1.4rem !important;
+  }
 }
 
 /* 响应式调整 */
@@ -355,4 +426,21 @@
     transform: translateX(0);
     opacity: 1;
   }
+}
+
+/* 激活态动画 */
+.carouselItem.active .slideText h3,
+.carouselItem.active .slideText p {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* 指示点优化 */
+.dots li button {
+  background: rgba(255,255,255,0.5) !important;
+}
+
+.dots li.slick-active button {
+  background: rgba(255,255,255,0.9) !important;
+  transform: scale(1.2);
 }

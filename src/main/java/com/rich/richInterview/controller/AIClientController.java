@@ -92,8 +92,4 @@ public class AIClientController {
     public void setMaxWaitTime(@RequestParam int milliseconds) {
         this.maxWaitTime = milliseconds;
     }
-
-    public int getMaxWaitTime() {
-        return maxWaitTime;
-    }
 }

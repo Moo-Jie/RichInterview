@@ -237,7 +237,7 @@ const QuestionAdminPage: React.FC = () => {
     },
     {
       title: "标签",
-      tooltip: "本系统标签规范：首部为难度标签（简单/中等/困难）",
+      tooltip: "本系统标签规范：首部为难度标签（简单/普通/困难）",
       dataIndex: "tags",
       width: 200,
       valueType: "select",
@@ -246,7 +246,7 @@ const QuestionAdminPage: React.FC = () => {
         mode: "tags",
         options: [
           { label: "简单", value: "简单" },
-          { label: "中等", value: "中等" },
+          { label: "普通", value: "普通" },
           { label: "困难", value: "困难" },
         ],
         tokenSeparators: [","],
@@ -256,9 +256,9 @@ const QuestionAdminPage: React.FC = () => {
         rules: [
           {
             required: true,
-            message: "必须包含难度标签（简单/中等/困难）",
+            message: "必须包含难度标签（简单/普通/困难）",
             validator: (_, value) =>
-              value?.some((v: string) => ["简单", "中等", "困难"].includes(v))
+              value?.some((v: string) => ["简单", "普通", "困难"].includes(v))
                 ? Promise.resolve()
                 : Promise.reject(new Error("必须包含难度标签")),
           },
@@ -295,10 +295,11 @@ const QuestionAdminPage: React.FC = () => {
       title: "审批状态",
       dataIndex: "reviewStatus",
       width: 200,
+      hideInForm: true,
       valueEnum: {
-        0: { text: "待审核" },
-        1: { text: "通过" },
-        2: { text: "未通过" },
+        0: { text: "待审核", status: "Processing" },
+        1: { text: "已通过", status: "Success" },
+        2: { text: "未通过", status: "Error" },
       },
       filters: true,
     },
