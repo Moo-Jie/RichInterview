@@ -30,3 +30,59 @@
 • Redux 状态管理        
 • TypeScript + ESLint + Prettier 代码规范         
 • OpenAPI 风格       
+
+# 项目体验        
+
+环境：谷歌浏览器、edge浏览器       
+            
+[（点击跳转）  Rich面试刷题平台 - 官网](http://暂不公布)      
+               
+# 部署项目
+
+### 测试与开发环境
+
+操作系统：win11
+
+JAVA版本：jdk17（jdk8+）
+
+Node版本：v20.17.0（v18.8.0+）
+
+Nginx版本：1.26.3
+
+### 源码部署
+
+1.JDK 版本
+
+JAVA 版本 - jdk17（jdk8+） Node 版本 - v20.17.0（v18.8.0+） Nginx 版本 - 1.26.3
+
+2.数据库录入
+
+运行项目内 SQL 脚本
+
+3.启动附带中间件
+
+（1）启动 Redis
+
+在 【项目根目录\bat】 修改 Redis 启动脚本的启动路径为你的 Redis 本地路径，双击运行即可
+
+（后续的中间件：本项目已实现接口降级逻辑 ，即使不部署中间件仍可启动，若您不想使用该功能，跳过即可）
+
+（2）启动 nacos
+
+在 【项目根目录\bat】 修改 nacos 启动脚本的启动路径为你的 nacos 本地路径，双击运行即可, 组件包可在 [（点击跳转）RichInterviewComponents ](https://github.com/Moo-Jie/RichInterviewComponents)   拉取
+
+（3）启动 sentinel-dashboard-1.8.6.jar
+
+在 【项目根目录\bat】 修改 sentinel 启动脚本的启动路径为 【项目根目录\lib\sentinel-dashboard-1.8.6.jar】，运行即可
+
+（4）启动 Elasticsearch
+
+双击【\elasticsearch-7.17.23\bin\elasticsearch.bat】, 组件包可在 [（点击跳转）RichInterviewComponents ](https://github.com/Moo-Jie/RichInterviewComponents)   拉取
+
+（5）启动 Hot Key
+
+部署请移步 [（点击跳转）RichInterview-JD-HotKey-components  ](https://github.com/Moo-Jie/RichInterview-JD-HotKey-components)     
+
+4.调整【src/main/resources/application.yml】 的 Mysql、Redis 、x-file-storage、nacos、sa-token 等配置信息。
+
+5.启动前后端即可
