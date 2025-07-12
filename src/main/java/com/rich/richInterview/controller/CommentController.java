@@ -1,11 +1,9 @@
 package com.rich.richInterview.controller;
 
-import cn.dev33.satoken.annotation.SaCheckRole;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.rich.richInterview.common.BaseResponse;
 import com.rich.richInterview.common.DeleteRequest;
 import com.rich.richInterview.common.ErrorCode;
-import com.rich.richInterview.constant.UserConstant;
 import com.rich.richInterview.exception.BusinessException;
 import com.rich.richInterview.exception.ThrowUtils;
 import com.rich.richInterview.model.dto.comment.CommentAddRequest;
@@ -17,7 +15,6 @@ import com.rich.richInterview.service.CommentService;
 import com.rich.richInterview.service.UserService;
 import com.rich.richInterview.utils.ResultUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -135,6 +132,7 @@ public class CommentController {
 
     /**
      * 点赞评论
+     *
      * @param idRequest 评论ID
      * @param request   用户登录态
      * @return com.rich.richInterview.common.BaseResponse<java.lang.Boolean>

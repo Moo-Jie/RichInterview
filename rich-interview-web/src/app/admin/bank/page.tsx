@@ -44,7 +44,7 @@ const QuestionBankAdminPage: React.FC = () => {
           setSelectedRows([]);
         } catch (error: any) {
           hide();
-          message.error("删除失败，" + error.message);
+          message.error("删除失败，检查是否有关联题目，或联系管理员");
         }
       },
     });
@@ -65,7 +65,7 @@ const QuestionBankAdminPage: React.FC = () => {
           actionRef.current?.reload();
         } catch (error: any) {
           hide();
-          message.error("删除失败，" + error.message);
+          message.error("删除失败，检查是否有关联题目，或联系管理员");
         }
       },
     });

@@ -18,11 +18,13 @@ import com.rich.richInterview.model.dto.question.*;
 import com.rich.richInterview.model.dto.questionBankQuestion.QuestionBankQuestionAddRequest;
 import com.rich.richInterview.model.entity.Question;
 import com.rich.richInterview.model.entity.QuestionBankQuestion;
+import com.rich.richInterview.model.entity.QuestionHotspot;
 import com.rich.richInterview.model.entity.User;
 import com.rich.richInterview.model.enums.ReviewStatusEnum;
 import com.rich.richInterview.model.vo.QuestionVO;
 import com.rich.richInterview.model.vo.UserVO;
 import com.rich.richInterview.service.QuestionBankQuestionService;
+import com.rich.richInterview.service.QuestionHotspotService;
 import com.rich.richInterview.service.QuestionService;
 import com.rich.richInterview.service.UserService;
 import com.rich.richInterview.utils.SqlUtils;
@@ -36,6 +38,7 @@ import org.elasticsearch.search.sort.SortBuilder;
 import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.BeanUtils;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 import org.springframework.data.elasticsearch.core.SearchHit;
@@ -68,6 +71,10 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
 
     @Resource
     private ElasticsearchRestTemplate elasticsearchRestTemplate;
+
+    @Lazy
+    @Resource
+    private QuestionHotspotService questionHotspotService;
 
     /**
      * 校验数据
@@ -351,6 +358,14 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         if (!oldQuestion.getUserId().equals(user.getId()) && !userService.isAdmin(request)) {
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
         }
+        // 删除题目题库关系
+        QueryWrapper<QuestionBankQuestion> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("questionId", id);
+        questionBankQuestionService.remove(queryWrapper);
+        // 删除题目热点数据
+        QueryWrapper<QuestionHotspot> questionQueryWrapper = new QueryWrapper<>();
+        questionQueryWrapper.eq("questionId", id);
+        questionHotspotService.remove(questionQueryWrapper);
         // 操作数据库
         boolean result = this.removeById(id);
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);

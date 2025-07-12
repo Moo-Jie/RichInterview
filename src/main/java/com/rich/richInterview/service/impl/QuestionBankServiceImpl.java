@@ -16,19 +16,16 @@ import com.rich.richInterview.model.dto.questionBank.QuestionBankAddRequest;
 import com.rich.richInterview.model.dto.questionBank.QuestionBankEditRequest;
 import com.rich.richInterview.model.dto.questionBank.QuestionBankQueryRequest;
 import com.rich.richInterview.model.dto.questionBank.QuestionBankUpdateRequest;
-import com.rich.richInterview.model.entity.Question;
-import com.rich.richInterview.model.entity.QuestionBank;
-import com.rich.richInterview.model.entity.User;
+import com.rich.richInterview.model.entity.*;
 import com.rich.richInterview.model.vo.QuestionBankVO;
 import com.rich.richInterview.model.vo.UserVO;
-import com.rich.richInterview.service.QuestionBankService;
-import com.rich.richInterview.service.QuestionService;
-import com.rich.richInterview.service.UserService;
+import com.rich.richInterview.service.*;
 import com.rich.richInterview.utils.SqlUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -43,7 +40,6 @@ import java.util.stream.Collectors;
 
 /**
  * 题库服务实现
- *
  */
 @Service
 @Slf4j
@@ -55,11 +51,20 @@ public class QuestionBankServiceImpl extends ServiceImpl<QuestionBankMapper, Que
     @Resource
     private QuestionService questionService;
 
+    @Resource
+    @Lazy
+    private QuestionBankHotspotService questionBankHotspotService;
+
+    @Resource
+    @Lazy
+    private QuestionBankQuestionService questionBankQuestionService;
+    ;
+
     /**
      * 校验数据
      *
      * @param questionBank
-     * @param add      对创建的数据进行校验
+     * @param add          对创建的数据进行校验
      */
     @Override
     public void validQuestionBank(QuestionBank questionBank, boolean add) {
@@ -143,7 +148,7 @@ public class QuestionBankServiceImpl extends ServiceImpl<QuestionBankMapper, Que
         QuestionBankVO questionBankVO = QuestionBankVO.objToVo(questionBank);
 
         // todo 根据需要为封装对象补充值
-         
+
         // 1. 关联查询用户信息
         Long userId = questionBank.getUserId();
         User user = null;
@@ -179,7 +184,7 @@ public class QuestionBankServiceImpl extends ServiceImpl<QuestionBankMapper, Que
         }).collect(Collectors.toList());
 
         // todo 根据需要为封装对象补充值
-         
+
         // 1. 关联查询用户信息
         Set<Long> userIdSet = questionBankList.stream().map(QuestionBank::getUserId).collect(Collectors.toSet());
         Map<Long, List<User>> userIdUserListMap = userService.listByIds(userIdSet).stream()
@@ -202,7 +207,7 @@ public class QuestionBankServiceImpl extends ServiceImpl<QuestionBankMapper, Que
             questionBankVO.setUser(userService.getUserVO(user));
 
         });
-         
+
 
         questionBankVOPage.setRecords(questionBankVOList);
         return questionBankVOPage;
@@ -210,6 +215,7 @@ public class QuestionBankServiceImpl extends ServiceImpl<QuestionBankMapper, Que
 
     /**
      * 创建题库(仅管理员权限)
+     *
      * @param questionBankAddRequest
      * @param request
      * @return java.lang.Long
@@ -242,6 +248,7 @@ public class QuestionBankServiceImpl extends ServiceImpl<QuestionBankMapper, Que
 
     /**
      * 删除题库(仅管理员权限)
+     *
      * @param deleteRequest
      * @param request
      * @return java.lang.Boolean
@@ -262,6 +269,17 @@ public class QuestionBankServiceImpl extends ServiceImpl<QuestionBankMapper, Que
         if (!oldQuestionBank.getUserId().equals(user.getId()) && !userService.isAdmin(request)) {
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
         }
+        // 若存在关联问题，则不允许删除
+        QueryWrapper<QuestionBankQuestion> questionBankQuestionQueryWrapper = new QueryWrapper<>();
+        questionBankQuestionQueryWrapper.eq("questionBankId", id);
+        long count = questionBankQuestionService.count(questionBankQuestionQueryWrapper);
+        if (count > 0) {
+            throw new BusinessException(ErrorCode.OPERATION_ERROR, "该题库存在关联的问题，请先移除与问题的关联");
+        }
+        // 删除题库热点数据
+        QueryWrapper<QuestionBankHotspot> questionBankHotspotQueryWrapper = new QueryWrapper<>();
+        questionBankHotspotQueryWrapper.eq("questionBankId", id);
+        questionBankHotspotService.remove(questionBankHotspotQueryWrapper);
         // 操作数据库
         boolean result = this.removeById(id);
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
@@ -269,8 +287,8 @@ public class QuestionBankServiceImpl extends ServiceImpl<QuestionBankMapper, Que
     }
 
     /**
-     *
      * 更新题库(仅管理员权限)
+     *
      * @param questionBankUpdateRequest
      * @return java.lang.Boolean
      * @author DuRuiChi
@@ -297,8 +315,8 @@ public class QuestionBankServiceImpl extends ServiceImpl<QuestionBankMapper, Que
     }
 
     /**
-     *
      * 根据 id 获取题库详情（封装类）
+     *
      * @param questionBankQueryRequest
      * @param request
      * @return com.rich.richInterview.model.vo.QuestionBankVO

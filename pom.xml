@@ -46,7 +46,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
-        <!-- Spring Session通过Redis管理 -->
+        <!-- Spring Session 通过 Redis管理 -->
         <dependency>
             <groupId>org.springframework.session</groupId>
             <artifactId>spring-session-data-redis</artifactId>
@@ -56,7 +56,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-elasticsearch</artifactId>
         </dependency>
-        <!-- 微信公众平台Java SDK -->
+        <!-- 微信公众平台 Java SDK -->
         <!-- 源：https://github.com/Wechat-Group/WxJava -->
         <dependency>
             <groupId>com.github.binarywang</groupId>
@@ -185,8 +185,6 @@
             <artifactId>sa-token-spring-boot-starter</artifactId>
             <version>1.43.0</version>
         </dependency>
-
-
         <!-- Lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
