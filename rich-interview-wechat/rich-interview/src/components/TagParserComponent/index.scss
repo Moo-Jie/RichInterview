@@ -1,0 +1,18 @@
+.tag-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 14px 0;
+
+  .tag-item {
+    padding: 12px 18px;
+    border-radius: 14px;
+    color: white;
+    font-size: 22px;
+
+    &:first-child {
+      min-width: 40px;
+      text-align: center;
+    }
+  }
+}

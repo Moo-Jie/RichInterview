@@ -20,7 +20,7 @@ export default class Index extends Component<PropsWithChildren> {
   render() {
     return (
       <View className='index'>
-        <Text>待开发：题库详情页面</Text>
+        <Text>待开发：题库详情</Text>
       </View>
     )
   }

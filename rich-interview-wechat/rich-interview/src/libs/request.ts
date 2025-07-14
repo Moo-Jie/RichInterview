@@ -4,8 +4,12 @@ import Taro from '@tarojs/taro';
 const DEV_BASE_URL = 'http://localhost:8101';
 const PROD_BASE_URL = 'http://49.233.207.238';
 
-const request = <T>(options: Taro.request.Option): Promise<T> => {
-  const baseURL = process.env.NODE_ENV === 'production' ? PROD_BASE_URL : DEV_BASE_URL;
+void PROD_BASE_URL;
+void DEV_BASE_URL;
+
+const request = <T,>(options: Taro.request.Option): Promise<T> => {
+  const baseURL = DEV_BASE_URL;
+  // const baseURL = PROD_BASE_URL;
 
   return new Promise((resolve, reject) => {
     Taro.request({

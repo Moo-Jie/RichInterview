@@ -3,8 +3,20 @@
  * 源：https://docs.taro.zone/docs/app-config#defineappconfig-%E5%AE%8F%E5%87%BD%E6%95%B0
  */
 export default defineAppConfig({
+  // 需要配置的小程序页面路径，支持通配符
   pages: [
-    'pages/index/index'
+    // 主页
+    'pages/index/index',
+    // 题目详情
+    'pages/question/index'
+  ],
+  subPackages: [
+    {
+      root: "packageQuestion",
+      pages: [
+        "pages/question/index"
+      ]
+    }
   ],
   window: {
     backgroundTextStyle: 'light',
