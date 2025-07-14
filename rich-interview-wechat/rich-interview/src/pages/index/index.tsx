@@ -3,6 +3,12 @@ import {View, Text, ScrollView} from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import {AtCard, AtList, AtListItem} from 'taro-ui'
 import './index.scss'
+import {
+  getHotQuestionBanks,
+  getNewQuestionBanks,
+} from '../../services/questionBank'
+
+import {getHotQuestions} from '../../services/question'
 
 type State = {
   hotBanks: any[],
@@ -26,9 +32,9 @@ export default class Index extends Component<{}, State> {
   async loadData() {
     try {
       const [hotBanks, newBanks, hotQuestions] = await Promise.all([
-        this.getHotQuestionBanks(),
-        this.getNewQuestionBanks(),
-        this.getHotQuestions()
+        getHotQuestionBanks(),
+        getNewQuestionBanks(),
+        getHotQuestions()
       ])
 
       this.setState({
@@ -39,49 +45,8 @@ export default class Index extends Component<{}, State> {
       })
     } catch (error) {
       Taro.showToast({title: '数据加载失败', icon: 'none'})
+      this.setState({loading: false})
     }
-  }
-
-  // 获取热门题库
-  async getHotQuestionBanks() {
-    const res = await Taro.request({
-      url: 'http://localhost:8101/api/questionBankHotspot/list/page/vo',
-      method: 'POST',
-      data: {
-        pageSize: 10,
-        sortField: 'viewNum',
-        sortOrder: 'descend'
-      }
-    })
-    return res.data.data?.records || []
-  }
-
-  // 获取最新题库
-  async getNewQuestionBanks() {
-    const res = await Taro.request({
-      url: 'http://localhost:8101/api/questionBank/list/page/vo',
-      method: 'POST',
-      data: {
-        pageSize: 10,
-        sortField: 'createTime',
-        sortOrder: 'descend'
-      }
-    })
-    return res.data.data?.records || []
-  }
-
-  // 获取热门题目
-  async getHotQuestions() {
-    const res = await Taro.request({
-      url: 'http://localhost:8101/api/questionHotspot/list/page/vo',
-      method: 'POST',
-      data: {
-        pageSize: 10,
-        sortField: 'viewNum',
-        sortOrder: 'descend'
-      }
-    })
-    return res.data.data?.records || []
   }
 
   handleNavigateToBank(bankId: string) {
@@ -109,13 +74,16 @@ export default class Index extends Component<{}, State> {
         <AtCard title="🔥 热门题库 TOP10" className='section-card'>
           <ScrollView scrollX className='hot-list'>
             {hotBanks.map((bank, index) => (
-              <View key={bank.id} className='hot-item'
-                    onClick={() => this.handleNavigateToBank(bank.questionBankId)}>
+              <View
+                key={bank.questionBankId}
+                className='hot-item'
+                onClick={() => this.handleNavigateToBank(bank.questionBankId)}
+              >
                 <Text className='rank'>{index + 1}.</Text>
                 <Text className='title'>{bank.title}</Text>
                 <View className='stats'>
-                  <Text className='stat'><Text className='icon'>👀</Text> {bank.viewNum || 0}</Text>
-                  <Text className='stat'><Text className='icon'>❤️</Text> {bank.starNum || 0}</Text>
+                  <Text className='stat'>👀 {bank.viewNum || 0}</Text>
+                  <Text className='stat'>❤️ {bank.starNum || 0}</Text>
                 </View>
               </View>
             ))}
@@ -142,7 +110,7 @@ export default class Index extends Component<{}, State> {
           <AtList>
             {hotQuestions.map(question => (
               <AtListItem
-                key={question.id}
+                key={question.questionId}
                 title={question.title}
                 note={`浏览: ${question.viewNum} | 收藏: ${question.starNum}`}
                 arrow='right'
