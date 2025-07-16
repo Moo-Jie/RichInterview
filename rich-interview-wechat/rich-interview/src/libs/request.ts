@@ -7,22 +7,44 @@ const PROD_BASE_URL = 'http://49.233.207.238';
 void PROD_BASE_URL;
 void DEV_BASE_URL;
 
+// 解析Set-Cookie获取satoken
+const extractSatoken = (headers: any): string | null => {
+  if (!headers || !headers['Set-Cookie'] && !headers['set-cookie']) {
+    return null;
+  }
+
+  const setCookies = headers['Set-Cookie'] || headers['set-cookie'];
+  const cookieArray = Array.isArray(setCookies) ? setCookies : [setCookies];
+
+  for (const cookieStr of cookieArray) {
+    const cookiePairs = cookieStr.split(';');
+    for (const pair of cookiePairs) {
+      const [name, value] = pair.trim().split('=');
+      if (name === 'satoken') {
+        return value;
+      }
+    }
+  }
+
+  return null;
+};
+
 const request = <T,>(options: Taro.request.Option): Promise<T> => {
   const baseURL = DEV_BASE_URL;
   // const baseURL = PROD_BASE_URL;
 
   Taro.addInterceptor((chain) => {
-    const requestParams = chain.requestParams
+    const requestParams = chain.requestParams;
     // 从本地存储获取token
-    const token = Taro.getStorageSync('token')
+    const token = Taro.getStorageSync('token');
     if (token) {
       requestParams.header = {
         ...requestParams.header,
-        Authorization: token
-      }
+        satoken: token
+      };
     }
-    return chain.proceed(requestParams)
-  })
+    return chain.proceed(requestParams);
+  });
 
   return new Promise((resolve, reject) => {
     Taro.request({
@@ -31,6 +53,15 @@ const request = <T,>(options: Taro.request.Option): Promise<T> => {
       success: (res) => {
         // 状态码处理
         if (res.statusCode >= 200 && res.statusCode < 300) {
+          // 解析响应头中的satoken
+          const satoken = extractSatoken(res.header);
+          if (satoken) {
+            // 将satoken存入本地存储
+            Taro.setStorageSync('token', satoken);
+          }
+
+          console.log('token为：', Taro.getStorageSync('token'));
+
           // 业务逻辑处理（40100未登录）
           if (res.data?.code === 40100) {
             // 检查是否已经是登录页面
@@ -38,7 +69,7 @@ const request = <T,>(options: Taro.request.Option): Promise<T> => {
             const currentPage = pages[pages.length - 1]?.route || '';
 
             if (!currentPage.includes('/user/login')) {
-              Taro.navigateTo({url: '/pages/user/login'});
+              Taro.navigateTo({ url: '/pages/user/login' });
             }
           }
           resolve(res.data as T);
@@ -47,7 +78,7 @@ const request = <T,>(options: Taro.request.Option): Promise<T> => {
         }
       },
       fail: (err) => {
-        Taro.showToast({title: '网络连接失败', icon: 'none'});
+        Taro.showToast({ title: '网络连接失败', icon: 'none' });
         reject(err);
       }
     });

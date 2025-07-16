@@ -85,9 +85,12 @@ export const userLogin = async (params: LoginParams): Promise<ApiResponse<LoginR
 export const getLoginUser = async (): Promise<UserVO | null> => {
   try {
     // 安全获取Token
-    const token = Taro.getStorageSync<string>('token')
+    const token = Taro.getStorageSync('token')
+
+    console.log('获取当前登录用户信息 携带 token', token)
+
     if (!token) {
-      throw new Error('未检测到登录状态')
+      throw new Error('未未检测到登录状态（保存 token）')
     }
 
     // 带认证头的请求
@@ -95,7 +98,7 @@ export const getLoginUser = async (): Promise<UserVO | null> => {
       url: '/api/user/get/login',
       method: 'GET',
       header: {
-        'Authorization': `Bearer ${token}`
+        'satoken': token
       }
     })
 
