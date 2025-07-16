@@ -8,15 +8,15 @@ export default defineAppConfig({
     // 主页
     'pages/index/index',
     // 题目详情
-    'pages/question/index'
-  ],
-  subPackages: [
-    {
-      root: "packageQuestion",
-      pages: [
-        "pages/question/index"
-      ]
-    }
+    'pages/question/index',
+    // 题库详情
+    'pages/questionBank/index',
+    // 全部题目
+    'pages/questions/index',
+    // 全部题库
+    'pages/questionBanks/index',
+    // 个人中心
+    'pages/user/index'
   ],
   window: {
     backgroundTextStyle: 'light',

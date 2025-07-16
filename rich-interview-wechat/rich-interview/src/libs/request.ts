@@ -11,6 +11,19 @@ const request = <T,>(options: Taro.request.Option): Promise<T> => {
   const baseURL = DEV_BASE_URL;
   // const baseURL = PROD_BASE_URL;
 
+  Taro.addInterceptor((chain) => {
+    const requestParams = chain.requestParams
+    // 从本地存储获取token
+    const token = Taro.getStorageSync('token')
+    if (token) {
+      requestParams.header = {
+        ...requestParams.header,
+        Authorization: token
+      }
+    }
+    return chain.proceed(requestParams)
+  })
+
   return new Promise((resolve, reject) => {
     Taro.request({
       ...options,

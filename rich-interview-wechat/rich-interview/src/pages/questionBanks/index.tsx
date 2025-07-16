@@ -1,27 +1,17 @@
-import {Component, PropsWithChildren} from 'react'
-import {Text, View} from '@tarojs/components'
+import {Component} from 'react';
+import {ScrollView, View} from '@tarojs/components';
+import './index.scss';
 
-import "taro-ui/dist/style/components/button.scss" // 按需引入
-import './index.scss'
+type State = {};
 
-export default class Index extends Component<PropsWithChildren> {
-  componentDidMount() {
-  }
-
-  componentWillUnmount() {
-  }
-
-  componentDidShow() {
-  }
-
-  componentDidHide() {
-  }
-
+export default class Index extends Component<{}, State> {
   render() {
     return (
-      <View className='index'>
-        <Text>待开发：全部题库页面</Text>
+      <View className='index-container'>
+        <ScrollView className='index-page' scrollY>
+          待开发......
+        </ScrollView>
       </View>
-    )
+    );
   }
 }
