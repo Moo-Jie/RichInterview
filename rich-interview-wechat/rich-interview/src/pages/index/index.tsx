@@ -108,7 +108,7 @@ export default class Index extends Component<{}, State> {
   }
 
   handleNavigateToUserCenter = () => {
-    Taro.navigateTo({ url: '/pages/user/index' });
+    Taro.switchTab({url: '/pages/user/index'});
   };
 
   handleNavigateToBank(bankId: string) {
@@ -171,12 +171,22 @@ export default class Index extends Component<{}, State> {
           userInfo: userVO,
           showLoginDrawer: false
         });
+
+        EventBus.emit('userUpdate', userVO);
+
+        // 刷新当前页面
+        const pages = Taro.getCurrentPages();
+        if (pages.length > 0) {
+          const currentPage = pages[pages.length - 1];
+          Taro.reLaunch({url: `/${currentPage.route}`});
+        }
       } else {
-        Taro.showToast({title: '登录失败，请重试，或联系管理员', icon: 'none'});
+        const errorMsg = response?.message || '登录失败，请重试';
+        Taro.showToast({title: errorMsg, icon: 'none'});
       }
     } catch (error) {
       console.error('登录出错', error);
-      Taro.showToast({title: '登录失败，请重试，或联系管理员', icon: 'none'});
+      Taro.showToast({title: `登录失败: ${error.message}`, icon: 'none'});
     } finally {
       this.setState({loginLoading: false});
     }
@@ -202,7 +212,7 @@ export default class Index extends Component<{}, State> {
       const userId = await userRegister(registerForm);
       if (userId > 0) {
         Taro.showToast({title: '注册成功', icon: 'success'});
-        this.handleLoginSubmit();
+        await this.handleLoginSubmit();
       } else {
         Taro.showToast({title: '注册失败，请重试', icon: 'none'});
       }
@@ -215,17 +225,23 @@ export default class Index extends Component<{}, State> {
   };
 
   switchToRegister = () => {
+    // 刷新当前页面
+    const pages = Taro.getCurrentPages();
+    if (pages.length > 0) {
+      const currentPage = pages[pages.length - 1];
+      Taro.reLaunch({url: `/${currentPage.route}`});
+    }
     this.setState({isRegistering: true});
   };
 
   switchToLogin = () => {
+    // 刷新当前页面
+    const pages = Taro.getCurrentPages();
+    if (pages.length > 0) {
+      const currentPage = pages[pages.length - 1];
+      Taro.reLaunch({url: `/${currentPage.route}`});
+    }
     this.setState({isRegistering: false});
-  };
-
-  handleLogout = () => {
-    Taro.removeStorageSync('token');
-    this.setState({userInfo: null});
-    Taro.showToast({title: '已退出登录', icon: 'success'});
   };
 
   renderLoginDrawer() {
@@ -324,7 +340,8 @@ export default class Index extends Component<{}, State> {
     return (
       <View className='index-container'>
         {/* 右上角用户头像/登录状态 */}
-        <View className="user-avatar-container" onClick={userInfo ? this.handleNavigateToUserCenter : this.handleOpenLoginDrawer}>
+        <View className="user-avatar-container"
+              onClick={userInfo ? this.handleNavigateToUserCenter : this.handleOpenLoginDrawer}>
           {userInfo ? (
             <View className="user-info">
               <View className="avatar-with-shine">
@@ -343,7 +360,6 @@ export default class Index extends Component<{}, State> {
                 )}
               </View>
               <Text className="user-name">{userInfo.userName || '用户'}</Text>
-              <Text className="logout-btn" onClick={this.handleLogout}>退出登录</Text>
             </View>
           ) : (
             <View className="not-logged-container">
@@ -452,6 +468,9 @@ export default class Index extends Component<{}, State> {
 
         {/* 登录抽屉 */}
         {this.renderLoginDrawer()}
+
+        {/* 底部栏占位 */}
+        <View style={{height: '100px'}}/>
       </View>
     );
   }

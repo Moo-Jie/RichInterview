@@ -9,7 +9,7 @@ import {EventBus} from "./eventBus";
 class App extends Component<PropsWithChildren> {
 
   componentDidMount() {
-    EventBus.on('userUpdate', userInfo => {
+    EventBus.on('userUpdate', (userInfo: any) => {
       this.setState({userInfo});
     });
   }

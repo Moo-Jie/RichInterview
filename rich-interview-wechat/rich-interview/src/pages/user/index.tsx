@@ -4,6 +4,7 @@ import Taro from '@tarojs/taro';
 import {AtCard, AtList, AtListItem} from 'taro-ui';
 import {Image} from '@tarojs/components';
 import {getLoginUser} from '../../api/user';
+import {EventBus} from "../../eventBus";
 import './index.scss';
 
 type State = {
@@ -30,8 +31,27 @@ export default class UserCenter extends Component<{}, State> {
   };
 
   async componentDidMount() {
+    // 添加事件监听
+    EventBus.on('userUpdate', this.handleUserUpdate);
+    EventBus.on('userLogout', this.handleUserLogout);
     await this.loadUserData();
   }
+
+  // 组件卸载时移除事件监听器
+  componentWillUnmount() {
+    EventBus.off('userUpdate', this.handleUserUpdate);
+    EventBus.off('userLogout', this.handleUserLogout);
+  }
+
+  // 用户更新处理方法
+  handleUserUpdate = (userVO) => {
+    this.setState({userInfo: userVO});
+  };
+
+  // 退出登录处理方法
+  handleUserLogout = () => {
+    this.setState({userInfo: null});
+  };
 
   async loadUserData() {
     try {
@@ -71,26 +91,33 @@ export default class UserCenter extends Component<{}, State> {
     Taro.removeStorageSync('token');
     Taro.removeStorageSync('userInfo');
     Taro.showToast({title: '已退出登录', icon: 'success'});
+    EventBus.emit('userLogout', null);
+    // 刷新当前页面
+    const pages = Taro.getCurrentPages();
+    if (pages.length > 0) {
+      const currentPage = pages[pages.length - 1];
+      Taro.reLaunch({url: `/${currentPage.route}`});
+    }
+    // 跳转主页
     setTimeout(() => {
       Taro.switchTab({url: '/pages/index/index'});
-    }, 1500);
+    }, 300);
   };
 
   render() {
     const {userInfo, loading, stats} = this.state;
 
-    if (loading) {
+    if (loading || !userInfo) {
       return (
-        <View className='loading-container'>
-          <Text>加载中...</Text>
-        </View>
-      );
-    }
-
-    if (!userInfo) {
-      return (
-        <View className='no-user-container'>
-          <Text>未登录</Text>
+        <View className='login-prompt-container'>
+          <View className='login-prompt-card'>
+            <Text className='prompt-icon'>🔒</Text>
+            <Text className='prompt-title'>请先登录</Text>
+            <Text className='prompt-desc'>登录后即可查看个人中心</Text>
+            <View className='login-button' onClick={this.handleLogout}>
+              <Text>立即登录</Text>
+            </View>
+          </View>
         </View>
       );
     }

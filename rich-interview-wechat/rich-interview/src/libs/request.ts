@@ -68,8 +68,8 @@ const request = <T,>(options: Taro.request.Option): Promise<T> => {
             const pages = Taro.getCurrentPages();
             const currentPage = pages[pages.length - 1]?.route || '';
 
-            if (!currentPage.includes('/user/login')) {
-              Taro.navigateTo({ url: '/pages/user/login' });
+            if (!currentPage.includes('/user/index')) {
+              Taro.navigateTo({ url: '/pages/user/index' });
             }
           }
           resolve(res.data as T);

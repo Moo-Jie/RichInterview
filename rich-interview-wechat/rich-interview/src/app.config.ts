@@ -23,5 +23,36 @@ export default defineAppConfig({
     navigationBarBackgroundColor: '#fff',
     navigationBarTitleText: 'RichInterview',
     navigationBarTextStyle: 'black'
+  },
+  tabBar: {
+    color: '#666',
+    selectedColor: '#2563EB',
+    borderStyle: 'white',
+    list: [
+      {
+        pagePath: 'pages/index/index',
+        text: '主页',
+        iconPath: 'assets/tabbar/home.png',
+        selectedIconPath: 'assets/tabbar/home-active.png'
+      },
+      {
+        pagePath: 'pages/questions/index',
+        text: '题目',
+        iconPath: 'assets/tabbar/question.png',
+        selectedIconPath: 'assets/tabbar/question-active.png'
+      },
+      {
+        pagePath: 'pages/questionBanks/index',
+        text: '题库',
+        iconPath: 'assets/tabbar/bank.png',
+        selectedIconPath: 'assets/tabbar/bank-active.png'
+      },
+      {
+        pagePath: 'pages/user/index',
+        text: '我的',
+        iconPath: 'assets/tabbar/user.png',
+        selectedIconPath: 'assets/tabbar/user-active.png'
+      }
+    ]
   }
 })

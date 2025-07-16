@@ -257,3 +257,120 @@
     }
   }
 }
+
+.login-prompt-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
+  padding: 40rpx;
+
+  .login-prompt-card {
+    background: #ffffff;
+    border-radius: 32rpx;
+    padding: 64rpx;
+    box-shadow: 0 16rpx 60rpx rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    max-width: 90%;
+    transition: transform 0.3s ease;
+
+    &:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 12rpx;
+      background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+    }
+
+    .prompt-icon {
+      font-size: 120rpx;
+      margin-bottom: 32rpx;
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 6rpx 12rpx rgba(59, 130, 246, 0.2));
+    }
+
+    .prompt-title {
+      font-size: 48rpx;
+      font-weight: bold;
+      margin-bottom: 20rpx;
+      color: #1f2937;
+      letter-spacing: 1rpx;
+    }
+
+    .prompt-desc {
+      font-size: 34rpx;
+      color: #6b7280;
+      margin-bottom: 48rpx;
+      line-height: 1.5;
+    }
+
+    .login-button {
+      background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%);
+      border-radius: 50rpx;
+      padding: 28rpx 80rpx;
+      box-shadow: 0 12rpx 24rpx rgba(59, 130, 246, 0.3);
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      font-weight: 500;
+      width: auto;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+
+      &:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
+        opacity: 0;
+        transition: opacity 0.4s ease;
+        z-index: -1;
+      }
+
+      &:active {
+        transform: translateY(4rpx);
+        box-shadow: 0 6rpx 16rpx rgba(59, 130, 246, 0.3);
+
+        &:before {
+          opacity: 1;
+        }
+      }
+
+      Text {
+        font-size: 38rpx;
+        color: white;
+        letter-spacing: 1.5rpx;
+        text-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.1);
+      }
+    }
+  }
+
+  @media (prefers-color-scheme: dark) {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+
+    .login-prompt-card {
+      background: #1f2937;
+      box-shadow: 0 16rpx 60rpx rgba(0, 0, 0, 0.25);
+
+      .prompt-title {
+        color: #f9fafb;
+      }
+
+      .prompt-desc {
+        color: #d1d5db;
+      }
+    }
+  }
+}
