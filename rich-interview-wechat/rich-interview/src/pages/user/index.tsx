@@ -1,9 +1,9 @@
-import { Component } from 'react';
-import { View, Text, ScrollView } from '@tarojs/components';
+import {Component} from 'react';
+import {View, Text, ScrollView} from '@tarojs/components';
 import Taro from '@tarojs/taro';
-import { AtCard, AtList, AtListItem } from 'taro-ui';
-import { Image } from '@tarojs/components';
-import { getLoginUser } from '../../api/user';
+import {AtCard, AtList, AtListItem} from 'taro-ui';
+import {Image} from '@tarojs/components';
+import {getLoginUser} from '../../api/user';
 import './index.scss';
 
 type State = {
@@ -42,7 +42,7 @@ export default class UserCenter extends Component<{}, State> {
           totalQuestions: Math.floor(Math.random() * 500) + 100,
           correctRate: Math.floor(Math.random() * 30) + 70,
           consecutiveDays: Math.floor(Math.random() * 100) + 1,
-          badges: ['学霸', '坚持者', '全栈高手', 'Java专家'],
+          badges: ['初来乍到', '本站新人'],
         };
 
         this.setState({
@@ -51,33 +51,33 @@ export default class UserCenter extends Component<{}, State> {
           loading: false,
         });
       } else {
-        Taro.showToast({ title: '请先登录', icon: 'none' });
+        Taro.showToast({title: '请先登录', icon: 'none'});
         setTimeout(() => {
-          Taro.switchTab({ url: '/pages/index/index' });
+          Taro.switchTab({url: '/pages/index/index'});
         }, 1500);
       }
     } catch (error) {
       console.error('加载用户数据失败', error);
-      Taro.showToast({ title: '加载失败', icon: 'none' });
-      this.setState({ loading: false });
+      Taro.showToast({title: '加载失败', icon: 'none'});
+      this.setState({loading: false});
     }
   }
 
   handleEditProfile = () => {
-    Taro.navigateTo({ url: '/pages/user/edit/index' });
+    Taro.navigateTo({url: '/pages/user/edit/index'});
   };
 
   handleLogout = () => {
     Taro.removeStorageSync('token');
     Taro.removeStorageSync('userInfo');
-    Taro.showToast({ title: '已退出登录', icon: 'success' });
+    Taro.showToast({title: '已退出登录', icon: 'success'});
     setTimeout(() => {
-      Taro.switchTab({ url: '/pages/index/index' });
+      Taro.switchTab({url: '/pages/index/index'});
     }, 1500);
   };
 
   render() {
-    const { userInfo, loading, stats } = this.state;
+    const {userInfo, loading, stats} = this.state;
 
     if (loading) {
       return (
@@ -118,7 +118,6 @@ export default class UserCenter extends Component<{}, State> {
           <View className='user-info'>
             <Text className='user-name'>{userInfo.userName || '未命名用户'}</Text>
             <Text className='user-role'>{userInfo.userRole === 'admin' ? '管理员' : '普通用户'}</Text>
-            <Text className='user-profile'>{userInfo.userProfile || '这个人很懒，什么都没写'}</Text>
           </View>
 
           <View className='edit-btn' onClick={this.handleEditProfile}>
@@ -132,10 +131,6 @@ export default class UserCenter extends Component<{}, State> {
             <View className='stat-item'>
               <Text className='stat-value'>{stats.totalQuestions}</Text>
               <Text className='stat-label'>刷题总数</Text>
-            </View>
-            <View className='stat-item'>
-              <Text className='stat-value'>{stats.correctRate}%</Text>
-              <Text className='stat-label'>正确率</Text>
             </View>
             <View className='stat-item'>
               <Text className='stat-value'>{stats.consecutiveDays}</Text>
@@ -161,11 +156,12 @@ export default class UserCenter extends Component<{}, State> {
         {/* 个人信息 */}
         <AtCard title='个人信息' className='info-card'>
           <AtList>
-            <AtListItem title='邮箱' extraText={userInfo.email || '未设置'} />
-            <AtListItem title='手机' extraText={userInfo.phoneNumber || '未设置'} />
-            <AtListItem title='学历' extraText={userInfo.grade || '未设置'} />
-            <AtListItem title='工作经验' extraText={userInfo.workExperience || '未设置'} />
-            <AtListItem title='专业方向' extraText={userInfo.expertiseDirection || '未设置'} />
+            <AtListItem title='签名' extraText={userInfo.userProfile || '这个用户很懒，什么也没留下'}/>
+            <AtListItem title='邮箱' extraText={userInfo.email || '未设置'}/>
+            <AtListItem title='手机' extraText={userInfo.phoneNumber || '未设置'}/>
+            <AtListItem title='学历' extraText={userInfo.grade || '未设置'}/>
+            <AtListItem title='工作经验' extraText={userInfo.workExperience || '未设置'}/>
+            <AtListItem title='专业方向' extraText={userInfo.expertiseDirection || '未设置'}/>
           </AtList>
         </AtCard>
 

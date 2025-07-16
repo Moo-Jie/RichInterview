@@ -354,13 +354,12 @@ export default class Index extends Component<{}, State> {
 
         <ScrollView className='index-page' scrollY>
           {/* 每日一刷模块 */}
-          <AtCard title="📅 每日一刷" className='section-card'>
+          <AtCard title="📅 每日一刷" className='section-card' note={"每日精选题目"}>
             <View className='custom-list-item'>
               <AtListItem
                 title={dailyQuestion.title}
                 note={
                   <View className='note-container'>
-                    <Text>每日精选题目</Text>
                     <TagParser tagList={[
                       ...(dailyQuestion.tagList?.filter((t: string) => t?.trim()) || ["暂未设定"]),
                       dailyQuestion.type?.trim()
