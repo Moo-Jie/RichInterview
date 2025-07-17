@@ -29,20 +29,32 @@ const extractSatoken = (headers: any): string | null => {
   return null;
 };
 
-const request = <T,>(options: Taro.request.Option): Promise<T> => {
+const request = <T, >(options: Taro.request.Option): Promise<T> => {
   const baseURL = DEV_BASE_URL;
   // const baseURL = PROD_BASE_URL;
+
+  // 获取设备唯一标识（优先使用缓存）
+  const getDeviceId = () => {
+    let deviceId = Taro.getStorageSync('deviceId');
+    if (!deviceId) {
+      deviceId = `wx-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      Taro.setStorageSync('deviceId', deviceId);
+    }
+    return deviceId;
+  };
 
   Taro.addInterceptor((chain) => {
     const requestParams = chain.requestParams;
     // 从本地存储获取token
     const token = Taro.getStorageSync('token');
-    if (token) {
-      requestParams.header = {
-        ...requestParams.header,
-        satoken: token
-      };
-    }
+    // 获取设备ID
+    const deviceId = getDeviceId();
+    // 添加请求头
+    requestParams.header = {
+      ...requestParams.header,
+      'X-Device-Id': deviceId,
+      ...(token ? {satoken: token} : {})
+    };
     return chain.proceed(requestParams);
   });
 
@@ -69,7 +81,7 @@ const request = <T,>(options: Taro.request.Option): Promise<T> => {
             const currentPage = pages[pages.length - 1]?.route || '';
 
             if (!currentPage.includes('/user/index')) {
-              Taro.navigateTo({ url: '/pages/user/index' });
+              Taro.navigateTo({url: '/pages/user/index'});
             }
           }
           resolve(res.data as T);
@@ -78,7 +90,7 @@ const request = <T,>(options: Taro.request.Option): Promise<T> => {
         }
       },
       fail: (err) => {
-        Taro.showToast({ title: '网络连接失败', icon: 'none' });
+        Taro.showToast({title: '网络连接失败', icon: 'none'});
         reject(err);
       }
     });

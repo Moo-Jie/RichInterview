@@ -93,6 +93,9 @@ public class QuestionController {
         ThrowUtils.throwIf(id == null || id <= 0, ErrorCode.PARAMS_ERROR);
         // 获取用户 IP
         String remoteAddr = request.getRemoteAddr();
+        if (remoteAddr == null || remoteAddr.isEmpty()) {
+            remoteAddr = "unknown";
+        }
         // 非注解方式，手动针对用户 IP 进行流控
         // 源：https://sentinelguard.io/zh-cn/docs/parameter-flow-control.html
         Entry entry = null;
@@ -112,7 +115,7 @@ public class QuestionController {
             if (!BlockException.isBlockException(ex)) {
                 // 记录日志
                 Tracer.trace(ex);
-                return ResultUtils.error(ErrorCode.SYSTEM_ERROR, "系统错误");
+                return ResultUtils.error(ErrorCode.SYSTEM_ERROR, ex.getMessage());
             }
             // 降级后逻辑
             if (ex instanceof DegradeException) {
@@ -185,7 +188,7 @@ public class QuestionController {
             if (!BlockException.isBlockException(ex)) {
                 // 记录日志
                 Tracer.trace(ex);
-                return ResultUtils.error(ErrorCode.SYSTEM_ERROR, "系统错误");
+                return ResultUtils.error(ErrorCode.SYSTEM_ERROR, ex.getMessage());
             }
             // 降级后逻辑
             if (ex instanceof DegradeException) {

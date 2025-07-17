@@ -115,7 +115,7 @@ public class QuestionHotspotController {
             if (!BlockException.isBlockException(ex)) {
                 // 记录日志
                 Tracer.trace(ex);
-                return ResultUtils.error(ErrorCode.SYSTEM_ERROR, "系统错误");
+                return ResultUtils.error(ErrorCode.SYSTEM_ERROR, ex.getMessage());
             }
             // 降级后逻辑
             if (ex instanceof DegradeException) {
@@ -218,7 +218,7 @@ public class QuestionHotspotController {
             if (!BlockException.isBlockException(ex)) {
                 // 记录日志
                 Tracer.trace(ex);
-                return ResultUtils.error(ErrorCode.SYSTEM_ERROR, "系统错误");
+                return ResultUtils.error(ErrorCode.SYSTEM_ERROR, ex.getMessage());
             }
             // 降级后逻辑
             if (ex instanceof DegradeException) {

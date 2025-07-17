@@ -66,7 +66,26 @@ export const getQuestionDetail = async (questionId: string): Promise<any> => {
       url: `/api/question/get/vo?id=${questionId}`,
       method: 'GET',
     });
-    return res.data?.data || null;
+    return res.data || null;
+  } catch (error) {
+    console.error('获取题目详情失败', error);
+    throw error;
+  }
+}
+
+/**
+ * 获取题目热点详情
+ */
+export const getQuestionHotspotDetail = async (questionId: string): Promise<any> => {
+  try {
+    const res = await request<ApiResponse<DetailResponse>>({
+      url: '/api/questionHotspot/get/vo/byQuestionId',
+      method: 'GET',
+      data: {
+        questionId: questionId
+      }
+    });
+    return res.data || null;
   } catch (error) {
     console.error('获取题目详情失败', error);
     throw error;

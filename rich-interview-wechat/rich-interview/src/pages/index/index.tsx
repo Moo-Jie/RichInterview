@@ -420,7 +420,7 @@ export default class Index extends Component<{}, State> {
                   title={question.title}
                   note={`👁️🗨 ${question.viewNum} | 👍🏻 ${question.starNum}`}
                   arrow='right'
-                  onClick={() => this.handleNavigateToQuestion(question.id)}
+                  onClick={() => this.handleNavigateToQuestion(question.questionId)}
                 />
               ))}
             </AtList>
