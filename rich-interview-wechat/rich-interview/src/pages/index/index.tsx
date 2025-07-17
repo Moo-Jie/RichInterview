@@ -14,13 +14,6 @@ import dayjs from 'dayjs';
 import './index.scss';
 import { EventBus } from "../../eventBus";
 
-// 用户常量
-const UserConstant = {
-  DEFAULT_USER_PICTURE: 'https://example.com/default-avatar.png',
-  DEFAULT_USER_PROFILE: '暂无个人简介',
-  DEFAULT_USER_MSG: '未填写'
-};
-
 type State = {
   hotBanks: any[];
   newBanks: any[];
@@ -185,7 +178,10 @@ export default class Index extends Component<{}, State> {
   };
 
   handleLoginSubmit = async () => {
-    const { userAccount, userPassword } = this.state.loginForm;
+    const { loginForm, registerForm } = this.state;
+    const userAccount = loginForm.userAccount || registerForm.userAccount;
+    const userPassword = loginForm.userPassword || registerForm.userPassword;
+
     if (!userAccount || !userPassword) {
       Taro.showToast({ title: '请输入账号和密码', icon: 'none' });
       return;
@@ -268,12 +264,12 @@ export default class Index extends Component<{}, State> {
         checkPassword,
         userName,
         phoneNumber,
-        email: email || UserConstant.DEFAULT_USER_MSG,
-        grade: grade || UserConstant.DEFAULT_USER_MSG,
-        workExperience: workExperience || UserConstant.DEFAULT_USER_MSG,
-        expertiseDirection: expertiseDirection || UserConstant.DEFAULT_USER_MSG,
-        userAavatar: userAavatar || UserConstant.DEFAULT_USER_PICTURE,
-        userProfile: userProfile || UserConstant.DEFAULT_USER_PROFILE,
+        email: email,
+        grade: grade ,
+        workExperience: workExperience,
+        expertiseDirection: expertiseDirection,
+        userAavatar: userAavatar,
+        userProfile: userProfile,
       };
 
       const userId = await userRegister(registerData);

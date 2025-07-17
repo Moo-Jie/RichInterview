@@ -374,3 +374,88 @@
     }
   }
 }
+
+// 签到按钮样式
+.signin-button-container {
+  margin-top: 30rpx;
+  padding: 0 20rpx;
+
+  .signin-button {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    border-radius: 50rpx;
+    color: white;
+    border: none;
+    box-shadow: 0 8rpx 24rpx rgba(37, 99, 235, 0.3);
+    transition: all 0.3s;
+
+    &.signed {
+      background: linear-gradient(135deg, #10b981, #059669);
+    }
+
+    &:active:not([disabled]) {
+      transform: scale(0.95);
+      box-shadow: 0 4rpx 12rpx rgba(37, 99, 235, 0.4);
+    }
+
+    &[disabled] {
+      opacity: 0.7;
+    }
+  }
+}
+
+// 签到日历样式
+.signin-calendar {
+  margin: 20px;
+  padding: 15px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+
+  .calendar-title {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    display: block;
+    text-align: center;
+  }
+
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+
+    .calendar-day {
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      background: #f5f5f5;
+      position: relative;
+
+      &.today {
+        background: #e6f7ff;
+        border: 1px solid #91d5ff;
+      }
+
+      &.signed {
+        background: #b7eb8f;
+        color: #fff;
+      }
+
+      .today-indicator {
+        position: absolute;
+        top: 2px;
+        right: 2px;
+        background: #1890ff;
+        color: white;
+        font-size: 10px;
+        border-radius: 50%;
+        width: 16px;
+        height: 16px;
+        line-height: 16px;
+        text-align: center;
+      }
+    }
+  }
+}

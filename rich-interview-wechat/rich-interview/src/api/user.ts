@@ -72,11 +72,11 @@ export const userRegister = async (params: RegisterParams): Promise<number> => {
  * 用户登录服务
  */
 export const userLogin = async (params: LoginParams): Promise<ApiResponse<LoginResponse>> => {
-    return await request<ApiResponse<LoginResponse>>({
-      url: '/api/user/login',
-      method: 'POST',
-      data: params
-    });
+  return await request<ApiResponse<LoginResponse>>({
+    url: '/api/user/login',
+    method: 'POST',
+    data: params
+  });
 }
 
 /**
@@ -142,5 +142,109 @@ export const validateToken = (): boolean => {
   } catch (error) {
     console.error('Token验证失败', error)
     return false
+  }
+}
+
+// 更新用户信息参数接口（对应后端UserUpdateMyRequest）
+export interface UserUpdateMyRequest {
+  userName?: string;
+  userAvatar?: string;
+  userProfile?: string;
+  userPassword?: string;
+  checkPassword?: string;
+  phoneNumber?: string;
+  email?: string;
+  grade?: string;
+  workExperience?: string;
+  expertiseDirection?: string;
+  previousQuestionID?: number; // Long类型前端用number
+}
+
+// 签到记录响应类型
+interface SignInRecordResponse {
+  code: number;
+  data: number[]; // 返回的是签到日期序号数组
+  message?: string;
+}
+
+/**
+ * 更新个人信息
+ */
+export const updateUserInfo = async (params: UserUpdateMyRequest): Promise<boolean> => {
+  try {
+    const token = Taro.getStorageSync('token');
+    if (!token) throw new Error('未登录');
+
+    const response = await request<ApiResponse<boolean>>({
+      url: '/api/user/update/my',
+      method: 'POST',
+      header: {'satoken': token},
+      data: params
+    });
+
+    if (response?.code === 0) {
+      Taro.showToast({title: '更新成功', icon: 'success'});
+      return true;
+    }
+    throw new Error(response?.message || '更新失败');
+  } catch (error) {
+    const err = error as Error;
+    console.error('更新用户信息失败', err.message);
+    Taro.showToast({title: `更新失败: ${err.message}`, icon: 'none'});
+    return false;
+  }
+}
+
+/**
+ * 用户签到
+ */
+export const addUserSignIn = async (): Promise<boolean> => {
+  try {
+    const token = Taro.getStorageSync('token');
+    if (!token) throw new Error('请先登录');
+
+    const response = await request<ApiResponse<boolean>>({
+      url: '/api/user/add/sign_in',
+      method: 'POST',
+      header: {'satoken': token}
+    });
+
+    if (response?.code === 0) {
+      Taro.showToast({title: '签到成功', icon: 'success'});
+      return response.data;
+    }
+    throw new Error(response?.message || '签到失败');
+  } catch (error) {
+    const err = error as Error;
+    console.error('签到失败', err.message);
+    Taro.showToast({title: `签到失败: ${err.message}`, icon: 'none'});
+    return false;
+  }
+}
+
+/**
+ * 获取用户签到记录
+ * @param year 查询年份（如2025）
+ */
+export const getUserSignInRecord = async (year: number): Promise<number[]> => {
+  try {
+    const token = Taro.getStorageSync('token');
+    if (!token) throw new Error('请先登录');
+
+    const response = await request<SignInRecordResponse>({
+      url: `/api/user/get/sign_in?year=${year}`,
+      method: 'GET',
+      header: {'satoken': token}
+    });
+
+    if (response?.code === 0 && Array.isArray(response.data)) {
+      return response.data;
+    }
+    throw new Error(response?.message || '获取签到记录失败');
+  } catch (error) {
+    const err = error as Error;
+    console.error('获取签到记录失败', err.message);
+    Taro.showToast({title: `获取失败: ${err.message}`, icon: 'none'});
+    return [];
   }
 }
