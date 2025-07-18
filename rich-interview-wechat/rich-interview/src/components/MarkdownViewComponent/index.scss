@@ -1,0 +1,67 @@
+.markdown-container {
+  padding: 12px;
+  background: #fff;
+  border-radius: 8px;
+  margin-top: 8px;
+
+  .rich-text-content {
+    // Markdown 基本样式
+    p {
+      line-height: 1.6;
+      margin: 10px 0;
+    }
+
+    pre {
+      background: #f7f7f9;
+      border-radius: 4px;
+      padding: 12px;
+      margin: 12px 0;
+      overflow-x: auto;
+    }
+
+    code {
+      font-family: monospace;
+      background: #f7f7f9;
+      padding: 2px 4px;
+      border-radius: 3px;
+    }
+
+    blockquote {
+      border-left: 4px solid #ddd;
+      padding-left: 12px;
+      color: #666;
+      margin: 12px 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+
+      th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+      }
+
+      th {
+        background-color: #f8f8f8;
+        font-weight: bold;
+      }
+    }
+  }
+
+  .markdown-fallback {
+    padding: 12px;
+    border: 1px solid #ffe58f;
+    background-color: #fffbe6;
+    border-radius: 4px;
+    color: #333;
+  }
+
+  .markdown-placeholder {
+    padding: 20px;
+    text-align: center;
+    color: #999;
+  }
+}

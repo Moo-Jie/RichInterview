@@ -1,3 +1,5 @@
+@import "~taro-ui/dist/style/components/article.scss";
+
 .question-detail-page {
   background: linear-gradient(to bottom, #f0f7ff, #e6f0fa);
   min-height: 100vh;
@@ -35,6 +37,25 @@
     margin-bottom: 30rpx;
     position: relative;
     overflow: hidden;
+
+    .at-article {
+      margin-top: 30rpx;
+
+      &__h3 {
+        font-size: 36rpx;
+        color: #1e293b;
+        margin: 40rpx 0 20rpx;
+        font-weight: bold;
+      }
+
+      &__p {
+        font-size: 32rpx;
+        line-height: 1.8;
+        color: #475569;
+        margin-bottom: 20rpx;
+        white-space: pre-wrap;
+      }
+    }
 
     &::before {
       content: '';

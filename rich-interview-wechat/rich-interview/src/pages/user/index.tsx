@@ -21,12 +21,14 @@ type State = {
   todaySigned: boolean; // 记录今天是否已签到
   currentYear: number; // 当前年份
   todayIndex: number; // 今天在一年中的序号
+  currentMonth: number; // 新增当前月份状态
 };
 
 export default class UserCenter extends Component<{}, State> {
   state: State = {
     userInfo: null,
     loading: true,
+    currentMonth: new Date().getMonth(),
     stats: {
       correctRate: 0,
       consecutiveDays: 0,
@@ -37,6 +39,16 @@ export default class UserCenter extends Component<{}, State> {
     todaySigned: false,
     currentYear: new Date().getFullYear(),
     todayIndex: this.getDayOfYear(new Date()),
+  };
+
+  changeMonth = (offset: number) => {
+    this.setState(prevState => {
+      const newDate = new Date(prevState.currentYear, prevState.currentMonth + offset);
+      return {
+        currentYear: newDate.getFullYear(),
+        currentMonth: newDate.getMonth()
+      };
+    });
   };
 
   // 计算日期在一年中的序号
@@ -71,7 +83,7 @@ export default class UserCenter extends Component<{}, State> {
     EventBus.off('userLogout', this.handleUserLogout);
   }
 
-  handleUserUpdate = (userVO) => {
+  handleUserUpdate = (userVO: any) => {
     this.setState({userInfo: userVO});
   };
 
@@ -84,17 +96,25 @@ export default class UserCenter extends Component<{}, State> {
     try {
       const result = await addUserSignIn();
       if (result) {
-        Taro.showToast({title: '签到成功！', icon: 'success'});
-        // 刷新签到数据
+        Taro.showToast({
+          title: '签到成功！',
+          icon: 'success',
+          success: () => {
+            //  延迟确保toast显示完整
+            setTimeout(() => {
+              // 获取当前路由路径并 时间戳参数
+              const pages = Taro.getCurrentPages();
+              if (pages.length > 0) {
+                const currentPage = pages[pages.length - 1];
+                const url = `/${currentPage.route}?refresh=${Date.now()}`;
+                Taro.redirectTo({url});
+              }
+            }, 300);
+          }
+        });
+        // 立即更新本地状态
         await this.loadSignInData();
-        // 更新连续打卡天数
         this.updateConsecutiveDays();
-        // 刷新当前页面
-        const pages = Taro.getCurrentPages();
-        if (pages.length > 0) {
-          const currentPage = pages[pages.length - 1];
-          Taro.reLaunch({url: `/${currentPage.route}`});
-        }
       }
     } catch (error) {
       Taro.showToast({title: '签到失败，请重试', icon: 'none'});
@@ -202,27 +222,43 @@ export default class UserCenter extends Component<{}, State> {
 
   // 渲染签到日历视图
   renderSignInCalendar() {
-    const {signInRecords} = this.state;
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = today.getMonth(); // 当前月份 (0-11)
-    const daysInMonth = new Date(year, month + 1, 0).getDate(); // 获取当月实际天数
+    const {signInRecords, currentYear, currentMonth} = this.state;
 
-    // 生成当月每一天的日期对象
+    // 生成月份切换按钮
+    const MonthSwitcher = () => (
+      <View className="month-switcher">
+        <AtIcon
+          value="chevron-left"
+          onClick={() => this.changeMonth(-1)}
+          className="switch-icon"
+        />
+        <AtIcon
+          value="chevron-right"
+          onClick={() => this.changeMonth(1)}
+          className="switch-icon"
+        />
+      </View>
+    );
+
+    // 生成当月日期数据（修改为使用 state 中的当前年月）
+    const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
     const monthDays = Array.from({length: daysInMonth}, (_, i) => {
-      const day = i + 1;
-      const date = new Date(year, month, day);
-      const dayOfYear = this.getDayOfYear(date);
+      const date = new Date(currentYear, currentMonth, i + 1);
       return {
-        day,
-        dayOfYear,
-        isToday: dayOfYear === this.state.todayIndex
+        day: i + 1,
+        dayOfYear: this.getDayOfYear(date),
+        isToday: this.getDayOfYear(date) === this.getDayOfYear(new Date())
       };
     });
 
     return (
       <View className="signin-calendar">
-        <Text className="calendar-title">{year}年{month + 1}月 签到日历</Text>
+        <View className="calendar-header">
+          <Text className="calendar-title">
+            {currentYear}年{currentMonth + 1}月
+          </Text>
+          <MonthSwitcher/>
+        </View>
         <View className="calendar-grid">
           {monthDays.map(({day, dayOfYear, isToday}) => {
             const isSigned = signInRecords.includes(dayOfYear);
@@ -302,7 +338,7 @@ export default class UserCenter extends Component<{}, State> {
             </View>
             <View className="stat-item">
               <Text className="stat-value">{stats.consecutiveDays}</Text>
-              <Text className="stat-label">连续打卡</Text>
+              <Text className="stat-label">本月连续打卡</Text>
             </View>
           </View>
 

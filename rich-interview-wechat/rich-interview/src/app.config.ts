@@ -16,7 +16,9 @@ export default defineAppConfig({
     // 全部题库
     'pages/questionBanks/index',
     // 个人中心
-    'pages/user/index'
+    'pages/user/index',
+    // 个人中心-编辑
+    'pages/user/edit/index'
   ],
   window: {
     backgroundTextStyle: 'light',

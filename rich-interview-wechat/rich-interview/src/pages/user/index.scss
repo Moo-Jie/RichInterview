@@ -459,3 +459,26 @@
     }
   }
 }
+
+.calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.month-switcher {
+  display: flex;
+  align-items: center;
+
+  .switch-icon {
+    padding: 8px;
+    font-size: 18px;
+    color: #6190E8;
+    &:active {
+      opacity: 0.7;
+    }
+  }
+}
+
+// 保持其他原有样式不变

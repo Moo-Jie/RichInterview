@@ -1,0 +1,184 @@
+// 基于Taro UI的自定义主题变量
+$color-brand: #6190E8; // 主色调
+$spacing-base: 20rpx; // 基础间距
+$border-radius-sm: 8rpx; // 小圆角
+$font-size-base: 28rpx; // 基础字号
+
+// 页面容器
+.edit-container {
+  background-color: #f5f7fa;
+  min-height: 100vh;
+  padding: 0 $spacing-base 40rpx;
+
+  // 头部样式
+  .edit-header {
+    display: flex;
+    align-items: center;
+    padding: 30rpx 0;
+    position: relative;
+
+    .back-btn {
+      display: flex;
+      align-items: center;
+      font-size: $font-size-base;
+      color: #666;
+      position: absolute;
+      left: 0;
+      z-index: 10;
+
+      .icon {
+        font-family: 'iconfont' !important; // 确保引入图标字体
+        margin-right: 10rpx;
+        font-size: 36rpx;
+      }
+    }
+
+    .title {
+      flex: 1;
+      text-align: center;
+      font-size: 36rpx;
+      font-weight: bold;
+      color: #333;
+    }
+  }
+
+  // 头像区域
+  .avatar-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 40rpx 0;
+
+    .avatar-container {
+      position: relative;
+      width: 180rpx;
+      height: 180rpx;
+      border-radius: 50%;
+      overflow: hidden;
+      background-color: #e6e6e6;
+      border: 4rpx solid #fff;
+      box-shadow: 0 4rpx 20rpx rgba(0,0,0,0.1);
+
+      .avatar, .avatar-placeholder {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .icon {
+          font-size: 80rpx;
+          color: #999;
+        }
+      }
+
+      .edit-mask {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(0,0,0,0.6);
+        text-align: center;
+        padding: 10rpx 0;
+
+        .edit-text {
+          color: #fff;
+          font-size: 24rpx;
+        }
+      }
+    }
+
+    .avatar-hint {
+      margin-top: 20rpx;
+      font-size: 24rpx;
+      color: #999;
+    }
+  }
+
+  // 表单区域
+  .form-section {
+    background: #fff;
+    border-radius: $border-radius-sm;
+    padding: 0 30rpx;
+    box-shadow: 0 4rpx 20rpx rgba(0,0,0,0.05);
+
+    .form-group {
+      padding: 30rpx 0;
+      border-bottom: 1rpx solid #eee;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      .form-label {
+        display: block;
+        margin-bottom: 20rpx;
+        font-size: $font-size-base;
+        color: #333;
+
+        &.error {
+          color: #f56c6c;
+        }
+
+        .required {
+          color: #f56c6c;
+          margin-left: 6rpx;
+        }
+      }
+
+      // 调整Taro UI输入组件样式
+      .at-input, .at-textarea {
+        padding: 0;
+        margin: 0;
+
+        &::after {
+          display: none; // 移除默认边框
+        }
+      }
+
+      .at-input__input {
+        font-size: $font-size-base;
+      }
+
+      .at-textarea {
+        border: 1rpx solid #eee;
+        border-radius: $border-radius-sm;
+        padding: 20rpx;
+        min-height: 180rpx;
+
+        &__textarea {
+          font-size: $font-size-base;
+        }
+      }
+    }
+  }
+
+  // 操作按钮
+  .action-buttons {
+    margin-top: 50rpx;
+    padding: 0 30rpx;
+
+    .save-btn {
+      background-color: $color-brand;
+      border: none;
+      border-radius: $border-radius-sm;
+      font-size: $font-size-base + 2;
+      height: 90rpx;
+      line-height: 90rpx;
+
+      &.at-button--disabled {
+        opacity: 0.6;
+      }
+    }
+  }
+}
+
+// 加载状态
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: $font-size-base + 4;
+  color: #999;
+}

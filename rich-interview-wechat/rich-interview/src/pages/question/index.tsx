@@ -175,12 +175,28 @@ export default class QuestionDetailPage extends Component<{}, State> {
 
           <TagParser tagList={question.tagList}/>
 
-          <View className='content'>
-            <Text>{question.content}</Text>
+          <View className='at-article'>
+            <View className='at-article__h3'>题目解析</View>
+            <View className='at-article__content'>
+              <View className='at-article__section'>
+                <View className='at-article__p'>
+                  {question.content.replace(/^###\s*/, '')}
+                </View>
+              </View>
+            </View>
           </View>
 
-          <View className='content'>
-            <Text>{question.answer}</Text>
+          <View className='at-article'>
+            <View className='at-article__h3'>参考答案</View>
+            <View className='at-article__content'>
+              <View className='at-article__section'>
+                {question.answer.split('\n\n').map((paragraph, i) => (
+                  <View key={i} className='at-article__p'>
+                    {paragraph.replace(/\s{2,}/g, '\n')}
+                  </View>
+                ))}
+              </View>
+            </View>
           </View>
         </View>
       </ScrollView>
