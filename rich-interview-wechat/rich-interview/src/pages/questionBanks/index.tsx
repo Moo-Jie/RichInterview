@@ -23,14 +23,17 @@ export default class QuestionBanks extends Component<{}, State> {
 
   async loadData() {
     try {
-      // 并行获取基础数据和热点数据
-      const [basicData, hotspotData] = await Promise.all([
+      // 获取基础数据和热点数据
+      const [basicData] = await Promise.all([
         listQuestionBankVOByPage({
           pageSize: 100,
           sortField: 'createTime',
           sortOrder: 'descend'
-        }),
-        getHotQuestionBanks()
+        })
+      ]);
+      const [hotspotData] = await Promise.all([
+        // 和基础题库保持一致
+        getHotQuestionBanks(basicData?.length || 0)
       ]);
 
       // 合并数据

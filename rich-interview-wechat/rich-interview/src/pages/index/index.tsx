@@ -100,8 +100,8 @@ export default class Index extends Component<{}, State> {
   async loadData() {
     try {
       const [hotBanks, newBanks, hotQuestions, newQuestions] = await Promise.all([
-        getHotQuestionBanks(),
-        getNewQuestionBanks(),
+        getHotQuestionBanks(12),
+        getNewQuestionBanks(12),
         getHotQuestions(),
         getNewQuestions(),
       ]);

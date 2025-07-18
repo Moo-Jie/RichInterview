@@ -47,12 +47,16 @@ interface QuestionBankHotspotVO {
 /**
  * 获取热门题库
  */
-export const getHotQuestionBanks = async (): Promise<any[]> => {
+export const getHotQuestionBanks = async (pageSize = 10): Promise<any[]> => {
   try {
     const res = await request<ApiResponse<PaginationResponse>>({
       url: '/api/questionBankHotspot/list/page/vo',
       method: 'POST',
-      data: {pageSize: 10, sortField: 'viewNum', sortOrder: 'descend'}
+      data: {
+        pageSize, // 改为参数传入
+        sortField: 'viewNum',
+        sortOrder: 'descend'
+      }
     });
     return res.data?.records || [];
   } catch (error) {
@@ -64,12 +68,16 @@ export const getHotQuestionBanks = async (): Promise<any[]> => {
 /**
  * 获取最新题库
  */
-export const getNewQuestionBanks = async (): Promise<any[]> => {
+export const getNewQuestionBanks = async (pageSize = 10): Promise<any[]> => {
   try {
     const res = await request<ApiResponse<PaginationResponse>>({
       url: '/api/questionBank/list/page/vo',
       method: 'POST',
-      data: {pageSize: 10, sortField: 'createTime', sortOrder: 'descend'}
+      data: {
+        pageSize,
+        sortField: 'createTime',
+        sortOrder: 'descend'
+      }
     });
     return res.data?.records || [];
   } catch (error) {
@@ -110,7 +118,12 @@ export const listQuestionBankVOByPage = async (
     const res = await request<ApiResponse<PaginationResponse>>({
       url: '/api/questionBank/list/page/vo',
       method: 'POST',
-      data: params
+      data: {
+        ...params,
+        // 确保分页参数传递到后端
+        current: params.current || 1,
+        pageSize: params.pageSize || 10
+      }
     });
     return res.data?.records || null;
   } catch (error) {
