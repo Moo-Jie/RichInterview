@@ -15,6 +15,18 @@ interface DetailResponse {
   data: any;
 }
 
+interface QuestionQueryParams {
+  current?: number;
+  pageSize?: number;
+  sortField?: string;
+  sortOrder?: 'ascend' | 'descend';
+  title?: string;
+  content?: string;
+  tags?: string[];
+  searchText?: string;
+}
+
+
 /**
  * 获取热门题目
  */
@@ -91,3 +103,33 @@ export const getQuestionHotspotDetail = async (questionId: string): Promise<any>
     throw error;
   }
 }
+
+/**
+ * 题目分页检索接口
+ * @param params 包含分页参数和搜索条件的对象
+ */
+export const searchQuestions = async (
+  params: QuestionQueryParams
+): Promise<{ records: any[]; total: number }> => {
+  try {
+    const res = await request<ApiResponse<PaginationResponse>>({
+      url: '/api/question/list/page/vo',
+      method: 'POST',
+      data: {
+        current: params.current || 1,
+        pageSize: params.pageSize || 10,
+        sortField: params.sortField || 'createTime',
+        sortOrder: params.sortOrder || 'descend',
+        searchText: params.searchText,
+        tags: params.tags
+      }
+    });
+    return {
+      records: res.data?.records || [],
+      // @ts-ignore
+      total: res.data?.total || 0
+    };
+  } catch (error) {
+    return { records: [], total: 0 };
+  }
+};

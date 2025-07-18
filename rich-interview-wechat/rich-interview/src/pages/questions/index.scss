@@ -1,0 +1,111 @@
+$primary-color: #6190e8;
+$border-color: #e6e6e6;
+$light-gray: #f8f8f8;
+
+.question-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: $light-gray;
+
+  .search-header {
+    background: #fff;
+    padding: 16rpx 24rpx;
+    border-bottom: 1px solid $border-color;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.03);
+  }
+
+  .tag-section {
+    margin-top: 20rpx;
+
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      padding-top: 16rpx;
+      gap: 12rpx;
+
+      .tag-item {
+        background: rgba($primary-color, 0.1);
+        color: $primary-color;
+        font-size: 24rpx;
+        padding: 8rpx 20rpx;
+        border-radius: 40rpx;
+        transition: all 0.2s;
+
+        &:active {
+          opacity: 0.8;
+          transform: scale(0.98);
+        }
+      }
+    }
+  }
+
+  .result-list {
+    flex: 1;
+    overflow: hidden;
+
+    .at-list {
+      padding: 0 24rpx;
+
+      &::after {
+        border: none;
+      }
+
+      .at-list__item {
+        margin-bottom: 24rpx;
+        border-radius: 16rpx;
+        box-shadow: 0 4rpx 24rpx rgba(0, 0, 0, 0.03);
+        padding: 28rpx;
+        background: #fff;
+
+        &::after {
+          border: none;
+        }
+      }
+    }
+  }
+
+  .question-info {
+    margin-top: 16rpx;
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12rpx;
+      margin-bottom: 16rpx;
+
+      .tag {
+        font-size: 24rpx;
+        color: $primary-color;
+        background: rgba($primary-color, 0.1);
+        padding: 4rpx 16rpx;
+        border-radius: 8rpx;
+      }
+    }
+
+    .meta {
+      display: flex;
+      align-items: center;
+      font-size: 24rpx;
+      color: #999;
+
+      .date {
+        display: flex;
+        align-items: center;
+        gap: 8rpx;
+      }
+    }
+  }
+
+  .loading,
+  .empty-text,
+  .no-more {
+    text-align: center;
+    padding: 40rpx;
+    font-size: 28rpx;
+    color: #999;
+  }
+}

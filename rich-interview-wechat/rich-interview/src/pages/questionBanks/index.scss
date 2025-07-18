@@ -1,0 +1,74 @@
+.banks-container {
+  height: 100vh;
+  background: #f5f5f5;
+
+  .banks-page {
+    height: 100%;
+    padding: 20px;
+  }
+
+  .bank-info {
+    .description {
+      color: #666;
+      font-size: 24px;
+    }
+
+    .meta {
+      margin-top: 8px;
+      display: flex;
+      justify-content: space-between;
+      color: #999;
+
+      text {
+        display: flex;
+        align-items: center;
+
+        .at-icon {
+          margin-right: 4px;
+        }
+      }
+    }
+  }
+
+  .loading-text,
+  .empty-text {
+    display: block;
+    text-align: center;
+    padding: 20px;
+    color: #888;
+  }
+}
+
+.meta-stats {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+
+  .stats {
+    display: flex;
+    align-items: center;
+    color: #666;
+
+    .at-icon {
+      margin-right: 4px;
+    }
+    .heart-icon {
+      margin-left: 12px;
+    }
+    .stat {
+      font-size: 22px;
+    }
+  }
+
+  .update-time {
+    color: #999;
+    font-size: 22px;
+    display: flex;
+    align-items: center;
+
+    .at-icon {
+      margin-right: 4px;
+    }
+  }
+}

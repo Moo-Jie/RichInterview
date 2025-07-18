@@ -183,7 +183,6 @@ export const updateUserInfo = async (params: UserUpdateMyRequest): Promise<boole
     });
 
     if (response?.code === 0) {
-      Taro.showToast({title: '更新成功', icon: 'success'});
       return true;
     }
     throw new Error(response?.message || '更新失败');

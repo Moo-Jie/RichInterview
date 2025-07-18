@@ -38,6 +38,50 @@
     position: relative;
     overflow: hidden;
 
+    // 用户中心的签到样式
+    .signin-button-container {
+      padding: 20rpx;
+
+      .signin-button {
+        background: linear-gradient(135deg, #3b82f6, #2563eb);
+        border-radius: 50rpx;
+        color: white;
+        border: none;
+        box-shadow: 0 8rpx 24rpx rgba(37, 99, 235, 0.3);
+        transition: all 0.3s;
+
+        &.signed {
+          background: linear-gradient(135deg, #10b981, #059669);
+        }
+
+        &:active {
+          transform: translateY(4rpx);
+          box-shadow: 0 6rpx 16rpx rgba(37, 99, 235, 0.3);
+        }
+
+        Text {
+          font-size: 34rpx;
+          font-weight: 500;
+        }
+      }
+    }
+
+    // 暗色模式适配
+    @media (prefers-color-scheme: dark) {
+      .signin-card {
+        background: #1f2937;
+
+        .signin-button {
+          background: linear-gradient(135deg, #1e40af, #1e3a8a);
+
+          &.signed {
+            background: linear-gradient(135deg, #065f46, #064e3b);
+          }
+        }
+      }
+    }
+
+
     .at-article {
       margin-top: 30rpx;
 
@@ -89,9 +133,11 @@
           &.easy {
             color: #10b981;
           }
+
           &.medium {
             color: #f59e0b;
           }
+
           &.hard {
             color: #ef4444;
           }
@@ -349,3 +395,54 @@
     }
   }
 }
+
+.share-card-modal {
+  padding: 20px;
+  text-align: center;
+
+  .save-button {
+    margin: 40rpx auto 0;
+    width: 80%;
+    background: linear-gradient(135deg, #4A6EFF, #8B5CF6);
+    transition: all 0.3s;
+
+    &:active {
+      transform: scale(0.98);
+      opacity: 0.9;
+    }
+
+    .button-text {
+      font-weight: bold;
+      letter-spacing: 2rpx;
+    }
+  }
+
+  image {
+    border-radius: 16rpx;
+    box-shadow: 0 8rpx 40rpx rgba(0,0,0,0.1);
+  }
+
+  .share-title {
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    display: block;
+  }
+
+  .save-button {
+    margin-top: 30px;
+    background: #4A6EFF;
+    color: #fff;
+    border-radius: 50px;
+    padding: 15px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .button-text {
+      margin-left: 10px;
+      font-size: 28px;
+    }
+  }
+}
+
