@@ -30,8 +30,8 @@ const extractSatoken = (headers: any): string | null => {
 };
 
 const request = <T, >(options: Taro.request.Option): Promise<T> => {
-  // const baseURL = DEV_BASE_URL;
-  const baseURL = PROD_BASE_URL;
+  const baseURL = DEV_BASE_URL;
+  // const baseURL = PROD_BASE_URL;
 
   // 获取设备唯一标识（优先使用缓存）
   const getDeviceId = () => {

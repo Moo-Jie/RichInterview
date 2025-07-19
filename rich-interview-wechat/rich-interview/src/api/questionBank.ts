@@ -23,7 +23,7 @@ interface QuestionBankVO {
   picture: string;
   createTime: Date;
   updateTime: Date;
-  user?: UserVO; // 假设存在UserVO类型
+  user?: UserVO;
   questionsPage?: PaginationResponse;
 }
 
@@ -47,13 +47,13 @@ interface QuestionBankHotspotVO {
 /**
  * 获取热门题库
  */
-export const getHotQuestionBanks = async (pageSize = 10): Promise<any[]> => {
+export const getHotQuestionBanks = async (pageSize: number): Promise<any[]> => {
   try {
     const res = await request<ApiResponse<PaginationResponse>>({
       url: '/api/questionBankHotspot/list/page/vo',
       method: 'POST',
       data: {
-        pageSize, // 改为参数传入
+        pageSize,
         sortField: 'viewNum',
         sortOrder: 'descend'
       }
@@ -97,7 +97,7 @@ export const getQuestionBankVOById = async (id: number): Promise<QuestionBankVO 
     const res = await request<ApiResponse<QuestionBankVO>>({
       url: '/api/questionBank/get/vo',
       method: 'GET',
-      data: {id}
+      data: {id, queryQuestionsFlag: true,questionsCurrent: 1,questionsPageSize: 100}
     });
     return res.data || null;
   } catch (error) {

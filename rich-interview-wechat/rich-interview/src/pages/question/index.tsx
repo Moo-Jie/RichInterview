@@ -5,8 +5,8 @@ import {AtButton, AtIcon, AtModal, AtModalContent, AtTag} from 'taro-ui';
 import {getQuestionDetail, getQuestionHotspotDetail} from '../../api/question';
 import TagParser from '../../components/TagParserComponent';
 import dayjs from 'dayjs';
-import './index.scss';
 import {addUserSignIn, getUserSignInRecord, UserVO} from '../../api/user';
+import './index.scss';
 
 type QuestionDetail = {
   answer: string;
@@ -50,8 +50,8 @@ type State = {
   starred: boolean;
   question: QuestionDetail | null;
   questionHotspotDetail: QuestionHotspotDetail | null;
-  showShareCard: boolean; // 分享卡片可见状态
-  shareCardPath: string; // 分享卡片图片路径
+  showShareCard: boolean;
+  shareCardPath: string;
   todaySigned: boolean;
   signInRecords: number[];
   currentYear: number;
@@ -193,6 +193,30 @@ export default class QuestionDetailPage extends Component<{}, State> {
     return lines * lineHeight;
   }
 
+  private truncateTextByHeight(ctx: any, text: string, maxWidth: number, lineHeight: number, maxHeight: number) {
+    const maxLines = Math.floor(maxHeight / lineHeight);
+    let currentLine = '';
+    let lines = 0;
+    let result = '';
+
+    for (const char of text) {
+      const testLine = currentLine + char;
+      const metrics = ctx.measureText(testLine);
+
+      if (metrics.width > maxWidth) {
+        lines++;
+        if (lines >= maxLines) {
+          return result + '...';
+        }
+        result += currentLine + '\n';
+        currentLine = char;
+      } else {
+        currentLine = testLine;
+      }
+    }
+    return result;
+  }
+
   // 生成分享卡片
   handleShare = async () => {
     const {question, questionHotspotDetail} = this.state;
@@ -249,6 +273,14 @@ export default class QuestionDetailPage extends Component<{}, State> {
         380 + contentBgHeight + 180
       );
 
+      const maxContentHeight = canvasHeight - 500;
+
+      if (contentHeight > maxContentHeight) {
+        needTruncate = true;
+        contentHeight = maxContentHeight;
+        contentToShow = this.truncateTextByHeight(ctx, contentToShow, maxContentWidth, lineHeight, maxContentHeight);
+      }
+
       // 2. 开始绘制
 
       // 绘制卡片背景
@@ -267,19 +299,28 @@ export default class QuestionDetailPage extends Component<{}, State> {
       ctx.setFontSize(44);
       ctx.setFillStyle('#ffffff');
       ctx.setTextAlign('center');
-      ctx.fillText('题目分享卡', canvasWidth / 2, headerHeight - 50);
+      ctx.fillText('题目分享卡', canvasWidth / 2, headerHeight - 20);
 
       // 用户信息
       ctx.setFontSize(28);
       ctx.setFillStyle('rgba(255,255,255,0.8)');
       ctx.setTextAlign('left');
-      ctx.fillText(`分享者：${question.user?.userName || 'RICH用户'}`, 40, headerHeight - 90);
+      ctx.fillText(`   分享者：${question.user?.userName || 'RICH 面试刷题平台用户'}` + '              分享自: RICH 面试刷题平台', 40, headerHeight - 90);
 
       // 题目标题
       let currentY = 220;
       ctx.setFontSize(36);
       ctx.setFillStyle('#333333');
       currentY = this.drawWrappedText(ctx, question.title, 40, currentY, canvasWidth - 80, 40);
+
+      // 热度信息
+      const statsY = currentY + 14;
+      ctx.setFontSize(28);
+      ctx.setFillStyle('#666666');
+      ctx.fillText('🔥', 60, statsY);
+      ctx.fillText(`${questionHotspotDetail.viewNum || 0} 浏览`, 100, statsY);
+      ctx.fillText('❤️', 260, statsY);
+      ctx.fillText(`${questionHotspotDetail.starNum || 0} 收藏`, 300, statsY);
 
       // 标签区域
       let tagX = 40;
@@ -301,27 +342,13 @@ export default class QuestionDetailPage extends Component<{}, State> {
       // 题目答案内容
       ctx.setFillStyle('#222222');
       ctx.setFontSize(28);
+
       let lastY = this.drawWrappedText(ctx, contentToShow, 60, contentBoxY + 50, canvasWidth - 120, 40);
-      // 添加提示信息
+
       if (needTruncate) {
         lastY = this.drawWrappedText(ctx, '字数过多，请前往小程序或官网进行学习', 60, lastY + 20, canvasWidth - 120, 36);
       }
       this.drawWrappedText(ctx, contentToShow, 60, contentBoxY + 50, canvasWidth - 120, 40);
-
-      // 热度信息
-      const statsY = contentBoxY + contentBgHeight + 30;
-      ctx.setFontSize(28);
-      ctx.setFillStyle('#666666');
-      ctx.fillText('🔥', 60, statsY);
-      ctx.fillText(`${questionHotspotDetail.viewNum || 0} 浏览`, 100, statsY);
-      ctx.fillText('❤️', 260, statsY);
-      ctx.fillText(`${questionHotspotDetail.starNum || 0} 收藏`, 300, statsY);
-
-      // 底部来源信息
-      ctx.setFontSize(24);
-      ctx.setFillStyle('#cccccc');
-      ctx.setTextAlign('center');
-      ctx.fillText('分享自: RICH 面试刷题平台', canvasWidth / 2, canvasHeight - 40);
 
       // 绘制内容
       ctx.draw(false, async () => {

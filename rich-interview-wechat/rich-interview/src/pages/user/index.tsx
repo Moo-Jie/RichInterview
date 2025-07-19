@@ -100,21 +100,13 @@ export default class UserCenter extends Component<{}, State> {
           title: '签到成功！',
           icon: 'success',
           success: () => {
-            //  延迟确保toast显示完整
-            setTimeout(() => {
-              // 获取当前路由路径并 时间戳参数
-              const pages = Taro.getCurrentPages();
-              if (pages.length > 0) {
-                const currentPage = pages[pages.length - 1];
-                const url = `/${currentPage.route}?refresh=${Date.now()}`;
-                Taro.redirectTo({url});
-              }
-            }, 300);
+            // 移除重定向逻辑，直接更新状态
+            this.setState({todaySigned: true}, async () => {
+              await this.loadSignInData();
+              this.updateConsecutiveDays();
+            });
           }
         });
-        // 立即更新本地状态
-        await this.loadSignInData();
-        this.updateConsecutiveDays();
       }
     } catch (error) {
       Taro.showToast({title: '签到失败，请重试', icon: 'none'});
@@ -356,7 +348,7 @@ export default class UserCenter extends Component<{}, State> {
                   <Text>今日已签到</Text>
                 </>
               ) : (
-                <Text>立即签到</Text>
+                <Text>双击签到</Text>
               )}
             </AtButton>
           </View>

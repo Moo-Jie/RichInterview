@@ -209,7 +209,6 @@ export const addUserSignIn = async (): Promise<boolean> => {
     });
 
     if (response?.code === 0) {
-      Taro.showToast({title: '签到成功', icon: 'success'});
       return response.data;
     }
     throw new Error(response?.message || '签到失败');
