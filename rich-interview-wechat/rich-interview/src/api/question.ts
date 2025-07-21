@@ -26,6 +26,44 @@ interface QuestionQueryParams {
   searchText?: string;
 }
 
+const FIELD_TYPES = {
+  VIEW_NUM: 'viewNum',
+  STAR_NUM: 'starNum',
+} as const;
+
+/**
+ * 增加题目浏览量
+ * @param questionId 题目ID
+ */
+export const incrementViewCount = async (questionId: string): Promise<boolean> => {
+  try {
+    const res = await request<ApiResponse<boolean>>({
+      url: `/api/questionHotspot/increment?questionId=${questionId}&fieldType=${FIELD_TYPES.VIEW_NUM}`,
+      method: 'POST',
+    });
+    return res.data || false;
+  } catch (error) {
+    console.error('增加点赞量失败', error);
+    return false;
+  }
+};
+
+/**
+ * 增加题目点赞量
+ * @param questionId 题目ID
+ */
+export const incrementStarCount = async (questionId: string): Promise<boolean> => {
+  try {
+    const res = await request<ApiResponse<boolean>>({
+      url: `/api/questionHotspot/increment?questionId=${questionId}&fieldType=${FIELD_TYPES.STAR_NUM}`,
+      method: 'POST',
+    });
+    return res.data || false;
+  } catch (error) {
+    console.error('增加点赞量失败', error);
+    return false;
+  }
+};
 
 /**
  * 获取热门题目
@@ -130,6 +168,6 @@ export const searchQuestions = async (
       total: res.data?.total || 0
     };
   } catch (error) {
-    return { records: [], total: 0 };
+    return {records: [], total: 0};
   }
 };

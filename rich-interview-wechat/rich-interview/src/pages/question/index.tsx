@@ -2,7 +2,7 @@ import {Component} from 'react';
 import {Canvas, Image, ScrollView, Text, View} from '@tarojs/components';
 import Taro from '@tarojs/taro';
 import {AtButton, AtIcon, AtModal, AtModalContent, AtTag} from 'taro-ui';
-import {getQuestionDetail, getQuestionHotspotDetail} from '../../api/question';
+import {getQuestionDetail, getQuestionHotspotDetail, incrementStarCount, incrementViewCount} from '../../api/question';
 import TagParser from '../../components/TagParserComponent';
 import dayjs from 'dayjs';
 import {addUserSignIn, getUserSignInRecord, UserVO} from '../../api/user';
@@ -77,6 +77,8 @@ export default class QuestionDetailPage extends Component<{}, State> {
     const {id} = Taro.getCurrentInstance().router?.params || {};
     if (id) {
       this.loadData(id);
+      // 增加浏览量
+      incrementViewCount(id).catch(console.error);
     } else {
       console.log(" id 不存在");
       setTimeout(() => Taro.navigateBack(), 0);
@@ -161,6 +163,29 @@ export default class QuestionDetailPage extends Component<{}, State> {
       setTimeout(() => Taro.navigateBack(), 3000);
     }
   }
+
+  handleStar = async () => {
+    const {question} = this.state;
+    // 添加状态检查
+    if (this.state.starred || !question?.id) return;
+
+    try {
+      const success = await incrementStarCount(question.id);
+      if (success) {
+        this.setState(prevState => ({
+          starred: true,
+          questionHotspotDetail: {
+            ...prevState.questionHotspotDetail,
+            starNum: (prevState.questionHotspotDetail?.starNum || 0) + 1,
+            tagList: prevState.questionHotspotDetail?.tagList || []
+          }
+        }));
+        Taro.showToast({title: '点赞成功', icon: 'success'});
+      }
+    } catch (error) {
+      Taro.showToast({title: '点赞失败，请重试', icon: 'none'});
+    }
+  };
 
   drawRoundRect(ctx: any, x: number, y: number, w: number, h: number, r: number) {
     ctx.beginPath();
@@ -525,6 +550,13 @@ export default class QuestionDetailPage extends Component<{}, State> {
           <View className='action-bar'>
             <View className='action-btn' onClick={this.handleGoBack}>
               <AtIcon value='chevron-left' size='18' color='#fff'/>
+            </View>
+            <View className='action-btn' onClick={this.handleStar}>
+              <AtIcon
+                value='heart-2'
+                size='18'
+                color={this.state.starred ? '#98d0ff' : '#fff'}
+              />
             </View>
             <View className='action-btn' onClick={this.handleShare}>
               <AtIcon value='share' size='18' color='#fff'/>

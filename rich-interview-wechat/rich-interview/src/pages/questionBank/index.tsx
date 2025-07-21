@@ -182,7 +182,9 @@ export default class QuestionBankDetailPage extends Component<{}, State> {
             <View className='action-btn' onClick={this.handleGoBack}>
               <AtIcon value='chevron-left' size='20' color='#fff'></AtIcon>
             </View>
-            <Text className='action-title'>题库详情</Text>
+            <View style={{flex: 1, textAlign: 'center'}}>
+              <Text className='action-title'>题库详情</Text>
+            </View>
           </View>
 
           {/* 题库封面 */}
@@ -209,11 +211,6 @@ export default class QuestionBankDetailPage extends Component<{}, State> {
                 <AtIcon value='star' size='18' color='#8a8a8a'></AtIcon>
                 <Text className='stat-value'>{hotspotDetail.starNum || 0}次点赞</Text>
               </View>
-
-              <View className='bank-stat'>
-                <AtIcon value='message' size='18' color='#8a8a8a'></AtIcon>
-                <Text className='stat-value'>{hotspotDetail.commentNum || 0}条评论</Text>
-              </View>
             </View>
 
             <View className='bank-tags'>
@@ -224,27 +221,6 @@ export default class QuestionBankDetailPage extends Component<{}, State> {
                 </AtTag>
               ))}
             </View>
-          </AtCard>
-
-          {/* 创建者信息 */}
-          <AtCard title='创建者' className='creator-card'>
-            <View
-              className='creator-info'
-              onClick={() => this.navigateToUser(bankDetail.user.id)}
-            >
-              {bankDetail.user.userAvatar ? (
-                <Image
-                  src={bankDetail.user.userAvatar}
-                  className='creator-avatar'
-                />
-              ) : (
-                <View className='avatar-placeholder'>
-                  <AtIcon value='user' size='20' color='#fff'></AtIcon>
-                </View>
-              )}
-              <Text className='creator-name'>{bankDetail.user.userName || '匿名用户'}</Text>
-            </View>
-            <Text className='update-time'>最近维护于：{bankDetail.updateTime}</Text>
           </AtCard>
 
           {/* 题库中的题目列表 */}
@@ -273,28 +249,26 @@ export default class QuestionBankDetailPage extends Component<{}, State> {
             )}
           </AtCard>
 
-          {/* 热点数据详情 */}
-          <AtCard title='热度分析' className='hotspot-card'>
-            <View className='hotspot-grid'>
-              <View className='hotspot-item'>
-                <Text className='hotspot-value'>{hotspotDetail.viewNum || 0}</Text>
-                <Text className='hotspot-label'>浏览量</Text>
-              </View>
-
-              <View className='hotspot-item'>
-                <Text className='hotspot-value'>{hotspotDetail.starNum || 0}</Text>
-                <Text className='hotspot-label'>点赞量</Text>
-              </View>
+          {/* 创建者信息 */}
+          <AtCard title='创建者' className='creator-card'>
+            <View
+              className='creator-info'
+              onClick={() => this.navigateToUser(bankDetail.user.id)}
+            >
+              {bankDetail.user.userAvatar ? (
+                <Image
+                  src={bankDetail.user.userAvatar}
+                  className='creator-avatar'
+                />
+              ) : (
+                <View className='avatar-placeholder'>
+                  <AtIcon value='user' size='20' color='#fff'></AtIcon>
+                </View>
+              )}
+              <Text className='creator-name'>{bankDetail.user.userName || '匿名用户'}</Text>
             </View>
+            <Text className='update-time'>最近维护于：{bankDetail.updateTime}</Text>
           </AtCard>
-
-          {/* 底部操作区域 */}
-          <View className='action-container'>
-            <Button className='action-btn collect-btn'>
-              <AtIcon value='star' size='20' color='#fff'></AtIcon>
-              {hotspotDetail.starNum > 0 ? '已点赞' : '点赞题库'}
-            </Button>
-          </View>
         </ScrollView>
       </View>
     );

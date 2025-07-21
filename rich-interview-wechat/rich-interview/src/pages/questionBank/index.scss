@@ -117,7 +117,7 @@
     }
   }
 
-  .creator-card, .questions-card, .hotspot-card {
+  .creator-card, .questions-card, {
     margin: 0 20px 20px;
     border-radius: 16px;
     overflow: hidden;
@@ -202,44 +202,6 @@
         .question-tags {
           margin-top: 12px;
         }
-      }
-    }
-  }
-
-  .hotspot-card {
-    .hotspot-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 20px;
-      margin: 15px 0 25px;
-
-      .hotspot-item {
-        background: #f8fafc;
-        border-radius: 12px;
-        padding: 20px;
-        text-align: center;
-
-        .hotspot-value {
-          font-size: 40px;
-          font-weight: bold;
-          color: #4a6eff;
-          display: block;
-        }
-
-        .hotspot-label {
-          font-size: 26px;
-          color: #8a8a8a;
-          margin-top: 8px;
-        }
-      }
-    }
-
-    .hotspot-meta {
-      .hotspot-time {
-        display: block;
-        font-size: 26px;
-        color: #909399;
-        margin: 8px 0;
       }
     }
   }

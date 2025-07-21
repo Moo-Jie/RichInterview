@@ -21,8 +21,8 @@
       top: 0;
       left: 0;
       width: 100%;
-      height: 100%; // 修复：高度改为100%确保完整覆盖
-      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      height: 100%;
+      background: linear-gradient(135deg, #98d0ff, #47f1ff);
       z-index: 0;
     }
 
@@ -389,7 +389,7 @@
     transition: all 0.3s;
 
     &.signed {
-      background: linear-gradient(135deg, #10b981, #059669);
+      background: linear-gradient(135deg, #59a7ff, #059669);
     }
 
     &:active:not([disabled]) {
