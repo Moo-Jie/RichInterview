@@ -44,6 +44,48 @@ interface QuestionBankHotspotVO {
   description: string;
 }
 
+const FIELD_TYPES = {
+  VIEW_NUM: 'viewNum',
+  STAR_NUM: 'starNum',
+} as const;
+
+/**
+ * 增加题库浏览量
+ * @param questionBankId 题库ID
+ */
+export const incrementViewCount = async (questionBankId: string): Promise<boolean> => {
+  try {
+    console.log(questionBankId)
+    const res = await request<ApiResponse<boolean>>({
+      url: `/api/questionBankHotspot/increment?questionBankId=${questionBankId}&fieldType=${FIELD_TYPES.VIEW_NUM}`,
+      method: 'POST',
+    });
+    return res.data || false;
+  } catch (error) {
+    console.error('增加点赞量失败', error);
+    return false;
+  }
+};
+
+/**
+ * 增加题库点赞量
+ * @param questionBankId 题库ID
+ */
+export const incrementStarCount = async (questionBankId: string): Promise<boolean> => {
+  try {
+    console.log(questionBankId)
+    const res = await request<ApiResponse<boolean>>({
+      url: `/api/questionBankHotspot/increment?questionBankId=${questionBankId}&fieldType=${FIELD_TYPES.STAR_NUM}`,
+      method: 'POST',
+    });
+    return res.data || false;
+  } catch (error) {
+    console.error('增加点赞量失败', error);
+    return false;
+  }
+};
+
+
 /**
  * 获取热门题库
  */

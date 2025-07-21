@@ -2,7 +2,11 @@ import {Component, JSXElementConstructor, Key, ReactElement, ReactNode, ReactPor
 import {Button, Image, ScrollView, Text, View} from '@tarojs/components';
 import Taro from '@tarojs/taro';
 import {AtCard, AtIcon, AtTag} from 'taro-ui';
-import {getQuestionBankHotspotVOByQuestionBankId, getQuestionBankVOById,} from '../../api/questionBank';
+import {
+  getQuestionBankHotspotVOByQuestionBankId,
+  getQuestionBankVOById, incrementStarCount,
+  incrementViewCount,
+} from '../../api/questionBank';
 import TagParser from '../../components/TagParserComponent';
 import dayjs from 'dayjs';
 import './index.scss';
@@ -52,6 +56,7 @@ type State = {
   showShareCard: boolean;
   shareCardPath: string;
   canvasRendered: boolean;
+  starred: boolean;
 };
 
 export default class QuestionBankDetailPage extends Component<{}, State> {
@@ -64,6 +69,7 @@ export default class QuestionBankDetailPage extends Component<{}, State> {
     showShareCard: false,
     shareCardPath: '',
     canvasRendered: false,
+    starred: false,
   };
 
   componentDidMount() {
@@ -72,12 +78,34 @@ export default class QuestionBankDetailPage extends Component<{}, State> {
       this.setState({}, () => {
         // @ts-ignore
         this.loadData(id);
+        incrementViewCount(id).catch(console.error);
       });
     } else {
       Taro.showToast({title: '题库ID不存在', icon: 'error'});
       setTimeout(() => Taro.navigateBack(), 2000);
     }
   }
+
+  // 点赞处理
+  handleStar = async () => {
+    if (!this.state.questionBankId || this.state.starred) return;
+
+    try {
+      const success = await incrementStarCount(this.state.questionBankId.toString());
+      if (success) {
+        this.setState(prevState => ({
+          starred: true,
+          hotspotDetail: prevState.hotspotDetail ? {
+            ...prevState.hotspotDetail,
+            starNum: (prevState.hotspotDetail.starNum || 0) + 1
+          } : null
+        }));
+        Taro.showToast({title: '点赞成功', icon: 'success'});
+      }
+    } catch (error) {
+      Taro.showToast({title: '操作失败，请重试', icon: 'none'});
+    }
+  };
 
   async loadData(questionBankId: number) {
     if (!questionBankId) return;
@@ -107,10 +135,12 @@ export default class QuestionBankDetailPage extends Component<{}, State> {
       };
 
       this.setState({
+        questionBankId,
         // @ts-ignore
         bankDetail,
         hotspotDetail,
         loading: false,
+        starred: false
       });
     } catch (error) {
       Taro.showToast({
@@ -180,10 +210,14 @@ export default class QuestionBankDetailPage extends Component<{}, State> {
           {/* 顶部操作栏 */}
           <View className='action-bar'>
             <View className='action-btn' onClick={this.handleGoBack}>
-              <AtIcon value='chevron-left' size='20' color='#fff'></AtIcon>
+              <AtIcon value='chevron-left' size='20' color='#fff'/>
             </View>
-            <View style={{flex: 1, textAlign: 'center'}}>
-              <Text className='action-title'>题库详情</Text>
+            <View className='action-btn' onClick={this.handleStar}>
+              <AtIcon
+                value='heart-2'
+                size='20'
+                color={this.state.starred ? '#98d0ff' : '#fff'}
+              />
             </View>
           </View>
 

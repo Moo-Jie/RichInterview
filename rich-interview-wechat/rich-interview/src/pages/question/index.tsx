@@ -513,7 +513,7 @@ export default class QuestionDetailPage extends Component<{}, State> {
           id='shareCanvas'
           style={{
             width: '750px',
-            height: '2000px', // 使用更大高度以适应长内容
+            height: '2000px',
             position: 'fixed',
             top: '-99999px',
             left: '-99999px'
