@@ -8,23 +8,38 @@
   }
 
   .bank-info {
+    position: relative;
+    padding: 28px;
+    background: linear-gradient(145deg, #e0e5ff, #ffffff);
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease;
+
+    &:active {
+      transform: translateY(2px);
+    }
+
     .description {
-      color: #666;
-      font-size: 24px;
+      color: #2d3748;
+      font-size: 28px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      position: relative;
     }
 
     .meta {
       margin-top: 8px;
       display: flex;
       justify-content: space-between;
-      color: #999;
+      color: #718096;
 
       text {
         display: flex;
         align-items: center;
 
         .at-icon {
-          margin-right: 4px;
+          color: #98d0ff;
+          margin-right: 8px;
         }
       }
     }
@@ -53,9 +68,11 @@
     .at-icon {
       margin-right: 4px;
     }
+
     .heart-icon {
       margin-left: 12px;
     }
+
     .stat {
       font-size: 22px;
     }

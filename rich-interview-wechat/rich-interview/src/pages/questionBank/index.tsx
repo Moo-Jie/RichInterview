@@ -152,11 +152,6 @@ export default class QuestionBankDetailPage extends Component<{}, State> {
     }
   }
 
-  // 导航到用户中心
-  navigateToUser = (userId: number) => {
-    Taro.navigateTo({url: `/pages/user/index?id=${userId}`});
-  };
-
   // 导航到题目详情
   navigateToQuestion = (questionId: number) => {
     Taro.navigateTo({url: `/pages/question/index?id=${questionId}`});
@@ -214,7 +209,7 @@ export default class QuestionBankDetailPage extends Component<{}, State> {
             </View>
             <View className='action-btn' onClick={this.handleStar}>
               <AtIcon
-                value='heart-2'
+                value='star'
                 size='20'
                 color={this.state.starred ? '#98d0ff' : '#fff'}
               />
@@ -287,7 +282,6 @@ export default class QuestionBankDetailPage extends Component<{}, State> {
           <AtCard title='创建者' className='creator-card'>
             <View
               className='creator-info'
-              onClick={() => this.navigateToUser(bankDetail.user.id)}
             >
               {bankDetail.user.userAvatar ? (
                 <Image

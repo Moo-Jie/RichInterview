@@ -82,7 +82,7 @@ export default class QuestionBanks extends Component<{}, State> {
                           <View className='stats'>
                             <AtIcon value='eye' size='14' color='#666'/>
                             <Text className='stat'>{bank.viewNum || 0}</Text>
-                            <AtIcon value='heart-2' size='14' color='#eb5757' className='heart-icon'/>
+                            <AtIcon value='star' size='14' color='#eb5757' className='heart-icon'/>
                             <Text className='stat'>{bank.starNum || 0}</Text>
                           </View>
                           <Text className='update-time'>

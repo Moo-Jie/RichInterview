@@ -158,7 +158,6 @@ export default class QuestionDetailPage extends Component<{}, State> {
         }
       });
     } catch (error) {
-      Taro.showToast({title: '题目加载失败：' + error.message, icon: 'none'});
       this.setState({error: true, loading: false});
       setTimeout(() => Taro.navigateBack(), 3000);
     }
@@ -498,7 +497,7 @@ export default class QuestionDetailPage extends Component<{}, State> {
         <View className='login-prompt-container'>
           <View className='login-prompt-card'>
             <Text className='prompt-icon'>⚠️</Text>
-            <Text className='prompt-title'>题目加载失败</Text>
+            <Text className='prompt-title'>题目加载失败，请先登录</Text>
             <Text className='prompt-desc'>请稍后再试或返回重试</Text>
           </View>
         </View>
@@ -553,7 +552,7 @@ export default class QuestionDetailPage extends Component<{}, State> {
             </View>
             <View className='action-btn' onClick={this.handleStar}>
               <AtIcon
-                value='heart-2'
+                value='star'
                 size='18'
                 color={this.state.starred ? '#98d0ff' : '#fff'}
               />
@@ -574,12 +573,12 @@ export default class QuestionDetailPage extends Component<{}, State> {
 
             <View className='stats'>
               <AtTag type='primary' circle>
-                <AtIcon value='eye' size='12'/>
-                {questionHotspotDetail.viewNum || 0}
+                <AtIcon value='eye' size='18'/>
+                {questionHotspotDetail.viewNum || 0} 次浏览
               </AtTag>
               <AtTag type='primary' circle>
-                <AtIcon value='heart' size='12'/>
-                {questionHotspotDetail.starNum || 0}
+                <AtIcon value='heart' size='18'/>
+                {questionHotspotDetail.starNum || 0} 次点赞
               </AtTag>
             </View>
 
@@ -621,7 +620,7 @@ export default class QuestionDetailPage extends Component<{}, State> {
                     <Text>今日已签到</Text>
                   </>
                 ) : (
-                  <Text>立即签到</Text>
+                  <Text>双击签到</Text>
                 )}
               </AtButton>
             </View>

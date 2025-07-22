@@ -330,7 +330,7 @@ export default class UserCenter extends Component<{}, State> {
             </View>
             <View className="stat-item">
               <Text className="stat-value">{stats.consecutiveDays}</Text>
-              <Text className="stat-label">本月连续打卡</Text>
+              <Text className="stat-label">已连续打卡</Text>
             </View>
           </View>
 
