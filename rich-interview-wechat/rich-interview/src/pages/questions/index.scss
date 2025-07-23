@@ -10,7 +10,7 @@ $shadow-color: rgba(0, 0, 0, 0.05);
   display: flex;
   flex-direction: column;
   background: $light-gray;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
 
   .search-header {
     background: #fff;
@@ -66,18 +66,45 @@ $shadow-color: rgba(0, 0, 0, 0.05);
     overflow: hidden;
     padding: 0 20rpx;
 
+    .at-card {
+      margin-top: 40rpx;
+      border-radius: 24rpx;
+      overflow: visible;
+
+      &__header {
+        min-height: 88rpx;
+        padding: 20rpx 32rpx;
+        border-bottom: 2rpx solid rgba($primary-color, 0.1);
+
+        &-title {
+          font-size: 36rpx !important;
+          font-weight: 600;
+          color: $text-color;
+        }
+
+        &-extra {
+          font-size: 28rpx;
+          color: rgba($text-color, 0.8);
+        }
+      }
+    }
+
     .at-list {
+      perspective: 1000px;
+
       &::after {
         border: none;
       }
 
       .at-list__item {
+        transform-style: preserve-3d;
+        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        cursor: pointer;
         background: #fff;
         margin-bottom: 24rpx;
         border-radius: 20rpx;
         box-shadow: 0 8rpx 24rpx $shadow-color;
         padding: 32rpx;
-        transition: all 0.3s ease;
         overflow: hidden;
         position: relative;
 
@@ -94,9 +121,19 @@ $shadow-color: rgba(0, 0, 0, 0.05);
           transition: opacity 0.3s;
         }
 
+        &:hover {
+          transform: translateY(-4rpx) scale(1.02);
+          box-shadow: 0 12rpx 32rpx rgba($primary-color, 0.15);
+
+          &::before {
+            width: 12rpx; // 扩大高光条
+            opacity: 0.8;
+          }
+        }
+
         &:active {
-          transform: translateY(2rpx);
-          box-shadow: 0 4rpx 12rpx $shadow-color;
+          transform: translateY(2rpx) scale(0.98);
+          box-shadow: 0 4rpx 12rpx rgba($primary-color, 0.25);
 
           &::before {
             opacity: 1;
@@ -104,7 +141,28 @@ $shadow-color: rgba(0, 0, 0, 0.05);
         }
 
         &::after {
-          border: none;
+          content: '';
+          position: absolute;
+          top: -50%;
+          left: -50%;
+          width: 200%;
+          height: 200%;
+          background: linear-gradient(
+              45deg,
+              rgba(255, 255, 255, 0.1) 10%,
+              rgba(255, 255, 255, 0.15) 50%,
+              rgba(255, 255, 255, 0.1) 90%
+          );
+          transform: rotate(30deg);
+          animation: shine 4s infinite;
+          opacity: 0.4;
+        }
+
+        > View {
+          position: relative;
+          z-index: 2;
+          transition: transform 0.3s;
+          background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
         }
       }
     }
@@ -121,7 +179,7 @@ $shadow-color: rgba(0, 0, 0, 0.05);
 
       .tag {
         font-size: 24rpx;
-        background: rgba($primary-color, 0.08);
+        background: linear-gradient(145deg, #c8e5ff, #ffffff);
         color: darken($primary-color, 10%);
         padding: 6rpx 16rpx;
         border-radius: 8rpx;
@@ -156,7 +214,7 @@ $shadow-color: rgba(0, 0, 0, 0.05);
     align-items: center;
 
     &::before {
-      font-family: 'at-icon';
+      font-family: 'at-icon', serif;
       font-size: 50rpx;
       margin-bottom: 20rpx;
     }
@@ -180,6 +238,35 @@ $shadow-color: rgba(0, 0, 0, 0.05);
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+
+@keyframes shine {
+  0% {
+    transform: translateX(-100%) rotate(30deg);
+  }
+  100% {
+    transform: translateX(200%) rotate(30deg);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.at-list__item {
+  animation: slideIn 0.5s ease-out;
 }

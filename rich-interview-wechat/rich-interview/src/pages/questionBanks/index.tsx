@@ -63,8 +63,8 @@ export default class QuestionBanks extends Component<{}, State> {
 
     return (
       <View className='banks-container'>
-        <ScrollView className='banks-page' scrollY>
-          <AtCard title="📚 全部题库" note={`共 ${banks.length} 个题库`}>
+        <ScrollView className='banks-page' scrollY style={{width: '95%'}}>
+          <AtCard title="🔥 热门题库" note={`共 ${banks.length} 个题库`}>
             {loading ? (
               <Text className='loading-text'>加载中...</Text>
             ) : banks.length === 0 ? (
@@ -80,13 +80,13 @@ export default class QuestionBanks extends Component<{}, State> {
                         <Text className='description'>{bank.description}</Text>
                         <View className='meta-stats'>
                           <View className='stats'>
-                            <AtIcon value='eye' size='14' color='#666'/>
+                            <AtIcon value='eye' size='17' color='#666'/>
                             <Text className='stat'>{bank.viewNum || 0}</Text>
-                            <AtIcon value='star' size='14' color='#eb5757' className='heart-icon'/>
+                            <AtIcon value='star' size='17' color='#666' className='heart-icon'/>
                             <Text className='stat'>{bank.starNum || 0}</Text>
                           </View>
                           <Text className='update-time'>
-                            <AtIcon value='clock' size='14'/>
+                            <AtIcon value='clock' size='17'/>
                             {dayjs(bank.updateTime).format('YYYY-MM-DD')}
                           </Text>
                         </View>

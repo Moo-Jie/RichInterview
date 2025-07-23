@@ -1,7 +1,7 @@
 import {Component} from 'react';
 import Taro from '@tarojs/taro';
 import {View, ScrollView, Text} from '@tarojs/components';
-import {AtSearchBar, AtList, AtListItem, AtInput, AtTag, AtIcon} from 'taro-ui';
+import {AtSearchBar, AtList, AtListItem, AtInput, AtTag, AtIcon, AtCard} from 'taro-ui';
 import {searchQuestions} from '../../api/question';
 import './index.scss';
 
@@ -158,44 +158,48 @@ export default class QuestionSearch extends Component<{}, State> {
           scrollY
           className='result-list'
           onScrollToLower={this.onReachBottom}
+          style={{width: '95%'}}
         >
-          <AtList>
-            {questions.map((q) => (
-              <AtListItem
-                key={q.id}
-                title={q.title}
-                note={
-                  <View className='question-info'>
-                    {q.tagList?.length > 0 && (
-                      <View className='tags'>
-                        {q.tagList.map(tag => (
-                          <Text className='tag' key={tag}>#{tag}</Text>
-                        ))}
+          <AtCard title="📚 全部题目" note={`共 ${questions.length} 个题目` }>
+            <AtList>
+              {questions.map((q) => (
+                <AtListItem
+                  key={q.id}
+                  title={q.title}
+                  note={
+                    <View className='question-info'>
+                      {q.tagList?.length > 0 && (
+                        <View className='tags'>
+                          {q.tagList.map(tag => (
+                            <Text className='tag' key={tag}>#{tag}</Text>
+                          ))}
+                        </View>
+                      )}
+                      <View className='meta'>
+                        <Text className='date'>
+                          <AtIcon value='calendar' size={14}/>
+                          {new Date(q.createTime).toLocaleDateString()}
+                        </Text>
                       </View>
-                    )}
-                    <View className='meta'>
-                      <Text className='date'>
-                        <AtIcon value='calendar' size={14}/>
-                        {new Date(q.createTime).toLocaleDateString()}
-                      </Text>
                     </View>
-                  </View>
-                }
-                arrow='right'
-                onClick={() => Taro.navigateTo({
-                  url: `/pages/question/index?id=${q.id}`
-                })}
-              />
-            ))}
-          </AtList>
+                  }
+                  arrow='right'
+                  onClick={() => Taro.navigateTo({
+                    url: `/pages/question/index?id=${q.id}`
+                  })}
+                />
+              ))}
+            </AtList>
 
-          {loading && <Text className='loading'>加载中...</Text>}
-          {!loading && questions.length === 0 && (
-            <Text className='empty-text'>暂无相关题目</Text>
-          )}
-          {!loading && questions.length > 0 && questions.length >= total && (
-            <Text className='no-more'>没有更多了~</Text>
-          )}
+
+            {loading && <Text className='loading'>加载中...</Text>}
+            {!loading && questions.length === 0 && (
+              <Text className='empty-text'>暂无相关题目</Text>
+            )}
+            {!loading && questions.length > 0 && questions.length >= total && (
+              <Text className='no-more'>没有更多了~</Text>
+            )}
+          </AtCard>
         </ScrollView>
       </View>
     );

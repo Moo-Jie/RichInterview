@@ -1,10 +1,41 @@
+$primary-color: #6190e8;
+$secondary-color: #ff7e79;
+$text-color: #333;
+$light-gray: #f8f8f8;
+$border-color: #e6e6e6;
+$shadow-color: rgba(0, 0, 0, 0.05);
+
 .banks-container {
   height: 100vh;
   background: #f5f5f5;
 
+
   .banks-page {
     height: 100%;
     padding: 20px;
+
+    .at-card {
+      margin-top: 40rpx;
+      border-radius: 24rpx;
+      overflow: visible;
+
+      &__header {
+        min-height: 88rpx;
+        padding: 20rpx 32rpx;
+        border-bottom: 2rpx solid rgba($primary-color, 0.1);
+
+        &-title {
+          font-size: 36rpx !important;
+          font-weight: 600;
+          color: $text-color;
+        }
+
+        &-extra {
+          font-size: 28rpx;
+          color: rgba($text-color, 0.8);
+        }
+      }
+    }
   }
 
   .bank-info {

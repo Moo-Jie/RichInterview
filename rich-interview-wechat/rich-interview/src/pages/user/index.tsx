@@ -62,13 +62,16 @@ export default class UserCenter extends Component<{}, State> {
   calculateBadges = (total: number): string[] => {
     // 当totalQuestions为0时不计算徽章
     if (total === 0) return [];
-
     if (total < 7) {
-      return ['初来乍到', '本站新人'];
+      return ['初来乍到', '初试锋芒', '本站新人'];
     } else if (total >= 7 && total < 30) {
-      return ['突飞猛进', '奋斗者'];
+      return ['渐入佳境', '小有所成', '持之以恒'];
+    } else if (total >= 30 && total < 60) {
+      return ['专项精兵', '题库猎手', '渐入佳境', '小有所成', '持之以恒'];
+    } else if (total >= 60 && total < 365) {
+      return ['百题斩将', '坚韧磐石', '百炼成钢', '专项精兵', '题库猎手', '渐入佳境', '小有所成', '持之以恒'];
     } else {
-      return ['刷题老油条', '突飞猛进', '奋斗者'];
+      return ['不朽传奇', '天梯之巅', '百题斩将', '坚韧磐石', '百炼成钢', '专项精兵', '题库猎手', '渐入佳境', '小有所成', '持之以恒'];
     }
   }
 
@@ -121,7 +124,7 @@ export default class UserCenter extends Component<{}, State> {
       const records = await getUserSignInRecord(this.state.currentYear);
       this.setState(prevState => ({
         signInRecords: records,
-        todaySigned: records.includes(this.state.todayIndex),
+        todaySigned: records.includes(prevState.todayIndex),
         totalQuestions: records.length,
         stats: {
           ...prevState.stats,
@@ -162,17 +165,8 @@ export default class UserCenter extends Component<{}, State> {
         // 加载用户签到数据
         await this.loadSignInData();
 
-        // 初始化统计数据
-        const stats = {
-          totalQuestions: 0,
-          correctRate: Math.floor(Math.random() * 30) + 70,
-          consecutiveDays: 0,
-          badges: ['初来乍到', '本站新人'],
-        };
-
         this.setState({
           userInfo: user,
-          stats,
           loading: false,
         }, () => {
           // 状态更新后计算连续打卡天数

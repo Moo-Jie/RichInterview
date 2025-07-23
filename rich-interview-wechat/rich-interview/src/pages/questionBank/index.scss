@@ -2,6 +2,7 @@
   background-color: #f5f7fa;
   min-height: 100vh;
 
+
   .loading-container, .error-container {
     display: flex;
     flex-direction: column;
@@ -33,11 +34,13 @@
   }
 
   .action-bar {
+    min-height: 7vh;
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    padding: 15px 20px;
-    background-color: #4a6eff;
+    align-items: center;
+    padding: 20rpx 32rpx;
+    background: linear-gradient(135deg, #98d0ff, #c2cbff);
+    box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.06);
     color: #fff;
     position: sticky;
     top: 0;

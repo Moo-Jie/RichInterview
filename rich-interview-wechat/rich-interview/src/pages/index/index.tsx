@@ -572,9 +572,9 @@
                   <Text className="user-name">{userInfo.userName || '用户'}</Text>
                 </>
               ) : (
-                <View className="not-logged-container">
+                <View className="avatar-container">
                   <AtIcon prefixClass='fa' value='user-circle' size={28} className='login-icon'/>
-                  <Text className="login-text">点击登录/注册</Text>
+                  <Text className="official-website-btn">点击登录/注册</Text>
                 </View>
               )}
             </View>
