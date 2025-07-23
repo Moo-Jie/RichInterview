@@ -2,6 +2,7 @@ import {Component} from 'react';
 import {View, Text, ScrollView} from '@tarojs/components';
 import Taro from '@tarojs/taro';
 import {AtCard, AtList, AtListItem, AtIcon} from 'taro-ui';
+import {Image} from '@tarojs/components';
 import {getHotQuestionBanks, listQuestionBankVOByPage} from '../../api/questionBank';
 import './index.scss';
 import dayjs from "dayjs";
@@ -77,6 +78,14 @@ export default class QuestionBanks extends Component<{}, State> {
                     title={`${index + 1}. ${bank.title}`}
                     note={
                       <View className='bank-info'>
+                        {bank.picture && (
+                          <View className='bank-cover'>
+                            <Image
+                              src={bank.picture}
+                              mode='aspectFit'
+                            />
+                          </View>
+                        )}
                         <Text className='description'>{bank.description}</Text>
                         <View className='meta-stats'>
                           <View className='stats'>

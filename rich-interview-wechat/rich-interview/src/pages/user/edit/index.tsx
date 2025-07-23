@@ -209,7 +209,6 @@ export default class UserEditPage extends Component<{}, State> {
         {/* 头部区域 */}
         <View className="edit-header">
           <View className="back-btn" onClick={this.handleBack}>
-            <Text className="icon">&#xe601;</Text>
             <Text>返回</Text>
           </View>
           <Text className="title">编辑资料</Text>
@@ -252,7 +251,7 @@ export default class UserEditPage extends Component<{}, State> {
 
           {/* 个人简介 */}
           <View className="form-group">
-            <Text className="form-label">个性签名</Text>
+            <Text className="form-label">个人简介</Text>
             <AtTextarea
               value={formData.userProfile || ''}
               onChange={(value: string) => this.handleInputChange('userProfile', value)}

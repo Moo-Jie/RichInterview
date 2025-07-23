@@ -2,23 +2,29 @@
 $color-brand: #6190E8; // 主色调
 $spacing-base: 20rpx; // 基础间距
 $border-radius-sm: 8rpx; // 小圆角
-$font-size-base: 28rpx; // 基础字号
+$font-size-base: 35rpx; // 基础字号
+$shadow-light: 0 8rpx 40rpx rgba(0, 0, 0, 0.08);
+$transition-base: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
 // 页面容器
 .edit-container {
-  background-color: #f5f7fa;
   min-height: 100vh;
-  padding: 0 $spacing-base 40rpx;
-
+  padding: 0 20rpx 80rpx;
+  background: linear-gradient(180deg, #f7f9fc 0%, #f5f7fa 100%);
 
   // 头部样式
   .edit-header {
     display: flex;
     align-items: center;
-    padding: 30rpx 0;
+    padding: 40rpx 0;
     position: relative;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: $shadow-light;
 
     .back-btn {
+      padding: 16rpx 24rpx;
+      border-radius: $border-radius-sm;
+      transition: $transition-base;
       display: flex;
       align-items: center;
       font-size: $font-size-base;
@@ -26,18 +32,31 @@ $font-size-base: 28rpx; // 基础字号
       position: absolute;
       left: 0;
       z-index: 10;
+      background: linear-gradient(145deg, #f0f4ff, #ffffff);
+      box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.08);
+
+      &:active {
+        background: rgba($color-brand, 0.1);
+        transform: scale(0.98);
+      }
 
       .icon {
-        font-family: 'iconfont' !important; // 确保引入图标字体
-        margin-right: 10rpx;
-        font-size: 36rpx;
+        color: $color-brand;
+        transition: transform 0.2s ease;
+        font-size: 40rpx;
+        margin-right: 12rpx;
+      }
+
+      &:hover {
+        box-shadow: 0 6rpx 16rpx rgba($color-brand, 0.15);
+        transform: translateY(-2rpx);
       }
     }
 
     .title {
       flex: 1;
       text-align: center;
-      font-size: 36rpx;
+      font-size: 40rpx;
       font-weight: bold;
       color: #333;
     }
@@ -48,17 +67,17 @@ $font-size-base: 28rpx; // 基础字号
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: 40rpx 0;
+    margin: 60rpx 0;
 
     .avatar-container {
       position: relative;
-      width: 180rpx;
-      height: 180rpx;
+      width: 200rpx;
+      height: 200rpx;
       border-radius: 50%;
       overflow: hidden;
       background-color: #e6e6e6;
-      border: 4rpx solid #fff;
-      box-shadow: 0 4rpx 20rpx rgba(0,0,0,0.1);
+      border-width: 6rpx;
+      box-shadow: 0 8rpx 40rpx rgba(0, 0, 0, 0.15);
 
       .avatar, .avatar-placeholder {
         width: 100%;
@@ -78,20 +97,27 @@ $font-size-base: 28rpx; // 基础字号
         bottom: 0;
         left: 0;
         right: 0;
-        background: rgba(0,0,0,0.6);
+        background: rgba($color-brand, 0.8);
         text-align: center;
-        padding: 10rpx 0;
+        padding: 16rpx 0;
+        opacity: 0;
+        transition: $transition-base;
 
         .edit-text {
           color: #fff;
-          font-size: 24rpx;
+          font-size: 28rpx;
+          font-weight: 500;
         }
+      }
+
+      &:hover .edit-mask {
+        opacity: 1;
       }
     }
 
     .avatar-hint {
-      margin-top: 20rpx;
-      font-size: 24rpx;
+      margin-top: 30rpx;
+      font-size: 28rpx;
       color: #999;
     }
   }
@@ -99,12 +125,13 @@ $font-size-base: 28rpx; // 基础字号
   // 表单区域
   .form-section {
     background: #fff;
+    border: 1rpx solid rgba(0, 0, 0, 0.04);
     border-radius: $border-radius-sm;
     padding: 0 30rpx;
-    box-shadow: 0 4rpx 20rpx rgba(0,0,0,0.05);
+    box-shadow: $shadow-light;
 
     .form-group {
-      padding: 30rpx 0;
+      padding: 40rpx 0;
       border-bottom: 1rpx solid #eee;
 
       &:last-child {
@@ -112,10 +139,16 @@ $font-size-base: 28rpx; // 基础字号
       }
 
       .form-label {
-        display: block;
-        margin-bottom: 20rpx;
-        font-size: $font-size-base;
-        color: #333;
+        flex: 1;
+        text-align: center;
+        font-size: 40rpx;
+        font-weight: 800;
+        color: #2d3748;
+        letter-spacing: 1rpx;
+        text-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.1);
+        display: flex;
+        margin-bottom: 24rpx;
+        align-items: center;
 
         &.error {
           color: #f56c6c;
@@ -123,17 +156,21 @@ $font-size-base: 28rpx; // 基础字号
 
         .required {
           color: #f56c6c;
-          margin-left: 6rpx;
+          margin-left: 8rpx;
         }
       }
 
       // 调整Taro UI输入组件样式
       .at-input, .at-textarea {
+        background: #fafbfd;
+        border-radius: 12rpx;
+        transition: $transition-base;
         padding: 0;
         margin: 0;
 
         &::after {
-          display: none; // 移除默认边框
+          display: none;
+          box-shadow: 0 0 0 2rpx rgba($color-brand, 0.2);
         }
       }
 
@@ -145,7 +182,8 @@ $font-size-base: 28rpx; // 基础字号
         border: 1rpx solid #eee;
         border-radius: $border-radius-sm;
         padding: 20rpx;
-        min-height: 180rpx;
+        min-height: 240rpx;
+        line-height: 1.6;
 
         &__textarea {
           font-size: $font-size-base;
@@ -156,11 +194,13 @@ $font-size-base: 28rpx; // 基础字号
 
   // 操作按钮
   .action-buttons {
-    margin-top: 50rpx;
+    margin-top: 80rpx;
     padding: 0 30rpx;
 
     .save-btn {
-      background-color: $color-brand;
+      background-image: linear-gradient(135deg, $color-brand 0%, darken($color-brand, 10%) 100%);
+      box-shadow: 0 4rpx 16rpx rgba($color-brand, 0.3);
+      transition: $transition-base;
       border: none;
       border-radius: $border-radius-sm;
       font-size: $font-size-base + 2;
@@ -169,6 +209,11 @@ $font-size-base: 28rpx; // 基础字号
 
       &.at-button--disabled {
         opacity: 0.6;
+      }
+
+      &:active {
+        transform: translateY(2rpx);
+        box-shadow: 0 2rpx 8rpx rgba($color-brand, 0.3);
       }
     }
   }

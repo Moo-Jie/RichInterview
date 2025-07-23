@@ -67,22 +67,6 @@
       }
     }
 
-    // 暗色模式适配
-    @media (prefers-color-scheme: dark) {
-      .signin-card {
-        background: #1f2937;
-
-        .signin-button {
-          background: linear-gradient(135deg, #1e40af, #1e3a8a);
-
-          &.signed {
-            background: linear-gradient(135deg, #065f46, #064e3b);
-          }
-        }
-      }
-    }
-
-
     .at-article {
       margin-top: 30rpx;
 
@@ -94,11 +78,17 @@
       }
 
       &__p {
+        font-family: "Comic Sans MS", cursive, -apple-system, sans-serif;
         font-size: 32rpx;
         line-height: 1.8;
-        color: #475569;
-        margin-bottom: 20rpx;
-        white-space: pre-wrap;
+        color: #4a5568;
+        letter-spacing: 0.5rpx;
+
+        &::before {
+          content: '➤     ';
+          margin-right: 12rpx;
+          color: #f472b6;
+        }
       }
     }
 
