@@ -5,6 +5,9 @@
 在当前的求职市场中，企业越来越注重通过技术面试来评估应聘者的专业素养和实战能力。为帮助求职者更高效地备战技术面试，一个集智能 AI 解答、面试题目类型齐全、精准检索、学习分析、简洁高效于一体的刷题平台显得尤为重要。       
       
 作者在保留传统刷题平台的简洁高效实用的体验的前提下，添加了诸多创新性功能，为求职者准备一款结合了主流 AI 模拟面试官 + 构建学习文档、实时动力热点图、新颖的刷题模式、丰富高效的用户体验、markdown风格展示与实时编辑等等，大幅提高用户粘性和用户刷题效率，以及低用户使用成本，是区别于传统面试刷题平台且独立开发的全新平台。      
+
+![USER](https://rich-tams.oss-cn-beijing.aliyuncs.com/RichInterview/762670a9db4628fd88446859d93479a5.png "user.jpg")   
+![ADMIN](https://rich-tams.oss-cn-beijing.aliyuncs.com/RichInterview/b055f6763b1bdebf8e3ff9f23394091d.png "admin.jpg")   
         
 # 核心优势         
 
