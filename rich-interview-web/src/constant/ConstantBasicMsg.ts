@@ -4,7 +4,7 @@
 export const ConstantBasicMsg = {
   // 主页地址
   // HOME_URL: "http://localhost:3000/",
-  HOME_URL: "http://49.233.207.238/",
+  HOME_URL: "https://richdu.cn/",
   // 项目名称
   PROJECT_NAME: "RichInterview",
   // 默认项目LOGO
@@ -35,13 +35,13 @@ export const ConstantBasicMsg = {
     "https://rich-tams.oss-cn-beijing.aliyuncs.com/LOGO.jpg",
   // Sentinel-Dashboard 地址
   // SENTINEL_DASHBOARD_URL: "http://localhost:8151/#/dashboard",
-  SENTINEL_DASHBOARD_URL: "http://49.233.207.238:8151/#/dashboard",
+  SENTINEL_DASHBOARD_URL: "https://richdu.cn:8151/#/dashboard",
   // 服务器 Swagger 接口文档地址
   // SERVER_API_SWAGGER_DOCS_URL: "http://localhost:8101/api/doc.html#/home",
-  SERVER_API_SWAGGER_DOCS_URL: "http://49.233.207.238/api/doc.html#/home",
+  SERVER_API_SWAGGER_DOCS_URL: "https://richdu.cn/api/doc.html#/home",
   // Nacos-Dashboard 地址
   // NACOS_DASHBOARD_URL: "http://localhost:8848/nacos/index.html#/",
-  NACOS_DASHBOARD_URL: "http://49.233.207.238:8848/nacos/index.html#/",
+  NACOS_DASHBOARD_URL: "https://richdu.cn:8848/nacos/index.html#/",
   // 云服务器性能
   SERVER_PERFORMANCE:{
     "cpu": "CPU - 2核",

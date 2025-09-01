@@ -305,7 +305,7 @@
     };
 
     handleNavigateToOfficialWebsite = () => {
-      const url = 'http://49.233.207.238/';
+      const url = 'https://richdu.cn/';
       Taro.setClipboardData({
         data: url,
         success: () => {

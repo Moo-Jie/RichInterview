@@ -26,7 +26,7 @@ spring:
     url: jdbc:mysql://localhost:3306/rich_interview
     username: root
     password: 12345
-  #    url: jdbc:mysql://49.233.207.238:3306/richinterview
+  #    url: jdbc:mysql://richdu.cn:3306/richinterview
   #    username: richInterviewUser
   #    password: 5Fse3fNPkYFz6Bef
 
@@ -36,7 +36,7 @@ spring:
     port: 6379
     timeout: 5000
     host: localhost
-  #    host: 49.233.207.238
+  #    host: richdu.cn
   #    password: 123456
 
   # Elasticsearch 配置

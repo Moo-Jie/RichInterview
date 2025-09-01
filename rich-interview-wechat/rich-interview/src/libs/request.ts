@@ -2,7 +2,7 @@ import Taro from '@tarojs/taro';
 
 // 环境配置
 const DEV_BASE_URL = 'http://localhost:8101';
-const PROD_BASE_URL = 'http://49.233.207.238';
+const PROD_BASE_URL = 'https://richdu.cn';
 
 void PROD_BASE_URL;
 void DEV_BASE_URL;
