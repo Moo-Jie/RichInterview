@@ -1,4 +1,4 @@
-  import {Component} from 'react';
+  import React, {Component} from 'react';
   import {View, Text, ScrollView, Input, Textarea} from '@tarojs/components';
   import Taro from '@tarojs/taro';
   import {AtCard, AtList, AtListItem, AtDrawer, AtIcon} from 'taro-ui';
@@ -13,6 +13,23 @@
   import dayjs from 'dayjs';
   import './index.scss';
   import {EventBus} from "../../eventBus";
+
+  // 隐私保护指引组件
+  const PrivacyPolicyGuide: React.FC = () => {
+    return (
+      <View className="privacy-guide">
+        <Text>
+          登录/注册即代表你同意:
+        </Text>
+        <Text
+          className="privacy-link"
+          onClick={() => Taro.navigateTo({ url: '/pages/privacy/index' })}
+        >
+          《用户隐私保护指引》
+        </Text>
+      </View>
+    );
+  };
 
   type State = {
     hotBanks: any[];
@@ -364,6 +381,9 @@
             {/*  </View>*/}
             {/*</View>*/}
 
+            {/* 添加隐私指引 */}
+            <PrivacyPolicyGuide />
+
             <Text className="switch-text" onClick={this.switchToRegister}>
               没有账号？<Text className="highlight">去注册</Text>
             </Text>
@@ -493,6 +513,9 @@
           <View className="form-note">
             <Text>注：带*号为必填项，其他信息可在个人中心补充</Text>
           </View>
+
+          {/* 添加隐私指引 */}
+          <PrivacyPolicyGuide />
 
           <View
             className={`register-button ${registerLoading ? 'loading' : ''}`}

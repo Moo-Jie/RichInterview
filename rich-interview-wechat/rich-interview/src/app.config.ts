@@ -18,7 +18,9 @@ export default defineAppConfig({
     // 个人中心
     'pages/user/index',
     // 个人中心-编辑
-    'pages/user/edit/index'
+    'pages/user/edit/index',
+    // 隐私政策
+    'pages/privacy/index'
   ],
   window: {
     backgroundTextStyle: 'light',
