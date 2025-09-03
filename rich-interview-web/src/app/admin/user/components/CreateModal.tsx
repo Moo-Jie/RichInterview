@@ -39,7 +39,7 @@ const CreateModal: React.FC<Props> = (props) => {
 
   return (
     <Modal
-      destroyOnClose
+      destroyOnHidden
       title={"创建"}
       open={visible}
       footer={null}

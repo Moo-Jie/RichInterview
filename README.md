@@ -6,14 +6,17 @@
       
 作者在保留传统刷题平台的简洁高效实用的体验的前提下，添加了诸多创新性功能，为求职者准备一款结合了主流 AI 模拟面试官 + 构建学习文档、实时动力热点图、新颖的刷题模式、丰富高效的用户体验、markdown风格展示与实时编辑等等，大幅提高用户粘性和用户刷题效率，以及低用户使用成本，是区别于传统面试刷题平台且独立开发的全新平台。      
 
-![USER](https://rich-tams.oss-cn-beijing.aliyuncs.com/RichInterview/762670a9db4628fd88446859d93479a5.png "user.jpg")   
+用户端业务功能：
+![USER](https://rich-tams.oss-cn-beijing.aliyuncs.com/RichInterview/762670a9db4628fd88446859d93479a5.png "user.jpg") 
+
+管理员端业务功能（体验管理员账户请联系作者）：
 ![ADMIN](https://rich-tams.oss-cn-beijing.aliyuncs.com/RichInterview/b055f6763b1bdebf8e3ff9f23394091d.png "admin.jpg")   
         
 # 核心优势         
 
 • 阿里云百炼 API + 字节跳动火山 API 实现 AI 模拟面试官 + 构建学习文档       
 • 通过多级缓存架构整合Redis与Caffeine实现热点数据实时响应          
-• 基于Elasticsearch 构建智能检索系统提升内容查询效率；         
+• 基于Elasticsearch 构建智能检索系统提升内容查询效率         
 • 运用Redisson分布式数据结构优化核心接口吞吐性能               
 • 服务端渲染实现快速首页加载 和 SEO 友好            
 • 建立动态IP黑白名单及流量熔断机制强化系统防护体系           
@@ -36,7 +39,7 @@
 
 # 项目体验        
 
-环境：谷歌浏览器、edge浏览器       
+环境：谷歌浏览器、edge浏览器、微信小程序       
             
 [（点击跳转）  Rich面试刷题平台 - 官网](http://richdu.cn)      
                

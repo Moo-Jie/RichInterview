@@ -308,7 +308,7 @@ export default function UserCenterPage() {
 
       {/*编辑个人信息弹窗*/}
       <Modal
-        destroyOnClose
+        destroyOnHidden
         title={"编辑资料"}
         open={editVisible}
         footer={null}

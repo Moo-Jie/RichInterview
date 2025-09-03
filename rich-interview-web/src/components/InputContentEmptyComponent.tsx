@@ -16,7 +16,7 @@ const InputContentEmptyComponent = memo(
         open={visible}
         onCancel={onCancel}
         centered
-        destroyOnClose
+        destroyOnHidden
         onOk={onCancel}
         cancelButtonProps={{
           style: {

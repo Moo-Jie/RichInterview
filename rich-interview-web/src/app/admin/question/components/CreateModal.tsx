@@ -38,7 +38,7 @@ const CreateModal: React.FC<Props> = (props) => {
   return (
     //   源：https://procomponents.ant.design/components/modal-form#modalformdrawerform-demo-modal-form
     <Modal
-      destroyOnClose
+      destroyOnHidden
       title={"新建"}
       width="1000px"
       open={visible}

@@ -28,6 +28,7 @@ import SearchInputComponent from "@/components/SearchInputComponent";
 import HelpCenterDrawer from "@/components/GlobalDrawers/HelpCenterDrawer";
 import SystemConfigDrawer from "@/components/GlobalDrawers/SystemConfigDrawer";
 import GitHubLink from "@/components/GitHubLinkComponent";
+import WeChatMiniProgramQRCodeDrawer from "@/components/GlobalDrawers/WeChatMiniProgramQRCodeDrawer";
 
 /**
  * 子组件内容，用于渲染布局主体区域
@@ -217,6 +218,7 @@ export default function MainLayout({ children }: Props) {
               </div>,
               <SystemConfigDrawer key="about" />,
               <HelpCenterDrawer key="help" />,
+              <WeChatMiniProgramQRCodeDrawer key="wechat" />,
               <GitHubLink
                   key="github"
                   href={ConstantBasicMsg.REPO_URL}

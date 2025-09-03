@@ -27,7 +27,7 @@ const LoginConfirmModal = memo(
         okText="去登录"
         cancelText="取消"
         centered
-        destroyOnClose
+        destroyOnHidden
       >
         使用该功能登录后免费，是否立即登录？
       </Modal>

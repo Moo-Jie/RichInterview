@@ -36,7 +36,7 @@ const UpdateModal: React.FC<Props> = (props) => {
 
   return (
     <Modal
-      destroyOnClose
+      destroyOnHidden
       title="完善题目内容"
       width="1000px"
       open={visible}

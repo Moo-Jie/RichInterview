@@ -43,7 +43,7 @@ const UpdateModal: React.FC<Props> = (props) => {
 
   return (
     <Modal
-      destroyOnClose
+      destroyOnHidden
       title={"更新"}
       open={visible}
       footer={null}
