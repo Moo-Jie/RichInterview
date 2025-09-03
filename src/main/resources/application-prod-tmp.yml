@@ -1,27 +1,31 @@
+# 生产环境配置文件模板，填写你的配置，并删除文件名 “  -tmp  ” 后缀
+
+
+
 # 线上配置文件
 server:
-  port: 8101
+  port:     # 你的服务器端口号
 
 
 spring:
   # 数据库配置
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://richdu.cn:3306/richinterview
-    username: richInterviewUser
-    password: 5Fse3fNPkYFz6Bef
+    url: jdbc:mysql://         # 你的数据库地址
+    username:          # 你的数据库用户名
+    password:          # 你的数据库密码
 
   # Redis 配置
   redis:
     database: 1
-    host: richdu.cn
+    host:         # 你的 redis 地址
     port: 6379
     password: 123456
     timeout: 5000
 
 
-# Elasticsearch 配置
-# ES 对服务器内存要求较高，建议使用 8G 以上的服务器
+# Elasticsearch 配置，使用时打开配置即可（若不使用该功能，可忽视）
+# ES 对服务器内存要求较高，不是 8G 以上的服务器最好不要部署
 #  elasticsearch:
 #    uris: http://localhost:9200
 #    username: root
@@ -38,22 +42,22 @@ mybatis-plus:
 knife4j:
   basic:
     enable: true
-    username: RichInterview
-    password: SwaggerDocs
+    username:          # 你的接口文档用户名
+    password:          # 你的接口文档密码
 
 
-# Nacos 配置中心，用于链接 nacos 服务
+# Nacos 配置中心，用于链接 nacos 服务（若不使用该功能，可忽视）
 nacos:
   config:
     # nacos 地址
-    server-addr: richdu.cn:8848
+    server-addr:         # 你的 nacos 地址
     bootstrap:
       # 开启预加载
       enable: true
     # 控制台 Data ID
-    data-id: RichInterview
+    data-id:             # 你的 nacos 控制台 Data ID
     # 控制台 Group Name
-    group: RICH_INTERVIEW_GROUP
+    group:             # 你的 nacos 配置的分组名
     # 选择的文件格式
     type: yaml
     # 开启自动刷新
@@ -79,4 +83,4 @@ sa-token:
   is-log: true
 
 huoshanai:
-  apikey: a8a15720-6982-41ea-9dce-8c9b5be82a5c
+  apikey:            # 你的接口密钥
