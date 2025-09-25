@@ -4,6 +4,7 @@ import Taro from '@tarojs/taro';
 import {AtButton, AtIcon, AtModal, AtModalContent, AtTag} from 'taro-ui';
 import {getQuestionDetail, getQuestionHotspotDetail, incrementStarCount, incrementViewCount} from '../../api/question';
 import TagParser from '../../components/TagParserComponent';
+import MarkdownRenderer from '../../components/MarkdownRenderer';
 import dayjs from 'dayjs';
 import {addUserSignIn, getUserSignInRecord, UserVO} from '../../api/user';
 import './index.scss';
@@ -599,11 +600,7 @@ export default class QuestionDetailPage extends Component<{}, State> {
               <View className='at-article__h3'>参考答案</View>
               <View className='at-article__content'>
                 <View className='at-article__section'>
-                  {question.answer.split('\n\n').map((paragraph, i) => (
-                    <View key={i} className='at-article__p'>
-                      {paragraph.replace(/\s{2,}/g, '\n')}
-                    </View>
-                  ))}
+                  <MarkdownRenderer content={question.answer} />
                 </View>
               </View>
             </View>
