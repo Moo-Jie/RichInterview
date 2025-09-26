@@ -21,7 +21,7 @@
       align-items: center;
       justify-content: center;
       box-shadow: 0 8rpx 24rpx rgba(37, 99, 235, 0.3);
-      transition: transform 0.3s ease;
+      transition: all 0.3s ease;
 
       &:active {
         transform: scale(0.9);
@@ -232,43 +232,7 @@
   }
 }
 
-@media (prefers-color-scheme: dark) {
-  .question-detail-page {
-    background: linear-gradient(to bottom, #0f172a, #1e293b);
 
-    .content-card {
-      background: #1f2937;
-
-      .header {
-        .title {
-          color: #f8fafc;
-        }
-
-        .meta {
-          color: #94a3b8;
-        }
-      }
-
-      .content {
-        color: #e2e8f0;
-      }
-    }
-
-    .loading-container, .error-container {
-      .loading-card, .error-card {
-        background: #1f2937;
-
-        .loading-title, .error-title {
-          color: #f8fafc;
-        }
-
-        .loading-desc, .error-desc {
-          color: #94a3b8;
-        }
-      }
-    }
-  }
-}
 
 .login-prompt-container {
   display: flex;
@@ -369,22 +333,7 @@
     }
   }
 
-  @media (prefers-color-scheme: dark) {
-    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
 
-    .login-prompt-card {
-      background: #1f2937;
-      box-shadow: 0 16rpx 60rpx rgba(0, 0, 0, 0.25);
-
-      .prompt-title {
-        color: #f9fafb;
-      }
-
-      .prompt-desc {
-        color: #d1d5db;
-      }
-    }
-  }
 }
 
 .share-card-modal {
@@ -436,4 +385,3 @@
     }
   }
 }
-

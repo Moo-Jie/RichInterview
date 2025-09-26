@@ -551,11 +551,11 @@ export default class QuestionDetailPage extends Component<{}, State> {
             <View className='action-btn' onClick={this.handleGoBack}>
               <AtIcon value='chevron-left' size='18' color='#fff'/>
             </View>
-            <View className='action-btn' onClick={this.handleStar}>
+            <View className={`action-btn ${this.state.starred ? 'starred' : ''}`} onClick={this.handleStar}>
               <AtIcon
-                value='star'
+                value='heart-2'
                 size='18'
-                color={this.state.starred ? '#98d0ff' : '#fff'}
+                color={this.state.starred ? '#e9ccff' : '#fff'}
               />
             </View>
             <View className='action-btn' onClick={this.handleShare}>
@@ -590,7 +590,7 @@ export default class QuestionDetailPage extends Component<{}, State> {
               <View className='at-article__content'>
                 <View className='at-article__section'>
                   <View className='at-article__p'>
-                    {question.content.replace(/^###\s*/, '')}
+                    {question.content.replace(/^#\s*/, '')}
                   </View>
                 </View>
               </View>
