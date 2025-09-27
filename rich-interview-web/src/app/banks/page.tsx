@@ -1,3 +1,4 @@
+"use server";
 import {listQuestionBankVoByPageUsingPost} from "@/api/questionBankController";
 import Title from "antd/es/typography/Title";
 import {Card, Divider, Flex, message} from "antd";
@@ -10,8 +11,6 @@ import "./page.module.css";
  * 题库列表
  * @constructor
  */
-// 服务端渲染，禁用静态生成
-export const dynamic = "force-dynamic";
 export default async function QuestionBankPage() {
   let questionBankListVo = [];
   try {

@@ -1,3 +1,4 @@
+"use server";
 import {listQuestionBankVoByPageUsingPost} from "@/api/questionBankController";
 import {listQuestionVoByPageUsingPost} from "@/api/questionController";
 import Title from "antd/es/typography/Title";
@@ -19,7 +20,6 @@ import QuestionListVo from "@/components/QuestionListVoComponent";
 import AiCallComponent from "@/components/aiCallComponent";
 import {listQuestionBankHotspotVoByPageUsingPost} from "@/api/questionBankHotspotController";
 import {listQuestionHotspotVoByPageUsingPost} from "@/api/questionHotspotController";
-import RecentStudy from "@/components/RecentStudyComponent";
 import DailyPracticeComponent from "@/components/DailyPracticeComponent";
 import MiniQuestionBankHotspotChart
     from "@/components/hotspotchartsComponents/questionBankHotspotchartsComponents/MiniQuestionBankHotspotChart";
@@ -32,15 +32,6 @@ import CarouselComponent from "@/components/CarouselComponents";
  * 主页
  * @constructor
  */
-// 添加TDK
-export const metadata = {
-  title: "主页",
-  description: "RICH面试刷题平台的主页",
-};
-
-// 服务端渲染，禁用静态生成
-export const dynamic = "force-dynamic";
-
 const carouselItems = [
   {
     href: "/banks",
@@ -214,7 +205,7 @@ export default async function HomePage() {
         {/* 右侧边栏 */}
         <Sider width={350} theme="light" className={styles.sidebar}>
           {/* 上次刷题 */}
-          <RecentStudy />
+          {/*<RecentStudy />*/}
           {/* 每日一刷 */}
           <DailyPracticeComponent questionList={questionListVo} />
 

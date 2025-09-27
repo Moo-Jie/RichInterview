@@ -8,7 +8,6 @@ import { useState } from "react";
 import { updateMyUserUsingPost } from "@/api/userController";
 import { ProColumns, ProTable } from "@ant-design/pro-components";
 import CalendarChart from "@/components/CalendarChartComponent";
-import RecentStudy from "@/components/RecentStudyComponent";
 import UpdateUserAvatarModal from "@/components/UpdatePictureComponent";
 import { setUserLogin } from "@/store/userLogin";
 import "./index.css";
@@ -275,13 +274,13 @@ export default function UserCenterPage() {
               </div>
             )}
             {/* 继续刷题 */}
-            {activeTabKey === "recentStudy" && (
-              <div className="content-container">
-                <Card className="study-card">
-                  <RecentStudy />
-                </Card>
-              </div>
-            )}
+            {/*{activeTabKey === "recentStudy" && (*/}
+            {/*  <div className="content-container">*/}
+            {/*    <Card className="study-card">*/}
+            {/*      <RecentStudy />*/}
+            {/*    </Card>*/}
+            {/*  </div>*/}
+            {/*)}*/}
             {/* 更多信息 */}
             {activeTabKey === "userMsg" && (
               <div className="content-container">
