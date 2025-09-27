@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * 题目热点服务
- *
  */
 public interface QuestionHotspotService extends IService<QuestionHotspot> {
 
@@ -20,7 +19,7 @@ public interface QuestionHotspotService extends IService<QuestionHotspot> {
      * 校验数据
      *
      * @param questionHotspot
-     * @param add 对创建的数据进行校验
+     * @param add             对创建的数据进行校验
      */
     void validQuestionHotspot(QuestionHotspot questionHotspot, boolean add);
 
@@ -31,7 +30,7 @@ public interface QuestionHotspotService extends IService<QuestionHotspot> {
      * @return
      */
     QueryWrapper<QuestionHotspot> getQueryWrapper(QuestionHotspotQueryRequest questionHotspotQueryRequest);
-    
+
     /**
      * 获取题目热点封装
      *
@@ -42,8 +41,8 @@ public interface QuestionHotspotService extends IService<QuestionHotspot> {
     QuestionHotspotVO getQuestionHotspotVO(QuestionHotspot questionHotspot, HttpServletRequest request);
 
     /**
-     *
      * 热点字段递增接口（自动初始化）
+     *
      * @param questionId
      * @param field
      * @return boolean
@@ -71,6 +70,7 @@ public interface QuestionHotspotService extends IService<QuestionHotspot> {
 
     /**
      * 热点字段递减接口（自动初始化）
+     *
      * @param questionId
      * @param field
      * @return boolean

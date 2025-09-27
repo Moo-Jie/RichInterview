@@ -1,6 +1,7 @@
 package com.rich.richInterview.model.vo;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.rich.richInterview.model.entity.Question;
 import com.rich.richInterview.model.entity.QuestionBank;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
@@ -10,7 +11,6 @@ import java.util.Date;
 
 /**
  * 题库视图
- *
  */
 @Data
 public class QuestionBankVO implements Serializable {
@@ -60,7 +60,7 @@ public class QuestionBankVO implements Serializable {
     /**
      * 题库关联题目分页列表
      */
-    private Page<QuestionVO> questionsPage;
+    private Page<Question> questionsPage;
 
     /**
      * 封装类转对象

@@ -138,4 +138,13 @@ public interface QuestionService extends IService<Question> {
      * @create 2025/5/2
      **/
     QuestionVO getQuestionVOById(Long id, HttpServletRequest request);
+
+    /**
+     * 分页获取题目列表（仅包含基础信息）
+     * @param questionQueryRequest
+     * @return com.baomidou.mybatisplus.extension.plugins.pagination.Page<com.rich.richInterview.model.entity.Question>
+     * @author DuRuiChi
+     * @create 2025/9/27
+     **/
+    Page<Question> getQuestionSimplePage(QuestionQueryRequest questionQueryRequest);
 }

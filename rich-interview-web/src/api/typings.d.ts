@@ -189,7 +189,7 @@ declare namespace API {
 
   type BaseResponseQuestionBankVO_ = {
     code?: number;
-    data?: QuestionBankVO;
+    data?: QuestionBank;
     message?: string;
   };
 

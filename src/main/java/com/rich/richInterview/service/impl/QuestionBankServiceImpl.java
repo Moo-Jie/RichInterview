@@ -16,7 +16,10 @@ import com.rich.richInterview.model.dto.questionBank.QuestionBankAddRequest;
 import com.rich.richInterview.model.dto.questionBank.QuestionBankEditRequest;
 import com.rich.richInterview.model.dto.questionBank.QuestionBankQueryRequest;
 import com.rich.richInterview.model.dto.questionBank.QuestionBankUpdateRequest;
-import com.rich.richInterview.model.entity.*;
+import com.rich.richInterview.model.entity.QuestionBank;
+import com.rich.richInterview.model.entity.QuestionBankHotspot;
+import com.rich.richInterview.model.entity.QuestionBankQuestion;
+import com.rich.richInterview.model.entity.User;
 import com.rich.richInterview.model.vo.QuestionBankVO;
 import com.rich.richInterview.model.vo.UserVO;
 import com.rich.richInterview.service.*;
@@ -366,8 +369,7 @@ public class QuestionBankServiceImpl extends ServiceImpl<QuestionBankMapper, Que
             questionQueryRequest.setPageSize(questionBankQueryRequest.getQuestionsPageSize());
             questionQueryRequest.setCurrent(questionBankQueryRequest.getQuestionsCurrent());
             // 封装VO
-            Page<Question> questionPage = questionService.getQuestionPage(questionQueryRequest);
-            questionBankVO.setQuestionsPage(questionService.getQuestionVOPage(questionPage, request));
+            questionBankVO.setQuestionsPage(questionService.getQuestionSimplePage(questionQueryRequest));
         }
 
         // 缓存查询结果

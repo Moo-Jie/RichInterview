@@ -30,7 +30,6 @@ import java.util.stream.Collectors;
 
 /**
  * 题目热点服务实现
- *
  */
 @Service
 @Slf4j
@@ -73,6 +72,7 @@ public class QuestionHotspotServiceImpl extends ServiceImpl<QuestionHotspotMappe
 
     /**
      * 热点字段递增接口
+     *
      * @param questionId
      * @param field
      * @return boolean
@@ -116,6 +116,7 @@ public class QuestionHotspotServiceImpl extends ServiceImpl<QuestionHotspotMappe
 
     /**
      * 热点字段递减接口
+     *
      * @param questionId
      * @param field
      * @return boolean
@@ -161,7 +162,7 @@ public class QuestionHotspotServiceImpl extends ServiceImpl<QuestionHotspotMappe
      * 校验数据
      *
      * @param questionHotspot
-     * @param add      对创建的数据进行校验
+     * @param add             对创建的数据进行校验
      */
     @Override
     public void validQuestionHotspot(QuestionHotspot questionHotspot, boolean add) {
@@ -253,7 +254,7 @@ public class QuestionHotspotServiceImpl extends ServiceImpl<QuestionHotspotMappe
         questionHotspotVOList.forEach(questionHotspotVO -> {
             // 填充题目基础信息
             Question question = questionService.getById(questionHotspotVO.getQuestionId());
-            if (question!= null) {
+            if (question != null) {
                 questionHotspotVO.setTitle(question.getTitle());
                 questionHotspotVO.setContent(question.getContent());
                 questionHotspotVO.setAnswer(question.getAnswer());

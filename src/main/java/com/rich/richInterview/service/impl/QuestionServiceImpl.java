@@ -680,6 +680,22 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
     }
 
     /**
+     * 分页获取题目列表（仅包含基础信息）
+     * @param questionQueryRequest
+     * @return com.baomidou.mybatisplus.extension.plugins.pagination.Page<com.rich.richInterview.model.entity.Question>
+     * @author DuRuiChi
+     * @create 2025/9/27
+     **/
+    @Override
+    public Page<Question> getQuestionSimplePage(QuestionQueryRequest questionQueryRequest) {
+        QueryWrapper<Question> queryWrapper = this.getQueryWrapper(questionQueryRequest);
+        // 排除answer字段
+        queryWrapper.select(Question.class, info ->
+                !info.getColumn().equals("answer"));
+        return this.page(new Page<>(questionQueryRequest.getCurrent(), questionQueryRequest.getPageSize()), queryWrapper);
+    }
+
+    /**
      * 检查 ES 客户端配置是否存在
      *
      * @return boolean

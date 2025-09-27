@@ -87,8 +87,7 @@ public class QuestionHotspotController {
         ThrowUtils.throwIf(questionId == null || questionId <= 0, ErrorCode.PARAMS_ERROR);
         // 1.反爬虫处理，针对用户 ID 控制访问次数
         User loginUser = userService.getLoginUser(request);
-        if (!loginUser.getUserRole().equals(UserConstant.ADMIN_ROLE))
-        {
+        if (!loginUser.getUserRole().equals(UserConstant.ADMIN_ROLE)) {
             detectCrawlersUtils.detectCrawler(loginUser.getId());
         }
         // 获取用户 IP
@@ -104,7 +103,10 @@ public class QuestionHotspotController {
             // 入口数量：表示流控入口的数量，设置为 1。
             // 额外参数：用于传递额外的参数，此处传入用户 IP 地址等。
             entry = SphU.entry("getQuestionHotspotVOByQuestionId", EntryType.IN, 1, remoteAddr);
-            // 2.查询数据库
+            // 核心业务
+            // 最近刷题记录
+            loginUser.setPreviousQuestionID(questionId);
+            userService.updateById(loginUser);
             // 根据题目 id 获取题库热点信息，不存在时初始化
             QuestionHotspot questionHotspot = questionHotspotService.getByQuestionId(questionId);
             ThrowUtils.throwIf(questionHotspot == null, ErrorCode.NOT_FOUND_ERROR);
