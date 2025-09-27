@@ -242,7 +242,7 @@ export default function MainLayout({ children }: Props) {
           }}
           // 菜单渲染
           menuItemRender={(item, dom) => {
-            return <Link href={item.path || "/"}>{dom}</Link>;
+            return <a href={item.path || "/"} target="_blank" rel="noopener noreferrer">{dom}</a>;
           }}
           // 底部页脚渲染
           footerRender={() => <GlobalFooter />}
