@@ -12,6 +12,9 @@ export interface UserVO {
   grade?: string
   workExperience?: string
   expertiseDirection?: string
+  userRole?: string
+  previousQuestionID?: number
+  createTime?: Date
 }
 
 // 统一响应格式
@@ -244,5 +247,43 @@ export const getUserSignInRecord = async (year: number): Promise<number[]> => {
     console.error('获取签到记录失败', err.message);
     Taro.showToast({title: `获取失败: ${err.message}`, icon: 'none'});
     return [];
+  }
+}
+
+/**
+ * 获取上次刷题记录
+ * @returns 上次刷题的题目信息
+ */
+export const getPreviousQuestion = async (): Promise<any | null> => {
+  try {
+    const token = Taro.getStorageSync('token');
+    if (!token) {
+      console.log('用户未登录，无法获取上次刷题记录');
+      return null;
+    }
+
+    // 先获取用户信息，包含previousQuestionID
+    const userInfo = await getLoginUser();
+    if (!userInfo || !userInfo.previousQuestionID) {
+      console.log('用户暂无刷题记录');
+      return null;
+    }
+
+    // 根据previousQuestionID获取题目详情
+    const questionResponse = await request<ApiResponse<any>>({
+      url: `/api/question/get/vo?id=${userInfo.previousQuestionID}`,
+      method: 'GET',
+      header: {'satoken': token}
+    });
+
+    if (questionResponse?.code === 0 && questionResponse.data) {
+      return questionResponse.data;
+    }
+
+    throw new Error(questionResponse?.message || '获取题目详情失败');
+  } catch (error) {
+    const err = error as Error;
+    console.error('获取上次刷题记录失败', err.message);
+    return null;
   }
 }

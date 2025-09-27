@@ -389,8 +389,8 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         Question question = new Question();
         BeanUtils.copyProperties(questionUpdateRequest, question);
         // tags 的转换
-        if (question.getTags() != null) {
-            question.setTags(JSONUtil.toJsonStr(question.getTags()));
+        if (questionUpdateRequest.getTags() != null) {
+            question.setTags(JSONUtil.toJsonStr(questionUpdateRequest.getTags()));
         }
         // 数据校验
         this.validQuestion(question, false);

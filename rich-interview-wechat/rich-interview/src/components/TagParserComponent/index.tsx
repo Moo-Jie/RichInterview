@@ -5,8 +5,9 @@ export default ({ tagList }: { tagList: string[] }) => {
   const getColor = (tag: string) => {
     switch(tag) {
       case '简单': return '#52c41a';
+      case '普通': return '#faad14';
       case '困难': return '#ff4d4f';
-      default: return '#faad14';
+      default: return '#ffffff';
     }
   }
 

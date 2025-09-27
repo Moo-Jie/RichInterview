@@ -23,10 +23,14 @@ import com.rich.richInterview.model.dto.question.QuestionEditRequest;
 import com.rich.richInterview.model.dto.question.QuestionQueryRequest;
 import com.rich.richInterview.model.dto.question.QuestionUpdateRequest;
 import com.rich.richInterview.model.entity.Question;
+import com.rich.richInterview.model.entity.User;
 import com.rich.richInterview.model.vo.QuestionVO;
+import com.rich.richInterview.model.vo.UserVO;
 import com.rich.richInterview.service.QuestionService;
+import com.rich.richInterview.service.impl.UserServiceImpl;
 import com.rich.richInterview.utils.ResultUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -43,6 +47,8 @@ public class QuestionController {
 
     @Resource
     private QuestionService questionService;
+    @Autowired
+    private UserServiceImpl userService;
 
     /**
      * 创建题目（仅管理员可用）
@@ -108,6 +114,11 @@ public class QuestionController {
             // 额外参数：用于传递额外的参数，此处传入用户 IP 地址等。
             entry = SphU.entry("getQuestionVOById", EntryType.IN, 1, remoteAddr);
             // 核心业务
+            // 最近刷题记录
+            User loginUser = userService.getLoginUser(request);
+            loginUser.setPreviousQuestionID(id);
+            userService.updateById(loginUser);
+            // 题目详情
             return ResultUtils.success(questionService.getQuestionVOById(id, request));
         } catch (Throwable ex) {
             // 当限流时，抛出 BlockException

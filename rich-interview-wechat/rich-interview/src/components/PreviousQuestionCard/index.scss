@@ -1,0 +1,201 @@
+// 上次刷到组件样式
+.previous-question-card {
+  margin-bottom: 32rpx;
+  border-radius: 24rpx;
+  overflow: hidden;
+  box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.08);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  position: relative;
+
+  // 添加装饰性背景图案
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+    animation: float 6s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  // 卡片标题样式覆盖
+  .at-card__header {
+    background: transparent;
+    color: white;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    
+    .at-card__header-title {
+      color: white;
+      font-weight: 600;
+      font-size: 32rpx;
+    }
+    
+    .at-card__header-extra {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 24rpx;
+    }
+  }
+
+  // 卡片内容区域
+  .at-card__content {
+    background: white;
+    border-radius: 0 0 24rpx 24rpx;
+    padding: 0;
+    min-height: 120rpx;
+  }
+}
+
+// 内容区域样式
+.previous-question-content {
+  .at-list__item {
+    background: white;
+    border-radius: 0 0 24rpx 24rpx;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      background: #f8faff;
+      transform: translateY(-2rpx);
+    }
+  }
+
+  .note-container {
+    margin-top: 16rpx;
+  }
+}
+
+// 空状态样式
+.previous-question-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60rpx 40rpx;
+  background: white;
+  border-radius: 0 0 24rpx 24rpx;
+
+  .empty-icon {
+    color: #c8d3f0;
+    margin-bottom: 24rpx;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  .empty-text {
+    color: #8f9bb3;
+    font-size: 28rpx;
+    font-weight: 500;
+    margin-bottom: 8rpx;
+  }
+
+  .empty-subtitle {
+    color: #c8d3f0;
+    font-size: 24rpx;
+  }
+}
+
+// 加载状态样式
+.previous-question-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60rpx 40rpx;
+  background: white;
+  border-radius: 0 0 24rpx 24rpx;
+
+  .loading-icon {
+    color: #667eea;
+    margin-bottom: 24rpx;
+    animation: spin 1s linear infinite;
+  }
+
+  .loading-text {
+    color: #8f9bb3;
+    font-size: 28rpx;
+  }
+}
+
+// 动画定义
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-20rpx) rotate(180deg);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+// 响应式设计
+@media (max-width: 750rpx) {
+  .previous-question-card {
+    margin: 0 24rpx 32rpx;
+    border-radius: 20rpx;
+    
+    .at-card__content {
+      border-radius: 0 0 20rpx 20rpx;
+    }
+  }
+  
+  .previous-question-empty,
+  .previous-question-loading {
+    padding: 50rpx 30rpx;
+    border-radius: 0 0 20rpx 20rpx;
+  }
+}
+
+// 深色模式支持
+@media (prefers-color-scheme: dark) {
+  .previous-question-card {
+    background: linear-gradient(135deg, #4c63d2 0%, #5a4fcf 100%);
+    
+    .at-card__content {
+      background: #1a1a1a;
+    }
+  }
+  
+  .previous-question-content {
+    .at-list__item {
+      background: #1a1a1a;
+      color: white;
+      
+      &:hover {
+        background: #2a2a2a;
+      }
+    }
+  }
+  
+  .previous-question-empty,
+  .previous-question-loading {
+    background: #1a1a1a;
+    
+    .empty-text,
+    .loading-text {
+      color: #b0b0b0;
+    }
+    
+    .empty-subtitle {
+      color: #666;
+    }
+  }
+}
