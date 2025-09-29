@@ -28,8 +28,8 @@ const QuestionTablePage: React.FC = (tableProps: Props) => {
     const actionRef = useRef<ActionType>();
     // 获取查询参数
     const searchParams = useSearchParams();
-    // 读取搜索参数
-    const searchParam = searchParams?.get("searchParam");
+    // 读取搜索参数 - 修复参数名，使用q匹配URL参数
+    const searchParam = searchParams?.get("q");
     // 用于存储题库选项
     const [bankOptions, setBankOptions] = useState<
         { label: string; value: number }[]
@@ -177,7 +177,7 @@ const QuestionTablePage: React.FC = (tableProps: Props) => {
                     const sortOrder = sort?.[sortField] || "descend";
                     // @ts-ignore
                     const {data, code} = await searchQuestionVoByPageUsingPost({
-                        ...params,
+                        ...finalParams, // 使用finalParams而不是params
                         sortField: "_score",
                         sortOrder,
                         ...filter,

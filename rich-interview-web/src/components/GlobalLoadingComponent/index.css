@@ -1,0 +1,88 @@
+.global-loading-modal .ant-modal-content {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+}
+
+.global-loading-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 24px;
+  text-align: center;
+}
+
+.loading-animation {
+  margin-bottom: 12px;
+  position: relative;
+}
+
+.loading-spinner {
+  font-size: 30px;
+  color: #1677ff;
+  animation: spin 1s linear infinite;
+}
+
+.loading-message {
+  font-size: 20px;
+  font-weight: 500;
+  color: #262626;
+  margin-bottom: 4px;
+  line-height: 1.4;
+}
+
+.loading-tips {
+  font-size: 12px;
+  color: #8c8c8c;
+  font-weight: 400;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { 
+    opacity: 0.8; 
+    transform: scale(1);
+  }
+  50% { 
+    opacity: 1; 
+    transform: scale(1.02);
+  }
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .global-loading-modal .ant-modal-content {
+    margin: 0 16px;
+  }
+  
+  .global-loading-content {
+    padding: 16px 20px;
+  }
+  
+  .loading-spinner {
+    font-size: 20px;
+  }
+  
+  .loading-message {
+    font-size: 13px;
+  }
+  
+  .loading-tips {
+    font-size: 11px;
+  }
+}
+
+/* 减少动画效果（用户偏好） */
+@media (prefers-reduced-motion: reduce) {
+  .loading-spinner,
+  .loading-tips {
+    animation: none !important;
+  }
+}

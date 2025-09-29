@@ -29,6 +29,7 @@ import HelpCenterDrawer from "@/components/GlobalDrawers/HelpCenterDrawer";
 import SystemConfigDrawer from "@/components/GlobalDrawers/SystemConfigDrawer";
 import GitHubLink from "@/components/GitHubLinkComponent";
 import WeChatMiniProgramQRCodeDrawer from "@/components/GlobalDrawers/WeChatMiniProgramQRCodeDrawer";
+import GlobalLoading from "@/components/GlobalLoadingComponent";
 
 /**
  * 子组件内容，用于渲染布局主体区域
@@ -54,6 +55,10 @@ export default function MainLayout({ children }: Props) {
   // 客户端渲染状态控制，组件没有挂载，故初始化 mounted 状态为 false
   const [mounted, setMounted] = useState(false);
   const [text, setText] = useState<string>("");
+  // 全局加载状态管理
+  const [globalLoading, setGlobalLoading] = useState(false);
+  const [loadingMessage, setLoadingMessage] = useState("页面正在加载中...");
+
   // 在组件首次挂在后，将 mounted 状态设为 true，表示客户端已完成挂载
   useEffect(() => {
     setMounted(true);
@@ -214,7 +219,13 @@ export default function MainLayout({ children }: Props) {
                   width: 300,
                 }}
               >
-                <SearchInputComponent key="search" />
+                <SearchInputComponent 
+                  key="search" 
+                  onLoadingChange={(loading, message) => {
+                    setGlobalLoading(loading);
+                    if (message) setLoadingMessage(message);
+                  }}
+                />
               </div>,
               <SystemConfigDrawer key="about" />,
               <HelpCenterDrawer key="help" />,
@@ -242,7 +253,34 @@ export default function MainLayout({ children }: Props) {
           }}
           // 菜单渲染
           menuItemRender={(item, dom) => {
-            return <a href={item.path || "/"} target="_blank" rel="noopener noreferrer">{dom}</a>;
+            const handleMenuClick = (e: React.MouseEvent) => {
+              e.preventDefault();
+              
+              // 如果是当前页面，不需要显示加载动画
+              if (item.path === pathname) {
+                return;
+              }
+              
+              // 显示加载动画
+              setLoadingMessage(`正在跳转到 ${item.name || '页面'}...`);
+              setGlobalLoading(true);
+              
+              // 延迟跳转，确保加载动画显示
+              setTimeout(() => {
+                router.push(item.path || "/");
+                
+                // 页面跳转后隐藏加载动画（延迟一点时间确保页面开始加载）
+                setTimeout(() => {
+                  setGlobalLoading(false);
+                }, 500);
+              }, 100);
+            };
+            
+            return (
+              <div onClick={handleMenuClick} style={{ cursor: 'pointer' }}>
+                {dom}
+              </div>
+            );
           }}
           // 底部页脚渲染
           footerRender={() => <GlobalFooter />}
@@ -254,6 +292,8 @@ export default function MainLayout({ children }: Props) {
             children
           }
         </ProLayout>
+        {/* 全局加载动画 */}
+        <GlobalLoading visible={globalLoading} message={loadingMessage} />
       </div>
     </WaterMark>
   );

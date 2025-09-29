@@ -224,10 +224,6 @@ export default function UserCenterPage() {
                 label: <span className="tab-label">✏️ 编辑资料</span>,
               },
               {
-                key: "recentStudy",
-                label: <span className="tab-label">🚀 上次刷题</span>,
-              },
-              {
                 key: "userMsg",
                 label: <span className="tab-label">ℹ️ 更多信息</span>,
               },

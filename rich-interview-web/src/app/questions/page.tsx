@@ -15,7 +15,8 @@ import DailyPracticeComponent from "@/components/DailyPracticeComponent";
 // @ts-ignore
 export default async function QuestionsPage({searchParams}) {
     // searchParams可以获取到url中的参数
-    const {q: searchText} = searchParams;
+    const resolvedSearchParams = await searchParams;
+    const {q: searchText} = resolvedSearchParams;
     // 获取热点数据
     let questionHotspotList = [];
     try {
@@ -60,20 +61,17 @@ export default async function QuestionsPage({searchParams}) {
                     style={{flex: 1}}
                 >
                     <Card className="section-card">
-                        <Title level={2}>热门TOP</Title>
+                        <Title level={2}>全部热门题目</Title>
                     </Card>
-                    <QuestionHotspotChartComponent data={questionHotspotList}/>
-                    <br/>
-                    <Title level={2}>全部热门题目</Title>
                     <Flex justify="space-between" align="center" gap={24}>
                         <QuestionTablePage
                             // 传入搜索数据
                             // @ts-ignore
                             defaultQuestionList={questionList}
                             defaultTotal={total}
-                            // 从url中获取到的搜索参数
+                            // 从url中获取到的搜索参数 - 修复参数映射，使用searchText匹配表单字段
                             defaultSearchParams={{
-                                title: searchText,
+                                searchText: searchText,
                             }}
                         />
                         {/* 右侧边栏 */}
@@ -82,6 +80,11 @@ export default async function QuestionsPage({searchParams}) {
                             <DailyPracticeComponent questionList={questionList}/>
                         </div>
                     </Flex>
+                    <br/>
+                    <Card className="section-card">
+                        <Title level={2}>热门TOP</Title>
+                    </Card>
+                    <QuestionHotspotChartComponent data={questionHotspotList}/>
                 </div>
             </Flex>
         </Card>

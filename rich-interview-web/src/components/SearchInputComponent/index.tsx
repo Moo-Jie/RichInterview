@@ -4,7 +4,9 @@ import "./index.css";
 import { SearchOutlined } from "@ant-design/icons";
 import React from "react";
 
-interface Props {}
+interface Props {
+  onLoadingChange?: (loading: boolean, message?: string) => void;
+}
 
 /**
  * 搜索条通用组件
@@ -13,6 +15,7 @@ interface Props {}
  * 基于Ant Design的Input组件封装，支持防抖和快捷操作
  */
 const SearchInputComponent = (props: Props) => {
+  const { onLoadingChange } = props;
   const router = useRouter();
 
   return (
@@ -39,11 +42,23 @@ const SearchInputComponent = (props: Props) => {
         maxLength={20}
         variant="borderless"
         onSearch={(value) => {
+          // 显示加载动画
+          onLoadingChange?.(true, `正在搜索 "${value}"...`);
+          
           // 使用 URLSearchParams 构造查询参数
           const params = new URLSearchParams();
-          params.set("searchParam", value);
-          // 跳转
-          router.push(`/questions?${params.toString()}`);
+          params.set("q", value);
+          
+          // 延迟跳转，确保加载动画显示
+          setTimeout(() => {
+            // 跳转
+            router.push(`/questions?${params.toString()}`);
+            
+            // 页面跳转后隐藏加载动画（延迟一点时间确保页面开始加载）
+            setTimeout(() => {
+              onLoadingChange?.(false);
+            }, 500);
+          }, 100);
         }}
       />
     </div>
