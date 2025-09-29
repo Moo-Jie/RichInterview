@@ -9,6 +9,8 @@
     border-radius: 14px;
     color: white;
     font-size: 22px;
+    display: inline-block; // 确保所有标签都显示为行内块元素
+    white-space: nowrap; // 防止标签内容换行
 
     &:first-child {
       min-width: 40px;

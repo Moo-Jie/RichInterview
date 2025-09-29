@@ -264,9 +264,15 @@ export default class QuestionBankDetailPage extends Component<{}, State> {
                   <Text className='question-index'>{index + 1}.</Text>
                   <View className='question-content'>
                     <Text className='question-title'>{question.title}</Text>
-                    {question.tagList && question.tagList.length > 0 && (
+                    {question.tags && (
                       <View className='question-tags'>
-                        <TagParser tagList={question.tagList}/>
+                        <TagParser tagList={(() => {
+                          try {
+                            return JSON.parse(question.tags);
+                          } catch (e) {
+                            return [];
+                          }
+                        })()}/>
                       </View>
                     )}
                   </View>

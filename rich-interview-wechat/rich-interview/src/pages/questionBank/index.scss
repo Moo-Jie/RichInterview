@@ -204,6 +204,14 @@
 
         .question-tags {
           margin-top: 12px;
+          
+          /* 确保标签容器有合适的样式 */
+          .tag-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+          }
         }
       }
     }
