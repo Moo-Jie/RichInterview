@@ -20,6 +20,7 @@ import com.rich.richInterview.model.enums.IncrementFieldEnum;
 import com.rich.richInterview.model.vo.QuestionBankHotspotVO;
 import com.rich.richInterview.service.QuestionBankHotspotService;
 import com.rich.richInterview.utils.ResultUtils;
+import com.rich.richInterview.utils.SentinelUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
@@ -164,20 +165,7 @@ public class QuestionBankHotspotController {
      * @create 2025/5/27
      **/
     public BaseResponse<Page<QuestionBankHotspotVO>> handleFallback(@RequestBody QuestionBankHotspotQueryRequest questionBankHotspotQueryRequest, HttpServletRequest request, Throwable ex) {
-        // TODO 调取缓存真实数据或其他方案
-        // 生成模拟数据
-        Page<QuestionBankHotspotVO> simulateQuestionBankHotspotVOPage = new Page<>();
-        List<QuestionBankHotspotVO> simulateQuestionBankHotspotVOList = new ArrayList<>();
-        QuestionBankHotspotVO simulateQuestionBankHotspotVO = new QuestionBankHotspotVO();
-        simulateQuestionBankHotspotVO.setId(404L);
-        simulateQuestionBankHotspotVO.setTitle("您的数据丢了！请检查网络或通知管理员。");
-        simulateQuestionBankHotspotVO.setDescription("您的题库信息暂时访问不到，请检查网络后再试试，或者联系管理员。");
-        simulateQuestionBankHotspotVO.setCreateTime(new Date(System.currentTimeMillis()));
-        simulateQuestionBankHotspotVO.setUpdateTime(new Date(System.currentTimeMillis()));
-        simulateQuestionBankHotspotVOList.add(simulateQuestionBankHotspotVO);
-        simulateQuestionBankHotspotVOPage.setRecords(simulateQuestionBankHotspotVOList);
-        // TODO 降级响应设定好的数据，不影响正常显示
-        return ResultUtils.success(simulateQuestionBankHotspotVOPage);
+        return SentinelUtils.handleFallbackPage(QuestionBankHotspotVO.class);
     }
 
     /**
@@ -189,18 +177,7 @@ public class QuestionBankHotspotController {
      **/
     @PostConstruct
     private void initFlowRules() {
-        List<FlowRule> rules = new ArrayList<>(FlowRuleManager.getRules());
-        FlowRule rule = new FlowRule();
-        // 指定资源名称，此处是要监测的方法
-        rule.setResource("listQuestionBankHotspotVOByPage");
-        // QPS 模式
-        rule.setGrade(RuleConstant.FLOW_GRADE_QPS);
-        // 阈值：5次/秒
-        rule.setCount(5);
-        // 添加规则
-        rules.add(rule);
-        // 加载规则
-        FlowRuleManager.loadRules(rules);
+        SentinelUtils.initFlowAndDegradeRules("listQuestionBankHotspotVOByPage");
     }
 
     /**

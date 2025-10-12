@@ -25,10 +25,10 @@ import com.rich.richInterview.model.dto.question.QuestionUpdateRequest;
 import com.rich.richInterview.model.entity.Question;
 import com.rich.richInterview.model.entity.User;
 import com.rich.richInterview.model.vo.QuestionVO;
-import com.rich.richInterview.model.vo.UserVO;
 import com.rich.richInterview.service.QuestionService;
 import com.rich.richInterview.service.impl.UserServiceImpl;
 import com.rich.richInterview.utils.ResultUtils;
+import com.rich.richInterview.utils.SentinelUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -107,11 +107,7 @@ public class QuestionController {
         Entry entry = null;
         initFlowAndDegradeRules("getQuestionVOById");
         try {
-            // SphU.entry() 方法用于创建一个流控入口，该方法接受三个参数：
-            // 资源名称：用于标识流控规则的资源名称。
-            // 入口类型：表示流控入口的类型，EntryType.IN 表示类型为入口。
-            // 入口数量：表示流控入口的数量，设置为 1。
-            // 额外参数：用于传递额外的参数，此处传入用户 IP 地址等。
+            // SphU.entry() 方法用于创建一个流控入口，该方法接受三个参数：【资源名称：用于标识流控规则的资源名称。】【入口数量：表示流控入口的数量，设置为 1。】【额外参数：用于传递额外的参数，此处传入用户 IP 地址等。】
             entry = SphU.entry("getQuestionVOById", EntryType.IN, 1, remoteAddr);
             // 核心业务
             // 最近刷题记录
@@ -130,14 +126,7 @@ public class QuestionController {
             }
             // 降级后逻辑
             if (ex instanceof DegradeException) {
-                QuestionVO simulateQuestionVO = new QuestionVO();
-                simulateQuestionVO.setId(404L);
-                simulateQuestionVO.setTitle("您的数据丢了！请检查网络或通知管理员。");
-                simulateQuestionVO.setContent("您的数据丢了！请检查网络或通知管理员。");
-                simulateQuestionVO.setAnswer("您的数据丢了！请检查网络或通知管理员。");
-                simulateQuestionVO.setCreateTime(new Date(System.currentTimeMillis()));
-                simulateQuestionVO.setUpdateTime(new Date(System.currentTimeMillis()));
-                return ResultUtils.success(simulateQuestionVO);
+                return SentinelUtils.handleFallback(QuestionVO.class);
             }
             // 限流后逻辑
             return ResultUtils.error(ErrorCode.SYSTEM_ERROR, "您访问过于频繁，系统压力稍大，请耐心等待哟~");
@@ -166,6 +155,7 @@ public class QuestionController {
     /**
      * 分页获取题目列表（封装类）
      * 源：https://sentinelguard.io/zh-cn/docs/annotation-support.html
+     *
      * @param questionQueryRequest
      * @param request
      * @return
@@ -183,11 +173,7 @@ public class QuestionController {
         Entry entry = null;
         initFlowAndDegradeRules("listQuestionVOByPage");
         try {
-            // SphU.entry() 方法用于创建一个流控入口，该方法接受三个参数：
-            // 1. 资源名称：用于标识流控规则的资源名称。
-            // 2. 入口类型：表示流控入口的类型，EntryType.IN 表示类型为入口。
-            // 3. 入口数量：表示流控入口的数量，设置为 1。
-            // 4. 额外参数：用于传递额外的参数，此处传入用户 IP 地址等。
+            // SphU.entry() 方法用于创建一个流控入口，该方法接受三个参数：【资源名称：用于标识流控规则的资源名称。】【入口数量：表示流控入口的数量，设置为 1。】【额外参数：用于传递额外的参数，此处传入用户 IP 地址等。】
             entry = SphU.entry("listQuestionVOByPage", EntryType.IN, 1, remoteAddr);
             // 查询数据库
             Page<Question> questionPage = questionService.getQuestionPage(questionQueryRequest);
@@ -225,23 +211,7 @@ public class QuestionController {
      * @create 2025/5/27
      **/
     public BaseResponse<Page<QuestionVO>> handleFallback(@RequestBody QuestionQueryRequest questionQueryRequest, HttpServletRequest request, Throwable ex) {
-        // TODO 调取缓存真实数据或其他方案
-        // 生成模拟数据
-        Page<QuestionVO> simulateQuestionVOPage = new Page<>();
-        List<QuestionVO> simulateQuestionVOList = new ArrayList<>();
-        QuestionVO simulateQuestionVO = new QuestionVO();
-        simulateQuestionVO.setId(404L);
-        simulateQuestionVO.setTitle("您的数据丢了！请检查网络或通知管理员。");
-        simulateQuestionVO.setContent("您的数据丢了！请检查网络或通知管理员。");
-        simulateQuestionVO.setAnswer("您的数据丢了！请检查网络或通知管理员。");
-        simulateQuestionVO.setTags("数据丢失");
-        simulateQuestionVO.setCreateTime(new Date(System.currentTimeMillis()));
-        simulateQuestionVO.setUpdateTime(new Date(System.currentTimeMillis()));
-        simulateQuestionVOList.add(simulateQuestionVO);
-        simulateQuestionVOPage.setRecords(simulateQuestionVOList);
-
-        // TODO 降级响应设定好的数据，不影响正常显示
-        return ResultUtils.success(simulateQuestionVOPage);
+        return SentinelUtils.handleFallbackPage(QuestionVO.class);
     }
 
     /**
@@ -253,44 +223,7 @@ public class QuestionController {
      * @create 2025/5/27
      **/
     private void initFlowAndDegradeRules(String resourceName) {
-        // 限流规则
-        // 单 IP 查看题目列表限流规则
-        ParamFlowRule rule = new ParamFlowRule(resourceName)
-                // 对 IP 地址参数限流
-                .setParamIdx(0)
-                // 每分钟最多 60 次
-                .setCount(60)
-                // 规则的统计周期为 60 秒
-                .setDurationInSec(60);
-        ParamFlowRuleManager.loadRules(Collections.singletonList(rule));
-
-        // 熔断规则
-        // 慢调用比例
-        DegradeRule slowCallRule = new DegradeRule(resourceName).setGrade(CircuitBreakerStrategy.SLOW_REQUEST_RATIO.getType())
-                // 慢调用比例大于 20%，触发熔断
-                .setCount(0.2)
-                // 熔断持续时间 60 秒
-                .setTimeWindow(60)
-                // 统计时长 30 秒
-                .setStatIntervalMs(30 * 1000)
-                // 最小请求数，小于该值的请求不会触发熔断
-                .setMinRequestAmount(10)
-                // 响应时间超过 3 秒
-                .setSlowRatioThreshold(3);
-
-        // 异常比例熔断规则
-        DegradeRule errorRateRule = new DegradeRule(resourceName).setGrade(CircuitBreakerStrategy.ERROR_RATIO.getType())
-                // 异常率大于 10%
-                .setCount(0.1)
-                // 熔断持续时间 60 秒
-                .setTimeWindow(60)
-                // 统计时长 30 秒
-                .setStatIntervalMs(30 * 1000)
-                // 最小请求数
-                .setMinRequestAmount(10);
-
-        // 加载规则
-        DegradeRuleManager.loadRules(Arrays.asList(slowCallRule, errorRateRule));
+        SentinelUtils.initFlowAndDegradeRules(resourceName);
     }
 
     /**

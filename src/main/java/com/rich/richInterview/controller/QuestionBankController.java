@@ -23,6 +23,7 @@ import com.rich.richInterview.model.vo.QuestionBankVO;
 import com.rich.richInterview.service.QuestionBankService;
 import com.rich.richInterview.service.UserService;
 import com.rich.richInterview.utils.ResultUtils;
+import com.rich.richInterview.utils.SentinelUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
@@ -165,21 +166,7 @@ public class QuestionBankController {
      * @create 2025/5/27
      **/
     public BaseResponse<Page<QuestionBankVO>> handleFallback(@RequestBody QuestionBankQueryRequest questionBankQueryRequest, HttpServletRequest request, Throwable ex) {
-        // TODO 调取缓存真实数据或其他方案
-        // 生成模拟数据
-        Page<QuestionBankVO> simulateQuestionBankVOPage = new Page<>();
-        List<QuestionBankVO> simulateQuestionBankVOList = new ArrayList<>();
-        QuestionBankVO simulateQuestionBankVO = new QuestionBankVO();
-        simulateQuestionBankVO.setId(404L);
-        simulateQuestionBankVO.setTitle("您的数据丢了！请检查网络或通知管理员。");
-        simulateQuestionBankVO.setDescription("您的题库信息暂时访问不到，请检查网络后再试试，或者联系管理员。");
-        simulateQuestionBankVO.setPicture("https://rich-tams.oss-cn-beijing.aliyuncs.com/LOGO.jpg");
-        simulateQuestionBankVO.setCreateTime(new Date(System.currentTimeMillis()));
-        simulateQuestionBankVO.setUpdateTime(new Date(System.currentTimeMillis()));
-        simulateQuestionBankVOList.add(simulateQuestionBankVO);
-        simulateQuestionBankVOPage.setRecords(simulateQuestionBankVOList);
-        // TODO 降级响应设定好的数据，不影响正常显示
-        return ResultUtils.success(simulateQuestionBankVOPage);
+        return SentinelUtils.handleFallbackPage(QuestionBankVO.class);
     }
 
     /**
@@ -191,18 +178,7 @@ public class QuestionBankController {
      **/
     @PostConstruct
     private void initFlowRules() {
-        List<FlowRule> rules = new ArrayList<>(FlowRuleManager.getRules());
-        FlowRule rule = new FlowRule();
-        // 指定资源名称，此处是要监测的方法
-        rule.setResource("listQuestionBankVOByPage");
-        // QPS 模式
-        rule.setGrade(RuleConstant.FLOW_GRADE_QPS);
-        // 阈值：5次/秒
-        rule.setCount(5);
-        // 添加规则
-        rules.add(rule);
-        // 加载规则
-        FlowRuleManager.loadRules(rules);
+        SentinelUtils.initFlowAndDegradeRules("listQuestionBankVOByPage");
     }
 
     /**

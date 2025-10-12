@@ -639,20 +639,22 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
     @Override
     public QuestionVO getQuestionVOById(Long id, HttpServletRequest request) {
         // HotKey
+
+        /* 规则备份：
+                [
+                  {
+                    "duration": 600,
+                        "key": "question_detail_",
+                        "prefix": true,
+                        "interval": 5,
+                        "threshold": 10,
+                        "desc": "热门题目 HotKey 缓存：首先判断 question_detail_ 开头的 key，如果 5 秒访问次数达到 10 次，就会指认为HotKey 被添加到缓存中，为期10 分钟，到期后从 JVM 中清除，变回普通 Key"
+                  }
+                ]
+        */
+
         // 生成 question_detail_ 开头的 key ，应当与数据库内设定好的热点探测规则匹配
-//         规则备份：
-//                [
-//                  {
-//                    "duration": 600,
-//                        "key": "question_detail_",
-//                        "prefix": true,
-//                        "interval": 5,
-//                        "threshold": 10,
-//                        "desc": "热门题目 HotKey 缓存：首先判断 question_detail_ 开头的 key，如果 5 秒访问次数达到 10 次，就会指认为HotKey 被添加到缓存中，为期10 分钟，到期后从 JVM 中清除，变回普通 Key"
-//                  }
-//                ]
-        // 不使用改热点探测服务注销即可
-//        String key = "question_detail_" + id;
+        // String key = "question_detail_" + id;
 
         // 响应缓存内容
         // 通过 JD-HotKey-Client 内置方法，判断是否被指认为 HotKey
