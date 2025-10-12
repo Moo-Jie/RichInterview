@@ -273,7 +273,6 @@
 }
 
 .ask-ai-card .card-title::before {
-    content: '🤖';
     position: absolute;
     left: 0;
     top: 50%;

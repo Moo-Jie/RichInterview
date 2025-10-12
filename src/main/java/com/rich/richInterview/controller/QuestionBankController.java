@@ -3,11 +3,9 @@ package com.rich.richInterview.controller;
 import cn.dev33.satoken.annotation.SaCheckRole;
 import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
-import com.alibaba.csp.sentinel.slots.block.RuleConstant;
 import com.alibaba.csp.sentinel.slots.block.degrade.DegradeException;
-import com.alibaba.csp.sentinel.slots.block.flow.FlowRule;
-import com.alibaba.csp.sentinel.slots.block.flow.FlowRuleManager;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.rich.richInterview.annotation.AutoCache;
 import com.rich.richInterview.common.BaseResponse;
 import com.rich.richInterview.common.DeleteRequest;
 import com.rich.richInterview.common.ErrorCode;
@@ -30,9 +28,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 
 /**
@@ -96,6 +91,16 @@ public class QuestionBankController {
      * @return
      */
     @GetMapping("/get/vo")
+    // 对 ID 查询降低缓存时间
+    @AutoCache(
+            keyPrefix = "question_bank_vo",
+            expireTime = 900,  // 设置缓存过期时间为 15 分钟
+            nullCacheTime = 180,  // 设置空缓存过期时间为 3 分钟
+            randomExpireRange = 180  // 设置随机过期范围为 3 分钟
+    )
+    @SentinelResource(value = "getQuestionBankVOById",
+            blockHandler = "handleBlockException",
+            fallback = "handleFallback")
     public BaseResponse<QuestionBankVO> getQuestionBankVOById(QuestionBankQueryRequest questionBankQueryRequest, HttpServletRequest request) {
         ThrowUtils.throwIf(questionBankQueryRequest == null, ErrorCode.PARAMS_ERROR);
         Long id = questionBankQueryRequest.getId();
@@ -140,6 +145,7 @@ public class QuestionBankController {
     @SentinelResource(value = "listQuestionBankVOByPage",
             blockHandler = "handleBlockException",
             fallback = "handleFallback")
+    @AutoCache(keyPrefix = "question_bank_page")
     public BaseResponse<Page<QuestionBankVO>> listQuestionBankVOByPage(@RequestBody QuestionBankQueryRequest questionBankQueryRequest,
                                                                        HttpServletRequest request) {
 

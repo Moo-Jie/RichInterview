@@ -1,4 +1,4 @@
-package com.rich.richInterview.aop;
+package com.rich.richInterview.aspect;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -15,14 +15,15 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.UUID;
 
 /**
- * 请求响应日志 AOP
+ * 请求响应日志切面
+ * 拦截所有 controller 层方法，记录请求路径、IP、参数、响应时间等日志
  * @author DuRuiChi
  * @create 2025/3/20
  **/
 @Aspect
 @Component
 @Slf4j
-public class LogInterceptor {
+public class LogInterceptorAspect {
 
     /**
      * 执行拦截

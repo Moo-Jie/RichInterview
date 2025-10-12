@@ -7,12 +7,8 @@ import com.alibaba.csp.sentinel.SphU;
 import com.alibaba.csp.sentinel.Tracer;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.alibaba.csp.sentinel.slots.block.degrade.DegradeException;
-import com.alibaba.csp.sentinel.slots.block.degrade.DegradeRule;
-import com.alibaba.csp.sentinel.slots.block.degrade.DegradeRuleManager;
-import com.alibaba.csp.sentinel.slots.block.degrade.circuitbreaker.CircuitBreakerStrategy;
-import com.alibaba.csp.sentinel.slots.block.flow.param.ParamFlowRule;
-import com.alibaba.csp.sentinel.slots.block.flow.param.ParamFlowRuleManager;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.rich.richInterview.annotation.AutoCache;
 import com.rich.richInterview.common.BaseResponse;
 import com.rich.richInterview.common.DeleteRequest;
 import com.rich.richInterview.common.ErrorCode;
@@ -35,7 +31,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
 
 /**
  * 题目接口
@@ -95,6 +90,13 @@ public class QuestionController {
      * @return
      */
     @GetMapping("/get/vo")
+    // 对 ID 查询降低缓存时间
+    @AutoCache(
+            keyPrefix = "question_vo",
+            expireTime = 900,  // 设置缓存过期时间为 15 分钟
+            nullCacheTime = 180,  // 设置空缓存过期时间为 3 分钟
+            randomExpireRange = 180  // 设置随机过期范围为 3 分钟
+    )
     public BaseResponse<QuestionVO> getQuestionVOById(Long id, HttpServletRequest request) {
         ThrowUtils.throwIf(id == null || id <= 0, ErrorCode.PARAMS_ERROR);
         // 获取用户 IP
@@ -161,6 +163,7 @@ public class QuestionController {
      * @return
      */
     @PostMapping("/list/page/vo")
+    @AutoCache(keyPrefix = "question_page")
     public BaseResponse<Page<QuestionVO>> listQuestionVOByPage(@RequestBody QuestionQueryRequest questionQueryRequest, HttpServletRequest request) {
         long size = questionQueryRequest.getPageSize();
         // TODO 安全性配置

@@ -1,6 +1,7 @@
 package com.rich.richInterview.controller;
 
 import cn.dev33.satoken.annotation.SaCheckRole;
+import com.rich.richInterview.annotation.AutoCache;
 import cn.dev33.satoken.annotation.SaMode;
 import com.alibaba.csp.sentinel.Entry;
 import com.alibaba.csp.sentinel.EntryType;
@@ -82,6 +83,13 @@ public class QuestionHotspotController {
     @GetMapping("/get/vo/byQuestionId")
     //    只要具有其中一个权限即可通过校验
     @SaCheckRole(value = {UserConstant.ADMIN_ROLE, UserConstant.DEFAULT_ROLE}, mode = SaMode.OR)
+    // 对 ID 查询降低缓存时间
+    @AutoCache(
+        keyPrefix = "question_hotspot_vo",
+        expireTime = 900,  // 设置缓存过期时间为 15 分钟
+        nullCacheTime = 180,  // 设置空缓存过期时间为 3 分钟
+        randomExpireRange = 180  // 设置随机过期范围为 3 分钟
+    )
     public BaseResponse<QuestionHotspotVO> getQuestionHotspotVOByQuestionId(
             @RequestParam Long questionId,
             HttpServletRequest request) {
@@ -179,6 +187,7 @@ public class QuestionHotspotController {
      * @return
      */
     @PostMapping("/list/page/vo")
+    @AutoCache(keyPrefix = "question_hotspot_page")
     public BaseResponse<Page<QuestionHotspotVO>> listQuestionHotspotVOByPage(@RequestBody QuestionHotspotQueryRequest questionHotspotQueryRequest,
                                                                              HttpServletRequest request) {
         long current = questionHotspotQueryRequest.getCurrent();

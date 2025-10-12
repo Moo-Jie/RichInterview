@@ -35,8 +35,18 @@ public class RedissonConfig {
         config.useSingleServer()
                 .setAddress("redis://" + host + ":" + port)
                 .setDatabase(database)
-                .setPassword(password);
-                // TODO 其他配置
+                .setPassword(password)
+                // 连接池配置
+                .setConnectionPoolSize(64)
+                .setConnectionMinimumIdleSize(10)
+                // 连接超时配置
+                .setConnectTimeout(10000)
+                .setTimeout(3000)
+                // 重试配置
+                .setRetryAttempts(3)
+                .setRetryInterval(1500)
+                // 心跳检测
+                .setPingConnectionInterval(30000);
         return Redisson.create(config);
     }
 }

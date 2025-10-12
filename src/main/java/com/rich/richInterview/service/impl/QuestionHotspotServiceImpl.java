@@ -252,12 +252,11 @@ public class QuestionHotspotServiceImpl extends ServiceImpl<QuestionHotspotMappe
         // 对象列表 => 封装对象列表
         List<QuestionHotspotVO> questionHotspotVOList = questionHotspotList.stream().map(QuestionHotspotVO::objToVo).collect(Collectors.toList());
         questionHotspotVOList.forEach(questionHotspotVO -> {
-            // 填充题目基础信息
+            // 填充题目基础信息（避免过长冗余信息）
             Question question = questionService.getById(questionHotspotVO.getQuestionId());
             if (question != null) {
                 questionHotspotVO.setTitle(question.getTitle());
                 questionHotspotVO.setContent(question.getContent());
-                questionHotspotVO.setAnswer(question.getAnswer());
                 questionHotspotVO.setTagList(JSONUtil.toList(question.getTags(), String.class));
             }
         });

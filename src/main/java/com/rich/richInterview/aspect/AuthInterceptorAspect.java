@@ -1,4 +1,4 @@
-package com.rich.richInterview.aop;
+package com.rich.richInterview.aspect;
 
 import com.rich.richInterview.annotation.AuthCheck;
 import com.rich.richInterview.common.ErrorCode;
@@ -16,7 +16,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * 权限校验 AOP ，拦截所有带有 @AuthCheck 注解的方法并鉴权
+ * 权限校验切面
+ * 拦截所有带有 @AuthCheck 注解的方法并鉴权
  * （已淘汰，现使用 Sa-Token 实现）
  *
  * @author DuRuiChi
@@ -24,7 +25,7 @@ import javax.servlet.http.HttpServletRequest;
  **/
 //@Aspect
 //@Component
-public class AuthInterceptor {
+public class AuthInterceptorAspect {
 
     @Resource
     private UserService userService;

@@ -123,7 +123,7 @@ public class QuestionBankHotspotServiceImpl extends ServiceImpl<QuestionBankHots
                 .map(QuestionBankHotspotVO::objToVo)
                 .collect(Collectors.toList());
         questionBankHotspotVOList.forEach(questionBankHotspotVO -> {
-            // 设置题库信息
+            // 设置题库信息（避免过长冗余信息）
             QuestionBank questionBank = questionBankService.getById(questionBankHotspotVO.getQuestionBankId());
             questionBankHotspotVO.setTitle(questionBank.getTitle());
             questionBankHotspotVO.setDescription(questionBank.getDescription());
