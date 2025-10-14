@@ -39,7 +39,6 @@ public class AutoCacheAspect {
     public Object around(ProceedingJoinPoint joinPoint, AutoCache autoCache) throws Throwable {
         // 获取方法信息
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
-        Method method = signature.getMethod();
         Object[] args = joinPoint.getArgs();
 
         // 通过拼接方法名和参数生成缓存键

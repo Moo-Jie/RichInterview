@@ -185,8 +185,8 @@ public class CacheUtils {
     /**
      * 生成缓存键
      *
-     * @param prefix     前缀
-     * @param args       参数
+     * @param prefix 前缀
+     * @param args   参数
      * @return 缓存键
      */
     public String generateCacheKey(String prefix, Object[] args) {
@@ -214,7 +214,7 @@ public class CacheUtils {
                 }
 
                 if (arg != null) {
-                    keyBuilder.append(arg);
+                    keyBuilder.append(generateObjectKey(arg));
                 } else {
                     keyBuilder.append("null");
                 }
@@ -223,6 +223,33 @@ public class CacheUtils {
         }
 
         return keyBuilder.toString();
+    }
+
+    /**
+     * 生成对象的缓存键表示
+     * 对于复杂对象，使用 JSON 序列化来确保所有属性都被包含
+     *
+     * @param obj 对象
+     * @return 对象的缓存键表示
+     */
+    private String generateObjectKey(Object obj) {
+        if (obj == null) {
+            return "null";
+        }
+
+        // 对于基本类型和字符串，直接使用 toString()
+        if (obj instanceof String || obj instanceof Number || obj instanceof Boolean ||
+                obj instanceof Character || obj.getClass().isPrimitive()) {
+            return obj.toString();
+        }
+
+        // 对于复杂对象，使用 JSON 序列化来确保所有属性都被包含
+        try {
+            return objectMapper.writeValueAsString(obj);
+        } catch (Exception e) {
+            log.warn("Failed to serialize object to JSON for cache key, falling back to toString(): {}", e.getMessage());
+            return obj.toString();
+        }
     }
 
     /**
