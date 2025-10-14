@@ -17,6 +17,12 @@ public class BaseResponse<T> implements Serializable {
 
     private String message;
 
+    /**
+     * 默认构造函数，用于 Jackson 反序列化
+     */
+    public BaseResponse() {
+    }
+
     public BaseResponse(int code, T data, String message) {
         this.code = code;
         this.data = data;

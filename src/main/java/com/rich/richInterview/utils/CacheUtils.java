@@ -1,8 +1,12 @@
 package com.rich.richInterview.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.rich.richInterview.common.ErrorCode;
+import com.rich.richInterview.exception.ThrowUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
@@ -38,7 +42,17 @@ public class CacheUtils {
 
     public CacheUtils() {
         this.objectMapper = new ObjectMapper();
+        // 注册 Java 8 时间模块
         this.objectMapper.registerModule(new JavaTimeModule());
+
+        // 配置序列化特性
+        this.objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        this.objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+
+        // 配置反序列化特性 - 增强容错性
+        this.objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        this.objectMapper.disable(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES);
+        this.objectMapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
     }
 
     /**
@@ -61,7 +75,7 @@ public class CacheUtils {
             }
 
             redisTemplate.opsForValue().set(key, jsonValue, actualExpireTime, TimeUnit.SECONDS);
-            log.debug("设置缓存成功，key: {}, expireTime: {}秒", key, actualExpireTime);
+            log.info("设置缓存成功，key: {}, expireTime: {}秒", key, actualExpireTime);
         } catch (JsonProcessingException e) {
             log.error("缓存序列化失败，key: {}", key, e);
         }
@@ -75,7 +89,7 @@ public class CacheUtils {
      */
     public void setNullCache(String key, long nullCacheTime) {
         redisTemplate.opsForValue().set(key, NULL_VALUE, nullCacheTime, TimeUnit.SECONDS);
-        log.debug("设置空值缓存，key: {}, expireTime: {}秒", key, nullCacheTime);
+        log.info("设置空值缓存，key: {}, expireTime: {}秒", key, nullCacheTime);
     }
 
     /**
@@ -96,12 +110,11 @@ public class CacheUtils {
 
             // 检查是否是空值缓存
             if (NULL_VALUE.equals(jsonValue)) {
-                log.debug("命中空值缓存，key: {}", key);
                 return null;
             }
 
             T result = objectMapper.readValue(jsonValue, clazz);
-            log.debug("缓存命中，key: {}", key);
+            ThrowUtils.throwIf(result == null, ErrorCode.NOT_FOUND_ERROR, "缓存结果为空");
             return result;
         } catch (Exception e) {
             log.error("缓存反序列化失败，key: {}", key, e);
@@ -118,7 +131,7 @@ public class CacheUtils {
      */
     public void deleteCache(String key) {
         redisTemplate.delete(key);
-        log.debug("删除缓存，key: {}", key);
+        log.info("删除缓存，key: {}", key);
     }
 
     /**
@@ -144,10 +157,10 @@ public class CacheUtils {
         try {
             boolean acquired = lock.tryLock(waitTime, leaseTime, TimeUnit.SECONDS);
             if (acquired) {
-                log.debug("获取分布式锁成功，lockKey: {}", lockKey);
+                log.info("获取分布式锁成功，lockKey: {}", lockKey);
                 return lock;
             } else {
-                log.debug("获取分布式锁失败，lockKey: {}", lockKey);
+                log.info("获取分布式锁失败，lockKey: {}", lockKey);
                 return null;
             }
         } catch (InterruptedException e) {
@@ -165,7 +178,7 @@ public class CacheUtils {
     public void releaseLock(RLock lock) {
         if (lock != null && lock.isHeldByCurrentThread()) {
             lock.unlock();
-            log.debug("释放分布式锁成功");
+            log.info("释放分布式锁成功");
         }
     }
 
@@ -173,33 +186,39 @@ public class CacheUtils {
      * 生成缓存键
      *
      * @param prefix     前缀
-     * @param methodName 方法名
      * @param args       参数
      * @return 缓存键
      */
-    public String generateCacheKey(String prefix, String methodName, Object[] args) {
+    public String generateCacheKey(String prefix, Object[] args) {
         StringBuilder keyBuilder = new StringBuilder();
 
         // 添加前缀
         if (prefix != null && !prefix.trim().isEmpty()) {
-            keyBuilder.append(prefix).append(":");
+            keyBuilder.append(prefix);
         }
-
-        // 添加方法名
-        keyBuilder.append(methodName);
 
         // 添加参数
         if (args != null && args.length > 0) {
             keyBuilder.append(":");
-            for (int i = 0; i < args.length; i++) {
-                if (i > 0) {
+            boolean hasValidArgs = false;
+            for (Object arg : args) {
+                // 过滤掉 HttpServletRequest 类型的参数
+                // TODO 其他过滤参数
+                if (arg != null && arg.getClass().getName()
+                        .contains("org.springframework.session.web.http.SessionRepositoryFilter$SessionRepositoryRequestWrapper")) {
+                    continue;
+                }
+
+                if (hasValidArgs) {
                     keyBuilder.append("_");
                 }
-                if (args[i] != null) {
-                    keyBuilder.append(args[i].toString());
+
+                if (arg != null) {
+                    keyBuilder.append(arg);
                 } else {
                     keyBuilder.append("null");
                 }
+                hasValidArgs = true;
             }
         }
 

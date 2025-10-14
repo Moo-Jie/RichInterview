@@ -40,20 +40,18 @@ public class AutoCacheAspect {
         // 获取方法信息
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
-        String methodName = method.getName();
         Object[] args = joinPoint.getArgs();
 
         // 通过拼接方法名和参数生成缓存键
         String cacheKey = cacheUtils.generateCacheKey(
                 autoCache.keyPrefix(),
-                methodName,
                 args
         );
 
         // 获取返回值类型
         Class<?> returnType = signature.getReturnType();
 
-        log.info("开始处理缓存，方法: {}, 缓存键: {}", methodName, cacheKey);
+        log.info("开始处理缓存, 缓存键: {}",cacheKey);
 
         // 1. 尝试从缓存获取数据
         Object cachedResult = cacheUtils.getCache(cacheKey, returnType);
