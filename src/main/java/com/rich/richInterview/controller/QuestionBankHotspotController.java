@@ -6,6 +6,7 @@ import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.alibaba.csp.sentinel.slots.block.degrade.DegradeException;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.rich.richInterview.annotation.AutoCache;
+import com.rich.richInterview.annotation.AutoClearCache;
 import com.rich.richInterview.common.BaseResponse;
 import com.rich.richInterview.common.ErrorCode;
 import com.rich.richInterview.constant.UserConstant;
@@ -48,6 +49,7 @@ public class QuestionBankHotspotController {
      * @create 2025/5/25
      **/
     @PostMapping("/increment")
+    @AutoClearCache(prefixes = {"question_bank_hotspot_page", "question_bank_hotspot_vo"})
     public BaseResponse<Boolean> incrementField(
             @RequestParam Long questionBankId,
             @RequestParam String fieldType) {
@@ -99,6 +101,7 @@ public class QuestionBankHotspotController {
      */
     @PostMapping("/update")
     @SaCheckRole(UserConstant.ADMIN_ROLE)
+    @AutoClearCache(prefixes = {"question_bank_hotspot_page", "question_bank_hotspot_vo"})
     public BaseResponse<Boolean> updateQuestionBankHotspot(@RequestBody QuestionBankHotspotUpdateRequest questionBankHotspotUpdateRequest) {
         if (questionBankHotspotUpdateRequest == null || questionBankHotspotUpdateRequest.getQuestionBankId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);

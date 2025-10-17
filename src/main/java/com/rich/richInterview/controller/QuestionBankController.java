@@ -6,6 +6,7 @@ import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.alibaba.csp.sentinel.slots.block.degrade.DegradeException;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.rich.richInterview.annotation.AutoCache;
+import com.rich.richInterview.annotation.AutoClearCache;
 import com.rich.richInterview.common.BaseResponse;
 import com.rich.richInterview.common.DeleteRequest;
 import com.rich.richInterview.common.ErrorCode;
@@ -54,6 +55,7 @@ public class QuestionBankController {
      */
     @SaCheckRole(UserConstant.ADMIN_ROLE)
     @PostMapping("/add")
+    @AutoClearCache(prefixes = {"question_bank_page", "question_bank_vo", "question_bank_hotspot_page", "question_bank_hotspot_vo"})
     public BaseResponse<Long> addQuestionBank(@RequestBody QuestionBankAddRequest questionBankAddRequest, HttpServletRequest request) {
         return ResultUtils.success(questionBankService.addQuestionBank(questionBankAddRequest, request));
     }
@@ -67,6 +69,7 @@ public class QuestionBankController {
      */
     @SaCheckRole(UserConstant.ADMIN_ROLE)
     @PostMapping("/delete")
+    @AutoClearCache(prefixes = {"question_bank_page", "question_bank_vo", "question_bank_hotspot_page", "question_bank_hotspot_vo"})
     public BaseResponse<Boolean> deleteQuestionBank(@RequestBody DeleteRequest deleteRequest, HttpServletRequest request) {
         return ResultUtils.success(questionBankService.deleteQuestionBank(deleteRequest, request));
     }
@@ -79,6 +82,7 @@ public class QuestionBankController {
      */
     @PostMapping("/update")
     @SaCheckRole(UserConstant.ADMIN_ROLE)
+    @AutoClearCache(prefixes = {"question_bank_page", "question_bank_vo", "question_bank_hotspot_page", "question_bank_hotspot_vo"})
     public BaseResponse<Boolean> updateQuestionBank(@RequestBody QuestionBankUpdateRequest questionBankUpdateRequest) {
         return ResultUtils.success(questionBankService.updateQuestionBank(questionBankUpdateRequest));
     }
@@ -239,6 +243,7 @@ public class QuestionBankController {
      * @return
      */
     @PostMapping("/edit")
+    @AutoClearCache(prefixes = {"question_bank_page", "question_bank_vo", "question_bank_hotspot_page", "question_bank_hotspot_vo"})
     public BaseResponse<Boolean> editQuestionBank(@RequestBody QuestionBankEditRequest questionBankEditRequest, HttpServletRequest request) {
         return ResultUtils.success(questionBankService.editQuestionBank(questionBankEditRequest, request));
     }

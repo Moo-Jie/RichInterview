@@ -11,14 +11,12 @@ import org.redisson.api.RLock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.lang.reflect.Method;
-
 /**
  * 自动缓存切面
  * 处理 @AutoCache 注解的方法，实现自动缓存功能（包含缓存雪崩、击穿、穿透的防护机制）
  *
  * @author DuRuiChi
- * @create 2025/1/12
+ * @create 2025/10/12
  */
 @Aspect
 @Component
@@ -50,7 +48,7 @@ public class AutoCacheAspect {
         // 获取返回值类型
         Class<?> returnType = signature.getReturnType();
 
-        log.info("开始处理缓存, 缓存键: {}",cacheKey);
+        log.info("开始处理缓存, 缓存键: {}", cacheKey);
 
         // 1. 尝试从缓存获取数据
         Object cachedResult = cacheUtils.getCache(cacheKey, returnType);

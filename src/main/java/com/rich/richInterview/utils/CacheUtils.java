@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
  * 提供Redis缓存的基础操作，包含防护机制
  *
  * @author DuRuiChi
- * @create 2025/1/12
+ * @create 2025/10/17
  */
 @Component
 @Slf4j
@@ -260,5 +260,58 @@ public class CacheUtils {
      */
     public String generateLockKey(String cacheKey) {
         return "lock:" + cacheKey;
+    }
+
+    /**
+     * 根据前缀删除缓存
+     * 删除所有匹配指定前缀的缓存键
+     *
+     * @param prefix 缓存键前缀
+     * @return 删除的缓存数量
+     */
+    public long deleteCacheByPrefix(String prefix) {
+        try {
+            // 使用通配符模式匹配前缀
+            String pattern = prefix + "*";
+            
+            // 获取所有匹配的键
+            var keys = redisTemplate.keys(pattern);
+            
+            if (keys != null && !keys.isEmpty()) {
+                // 批量删除
+                Long deletedCount = redisTemplate.delete(keys);
+                log.info("根据前缀删除缓存成功，前缀: {}, 删除数量: {}", prefix, deletedCount);
+                return deletedCount != null ? deletedCount : 0;
+            } else {
+                log.info("根据前缀未找到匹配的缓存，前缀: {}", prefix);
+                return 0;
+            }
+        } catch (Exception e) {
+            log.error("根据前缀删除缓存失败，前缀: {}", prefix, e);
+            return 0;
+        }
+    }
+
+    /**
+     * 根据多个前缀批量删除缓存
+     *
+     * @param prefixes 缓存键前缀数组
+     * @return 总删除的缓存数量
+     */
+    public long deleteCacheByPrefixes(String[] prefixes) {
+        if (prefixes == null || prefixes.length == 0) {
+            log.warn("前缀数组为空，跳过缓存删除");
+            return 0;
+        }
+
+        long totalDeleted = 0;
+        for (String prefix : prefixes) {
+            if (prefix != null && !prefix.trim().isEmpty()) {
+                totalDeleted += deleteCacheByPrefix(prefix.trim());
+            }
+        }
+        
+        log.info("批量删除缓存完成，总删除数量: {}", totalDeleted);
+        return totalDeleted;
     }
 }

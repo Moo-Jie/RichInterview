@@ -9,6 +9,7 @@ import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.alibaba.csp.sentinel.slots.block.degrade.DegradeException;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.rich.richInterview.annotation.AutoCache;
+import com.rich.richInterview.annotation.AutoClearCache;
 import com.rich.richInterview.common.BaseResponse;
 import com.rich.richInterview.common.DeleteRequest;
 import com.rich.richInterview.common.ErrorCode;
@@ -54,6 +55,7 @@ public class QuestionController {
      */
     @SaCheckRole(UserConstant.ADMIN_ROLE)
     @PostMapping("/add")
+    @AutoClearCache(prefixes = {"question_page", "question_vo", "question_hotspot_page", "question_hotspot_vo", "question_bank_page", "question_bank_vo"})
     public BaseResponse<Long> addQuestion(@RequestBody QuestionAddRequest questionAddRequest, HttpServletRequest request) {
         return ResultUtils.success(questionService.addQuestion(questionAddRequest, request));
     }
@@ -67,6 +69,7 @@ public class QuestionController {
      */
     @SaCheckRole(UserConstant.ADMIN_ROLE)
     @PostMapping("/delete")
+    @AutoClearCache(prefixes = {"question_page", "question_vo", "question_hotspot_page", "question_hotspot_vo", "question_bank_page", "question_bank_vo"})
     public BaseResponse<Boolean> deleteQuestion(@RequestBody DeleteRequest deleteRequest, HttpServletRequest request) {
         return ResultUtils.success(questionService.deleteQuestion(deleteRequest, request));
     }
@@ -79,6 +82,7 @@ public class QuestionController {
      */
     @SaCheckRole(UserConstant.ADMIN_ROLE)
     @PostMapping("/update")
+    @AutoClearCache(prefixes = {"question_page", "question_vo", "question_hotspot_page", "question_hotspot_vo", "question_bank_page", "question_bank_vo"})
     public BaseResponse<Boolean> updateQuestion(@RequestBody QuestionUpdateRequest questionUpdateRequest, HttpServletRequest request) {
         return ResultUtils.success(questionService.updateQuestion(questionUpdateRequest, request));
     }
@@ -249,6 +253,7 @@ public class QuestionController {
      * @return
      */
     @PostMapping("/edit")
+    @AutoClearCache(prefixes = {"question_page", "question_vo", "question_hotspot_page", "question_hotspot_vo", "question_bank_page", "question_bank_vo"})
     public BaseResponse<Boolean> editQuestion(@RequestBody QuestionEditRequest questionEditRequest, HttpServletRequest request) {
         return ResultUtils.success(questionService.editQuestion(questionEditRequest, request));
     }

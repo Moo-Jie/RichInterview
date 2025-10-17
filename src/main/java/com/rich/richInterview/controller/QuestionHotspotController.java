@@ -2,6 +2,7 @@ package com.rich.richInterview.controller;
 
 import cn.dev33.satoken.annotation.SaCheckRole;
 import com.rich.richInterview.annotation.AutoCache;
+import com.rich.richInterview.annotation.AutoClearCache;
 import cn.dev33.satoken.annotation.SaMode;
 import com.alibaba.csp.sentinel.Entry;
 import com.alibaba.csp.sentinel.EntryType;
@@ -59,6 +60,7 @@ public class QuestionHotspotController {
     /**
      * 热点字段递增接口（自动初始化）
      */
+    @AutoClearCache(prefixes = {"question_hotspot_page", "question_hotspot_vo"})
     @PostMapping("/increment")
     public BaseResponse<Boolean> incrementField(
             @RequestParam Long questionId,
@@ -144,6 +146,7 @@ public class QuestionHotspotController {
      * @param questionHotspotUpdateRequest
      * @return
      */
+    @AutoClearCache(prefixes = {"question_hotspot_page", "question_hotspot_vo"})
     @PostMapping("/update")
     @SaCheckRole(UserConstant.ADMIN_ROLE)
     public BaseResponse<Boolean> updateQuestionHotspot(@RequestBody QuestionHotspotUpdateRequest questionHotspotUpdateRequest) {
