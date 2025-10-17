@@ -74,7 +74,7 @@ public class QuestionBankHotspotController {
             fallback = "handleFallback")
     // 对 ID 查询降低缓存时间
     @AutoCache(
-            keyPrefix = "question_bank_vo",
+            keyPrefix = "question_bank_hotspot_vo",
             expireTime = 120,  // 设置缓存过期时间为 2 分钟
             nullCacheTime = 60,  // 设置空缓存过期时间为 1 分钟
             randomExpireRange = 30  // 设置随机过期范围为 0.5 分钟
