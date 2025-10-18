@@ -219,7 +219,7 @@ public class QuestionHotspotController {
             }
             // 降级后逻辑
             if (ex instanceof DegradeException) {
-                return handleFallback(questionHotspotQueryRequest, request, ex);
+                return SentinelUtils.handleFallbackPage(QuestionHotspotVO.class);
             }
             // 限流后逻辑
             return ResultUtils.error(ErrorCode.SYSTEM_ERROR, "您访问过于频繁，系统压力稍大，请耐心等待哟~");
@@ -229,35 +229,6 @@ public class QuestionHotspotController {
                 entry.exit(1, remoteAddr);
             }
         }
-    }
-
-    /**
-     * Sintel 流控：触发异常熔断后的降级服务
-     *
-     * @param questionHotspotQueryRequest
-     * @param request
-     * @param ex
-     * @return com.rich.richInterview.common.BaseResponse<com.baomidou.mybatisplus.extension.plugins.pagination.Page < com.rich.richInterview.model.vo.QuestionHotspotVO>>
-     * @author DuRuiChi
-     * @create 2025/5/27
-     **/
-    public BaseResponse<Page<QuestionHotspotVO>> handleFallback(@RequestBody QuestionHotspotQueryRequest questionHotspotQueryRequest, HttpServletRequest request, Throwable ex) {
-        // TODO 调取缓存真实数据或其他方案
-        // 生成模拟数据
-        Page<QuestionHotspotVO> simulateQuestionHotspotVOPage = new Page<>();
-        List<QuestionHotspotVO> simulateQuestionHotspotVOList = new ArrayList<>();
-        QuestionHotspotVO simulateQuestionHotspotVO = new QuestionHotspotVO();
-        simulateQuestionHotspotVO.setId(404L);
-        simulateQuestionHotspotVO.setTitle("您的数据丢了！请检查网络或通知管理员。");
-        simulateQuestionHotspotVO.setContent("您的数据丢了！请检查网络或通知管理员。");
-        simulateQuestionHotspotVO.setAnswer("您的数据丢了！请检查网络或通知管理员。");
-        simulateQuestionHotspotVO.setCreateTime(new Date(System.currentTimeMillis()));
-        simulateQuestionHotspotVO.setUpdateTime(new Date(System.currentTimeMillis()));
-        simulateQuestionHotspotVOList.add(simulateQuestionHotspotVO);
-        simulateQuestionHotspotVOPage.setRecords(simulateQuestionHotspotVOList);
-
-        // TODO 降级响应设定好的数据，不影响正常显示
-        return ResultUtils.success(simulateQuestionHotspotVOPage);
     }
 
     /**

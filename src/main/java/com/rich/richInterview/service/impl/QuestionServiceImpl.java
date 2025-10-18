@@ -216,11 +216,10 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
      * 分页获取题目封装
      *
      * @param questionPage
-     * @param request
      * @return
      */
     @Override
-    public Page<QuestionVO> getQuestionVOPage(Page<Question> questionPage, HttpServletRequest request) {
+    public Page<QuestionVO> getQuestionVOPage(Page<Question> questionPage) {
         List<Question> questionList = questionPage.getRecords();
         Page<QuestionVO> questionVOPage = new Page<>(questionPage.getCurrent(), questionPage.getSize(), questionPage.getTotal());
         if (CollUtil.isEmpty(questionList)) {
@@ -246,18 +245,10 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
 
         // todo 根据需要为封装对象补充值
 
-        // 1. 关联查询用户信息
+        // 关联查询用户信息
         Set<Long> userIdSet = questionList.stream().map(Question::getUserId).collect(Collectors.toSet());
         Map<Long, List<User>> userIdUserListMap = userService.listByIds(userIdSet).stream()
                 .collect(Collectors.groupingBy(User::getId));
-        // 2. 已登录，获取用户点赞、收藏状态
-        Map<Long, Boolean> questionIdHasThumbMap = new HashMap<>();
-        Map<Long, Boolean> questionIdHasFavourMap = new HashMap<>();
-        User loginUser = userService.getLoginUserPermitNull(request);
-        if (loginUser != null) {
-            Set<Long> questionIdSet = questionList.stream().map(Question::getId).collect(Collectors.toSet());
-            loginUser = userService.getLoginUser(request);
-        }
         // 填充信息
         questionVOList.forEach(questionVO -> {
             Long userId = questionVO.getUserId();
@@ -439,7 +430,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         Page<Question> questionPage = this.page(new Page<>(current, size),
                 this.getQueryWrapper(questionQueryRequest));
         // 获取封装类
-        return this.getQuestionVOPage(questionPage, request);
+        return this.getQuestionVOPage(questionPage);
     }
 
     /**

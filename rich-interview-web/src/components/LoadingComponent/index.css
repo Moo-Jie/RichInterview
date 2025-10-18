@@ -3,8 +3,7 @@
     inset: 0;
     display: grid;
     place-content: center;
-    background-color: rgba(255, 255, 255, 0.92);
-    backdrop-filter: blur(4px);
+    background-color: rgba(255, 255, 255, 0.95);
     z-index: 1000;
 }
 
@@ -18,24 +17,18 @@
 .loading-icon {
     font-size: clamp(72px, 10vw, 100px);
     color: #1890ff;
-    animation: spin 1.2s linear infinite;
+    animation: spin 0.8s linear infinite;
     will-change: transform;
 }
 
 .loading-text {
     font-size: clamp(1rem, 3vw, 2rem);
     font-family:  '楷体', cursive;
-    animation: pulse 1.5s ease-in-out infinite;
-    will-change: transform, opacity;
+    will-change: auto;
 }
 
 @keyframes spin {
     to { transform: rotate(360deg); }
-}
-
-@keyframes pulse {
-    0%, 100% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.05); opacity: 0.85; }
 }
 
 @media (max-width: 768px) {
@@ -53,8 +46,7 @@
 }
 
 @media (prefers-reduced-motion) {
-    .loading-icon,
-    .loading-text {
+    .loading-icon {
         animation: none !important;
     }
 }

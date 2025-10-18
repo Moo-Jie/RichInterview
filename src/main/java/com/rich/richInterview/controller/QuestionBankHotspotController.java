@@ -166,14 +166,11 @@ public class QuestionBankHotspotController {
     /**
      * Sintel 流控：触发异常熔断后的降级服务
      *
-     * @param questionBankHotspotQueryRequest
-     * @param request
-     * @param ex
      * @return com.rich.richInterview.common.BaseResponse<com.baomidou.mybatisplus.extension.plugins.pagination.Page < com.rich.richInterview.model.vo.QuestionBankHotspotVO>>
      * @author DuRuiChi
      * @create 2025/5/27
      **/
-    public BaseResponse<Page<QuestionBankHotspotVO>> handleFallback(@RequestBody QuestionBankHotspotQueryRequest questionBankHotspotQueryRequest, HttpServletRequest request, Throwable ex) {
+    public BaseResponse<Page<QuestionBankHotspotVO>> handleFallback() {
         return SentinelUtils.handleFallbackPage(QuestionBankHotspotVO.class);
     }
 
@@ -192,18 +189,15 @@ public class QuestionBankHotspotController {
     /**
      * Sintel 流控： 触发流量过大阻塞后响应的服务
      *
-     * @param questionBankHotspotQueryRequest
-     * @param request
      * @param ex
      * @return com.rich.richInterview.common.BaseResponse<com.baomidou.mybatisplus.extension.plugins.pagination.Page < com.rich.richInterview.model.vo.QuestionBankHotspotVO>>
      * @author DuRuiChi
      * @create 2025/5/27
      **/
-    public BaseResponse<Page<QuestionBankHotspotVO>> handleBlockException(@RequestBody QuestionBankHotspotQueryRequest questionBankHotspotQueryRequest,
-                                                                          HttpServletRequest request, BlockException ex) {
+    public BaseResponse<Page<QuestionBankHotspotVO>> handleBlockException(BlockException ex) {
         // 过滤普通降级操作
         if (ex instanceof DegradeException) {
-            return handleFallback(questionBankHotspotQueryRequest, request, ex);
+            return handleFallback();
         }
         // 系统高压限流降级操作
         return ResultUtils.error(ErrorCode.SYSTEM_ERROR, "系统压力稍大，请耐心等待哟~");

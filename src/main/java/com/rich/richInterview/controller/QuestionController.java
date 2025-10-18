@@ -185,7 +185,7 @@ public class QuestionController {
             // 查询数据库
             Page<Question> questionPage = questionService.getQuestionPage(questionQueryRequest);
             // 获取封装类
-            return ResultUtils.success(questionService.getQuestionVOPage(questionPage, request));
+            return ResultUtils.success(questionService.getQuestionVOPage(questionPage));
         } catch (Throwable ex) {
             // 当限流时，抛出 BlockException
             // 普通业务异常后逻辑
@@ -196,7 +196,7 @@ public class QuestionController {
             }
             // 降级后逻辑
             if (ex instanceof DegradeException) {
-                return handleFallback(questionQueryRequest, request, ex);
+                return handleFallback();
             }
             // 限流后逻辑
             return ResultUtils.error(ErrorCode.SYSTEM_ERROR, "您访问过于频繁，系统压力稍大，请耐心等待哟~");
@@ -211,13 +211,10 @@ public class QuestionController {
     /**
      * Sintel 熔断：触发异常熔断后的降级服务
      *
-     * @param questionQueryRequest
-     * @param request
-     * @param ex
      * @author DuRuiChi
      * @create 2025/5/27
      **/
-    public BaseResponse<Page<QuestionVO>> handleFallback(@RequestBody QuestionQueryRequest questionQueryRequest, HttpServletRequest request, Throwable ex) {
+    public BaseResponse<Page<QuestionVO>> handleFallback() {
         return SentinelUtils.handleFallbackPage(QuestionVO.class);
     }
 
@@ -276,18 +273,18 @@ public class QuestionController {
      * 从 ES 数据库中查询题目
      *
      * @param questionQueryRequest
-     * @param request
      * @return com.rich.richInterview.common.BaseResponse<com.baomidou.mybatisplus.extension.plugins.pagination.Page < com.rich.richInterview.model.vo.QuestionVO>>
      * @author DuRuiChi
      * @create 2025/5/2
      **/
+    @AutoCache(keyPrefix = "question_page")
     @PostMapping("/search/page/vo")
-    public BaseResponse<Page<QuestionVO>> searchQuestionVOByPage(@RequestBody QuestionQueryRequest questionQueryRequest, HttpServletRequest request) {
+    public BaseResponse<Page<QuestionVO>> searchQuestionVOByPage(@RequestBody QuestionQueryRequest questionQueryRequest) {
         long size = questionQueryRequest.getPageSize();
         // 限制爬虫
         ThrowUtils.throwIf(size > 200, ErrorCode.PARAMS_ERROR);
         Page<Question> questionPage = questionService.searchFromEs(questionQueryRequest);
-        return ResultUtils.success(questionService.getQuestionVOPage(questionPage, request));
+        return ResultUtils.success(questionService.getQuestionVOPage(questionPage));
     }
 
 }
