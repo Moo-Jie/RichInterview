@@ -11,8 +11,6 @@ import com.rich.richInterview.exception.BusinessException;
 public enum IncrementFieldEnum {
     VIEW_NUM("viewNum"),
     STAR_NUM("starNum"),
-    FORWARD_NUM("forwardNum"),
-    COLLECT_NUM("collectNum"),
     COMMENT_NUM("commentNum");
 
     private final String fieldName;

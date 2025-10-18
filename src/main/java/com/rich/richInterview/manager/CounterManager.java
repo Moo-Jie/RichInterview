@@ -1,4 +1,4 @@
-package com.rich.richInterview.service.managerService;
+package com.rich.richInterview.manager;
 
 import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +28,46 @@ public class CounterManager {
 
     /**
      * 对Redis key 进行自增，并返回计数
+     *
+     * @param key          键名
+     * @return long
+     * @author DuRuiChi
+     * @create 2025/6/6
+     */
+    public long incrAndGetCount(String key) {
+        // 使用 Lua 脚本实现计数操作的原子性，避免高并发下的线程安全问题
+        // Lua 脚本用法：https://www.cnblogs.com/PatrickLiu/p/8656675.html
+        // 此方法只进行单纯的递增，不设置过期时间
+        String luaScriptStr =
+                // redis.call() 调用 Redis 命令
+                // KEYS[1] 取执行 Lua 脚本时第一个键参数
+                // exists() 判断键名是否存在
+                "if redis.call('exists', KEYS[1]) == 1 then " +
+                        // incr() 进行自增
+                        "  return redis.call('incr', KEYS[1]); " + "else " +
+                        // set() 初始值为 1
+                        "  redis.call('set', KEYS[1], 1); " +
+                        "  return 1; " + "end";
+
+        // 初始化脚本对象，指定返回值类型为 IntegerCodec
+        // redissonClient 为 Redisson 客户端对象
+        // 调用 getScript(IntegerCodec.INSTANCE) 创建脚本执行对象，指定 IntegerCodec 键值按整数编解码
+        RScript script = redissonClient.getScript(IntegerCodec.INSTANCE);
+        // eval() 执行 Lua 脚本并返回结果
+        Object countNum = script.eval(
+                // 声明脚本模式为 读写模式
+                RScript.Mode.READ_WRITE,
+                // Lua 脚本字符串
+                luaScriptStr,
+                // 指定返回值类型为整数
+                RScript.ReturnType.INTEGER,
+                // 指定 Lua 脚本键参数，只传入 KEYS[1] ，即 Redis 键名
+                Collections.singletonList(key));
+        return (long) countNum;
+    }
+
+    /**
+     * 对Redis key 进行自增，并返回计数(带过期时间)
      *
      * @param key          键名
      * @param timeInterval 时间间隔

@@ -10,32 +10,27 @@ import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.alibaba.csp.sentinel.slots.block.degrade.DegradeException;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.rich.richInterview.annotation.AutoCache;
-import com.rich.richInterview.annotation.AutoClearCache;
 import com.rich.richInterview.common.BaseResponse;
 import com.rich.richInterview.common.ErrorCode;
 import com.rich.richInterview.constant.UserConstant;
-import com.rich.richInterview.exception.BusinessException;
 import com.rich.richInterview.exception.ThrowUtils;
+import com.rich.richInterview.manager.CounterManager;
 import com.rich.richInterview.model.dto.questionHotspot.QuestionHotspotQueryRequest;
-import com.rich.richInterview.model.dto.questionHotspot.QuestionHotspotUpdateRequest;
 import com.rich.richInterview.model.entity.QuestionHotspot;
 import com.rich.richInterview.model.entity.User;
 import com.rich.richInterview.model.enums.IncrementFieldEnum;
 import com.rich.richInterview.model.vo.QuestionHotspotVO;
 import com.rich.richInterview.service.QuestionHotspotService;
 import com.rich.richInterview.service.UserService;
+import com.rich.richInterview.utils.CacheUtils;
 import com.rich.richInterview.utils.DetectCrawlersUtils;
 import com.rich.richInterview.utils.ResultUtils;
 import com.rich.richInterview.utils.SentinelUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 /**
  * 题目热点接口
@@ -54,10 +49,22 @@ public class QuestionHotspotController {
     @Resource
     private DetectCrawlersUtils detectCrawlersUtils;
 
+    @Resource
+    private CacheUtils cacheUtils;
+
+    @Resource
+    private CounterManager counterManager;
+
+    // 缓存前缀常量
+    private static final String HOTSPOT_CACHE_PREFIX = "question_hotspot";
+
+    // 缓存过期时间（秒）
+    private static final long FIELD_CACHE_EXPIRE_TIME = 1200; // 20 分钟
+    private static final long RANDOM_EXPIRE_RANGE = 60;      // 随机范围 5 分钟
+
     /**
      * 热点字段递增接口（自动初始化）
      */
-    @AutoClearCache(prefixes = {"question_hotspot_page", "question_hotspot_vo"})
     @PostMapping("/increment")
     public BaseResponse<Boolean> incrementField(
             @RequestParam Long questionId,
@@ -67,8 +74,43 @@ public class QuestionHotspotController {
         // 使用字段名查找对应的枚举
         IncrementFieldEnum field = IncrementFieldEnum.fromFieldName(fieldType);
 
-        boolean result = questionHotspotService.incrementField(questionId, field);
-        ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
+        // 构建缓存键
+        String cacheKey = buildFieldCacheKey(questionId, field);
+
+        // 使用 CounterManager 进行原子性递增，最多重试3次
+        int maxRetries = 3;
+        boolean success = false;
+
+        for (int i = 0; i < maxRetries; i++) {
+            try {
+                // 使用Lua脚本进行原子性递增
+                long newValue = counterManager.incrAndGetCount(cacheKey);
+                if (newValue > 0) {
+                    success = true;
+                    break;
+                }
+            } catch (Exception e) {
+                log.warn("字段递增失败，重试中... questionId: {}, field: {}, attempt: {}", questionId, field.getFieldName(), i + 1, e);
+            }
+
+            // 如果失败，短暂等待后重试
+            // 此操作是为了防止 热点增量请求 比 热点查询请求 早一步到达，导致增量时，仍未创建热点缓存
+            if (i < maxRetries - 1) {
+                try {
+                    Thread.sleep(50); // 等待 50ms
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    break;
+                }
+            }
+        }
+
+        if (!success) {
+            log.warn("字段递增最终失败，跳过本次操作，questionId: {}, field: {}", questionId, field.getFieldName());
+            // 不抛出异常，避免影响用户体验
+            return ResultUtils.success(false);
+        }
+
         return ResultUtils.success(true);
     }
 
@@ -80,85 +122,63 @@ public class QuestionHotspotController {
      * @return QuestionHotspotVO
      */
     @GetMapping("/get/vo/byQuestionId")
-    //    只要具有其中一个权限即可通过校验
     @SaCheckRole(value = {UserConstant.ADMIN_ROLE, UserConstant.DEFAULT_ROLE}, mode = SaMode.OR)
-    // 对 ID 查询降低缓存时间
-    @AutoCache(
-            keyPrefix = "question_hotspot_vo",
-            expireTime = 120,  // 设置缓存过期时间为 2 分钟
-            nullCacheTime = 60,  // 设置空缓存过期时间为 1 分钟
-            randomExpireRange = 30  // 设置随机过期范围为 0.5 分钟
-    )
     public BaseResponse<QuestionHotspotVO> getQuestionHotspotVOByQuestionId(
             @RequestParam Long questionId,
             HttpServletRequest request) {
         ThrowUtils.throwIf(questionId == null || questionId <= 0, ErrorCode.PARAMS_ERROR);
+
         // 1.反爬虫处理，针对用户 ID 控制访问次数
         User loginUser = userService.getLoginUser(request);
         if (!loginUser.getUserRole().equals(UserConstant.ADMIN_ROLE)) {
             detectCrawlersUtils.detectCrawler(loginUser.getId());
         }
+
         // 获取用户 IP
         String remoteAddr = request.getRemoteAddr();
-        // 非注解方式，手动针对用户 IP 进行流控
-        // 源：https://sentinelguard.io/zh-cn/docs/parameter-flow-control.html
         Entry entry = null;
         initFlowAndDegradeRules("getQuestionHotspotVOByQuestionId");
+
         try {
-            // SphU.entry() 方法用于创建一个流控入口，该方法接受三个参数：【资源名称：用于标识流控规则的资源名称。】【入口数量：表示流控入口的数量，设置为 1。】【额外参数：用于传递额外的参数，此处传入用户 IP 地址等。】
             entry = SphU.entry("getQuestionHotspotVOByQuestionId", EntryType.IN, 1, remoteAddr);
+
             // 核心业务
-            // 最近刷题记录
             loginUser.setPreviousQuestionID(questionId);
             userService.updateById(loginUser);
-            // 根据题目 id 获取题库热点信息，不存在时初始化
+
+            // 尝试从缓存获取各个字段的值
+            QuestionHotspotVO hotspotVO = getQuestionHotspotFromCache(questionId);
+
+            if (hotspotVO != null) {
+                // 从缓存获取热点数据成功
+                return ResultUtils.success(hotspotVO);
+            } else {
+                log.info("缓存未命中，查询数据库，questionId: {}", questionId);
+            }
+
+            // 缓存未命中，查询数据库
             QuestionHotspot questionHotspot = questionHotspotService.getByQuestionId(questionId);
             ThrowUtils.throwIf(questionHotspot == null, ErrorCode.NOT_FOUND_ERROR);
+
+            // 将数据库数据写入缓存
+            cacheQuestionHotspotFields(questionHotspot);
+
             return ResultUtils.success(questionHotspotService.getQuestionHotspotVO(questionHotspot, request));
+
         } catch (Throwable ex) {
-            // 当限流时，抛出 BlockException
-            // 普通业务异常后逻辑
             if (!BlockException.isBlockException(ex)) {
-                // 记录日志
                 Tracer.trace(ex);
                 return ResultUtils.error(ErrorCode.SYSTEM_ERROR, ex.getMessage());
             }
-            // 降级后逻辑
             if (ex instanceof DegradeException) {
                 return SentinelUtils.handleFallback(QuestionHotspotVO.class);
             }
-            // 限流后逻辑
             return ResultUtils.error(ErrorCode.SYSTEM_ERROR, "您访问过于频繁，系统压力稍大，请耐心等待哟~");
         } finally {
             if (entry != null) {
-                // 退出流控
                 entry.exit(1, remoteAddr);
             }
         }
-    }
-
-    /**
-     * 更新题目热点（仅管理员可用）
-     *
-     * @param questionHotspotUpdateRequest
-     * @return
-     */
-    @AutoClearCache(prefixes = {"question_hotspot_page", "question_hotspot_vo"})
-    @PostMapping("/update")
-    @SaCheckRole(UserConstant.ADMIN_ROLE)
-    public BaseResponse<Boolean> updateQuestionHotspot(@RequestBody QuestionHotspotUpdateRequest questionHotspotUpdateRequest) {
-        if (questionHotspotUpdateRequest == null || questionHotspotUpdateRequest.getQuestionId() == null) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR);
-        }
-        // todo 在此处将实体类和 DTO 进行转换
-        QuestionHotspot questionHotspot = new QuestionHotspot();
-        BeanUtils.copyProperties(questionHotspotUpdateRequest, questionHotspot);
-        // 数据校验
-        questionHotspotService.validQuestionHotspot(questionHotspot, false);
-        // 操作数据库
-        boolean result = questionHotspotService.updateById(questionHotspot);
-        ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
-        return ResultUtils.success(true);
     }
 
     /**
@@ -172,7 +192,6 @@ public class QuestionHotspotController {
     public BaseResponse<Page<QuestionHotspot>> listQuestionHotspotByPage(@RequestBody QuestionHotspotQueryRequest questionHotspotQueryRequest) {
         long current = questionHotspotQueryRequest.getCurrent();
         long size = questionHotspotQueryRequest.getPageSize();
-        // 查询数据库
         Page<QuestionHotspot> questionHotspotPage = questionHotspotService.page(new Page<>(current, size),
                 questionHotspotService.getQueryWrapper(questionHotspotQueryRequest));
         return ResultUtils.success(questionHotspotPage);
@@ -180,7 +199,7 @@ public class QuestionHotspotController {
 
     /**
      * 分页获取题目热点列表（封装类）
-     * 源：https://sentinelguard.io/zh-cn/docs/annotation-support.html
+     * 保留原有缓存注解，让其自然过期
      *
      * @param questionHotspotQueryRequest
      * @param request
@@ -193,39 +212,27 @@ public class QuestionHotspotController {
         long current = questionHotspotQueryRequest.getCurrent();
         long size = questionHotspotQueryRequest.getPageSize();
 
-        // 限制爬虫
         ThrowUtils.throwIf(size > 20, ErrorCode.PARAMS_ERROR);
-        // 获取用户 IP
         String remoteAddr = request.getRemoteAddr();
-        // 非注解方式，手动针对用户 IP 进行流控
-        // 源：https://sentinelguard.io/zh-cn/docs/parameter-flow-control.html
         Entry entry = null;
         initFlowAndDegradeRules("listQuestionHotspotVOByPage");
+
         try {
-            // SphU.entry() 方法用于创建一个流控入口，该方法接受三个参数：【资源名称：用于标识流控规则的资源名称。】【入口数量：表示流控入口的数量，设置为 1。】【额外参数：用于传递额外的参数，此处传入用户 IP 地址等。】
             entry = SphU.entry("listQuestionHotspotVOByPage", EntryType.IN, 1, remoteAddr);
-            // 查询数据库
             Page<QuestionHotspot> questionHotspotPage = questionHotspotService.page(new Page<>(current, size),
                     questionHotspotService.getQueryWrapper(questionHotspotQueryRequest));
-            // 获取封装类
             return ResultUtils.success(questionHotspotService.getQuestionHotspotVOPage(questionHotspotPage, request));
         } catch (Throwable ex) {
-            // 当限流时，抛出 BlockException
-            // 普通业务异常后逻辑
             if (!BlockException.isBlockException(ex)) {
-                // 记录日志
                 Tracer.trace(ex);
                 return ResultUtils.error(ErrorCode.SYSTEM_ERROR, ex.getMessage());
             }
-            // 降级后逻辑
             if (ex instanceof DegradeException) {
                 return SentinelUtils.handleFallbackPage(QuestionHotspotVO.class);
             }
-            // 限流后逻辑
             return ResultUtils.error(ErrorCode.SYSTEM_ERROR, "您访问过于频繁，系统压力稍大，请耐心等待哟~");
         } finally {
             if (entry != null) {
-                // 退出流控
                 entry.exit(1, remoteAddr);
             }
         }
@@ -233,13 +240,81 @@ public class QuestionHotspotController {
 
     /**
      * 设定限流与熔断规则
-     *
-     * @return void
-     * @author DuRuiChi
-     * @PostConstruct 依赖注入后自动执行
-     * @create 2025/5/27
-     **/
+     */
     private void initFlowAndDegradeRules(String resourceName) {
         SentinelUtils.initFlowAndDegradeRules(resourceName);
+    }
+
+    /**
+     * 构建字段缓存键
+     */
+    private String buildFieldCacheKey(Long questionId, IncrementFieldEnum field) {
+        return HOTSPOT_CACHE_PREFIX + ":" + questionId + ":" + field.getFieldName();
+    }
+
+    /**
+     * 从缓存获取题目热点数据
+     */
+    private QuestionHotspotVO getQuestionHotspotFromCache(Long questionId) {
+        try {
+            QuestionHotspotVO hotspotVO = new QuestionHotspotVO();
+            hotspotVO.setQuestionId(questionId);
+
+            // 尝试从缓存获取各个字段
+            boolean hasAnyCache = false;
+
+            for (IncrementFieldEnum field : IncrementFieldEnum.values()) {
+                String cacheKey = buildFieldCacheKey(questionId, field);
+                Integer value = cacheUtils.getCache(cacheKey, Integer.class);
+                log.info("从缓存获取字段 {} 的值: {}", field.getFieldName(), value);
+                hasAnyCache = true;
+                switch (field) {
+                    case VIEW_NUM:
+                        hotspotVO.setViewNum(value);
+                        break;
+                    case STAR_NUM:
+                        hotspotVO.setStarNum(value);
+                        break;
+//                        case FORWARD_NUM:
+//                            hotspotVO.setForwardNum(value);
+//                            break;
+//                        case COLLECT_NUM:
+//                            hotspotVO.setCollectNum(value);
+//                            break;
+                    case COMMENT_NUM:
+                        hotspotVO.setCommentNum(value);
+                        break;
+                }
+            }
+            return hasAnyCache ? hotspotVO : null;
+        } catch (Exception e) {
+            log.error("从缓存获取热点数据失败，questionId: {}", questionId, e);
+            return null;
+        }
+    }
+
+    /**
+     * 将题目热点数据缓存到Redis
+     */
+    private void cacheQuestionHotspotFields(QuestionHotspot questionHotspot) {
+        try {
+            Long questionId = questionHotspot.getQuestionId();
+
+            // 缓存各个字段
+            cacheUtils.setCache(buildFieldCacheKey(questionId, IncrementFieldEnum.VIEW_NUM),
+                    questionHotspot.getViewNum(), FIELD_CACHE_EXPIRE_TIME, true, RANDOM_EXPIRE_RANGE);
+            cacheUtils.setCache(buildFieldCacheKey(questionId, IncrementFieldEnum.STAR_NUM),
+                    questionHotspot.getStarNum(), FIELD_CACHE_EXPIRE_TIME, true, RANDOM_EXPIRE_RANGE);
+//            cacheUtils.setCache(buildFieldCacheKey(questionId, IncrementFieldEnum.FORWARD_NUM),
+//                    questionHotspot.getForwardNum(), FIELD_CACHE_EXPIRE_TIME, true, RANDOM_EXPIRE_RANGE);
+//            cacheUtils.setCache(buildFieldCacheKey(questionId, IncrementFieldEnum.COLLECT_NUM),
+//                    questionHotspot.getCollectNum(), FIELD_CACHE_EXPIRE_TIME, true, RANDOM_EXPIRE_RANGE);
+            cacheUtils.setCache(buildFieldCacheKey(questionId, IncrementFieldEnum.COMMENT_NUM),
+                    questionHotspot.getCommentNum(), FIELD_CACHE_EXPIRE_TIME, true, RANDOM_EXPIRE_RANGE);
+
+            log.info("缓存题目热点字段成功，questionId: {}", questionId);
+        } catch (Exception e) {
+            log.error("缓存题目热点字段失败，questionId: {}", questionHotspot.getQuestionId(), e);
+        }
     }
 }

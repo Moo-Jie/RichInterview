@@ -5,7 +5,7 @@ import com.rich.richInterview.common.ErrorCode;
 import com.rich.richInterview.exception.BusinessException;
 import com.rich.richInterview.model.entity.User;
 import com.rich.richInterview.service.UserService;
-import com.rich.richInterview.service.managerService.CounterManager;
+import com.rich.richInterview.manager.CounterManager;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

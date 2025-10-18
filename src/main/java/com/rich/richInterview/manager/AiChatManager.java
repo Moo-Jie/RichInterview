@@ -1,4 +1,4 @@
-package com.rich.richInterview.service.managerService;
+package com.rich.richInterview.manager;
 
 import cn.hutool.core.collection.CollUtil;
 import com.rich.richInterview.common.ErrorCode;

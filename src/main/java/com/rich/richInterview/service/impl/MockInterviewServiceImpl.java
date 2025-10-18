@@ -15,7 +15,7 @@ import com.rich.richInterview.model.entity.User;
 import com.rich.richInterview.model.enums.MockInterviewEventEnum;
 import com.rich.richInterview.model.enums.MockInterviewStatusEnum;
 import com.rich.richInterview.service.MockInterviewService;
-import com.rich.richInterview.service.managerService.AiChatManager;
+import com.rich.richInterview.manager.AiChatManager;
 import com.rich.richInterview.utils.SqlUtils;
 import com.volcengine.ark.runtime.model.completion.chat.ChatMessage;
 import com.volcengine.ark.runtime.model.completion.chat.ChatMessageRole;
