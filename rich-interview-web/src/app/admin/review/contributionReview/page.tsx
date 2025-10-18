@@ -1,28 +1,18 @@
 "use client";
+import {CheckCircleOutlined, CloseCircleOutlined, DeleteOutlined, EditOutlined,} from "@ant-design/icons";
 import {
-  CheckCircleOutlined,
-  CloseCircleOutlined,
-  DeleteOutlined,
-  EditOutlined,
-} from "@ant-design/icons";
-import {
-  approveQuestionReviewUsingPost,
-  batchApproveQuestionReviewUsingPost,
-  batchDeleteQuestionReviewUsingPost,
-  batchRejectQuestionReviewUsingPost,
-  deleteQuestionReviewUsingPost,
-  listQuestionReviewByPageUsingPost,
-  rejectQuestionReviewUsingPost,
+    approveQuestionReviewUsingPost,
+    batchApproveQuestionReviewUsingPost,
+    batchDeleteQuestionReviewUsingPost,
+    batchRejectQuestionReviewUsingPost,
+    deleteQuestionReviewUsingPost,
+    listQuestionReviewByPageUsingPost,
+    rejectQuestionReviewUsingPost,
 } from "@/api/questionReviewController";
-import {
-  ActionType,
-  PageContainer,
-  ProColumns,
-  ProTable,
-} from "@ant-design/pro-components";
-import { App, Button, Space, Typography } from "antd";
-import React, { useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import {ActionType, PageContainer, ProColumns, ProTable,} from "@ant-design/pro-components";
+import {App, Button, Space, Typography} from "antd";
+import React, {useRef, useState} from "react";
+import {useRouter} from "next/navigation";
 import MarkdownEditor from "@/components/MarkdownComponent/MarkdownEditor";
 import TagListComponent from "@/components/TagListComponent";
 import UpdateModal from "./components/UpdateModal";

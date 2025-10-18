@@ -1,4 +1,4 @@
-import { GithubFilled } from "@ant-design/icons";
+import {GithubFilled} from "@ant-design/icons";
 import styles from "./index.module.css";
 
 interface GitHubLinkProps {

@@ -1,9 +1,9 @@
 "use client";
-import { App, Button, Card } from "antd";
+import {App, Button, Card} from "antd";
 import useQuestionBankStarNumIncrementFieldHook from "@/hooks/useQuestionBankStarNumIncrementFieldHook";
-import { EyeFilled, LikeFilled, LikeOutlined } from "@ant-design/icons";
-import { useEffect, useState } from "react";
-import { getQuestionBankHotspotVoByQuestionBankIdUsingGet } from "@/api/questionBankHotspotController";
+import {EyeFilled, LikeFilled, LikeOutlined} from "@ant-design/icons";
+import {useEffect, useState} from "react";
+import {getQuestionBankHotspotVoByQuestionBankIdUsingGet} from "@/api/questionBankHotspotController";
 import useQuestionBankViewNumIncrementFieldHook from "@/hooks/useQuestionBankViewNumIncrementFieldHook";
 import "../../app/bank/[questionBankId]/index.css";
 

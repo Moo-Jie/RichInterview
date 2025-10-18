@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef } from "react";
+import React, {useEffect, useRef} from "react";
 import * as echarts from "echarts";
 import "../components/index.css";
 

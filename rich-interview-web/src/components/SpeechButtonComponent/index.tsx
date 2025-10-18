@@ -1,7 +1,7 @@
 "use client";
-import { App, Button } from "antd";
-import { SoundOutlined } from "@ant-design/icons";
-import React, { useEffect, useState } from "react";
+import {App, Button} from "antd";
+import {SoundOutlined} from "@ant-design/icons";
+import React, {useEffect, useState} from "react";
 
 interface Props {
   text: string;

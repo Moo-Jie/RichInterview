@@ -1,14 +1,13 @@
 "use client";
-import { App, Button, Card } from "antd";
-import React, { useEffect, useState } from "react";
-import { listCommentVoByPageUsingPost } from "@/api/commentController";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store";
-import { ConstantBasicMsg } from "@/constant/ConstantBasicMsg";
+import {App, Button, Card} from "antd";
+import React, {useEffect, useState} from "react";
+import {listCommentVoByPageUsingPost, starCommentUsingPost} from "@/api/commentController";
+import {useSelector} from "react-redux";
+import {RootState} from "@/store";
+import {ConstantBasicMsg} from "@/constant/ConstantBasicMsg";
 import MarkdownViewer from "@/components/MarkdownComponent/MarkdownViewer";
 import Link from "next/link";
-import { LikeOutlined } from "@ant-design/icons";
-import { starCommentUsingPost } from "@/api/commentController";
+import {LikeOutlined} from "@ant-design/icons";
 import "../../../components/QuestionMsgComponent/index.css";
 
 export default function HotCommentsPage() {

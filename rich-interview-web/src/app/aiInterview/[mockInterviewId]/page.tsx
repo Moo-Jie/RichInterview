@@ -1,14 +1,11 @@
 "use client";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
-import { App, Button, Input, Spin } from "antd";
-import {
-  doChatEventUsingPost,
-  getMockInterviewByIdUsingGet,
-} from "@/api/mockInterviewController";
+import {useCallback, useEffect, useRef, useState} from "react";
+import {useParams, useRouter} from "next/navigation";
+import {App, Button, Input, Spin} from "antd";
+import {doChatEventUsingPost, getMockInterviewByIdUsingGet,} from "@/api/mockInterviewController";
 import "./index.css";
 import dayjs from "dayjs";
-import { AuditOutlined, UserOutlined } from "@ant-design/icons";
+import {AuditOutlined, UserOutlined} from "@ant-design/icons";
 
 // 消息类型定义
 interface ChatMessage {

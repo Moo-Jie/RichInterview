@@ -1,8 +1,6 @@
 package com.rich.richInterview.controller;
 
 import cn.dev33.satoken.annotation.SaCheckRole;
-import com.rich.richInterview.annotation.AutoCache;
-import com.rich.richInterview.annotation.AutoClearCache;
 import cn.dev33.satoken.annotation.SaMode;
 import com.alibaba.csp.sentinel.Entry;
 import com.alibaba.csp.sentinel.EntryType;
@@ -10,12 +8,9 @@ import com.alibaba.csp.sentinel.SphU;
 import com.alibaba.csp.sentinel.Tracer;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.alibaba.csp.sentinel.slots.block.degrade.DegradeException;
-import com.alibaba.csp.sentinel.slots.block.degrade.DegradeRule;
-import com.alibaba.csp.sentinel.slots.block.degrade.DegradeRuleManager;
-import com.alibaba.csp.sentinel.slots.block.degrade.circuitbreaker.CircuitBreakerStrategy;
-import com.alibaba.csp.sentinel.slots.block.flow.param.ParamFlowRule;
-import com.alibaba.csp.sentinel.slots.block.flow.param.ParamFlowRuleManager;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.rich.richInterview.annotation.AutoCache;
+import com.rich.richInterview.annotation.AutoClearCache;
 import com.rich.richInterview.common.BaseResponse;
 import com.rich.richInterview.common.ErrorCode;
 import com.rich.richInterview.constant.UserConstant;
@@ -38,7 +33,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 题目热点接口

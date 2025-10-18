@@ -1,8 +1,8 @@
-import { updateQuestionBankUsingPost } from "@/api/questionBankController";
-import { App, Button, List, Modal, Spin, Typography, Upload } from "antd";
-import React, { useState } from "react";
-import { InboxOutlined } from "@ant-design/icons";
-import { uploadImageUsingPost } from "@/api/fileDetailController";
+import {updateQuestionBankUsingPost} from "@/api/questionBankController";
+import {App, Button, List, Modal, Spin, Typography, Upload} from "antd";
+import React, {useState} from "react";
+import {InboxOutlined} from "@ant-design/icons";
+import {uploadImageUsingPost} from "@/api/fileDetailController";
 import "./index.css";
 
 interface Props {

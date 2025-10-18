@@ -1,8 +1,8 @@
 "use client";
-import { Card, List } from "antd";
-import React, { useEffect, useRef } from "react";
+import {Card, List} from "antd";
+import React, {useEffect, useRef} from "react";
 import * as echarts from "echarts";
-import { EyeFilled, LikeFilled } from "@ant-design/icons";
+import {EyeFilled, LikeFilled} from "@ant-design/icons";
 import "../components/index.css";
 
 interface Props {

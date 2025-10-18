@@ -1,5 +1,5 @@
-import { LoadingOutlined } from "@ant-design/icons";
-import { Modal } from "antd";
+import {LoadingOutlined} from "@ant-design/icons";
+import {Modal} from "antd";
 import "./index.css";
 
 interface GlobalLoadingProps {

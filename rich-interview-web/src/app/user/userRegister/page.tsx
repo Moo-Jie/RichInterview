@@ -1,32 +1,26 @@
 "use client";
 
-import React, { useState } from "react";
+import React, {useState} from "react";
+import {LoginForm, ProForm, ProFormSelect, ProFormText, ProFormTextArea,} from "@ant-design/pro-form";
+import {App, Button, Card} from "antd";
 import {
-  LoginForm,
-  ProForm,
-  ProFormSelect,
-  ProFormText,
-  ProFormTextArea,
-} from "@ant-design/pro-form";
-import { App, Button, Card } from "antd";
-import {
-  CheckCircleTwoTone,
-  ExperimentOutlined,
-  LockOutlined,
-  MailOutlined,
-  MobileOutlined,
-  ReadOutlined,
-  RightCircleTwoTone,
-  RobotOutlined,
-  UserOutlined,
+    CheckCircleTwoTone,
+    ExperimentOutlined,
+    LockOutlined,
+    MailOutlined,
+    MobileOutlined,
+    ReadOutlined,
+    RightCircleTwoTone,
+    RobotOutlined,
+    UserOutlined,
 } from "@ant-design/icons";
-import { userRegisterUsingPost } from "@/api/userController";
+import {userRegisterUsingPost} from "@/api/userController";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import {useRouter} from "next/navigation";
 import Image from "next/image";
-import { ConstantBasicMsg } from "@/constant/ConstantBasicMsg";
+import {ConstantBasicMsg} from "@/constant/ConstantBasicMsg";
 import "./index.css";
-import { Vertify } from "@alex_xu/react-slider-vertify";
+import {Vertify} from "@alex_xu/react-slider-vertify";
 
 function BriefcaseOutlined() {
   return null;

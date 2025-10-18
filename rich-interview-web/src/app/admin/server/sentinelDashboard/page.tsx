@@ -1,7 +1,7 @@
 "use client";
-import { Alert, Button, Card, Typography } from "antd";
-import { LinkOutlined } from "@ant-design/icons";
-import { ConstantBasicMsg } from "@/constant/ConstantBasicMsg";
+import {Alert, Button, Card, Typography} from "antd";
+import {LinkOutlined} from "@ant-design/icons";
+import {ConstantBasicMsg} from "@/constant/ConstantBasicMsg";
 import "../components/index.css";
 
 export default function sentinelDashboard() {

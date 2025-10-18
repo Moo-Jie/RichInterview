@@ -1,5 +1,5 @@
 import {QrcodeOutlined} from "@ant-design/icons";
-import {Button, Drawer, Typography, Image} from "antd";
+import {Button, Drawer, Image, Typography} from "antd";
 import {useState} from "react";
 import styles from "./components/index.module.css";
 

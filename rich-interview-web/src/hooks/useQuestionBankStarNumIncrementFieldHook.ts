@@ -1,6 +1,6 @@
-import { useRef, useState } from "react";
-import { incrementFieldUsingPost } from "@/api/questionBankHotspotController";
-import { message } from "antd";
+import {useRef, useState} from "react";
+import {incrementFieldUsingPost} from "@/api/questionBankHotspotController";
+import {message} from "antd";
 
 /**
  * 题库点赞钩子

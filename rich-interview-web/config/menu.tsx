@@ -1,13 +1,13 @@
 import {MenuDataItem} from "@ant-design/pro-layout";
 import {
-  AuditOutlined,
-  BookOutlined,
-  CoffeeOutlined,
-  CrownOutlined,
-  HomeOutlined,
-  MoreOutlined,
-  QuestionCircleOutlined,
-  StockOutlined,
+    AuditOutlined,
+    BookOutlined,
+    CoffeeOutlined,
+    CrownOutlined,
+    HomeOutlined,
+    MoreOutlined,
+    QuestionCircleOutlined,
+    StockOutlined,
 } from "@ant-design/icons";
 import AccessEnumeration from "@/access/accessEnumeration";
 import {ConstantPathMsg} from "@/constant/ConstantPathMsg";

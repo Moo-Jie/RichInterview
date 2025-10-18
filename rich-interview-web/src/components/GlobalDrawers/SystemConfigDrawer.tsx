@@ -1,4 +1,4 @@
-import {InfoCircleFilled, QuestionCircleFilled} from "@ant-design/icons";
+import {InfoCircleFilled} from "@ant-design/icons";
 import {Button, Drawer} from "antd";
 import {ProDescriptions} from "@ant-design/pro-components";
 import {ConstantBasicMsg} from "@/constant/ConstantBasicMsg";

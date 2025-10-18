@@ -4,7 +4,6 @@ import cn.hutool.core.collection.CollUtil;
 import com.rich.richInterview.common.ErrorCode;
 import com.rich.richInterview.exception.BusinessException;
 import com.rich.richInterview.model.dto.mockInterview.MockInterviewChatRecord;
-import com.volcengine.StringUtil;
 import com.volcengine.ark.runtime.model.completion.chat.ChatCompletionChoice;
 import com.volcengine.ark.runtime.model.completion.chat.ChatCompletionRequest;
 import com.volcengine.ark.runtime.model.completion.chat.ChatMessage;

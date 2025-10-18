@@ -1,6 +1,6 @@
-import { updateQuestionReviewUsingPost } from "@/api/questionReviewController";
-import { ProColumns, ProTable } from "@ant-design/pro-components";
-import { App, Modal } from "antd";
+import {updateQuestionReviewUsingPost} from "@/api/questionReviewController";
+import {ProColumns, ProTable} from "@ant-design/pro-components";
+import {App, Modal} from "antd";
 import React from "react";
 
 interface Props {

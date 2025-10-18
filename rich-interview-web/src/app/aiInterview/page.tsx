@@ -1,30 +1,16 @@
 "use client";
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
+import {App, Button, Form, Input, Modal, Space, Table, Tag, Typography,} from "antd";
 import {
-  App,
-  Button,
-  Form,
-  Input,
-  Modal,
-  Space,
-  Table,
-  Tag,
-  Typography,
-} from "antd";
-import {
-  addMockInterviewUsingPost,
-  deleteMockInterviewUsingPost,
-  listMyMockInterviewByPageUsingPost,
+    addMockInterviewUsingPost,
+    deleteMockInterviewUsingPost,
+    listMyMockInterviewByPageUsingPost,
 } from "@/api/mockInterviewController";
 import dayjs from "dayjs";
-import {
-  DashboardOutlined,
-  RobotOutlined,
-  RocketOutlined,
-} from "@ant-design/icons";
+import {DashboardOutlined, RobotOutlined, RocketOutlined,} from "@ant-design/icons";
 import "./index.css";
+import {useRouter} from "next/navigation";
 import MockInterview = API.MockInterview;
-import { useRouter } from "next/navigation";
 
 type StatusMap = {
   [key: number]: { text: string; color: string };

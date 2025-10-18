@@ -1,10 +1,10 @@
 "use client";
-import { App, Button, Card } from "antd";
+import {App, Button, Card} from "antd";
 import Title from "antd/es/typography/Title";
 import TagList from "@/components/TagListComponent";
 import MarkdownViewer from "@/components/MarkdownComponent/MarkdownViewer";
 import useAddUserSignInRecordHook from "@/hooks/useAddUserSignInRecordHook";
-import { CopyOutlined } from "@ant-design/icons";
+import {CopyOutlined} from "@ant-design/icons";
 import "./index.css";
 import React from "react";
 import SpeechButton from "@/components/SpeechButtonComponent";

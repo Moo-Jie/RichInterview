@@ -1,5 +1,5 @@
-import { BulbOutlined } from "@ant-design/icons";
-import { Card } from "antd";
+import {BulbOutlined} from "@ant-design/icons";
+import {Card} from "antd";
 import Link from "next/link";
 import styles from "../../app/page.module.css";
 

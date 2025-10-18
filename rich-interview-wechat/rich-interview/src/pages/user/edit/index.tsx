@@ -1,9 +1,9 @@
 import {Component} from 'react';
 import Taro from '@tarojs/taro';
-import {View, Text, ScrollView, Image} from '@tarojs/components';
-import {AtInput, AtTextarea, AtButton, AtToast} from 'taro-ui';
+import {Image, ScrollView, Text, View} from '@tarojs/components';
+import {AtButton, AtInput, AtTextarea, AtToast} from 'taro-ui';
 import {EventBus} from '../../../eventBus';
-import {getLoginUser, updateUserInfo, UserVO, UserUpdateMyRequest} from '../../../api/user';
+import {getLoginUser, updateUserInfo, UserUpdateMyRequest, UserVO} from '../../../api/user';
 import './index.scss';
 
 interface State {

@@ -1,26 +1,26 @@
 "use client";
-import { App, Button, Card, Modal } from "antd";
+import {App, Button, Card, Modal} from "antd";
 import Title from "antd/es/typography/Title";
 import TagListComponent from "@/components/TagListComponent";
 import MarkdownViewer from "@/components/MarkdownComponent/MarkdownViewer";
 import useAddUserSignInRecordHook from "@/hooks/useAddUserSignInRecordHook";
-import React, { useEffect, useState } from "react";
-import { queryAiUsingPost } from "@/api/aiClientController";
-import { CopyOutlined, LikeOutlined, LoadingOutlined } from "@ant-design/icons";
+import React, {useEffect, useState} from "react";
+import {queryAiUsingPost} from "@/api/aiClientController";
+import {CopyOutlined, LikeOutlined, LoadingOutlined} from "@ant-design/icons";
 import useAddUserPreviousQuestionRecordHook from "@/hooks/useAddUserPreviousQuestionRecordHook";
 import useQuestionViewNumIncrementFieldHook from "@/hooks/useQuestionViewNumIncrementFieldHook";
-import { getQuestionHotspotVoByQuestionIdUsingGet } from "@/api/questionHotspotController";
+import {getQuestionHotspotVoByQuestionIdUsingGet} from "@/api/questionHotspotController";
 import useQuestionStarNumIncrementFieldHook from "@/hooks/useQuestionStarNumIncrementFieldHook";
 import {
-  addCommentUsingPost,
-  deleteCommentUsingPost,
-  listCommentVoByPageUsingPost,
-  starCommentUsingPost,
+    addCommentUsingPost,
+    deleteCommentUsingPost,
+    listCommentVoByPageUsingPost,
+    starCommentUsingPost,
 } from "@/api/commentController";
 import SpeechButton from "@/components/SpeechButtonComponent";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store";
-import { ConstantBasicMsg } from "@/constant/ConstantBasicMsg";
+import {useSelector} from "react-redux";
+import {RootState} from "@/store";
+import {ConstantBasicMsg} from "@/constant/ConstantBasicMsg";
 import "./index.css";
 
 interface Props {

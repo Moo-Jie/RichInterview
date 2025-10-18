@@ -1,6 +1,6 @@
 "use client";
-import { Modal } from "antd";
-import { memo } from "react";
+import {Modal} from "antd";
+import {memo} from "react";
 
 interface InputContentEmptyProps {
   visible: boolean;

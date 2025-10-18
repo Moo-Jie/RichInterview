@@ -1,10 +1,8 @@
 import {Component} from 'react';
-import {View, Text, ScrollView} from '@tarojs/components';
+import {Image, ScrollView, Text, View} from '@tarojs/components';
 import Taro from '@tarojs/taro';
-import {AtCard, AtList, AtListItem, AtButton, AtIcon} from 'taro-ui';
-import {Image} from '@tarojs/components';
-import {getLoginUser} from '../../api/user';
-import {addUserSignIn, getUserSignInRecord} from '../../api/user'; // 导入签到相关API
+import {AtButton, AtCard, AtIcon, AtList, AtListItem} from 'taro-ui';
+import {addUserSignIn, getLoginUser, getUserSignInRecord} from '../../api/user'; // 导入签到相关API
 import {EventBus} from "../../eventBus";
 import './index.scss';
 

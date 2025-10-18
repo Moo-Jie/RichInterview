@@ -1,18 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import ReactECharts from "echarts-for-react";
 import dayjs from "dayjs";
-import {
-  Button,
-  message,
-  Skeleton,
-  Progress,
-  Flex,
-  Typography,
-  Tooltip,
-} from "antd";
-import { getUserSignInRecordUsingGet } from "@/api/userController";
+import {Button, Flex, message, Progress, Skeleton, Tooltip, Typography,} from "antd";
+import {getUserSignInRecordUsingGet} from "@/api/userController";
 import "./index.css";
-import { CrownFilled, RocketFilled } from "@ant-design/icons";
+import {CrownFilled, RocketFilled} from "@ant-design/icons";
 
 interface Props {}
 

@@ -7,13 +7,12 @@
  *  TODO 通用组件进一步抽取
  */
 
-import {GithubFilled, LoginOutlined, LogoutOutlined, UserOutlined, UserSwitchOutlined,} from "@ant-design/icons";
+import {LoginOutlined, LogoutOutlined, UserOutlined, UserSwitchOutlined,} from "@ant-design/icons";
 import {ProLayout, WaterMark,} from "@ant-design/pro-components";
 import {App, Dropdown} from "antd";
 import React, {useEffect, useState} from "react";
 import Image from "next/image";
 import {usePathname, useRouter} from "next/navigation";
-import Link from "next/link";
 import GlobalFooter from "@/components/GlobalFooterComponent";
 import {sysMenus} from "../../../config/menu";
 import {ConstantBasicMsg} from "@/constant/ConstantBasicMsg";
