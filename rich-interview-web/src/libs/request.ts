@@ -4,8 +4,8 @@ import axios from "axios";
 const DEV_BASE_URL = "http://localhost:8101";
 const PROD_BASE_URL = "https://richdu.cn";
 const myAxios = axios.create({
-  // baseURL: PROD_BASE_URL,
-  baseURL: DEV_BASE_URL,
+  baseURL: PROD_BASE_URL,
+  // baseURL: DEV_BASE_URL,
   timeout: 200000,
   withCredentials: true,
 });

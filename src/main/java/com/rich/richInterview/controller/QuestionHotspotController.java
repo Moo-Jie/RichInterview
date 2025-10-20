@@ -84,13 +84,25 @@ public class QuestionHotspotController {
         for (int i = 0; i < maxRetries; i++) {
             try {
                 // 使用Lua脚本进行原子性递增
-                long newValue = counterManager.incrAndGetCount(cacheKey);
-                if (newValue > 0) {
+                long newValue = counterManager.incrCount(cacheKey);
+                if (newValue == -1) {
+                    // key不存在，说明缓存还未初始化，等待后重试
+                    log.info("热点缓存key不存在，等待缓存初始化... questionId: {}, field: {}, attempt: {}", 
+                            questionId, field.getFieldName(), i + 1);
+                } else if (newValue > 0) {
+                    // 递增成功
                     success = true;
+                    log.debug("字段递增成功，questionId: {}, field: {}, newValue: {}", 
+                            questionId, field.getFieldName(), newValue);
                     break;
+                } else {
+                    // 其他异常情况
+                    log.warn("字段递增返回异常值: {}, questionId: {}, field: {}", 
+                            newValue, questionId, field.getFieldName());
                 }
             } catch (Exception e) {
-                log.warn("字段递增失败，重试中... questionId: {}, field: {}, attempt: {}", questionId, field.getFieldName(), i + 1, e);
+                log.warn("字段递增失败，重试中... questionId: {}, field: {}, attempt: {}", 
+                        questionId, field.getFieldName(), i + 1, e);
             }
 
             // 如果失败，短暂等待后重试
@@ -106,7 +118,8 @@ public class QuestionHotspotController {
         }
 
         if (!success) {
-            log.warn("字段递增最终失败，跳过本次操作，questionId: {}, field: {}", questionId, field.getFieldName());
+            log.warn("字段递增最终失败，可能是缓存未初始化，questionId: {}, field: {}", 
+                    questionId, field.getFieldName());
             // 不抛出异常，避免影响用户体验
             return ResultUtils.success(false);
         }
@@ -254,6 +267,7 @@ public class QuestionHotspotController {
 
     /**
      * 从缓存获取题目热点数据
+     * 适配新的数值存储格式（非JSON格式）
      */
     private QuestionHotspotVO getQuestionHotspotFromCache(Long questionId) {
         try {
@@ -265,25 +279,60 @@ public class QuestionHotspotController {
 
             for (IncrementFieldEnum field : IncrementFieldEnum.values()) {
                 String cacheKey = buildFieldCacheKey(questionId, field);
-                Integer value = cacheUtils.getCache(cacheKey, Integer.class);
-                log.info("从缓存获取字段 {} 的值: {}", field.getFieldName(), value);
-                hasAnyCache = true;
-                switch (field) {
-                    case VIEW_NUM:
-                        hotspotVO.setViewNum(value);
-                        break;
-                    case STAR_NUM:
-                        hotspotVO.setStarNum(value);
-                        break;
+                
+                // 直接从 Redis 获取字符串值，然后转换为整数
+                Object rawValue = cacheUtils.getCache(cacheKey, Object.class);
+                Integer value = null;
+                
+                if (rawValue != null) {
+                    try {
+                        // 尝试将值转换为整数
+                        if (rawValue instanceof Number) {
+                            value = ((Number) rawValue).intValue();
+                        } else if (rawValue instanceof String) {
+                            // 处理纯数值字符串（如 "123"）
+                            String strValue = (String) rawValue;
+                            if (strValue.matches("^\\d+$")) {
+                                value = Integer.parseInt(strValue);
+                            } else {
+                                // 如果是JSON格式的字符串，尝试解析
+                                try {
+                                    value = Integer.parseInt(strValue.replaceAll("\"", ""));
+                                } catch (NumberFormatException e) {
+                                    log.warn("无法解析缓存值为整数，key: {}, value: {}", cacheKey, strValue);
+                                    return null;
+                                }
+                            }
+                        }
+                    } catch (Exception e) {
+                        log.warn("解析缓存值失败，key: {}, rawValue: {}", cacheKey, rawValue, e);
+                        return null;
+                    }
+                }
+                
+                // 只要存在没有缓存的热点数据，就返回 null，走数据库查询
+                if (value != null) {
+                    log.debug("从缓存获取字段 {} 的值: {}", field.getFieldName(), value);
+                    hasAnyCache = true;
+                    switch (field) {
+                        case VIEW_NUM:
+                            hotspotVO.setViewNum(value);
+                            break;
+                        case STAR_NUM:
+                            hotspotVO.setStarNum(value);
+                            break;
 //                        case FORWARD_NUM:
 //                            hotspotVO.setForwardNum(value);
 //                            break;
 //                        case COLLECT_NUM:
 //                            hotspotVO.setCollectNum(value);
 //                            break;
-                    case COMMENT_NUM:
-                        hotspotVO.setCommentNum(value);
-                        break;
+                        case COMMENT_NUM:
+                            hotspotVO.setCommentNum(value);
+                            break;
+                    }
+                } else {
+                    return null;
                 }
             }
             return hasAnyCache ? hotspotVO : null;
@@ -295,24 +344,42 @@ public class QuestionHotspotController {
 
     /**
      * 将题目热点数据缓存到Redis
+     * 使用 CounterManager 初始化计数器，确保数据类型兼容性
      */
     private void cacheQuestionHotspotFields(QuestionHotspot questionHotspot) {
         try {
             Long questionId = questionHotspot.getQuestionId();
+            
+            // 计算实际过期时间（包含随机范围）
+            long actualExpireTime = FIELD_CACHE_EXPIRE_TIME + (long) (Math.random() * RANDOM_EXPIRE_RANGE);
 
-            // 缓存各个字段
-            cacheUtils.setCache(buildFieldCacheKey(questionId, IncrementFieldEnum.VIEW_NUM),
-                    questionHotspot.getViewNum(), FIELD_CACHE_EXPIRE_TIME, true, RANDOM_EXPIRE_RANGE);
-            cacheUtils.setCache(buildFieldCacheKey(questionId, IncrementFieldEnum.STAR_NUM),
-                    questionHotspot.getStarNum(), FIELD_CACHE_EXPIRE_TIME, true, RANDOM_EXPIRE_RANGE);
-//            cacheUtils.setCache(buildFieldCacheKey(questionId, IncrementFieldEnum.FORWARD_NUM),
-//                    questionHotspot.getForwardNum(), FIELD_CACHE_EXPIRE_TIME, true, RANDOM_EXPIRE_RANGE);
-//            cacheUtils.setCache(buildFieldCacheKey(questionId, IncrementFieldEnum.COLLECT_NUM),
-//                    questionHotspot.getCollectNum(), FIELD_CACHE_EXPIRE_TIME, true, RANDOM_EXPIRE_RANGE);
-            cacheUtils.setCache(buildFieldCacheKey(questionId, IncrementFieldEnum.COMMENT_NUM),
-                    questionHotspot.getCommentNum(), FIELD_CACHE_EXPIRE_TIME, true, RANDOM_EXPIRE_RANGE);
+            // 使用 CounterManager 初始化各个字段的计数器，确保存储的是纯数值格式
+            boolean viewNumSuccess = counterManager.initCounter(
+                    buildFieldCacheKey(questionId, IncrementFieldEnum.VIEW_NUM),
+                    questionHotspot.getViewNum(), actualExpireTime);
+            
+            boolean starNumSuccess = counterManager.initCounter(
+                    buildFieldCacheKey(questionId, IncrementFieldEnum.STAR_NUM),
+                    questionHotspot.getStarNum(), actualExpireTime);
+            
+            boolean commentNumSuccess = counterManager.initCounter(
+                    buildFieldCacheKey(questionId, IncrementFieldEnum.COMMENT_NUM),
+                    questionHotspot.getCommentNum(), actualExpireTime);
 
-            log.info("缓存题目热点字段成功，questionId: {}", questionId);
+//            boolean forwardNumSuccess = counterManager.initCounter(
+//                    buildFieldCacheKey(questionId, IncrementFieldEnum.FORWARD_NUM),
+//                    questionHotspot.getForwardNum(), actualExpireTime);
+//            
+//            boolean collectNumSuccess = counterManager.initCounter(
+//                    buildFieldCacheKey(questionId, IncrementFieldEnum.COLLECT_NUM),
+//                    questionHotspot.getCollectNum(), actualExpireTime);
+
+            if (viewNumSuccess && starNumSuccess && commentNumSuccess) {
+                log.info("缓存题目热点字段成功，questionId: {}", questionId);
+            } else {
+                log.warn("部分热点字段缓存失败，questionId: {}, viewNum: {}, starNum: {}, commentNum: {}", 
+                        questionId, viewNumSuccess, starNumSuccess, commentNumSuccess);
+            }
         } catch (Exception e) {
             log.error("缓存题目热点字段失败，questionId: {}", questionHotspot.getQuestionId(), e);
         }
