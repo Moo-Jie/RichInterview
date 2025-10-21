@@ -2,6 +2,12 @@
   font-family: "Comic Sans MS", cursive, -apple-system, sans-serif;
   line-height: 1.6;
   color: #4a5568;
+  
+  // 启用文本选择
+  user-select: text;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
 
   // 标题样式
   .markdown-h1 {
@@ -167,6 +173,15 @@
     font-family: 'Courier New', monospace;
     font-size: 28rpx;
     display: inline;
+    white-space: nowrap;
+    overflow-x: auto;
+    user-select: text;
+    -webkit-user-select: text;
+    
+    &::selection {
+      background-color: #fecaca;
+      color: #991b1b;
+    }
   }
 
   .markdown-pre {
@@ -176,12 +191,32 @@
     border-radius: 12rpx;
     margin: 24rpx 0;
     overflow-x: auto;
+    overflow-y: hidden;
     font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
     font-size: 26rpx;
     line-height: 1.6;
     position: relative;
     border: 1rpx solid #334155;
     box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.15);
+    
+    // 自定义滚动条样式
+    &::-webkit-scrollbar {
+      height: 8rpx;
+    }
+    
+    &::-webkit-scrollbar-track {
+      background: #334155;
+      border-radius: 4rpx;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: #64748b;
+      border-radius: 4rpx;
+      
+      &:hover {
+        background: #94a3b8;
+      }
+    }
     
     &::before {
       content: '';
@@ -200,8 +235,18 @@
       padding: 0;
       border-radius: 0;
       font-family: inherit;
-      white-space: pre-wrap;
-      word-wrap: break-word;
+      white-space: pre;
+      word-wrap: normal;
+      overflow-wrap: normal;
+      display: block;
+      min-width: max-content;
+      user-select: text;
+      -webkit-user-select: text;
+      
+      &::selection {
+        background-color: #475569;
+        color: #e2e8f0;
+      }
     }
   }
 

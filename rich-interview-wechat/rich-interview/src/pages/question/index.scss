@@ -10,7 +10,9 @@
   .action-bar {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     margin-bottom: 30rpx;
+    padding: 0 20rpx;
 
     .action-btn {
       width: 80rpx;
@@ -27,6 +29,11 @@
         transform: scale(0.9);
         background: linear-gradient(135deg, #2563eb, #1d4ed8);
       }
+      
+      &.starred {
+        background: linear-gradient(135deg, #fde047, #f59e0b);
+        box-shadow: 0 8rpx 24rpx rgba(245, 158, 11, 0.3);
+      }
     }
   }
 
@@ -38,6 +45,12 @@
     margin-bottom: 30rpx;
     position: relative;
     overflow: hidden;
+    
+    // 启用文本选择
+    user-select: text;
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
 
     // 用户中心的签到样式
     .signin-button-container {

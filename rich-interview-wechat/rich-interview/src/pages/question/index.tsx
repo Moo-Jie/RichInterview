@@ -478,6 +478,27 @@ export default class QuestionDetailPage extends Component<{}, State> {
     Taro.navigateBack();
   };
 
+  // 复制题目内容
+  handleCopyContent = () => {
+    const { question } = this.state;
+    if (!question) {
+      Taro.showToast({ title: '题目内容尚未加载', icon: 'none' });
+      return;
+    }
+
+    const contentToCopy = `题目：${question.title}\n\n题目内容：\n${question.content.replace(/^#\s*/, '')}\n\n参考答案：\n${question.answer}`;
+    
+    Taro.setClipboardData({
+      data: contentToCopy,
+      success: () => {
+        Taro.showToast({ title: '题目内容已复制', icon: 'success' });
+      },
+      fail: () => {
+        Taro.showToast({ title: '复制失败，请重试', icon: 'none' });
+      }
+    });
+  };
+
   render() {
     const {question, questionHotspotDetail, loading, error, showShareCard, shareCardPath} = this.state;
 
@@ -557,6 +578,9 @@ export default class QuestionDetailPage extends Component<{}, State> {
                 size='18'
                 color={this.state.starred ? '#e9ccff' : '#fff'}
               />
+            </View>
+            <View className='action-btn' onClick={this.handleCopyContent}>
+              <AtIcon value='file-generic' size='18' color='#fff'/>
             </View>
             <View className='action-btn' onClick={this.handleShare}>
               <AtIcon value='share' size='18' color='#fff'/>
