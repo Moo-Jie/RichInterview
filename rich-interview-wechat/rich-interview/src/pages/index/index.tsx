@@ -213,10 +213,8 @@ export default class Index extends Component<{}, State> {
 
     try {
       const response = await userLogin({userAccount, userPassword});
-      if (response && response.code === 0 && response.data) {
-        const userVO = response.data;
-        Taro.setStorageSync('userInfo', userVO);
-
+      if (response !== null) {
+        const userVO = response.userInfo;
         EventBus.emit('userUpdate', userVO);
 
         this.setState({
@@ -231,8 +229,7 @@ export default class Index extends Component<{}, State> {
           Taro.reLaunch({url: `/${currentPage.route}`});
         }
       } else {
-        const errorMsg = response?.message || '登录失败，请重试';
-        Taro.showToast({title: errorMsg, icon: 'none'});
+        Taro.showToast({title: '登录失败，请重试', icon: 'none'});
       }
     } catch (error) {
       console.error('登录出错', error);

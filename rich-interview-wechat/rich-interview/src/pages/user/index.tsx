@@ -2,7 +2,7 @@ import {Component} from 'react';
 import {Image, ScrollView, Text, View} from '@tarojs/components';
 import Taro from '@tarojs/taro';
 import {AtButton, AtCard, AtIcon, AtList, AtListItem} from 'taro-ui';
-import {addUserSignIn, getLoginUser, getUserSignInRecord} from '../../api/user'; // 导入签到相关API
+import {addUserSignIn, getLoginUser, getUserSignInRecord, userLogout} from '../../api/user'; // 导入签到相关API
 import {EventBus} from "../../eventBus";
 import './index.scss';
 
@@ -74,18 +74,31 @@ export default class UserCenter extends Component<{}, State> {
   }
 
   async componentDidMount() {
+    // @ts-ignore
     EventBus.on('userUpdate', this.handleUserUpdate);
     EventBus.on('userLogout', this.handleUserLogout);
     await this.loadUserData();
   }
 
   componentWillUnmount() {
+    // @ts-ignore
     EventBus.off('userUpdate', this.handleUserUpdate);
     EventBus.off('userLogout', this.handleUserLogout);
   }
 
   handleUserUpdate = (userVO: any) => {
-    this.setState({userInfo: userVO});
+    if (userVO) {
+      // 更新组件状态
+      this.setState({userInfo: userVO});
+
+      // 同步更新本地存储
+      try {
+        Taro.setStorageSync('userInfo', userVO);
+        console.log('用户信息已同步更新');
+      } catch (error) {
+        console.error('更新本地用户信息失败:', error);
+      }
+    }
   };
 
   handleUserLogout = () => {
@@ -187,21 +200,59 @@ export default class UserCenter extends Component<{}, State> {
     Taro.navigateTo({url: '/pages/user/edit/index'});
   };
 
-  handleLogout = () => {
-    Taro.removeStorageSync('token');
-    Taro.removeStorageSync('userInfo');
-    Taro.showToast({title: '已退出登录', icon: 'success'});
-    EventBus.emit('userLogout', null);
+  handleLogout = async () => {
+    try {
+      // 显示确认对话框
+      const result = await Taro.showModal({
+        title: '确认退出',
+        content: '确定要退出登录吗？',
+        confirmText: '退出',
+        cancelText: '取消'
+      });
 
-    const pages = Taro.getCurrentPages();
-    if (pages.length > 0) {
-      const currentPage = pages[pages.length - 1];
-      Taro.reLaunch({url: `/${currentPage.route}`});
+      if (!result.confirm) {
+        return;
+      }
+
+      // 显示加载提示
+      Taro.showLoading({
+        title: '退出中...',
+        mask: true
+      });
+
+      // 调用API退出登录
+      await userLogout();
+
+      // 隐藏加载提示
+      Taro.hideLoading();
+
+      // 发送登出事件
+      EventBus.emit('userLogout', null);
+
+      // 重新启动到首页
+      Taro.reLaunch({
+        url: '/pages/index/index'
+      });
+
+    } catch (error) {
+      console.error('退出登录失败:', error);
+      Taro.hideLoading();
+
+      // 即使API调用失败，也清除本地数据
+      Taro.removeStorageSync('token');
+      Taro.removeStorageSync('userInfo');
+
+      Taro.showToast({
+        title: '已退出登录',
+        icon: 'success'
+      });
+
+      EventBus.emit('userLogout', null);
+
+      Taro.reLaunch({
+        url: '/pages/index/index'
+      });
     }
-
-    setTimeout(() => {
-      Taro.switchTab({url: '/pages/index/index'});
-    }, 300);
   };
 
   // 渲染签到日历视图

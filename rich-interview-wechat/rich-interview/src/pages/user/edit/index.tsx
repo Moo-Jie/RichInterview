@@ -4,6 +4,7 @@ import {Image, ScrollView, Text, View} from '@tarojs/components';
 import {AtButton, AtInput, AtTextarea, AtToast} from 'taro-ui';
 import {EventBus} from '../../../eventBus';
 import {getLoginUser, updateUserInfo, UserUpdateMyRequest, UserVO} from '../../../api/user';
+import {chooseAndUploadAvatar} from '../../../api/upload';
 import './index.scss';
 
 interface State {
@@ -13,7 +14,8 @@ interface State {
   isSaving: boolean;
   showToast: boolean;
   toastMessage: string;
-  avatarTempPath: string | null;
+  isUploadingAvatar: boolean;
+  hasChanges: boolean; // 标记是否有未保存的更改
   // 用于标记字段错误
   errors: {
     userName?: boolean;
@@ -39,7 +41,8 @@ export default class UserEditPage extends Component<{}, State> {
     isSaving: false,
     showToast: false,
     toastMessage: '',
-    avatarTempPath: null,
+    isUploadingAvatar: false,
+    hasChanges: false,
     errors: {}
   };
 
@@ -83,16 +86,18 @@ export default class UserEditPage extends Component<{}, State> {
   };
 
   handleInputChange = (field: keyof UserUpdateMyRequest, value: string) => {
-    // 清除字段错误状态
     this.setState(prevState => ({
       formData: {
         ...prevState.formData,
         [field]: value
       },
+      // 清除对应字段的错误状态
       errors: {
         ...prevState.errors,
         [field]: false
-      }
+      },
+      // 标记有更改
+      hasChanges: true
     }));
   };
 
@@ -136,26 +141,43 @@ export default class UserEditPage extends Component<{}, State> {
 
     this.setState({isSaving: true});
     try {
-      // 如果有临时头像路径，先上传头像
-      if (this.state.avatarTempPath) {
-        // 这里需要实现实际的上传功能（需要后端API支持）
-        // 伪代码: const avatarUrl = await uploadAvatar(this.state.avatarTempPath);
-        // 在实际应用中替换以下两行
-        const avatarUrl = `https://temp-avatar.com/${Date.now()}.jpg`;
-        this.handleInputChange('userAvatar', avatarUrl);
+      // 调用更新API，直接返回更新后的用户信息
+      const updatedUserInfo = await updateUserInfo(this.state.formData);
+      
+      if (updatedUserInfo) {
+        this.setState({
+          userInfo: updatedUserInfo,
+          hasChanges: false // 重置更改状态
+        });
+        
+        // 通知用户中心更新数据
+        EventBus.emit('userUpdate', updatedUserInfo);
+        
+        this.showToast('保存成功');
+
+        // 延迟返回
+        setTimeout(() => Taro.navigateBack(), 1500);
+      } else {
+        this.showToast('保存失败，请重试');
       }
-
-      await updateUserInfo(this.state.formData);
-      this.showToast('保存成功');
-
-      // 通知用户中心更新数据
-      EventBus.emit('userUpdate', this.state.formData);
-
-      // 延迟返回
-      setTimeout(() => Taro.navigateBack(), 1500);
     } catch (error) {
       console.error('保存失败', error);
-      this.showToast('保存失败，请重试');
+      
+      // 根据错误类型提供更详细的错误信息
+      let errorMessage = '保存失败，请重试';
+      if (error instanceof Error) {
+        if (error.message.includes('401') || error.message.includes('未授权')) {
+          errorMessage = '登录状态已过期，请重新登录';
+        } else if (error.message.includes('403')) {
+          errorMessage = '权限不足，无法修改用户信息';
+        } else if (error.message.includes('网络')) {
+          errorMessage = '网络连接失败，请检查网络后重试';
+        } else if (error.message) {
+          errorMessage = error.message;
+        }
+      }
+      
+      this.showToast(errorMessage);
     } finally {
       this.setState({isSaving: false});
     }
@@ -163,26 +185,47 @@ export default class UserEditPage extends Component<{}, State> {
 
   handleChooseAvatar = async () => {
     try {
-      const res = await Taro.chooseImage({
-        count: 1,
-        sourceType: ['album', 'camera'],
-        sizeType: ['compressed']
-      });
-
-      if (res.tempFilePaths.length > 0) {
-        const tempPath = res.tempFilePaths[0];
-        this.setState({
-          avatarTempPath: tempPath
-        });
+      this.setState({isUploadingAvatar: true});
+      
+      const avatarUrl = await chooseAndUploadAvatar();
+      
+      if (avatarUrl) {
+        // 更新表单数据中的头像URL
+        this.handleInputChange('userAvatar', avatarUrl);
+        this.showToast('头像上传成功');
+      } else {
+        this.showToast('头像上传失败，请重试');
       }
     } catch (error) {
-      console.error('选择头像失败', error);
-      this.showToast('选择头像失败');
+      console.error('上传头像失败', error);
+      this.showToast('上传头像失败');
+    } finally {
+      this.setState({isUploadingAvatar: false});
     }
   };
 
-  handleBack = () => {
-    Taro.navigateBack();
+  handleBack = async () => {
+    const {hasChanges} = this.state;
+    
+    if (hasChanges) {
+      try {
+        const result = await Taro.showModal({
+          title: '确认离开',
+          content: '您有未保存的更改，确定要离开吗？',
+          confirmText: '离开',
+          cancelText: '取消'
+        });
+        
+        if (result.confirm) {
+          Taro.navigateBack();
+        }
+      } catch (error) {
+        console.error('显示确认对话框失败:', error);
+        Taro.navigateBack();
+      }
+    } else {
+      Taro.navigateBack();
+    }
   };
 
   render() {
@@ -193,7 +236,7 @@ export default class UserEditPage extends Component<{}, State> {
       isSaving,
       showToast,
       toastMessage,
-      avatarTempPath,
+      isUploadingAvatar,
       errors
     } = this.state;
 
@@ -201,8 +244,8 @@ export default class UserEditPage extends Component<{}, State> {
       return <View className="loading-container">加载中...</View>;
     }
 
-    // 头像处理（优先使用临时选择的）
-    const displayAvatar = avatarTempPath || formData.userAvatar || userInfo.userAvatar;
+    // 头像处理（优先使用表单中的头像）
+    const displayAvatar = formData.userAvatar || userInfo.userAvatar;
 
     return (
       <ScrollView className="edit-container">
@@ -216,7 +259,10 @@ export default class UserEditPage extends Component<{}, State> {
 
         {/* 头像编辑区 */}
         <View className="avatar-section">
-          <View className="avatar-container" onClick={this.handleChooseAvatar}>
+          <View 
+            className={`avatar-container ${isUploadingAvatar ? 'uploading' : ''}`} 
+            onClick={isUploadingAvatar ? undefined : this.handleChooseAvatar}
+          >
             {displayAvatar ? (
               <Image src={displayAvatar} className="avatar" mode="aspectFill"/>
             ) : (
@@ -225,10 +271,14 @@ export default class UserEditPage extends Component<{}, State> {
               </View>
             )}
             <View className="edit-mask">
-              <Text className="edit-text">更换</Text>
+              <Text className="edit-text">
+                {isUploadingAvatar ? '上传中...' : '更换'}
+              </Text>
             </View>
           </View>
-          <Text className="avatar-hint">点击头像更换</Text>
+          <Text className="avatar-hint">
+            {isUploadingAvatar ? '正在上传头像，请稍候...' : '点击头像更换'}
+          </Text>
         </View>
 
         {/* 表单编辑区 */}

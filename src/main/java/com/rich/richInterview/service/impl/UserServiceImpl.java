@@ -533,6 +533,25 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         User user = new User();
         BeanUtils.copyProperties(userUpdateMyRequest, user);
         user.setId(loginUser.getId());
-        return this.updateById(user);
+        
+        // 如果需要更新密码，进行加密处理
+        if (userPassword != null) {
+            String encryptPassword = DigestUtils.md5DigestAsHex((SALT + userPassword).getBytes());
+            user.setUserPassword(encryptPassword);
+        }
+        
+        boolean updateResult = this.updateById(user);
+        
+        // 如果数据库更新成功，同步更新 Sa-Token 缓存中的用户信息
+        if (updateResult) {
+            // 从数据库获取最新的用户信息
+            User updatedUser = this.getById(loginUser.getId());
+            if (updatedUser != null) {
+                // 更新 Sa-Token 缓存中的用户登录态信息
+                StpUtil.getSession().set(USER_LOGIN_STATE, updatedUser);
+            }
+        }
+        
+        return updateResult;
     }
 }
