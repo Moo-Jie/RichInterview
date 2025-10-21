@@ -1,8 +1,7 @@
 import {Component} from 'react';
-import {View, Text, ScrollView} from '@tarojs/components';
+import {Image, ScrollView, Text, View} from '@tarojs/components';
 import Taro from '@tarojs/taro';
-import {AtCard, AtList, AtListItem, AtIcon} from 'taro-ui';
-import {Image} from '@tarojs/components';
+import {AtCard, AtIcon, AtList, AtListItem} from 'taro-ui';
 import {getHotQuestionBanks, listQuestionBankVOByPage} from '../../api/questionBank';
 import './index.scss';
 import dayjs from "dayjs";

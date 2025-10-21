@@ -37,7 +37,7 @@ public class QuestionHotspotUpdateRequest implements Serializable {
     private Integer collectNum;
 
     /**
-     * 评论量
+     * 回答量
      */
     private Integer commentNum;
 

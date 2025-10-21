@@ -4,7 +4,8 @@ import Taro from '@tarojs/taro';
 import {AtCard, AtIcon, AtTag} from 'taro-ui';
 import {
   getQuestionBankHotspotVOByQuestionBankId,
-  getQuestionBankVOById, incrementStarCount,
+  getQuestionBankVOById,
+  incrementStarCount,
   incrementViewCount,
 } from '../../api/questionBank';
 import TagParser from '../../components/TagParserComponent';

@@ -40,7 +40,7 @@ public class QuestionHotspotQueryRequest extends PageRequest implements Serializ
     private Integer collectNum;
 
     /**
-     * 评论量
+     * 回答量
      */
     private Integer commentNum;
 

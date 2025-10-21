@@ -1,5 +1,5 @@
-import { Component } from 'react';
-import { View } from '@tarojs/components';
+import {Component} from 'react';
+import {View} from '@tarojs/components';
 import './index.scss';
 
 interface MarkdownRendererProps {

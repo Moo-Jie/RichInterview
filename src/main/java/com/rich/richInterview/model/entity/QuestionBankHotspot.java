@@ -46,7 +46,7 @@ public class QuestionBankHotspot {
     private Integer collectNum;
 
     /**
-     * 评论量
+     * 回答量
      */
     private Integer commentNum;
 

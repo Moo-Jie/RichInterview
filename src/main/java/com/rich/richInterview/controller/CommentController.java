@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
- * 评论接口
+ * 回答接口
  */
 @RestController
 @RequestMapping("/comment")
@@ -37,9 +37,9 @@ public class CommentController {
 
 
     /**
-     * 用户创建评论
+     * 用户创建回答
      *
-     * @param commentAddRequest 用户提交的评论信息
+     * @param commentAddRequest 用户提交的回答信息
      * @param request           用户登录态
      * @return com.rich.richInterview.common.BaseResponse<java.lang.Long>
      * @author DuRuiChi
@@ -52,7 +52,7 @@ public class CommentController {
     }
 
     /**
-     * 用户删除评论
+     * 用户删除回答
      *
      * @param deleteRequest id
      * @param request       用户登录态
@@ -69,7 +69,7 @@ public class CommentController {
     }
 
     /**
-     * 根据 题目ID 获取评论列表（封装类）
+     * 根据 题目ID 获取回答列表（封装类）
      *
      * @param questionId 题目ID
      * @param request    用户登录态
@@ -85,7 +85,7 @@ public class CommentController {
     }
 
     /**
-     * 分页获取评论列表（封装类）
+     * 分页获取回答列表（封装类）
      *
      * @param commentQueryRequest
      * @param request
@@ -106,7 +106,7 @@ public class CommentController {
     }
 
     /**
-     * 分页获取当前登录用户创建的评论列表
+     * 分页获取当前登录用户创建的回答列表
      *
      * @param commentQueryRequest
      * @param request
@@ -131,9 +131,9 @@ public class CommentController {
     }
 
     /**
-     * 点赞评论
+     * 点赞回答
      *
-     * @param idRequest 评论ID
+     * @param idRequest 回答ID
      * @param request   用户登录态
      * @return com.rich.richInterview.common.BaseResponse<java.lang.Boolean>
      * @author DuRuiChi

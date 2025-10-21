@@ -88,7 +88,7 @@ export default function HotCommentsPage() {
             </span>
             <div className="comment-sort">
               <span style={{ fontSize: 15, color: "#666", marginLeft: 8 }}>
-                (点击评论跳转到题目)
+                (点击回答跳转到题目)
               </span>
               <Button
                 type={sortType === "hot" ? "primary" : "default"}
@@ -109,10 +109,10 @@ export default function HotCommentsPage() {
           </div>
         }
       >
-        {/* 评论列表 */}
+        {/* 回答列表 */}
         {isLoading ? (
           <div className="custom-loading" style={{ padding: 16 }}>
-            <span className="loading-text">加载评论中...</span>
+            <span className="loading-text">加载回答中...</span>
           </div>
         ) : comments.length === 0 ? (
           <div style={{ padding: 16, textAlign: "center" }}>
@@ -154,7 +154,7 @@ export default function HotCommentsPage() {
                     {comment.thumbNum || 0}
                   </Button>
                 </div>
-                {/* 评论内容 */}
+                {/* 回答内容 */}
                 <div className="comment-content">
                   <MarkdownViewer value={comment.content || "未获取"} />
                 </div>

@@ -552,7 +552,7 @@
     transform: translateX(3px);
 }
 
-/* 评论模块样式 */
+/* 回答模块样式 */
 .comment-header {
     display: flex;
     align-items: center;
@@ -564,7 +564,7 @@
     gap: 8px;
 }
 
-/* 评论输入框美化 */
+/* 回答输入框美化 */
 .comment-input textarea {
     font-size: 16px;
     padding: 12px;
@@ -643,7 +643,7 @@
     color: transparent;
 }
 
-/* 评论内容区域 */
+/* 回答内容区域 */
 .comment-content {
     padding: 12px;
     background: rgba(255, 255, 255, 0.95);

@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 查询评论请求
+ * 查询回答请求
  *
  */
 @EqualsAndHashCode(callSuper = true)
@@ -24,7 +24,7 @@ public class CommentQueryRequest extends PageRequest implements Serializable {
     private Long id;
 
     /**
-     * 评论内容
+     * 回答内容
      */
     private String content;
 

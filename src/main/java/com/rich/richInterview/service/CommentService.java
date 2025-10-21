@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
- * 评论服务
+ * 回答服务
  *
  */
 public interface CommentService extends IService<Comment> {
@@ -34,7 +34,7 @@ public interface CommentService extends IService<Comment> {
     QueryWrapper<Comment> getQueryWrapper(CommentQueryRequest commentQueryRequest);
     
     /**
-     * 获取评论封装
+     * 获取回答封装
      *
      * @param comment
      * @param request
@@ -43,7 +43,7 @@ public interface CommentService extends IService<Comment> {
     CommentVO getCommentVO(Comment comment, HttpServletRequest request);
 
     /**
-     * 分页获取评论封装
+     * 分页获取回答封装
      *
      * @param commentPage
      * @param request
@@ -52,7 +52,7 @@ public interface CommentService extends IService<Comment> {
     Page<CommentVO> getCommentVOPage(Page<Comment> commentPage, HttpServletRequest request);
 
     /**
-     * 创建评论
+     * 创建回答
      * @param commentAddRequest
      * @param request
      * @return java.lang.Long
@@ -62,7 +62,7 @@ public interface CommentService extends IService<Comment> {
     Long addComment(CommentAddRequest commentAddRequest, HttpServletRequest request);
 
     /**
-     * 删除评论
+     * 删除回答
      * @param id
      * @param request
      * @return java.lang.Boolean
@@ -73,7 +73,7 @@ public interface CommentService extends IService<Comment> {
 
     /**
      *
-     * 根据 题目ID 获取评论列表（封装类）
+     * 根据 题目ID 获取回答列表（封装类）
      * @param questionId
      * @param request
      * @return java.util.List<com.rich.richInterview.model.vo.CommentVO>
@@ -83,7 +83,7 @@ public interface CommentService extends IService<Comment> {
     List<CommentVO> getCommentVOListByQuestionId(long questionId, HttpServletRequest request);
 
     /**
-     * 点赞评论
+     * 点赞回答
      * @param id
      * @param request
      * @return java.lang.Boolean

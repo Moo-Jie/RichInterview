@@ -36,7 +36,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * 评论服务实现
+ * 回答服务实现
  *
  */
 @Service
@@ -74,8 +74,8 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     }
 
     /**
-     * 点赞评论
-     * @param id      评论ID
+     * 点赞回答
+     * @param id      回答ID
      * @param request 用户登录态
      * @return java.lang.Boolean
      * @author DuRuiChi
@@ -83,7 +83,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
      **/
     @Override
     public Boolean starComment(Long id, HttpServletRequest request) {
-        // 校验评论存在性
+        // 校验回答存在性
         Comment comment = this.getById(id);
         ThrowUtils.throwIf(comment == null, ErrorCode.NOT_FOUND_ERROR);
 
@@ -128,7 +128,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     }
 
     /**
-     * 获取评论封装
+     * 获取回答封装
      * @param comment
      * @param request
      * @return com.rich.richInterview.model.vo.CommentVO
@@ -155,7 +155,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     }
 
     /**
-     * 分页获取评论封装
+     * 分页获取回答封装
      * @param commentPage
      * @param request
      * @return com.baomidou.mybatisplus.extension.plugins.pagination.Page<com.rich.richInterview.model.vo.CommentVO>
@@ -192,7 +192,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     }
 
     /**
-     * 创建评论
+     * 创建回答
      * @param commentAddRequest
      * @param request
      * @return java.lang.Long
@@ -211,7 +211,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         // 写入数据库
         boolean result = this.save(comment);
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
-        // 同步增加题目的评论数
+        // 同步增加题目的回答数
         questionHotspotService.incrementField(comment.getQuestionId(), IncrementFieldEnum.COMMENT_NUM);
         // 返回新写入的数据 id
         long newCommentId = comment.getId();
@@ -219,7 +219,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     }
 
     /**
-     * 删除评论
+     * 删除回答
      * @param id
      * @param request
      * @return java.lang.Boolean
@@ -239,7 +239,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         // 操作数据库
         boolean result = this.removeById(id);
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
-        // 同步减少题目的评论数
+        // 同步减少题目的回答数
         questionHotspotService.decrementField(oldComment.getQuestionId(), IncrementFieldEnum.COMMENT_NUM);
 
         return true;
@@ -249,7 +249,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
 
     /**
      *
-     * 根据 题目ID 获取评论列表（封装类）
+     * 根据 题目ID 获取回答列表（封装类）
      * @param questionId
      * @param request
      * @return java.util.List<com.rich.richInterview.model.vo.CommentVO>
@@ -258,7 +258,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
      **/
     @Override
     public List<CommentVO> getCommentVOListByQuestionId(long questionId, HttpServletRequest request) {
-        // 查询题目评论
+        // 查询题目回答
         QueryWrapper<Comment> commentQueryWrapper = new QueryWrapper<>();
         commentQueryWrapper.eq("questionId", questionId);
         List<Comment> commentList = this.list(commentQueryWrapper);

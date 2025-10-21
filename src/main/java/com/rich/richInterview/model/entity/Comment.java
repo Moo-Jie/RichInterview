@@ -8,7 +8,7 @@ import lombok.Data;
 import java.util.Date;
 
 /**
- * 评论表
+ * 回答表
  * @TableName comment
  */
 @TableName(value ="comment")
@@ -21,7 +21,7 @@ public class Comment {
     private Long id;
 
     /**
-     * 评论内容
+     * 回答内容
      */
     private String content;
 

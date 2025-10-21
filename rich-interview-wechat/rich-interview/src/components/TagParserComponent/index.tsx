@@ -1,4 +1,4 @@
-import { View, Text } from '@tarojs/components'
+import {Text, View} from '@tarojs/components'
 import './index.scss'
 
 export default ({ tagList }: { tagList: string[] }) => {

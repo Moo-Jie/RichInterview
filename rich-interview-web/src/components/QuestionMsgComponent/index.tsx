@@ -56,11 +56,11 @@ const QuestionMsgComponent = (props: Props) => {
   const questionId = question?.id;
   // 客户端组件消息组件
   const { message } = App.useApp();
-  // 评论点赞数
+  // 回答点赞数
   const [likedComments, setLikedComments] = useState<Set<number>>(new Set());
   // 点赞钩子
   const { incrementStar } = useQuestionStarNumIncrementFieldHook(questionId);
-  // 评论相关状态
+  // 回答相关状态
   const [comments, setComments] = useState<API.CommentVO[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize] = useState(5);
@@ -70,7 +70,7 @@ const QuestionMsgComponent = (props: Props) => {
   const [deletingCommentId, setDeletingCommentId] = useState<number | null>(
     null,
   );
-  // 评论删除确认框状态
+  // 回答删除确认框状态
   const [deleteConfirmVisible, setDeleteConfirmVisible] = useState(false);
   const [selectedCommentId, setSelectedCommentId] = useState<number | null>(
     null,
@@ -101,7 +101,7 @@ const QuestionMsgComponent = (props: Props) => {
     }
   };
 
-  // 获取评论列表
+  // 获取回答列表
   const fetchComments = async () => {
     setIsCommentLoading(true);
     try {
@@ -120,17 +120,17 @@ const QuestionMsgComponent = (props: Props) => {
       }
     } catch (e: any) {
       message.error(
-        `获取评论失败: ${e?.response?.data?.message || e?.message || "未知错误"}`,
+        `获取回答失败: ${e?.response?.data?.message || e?.message || "未知错误"}`,
       );
     } finally {
       setIsCommentLoading(false);
     }
   };
 
-  // 添加评论
+  // 添加回答
   const handleAddComment = async () => {
     if (!commentContent.trim()) {
-      message.warning("请输入评论内容");
+      message.warning("请输入回答内容");
       return;
     }
 
@@ -142,18 +142,18 @@ const QuestionMsgComponent = (props: Props) => {
       } as API.CommentAddRequest);
 
       if (res != null) {
-        message.success("评论成功，期待成为热评哦~");
+        message.success("回答成功，期待成为热评哦~");
         setCommentContent("");
         // 发布后回到第一页
         setCurrentPage(1);
-        // 刷新评论列表
+        // 刷新回答列表
         await fetchComments();
       } else {
-        message.error("评论失败");
+        message.error("回答失败");
       }
     } catch (e: any) {
       message.error(
-        `评论失败: ${e?.response?.data?.message || e?.message || "未知错误"}`,
+        `回答失败: ${e?.response?.data?.message || e?.message || "未知错误"}`,
       );
     } finally {
       // 重置加载状态
@@ -161,7 +161,7 @@ const QuestionMsgComponent = (props: Props) => {
     }
   };
 
-  // 删除评论
+  // 删除回答
   const handleDeleteConfirm = async () => {
     if (!selectedCommentId) return;
 
@@ -171,7 +171,7 @@ const QuestionMsgComponent = (props: Props) => {
         id: selectedCommentId,
       } as API.DeleteRequest);
       if (res != null) {
-        message.success("删除评论成功");
+        message.success("删除回答成功");
         setComments(comments.filter((c) => c.id !== selectedCommentId));
       }
     } catch (e: any) {
@@ -500,12 +500,12 @@ const QuestionMsgComponent = (props: Props) => {
           </div>
         )}
       </Card>
-      {/* 评论区 */}
+      {/* 回答区 */}
       <Card
         className="ask-ai-card"
         title={
           <div className="comment-header">
-            <span>用户评论</span>
+            <span>用户回答</span>
             <div className="comment-sort">
               <Button
                 type={sortType === "latest" ? "primary" : "default"}
@@ -526,7 +526,7 @@ const QuestionMsgComponent = (props: Props) => {
           </div>
         }
       >
-        {/* 评论输入区域 */}
+        {/* 回答输入区域 */}
         <div>
           <textarea
             value={commentContent}
@@ -553,19 +553,19 @@ const QuestionMsgComponent = (props: Props) => {
             style={{ marginTop: "8px", float: "right" }}
             className="copy-button"
           >
-            发布评论
+            发布回答
           </Button>
           <div style={{ clear: "both" }} />
         </div>
 
-        {/* 评论列表 */}
+        {/* 回答列表 */}
         {isCommentLoading ? (
           <div className="custom-loading" style={{ padding: 16 }}>
-            <LoadingOutlined spin /> 加载评论中...
+            <LoadingOutlined spin /> 加载回答中...
           </div>
         ) : comments.length === 0 ? (
           <div style={{ padding: 16, textAlign: "center" }}>
-            暂无评论，快来发表你的看法吧~
+            暂无回答，快来发表你的看法吧~
           </div>
         ) : (
           comments.map((comment) => (
@@ -668,7 +668,7 @@ const QuestionMsgComponent = (props: Props) => {
         okText="确定删除"
         cancelText="取消"
       >
-        <p>确定要删您的条评论吗？</p>
+        <p>确定要删您的条回答吗？</p>
       </Modal>
     </div>
   );

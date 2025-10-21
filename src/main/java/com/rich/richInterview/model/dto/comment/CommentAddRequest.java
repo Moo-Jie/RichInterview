@@ -5,14 +5,14 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * 创建评论请求
+ * 创建回答请求
  *
  */
 @Data
 public class CommentAddRequest implements Serializable {
 
     /**
-     * 评论内容
+     * 回答内容
      */
     private String content;
 

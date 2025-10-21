@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 评论视图
+ * 回答视图
  *
  */
 @Data
@@ -23,7 +23,7 @@ public class CommentVO implements Serializable {
     private Long id;
 
     /**
-     * 评论内容
+     * 回答内容
      */
     private String content;
 

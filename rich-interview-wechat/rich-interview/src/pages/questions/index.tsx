@@ -1,7 +1,7 @@
 import {Component} from 'react';
 import Taro from '@tarojs/taro';
-import {View, ScrollView, Text} from '@tarojs/components';
-import {AtSearchBar, AtList, AtListItem, AtInput, AtTag, AtIcon, AtCard} from 'taro-ui';
+import {ScrollView, Text, View} from '@tarojs/components';
+import {AtCard, AtIcon, AtInput, AtList, AtListItem, AtSearchBar, AtTag} from 'taro-ui';
 import {searchQuestions} from '../../api/question';
 import './index.scss';
 
