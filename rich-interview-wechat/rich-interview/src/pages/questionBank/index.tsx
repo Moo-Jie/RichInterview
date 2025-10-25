@@ -210,9 +210,9 @@ export default class QuestionBankDetailPage extends Component<{}, State> {
             </View>
             <View className='action-btn' onClick={this.handleStar}>
               <AtIcon
-                value='star'
+                value='heart-2'
                 size='20'
-                color={this.state.starred ? '#98d0ff' : '#fff'}
+                color={this.state.starred ? '#e9ccff' : '#fff'}
               />
             </View>
           </View>
@@ -238,7 +238,7 @@ export default class QuestionBankDetailPage extends Component<{}, State> {
               </View>
 
               <View className='bank-stat'>
-                <AtIcon value='star' size='18' color='#8a8a8a'></AtIcon>
+                <AtIcon value='heart-2' size='18' color='#8a8a8a'></AtIcon>
                 <Text className='stat-value'>{hotspotDetail.starNum || 0}次点赞</Text>
               </View>
             </View>

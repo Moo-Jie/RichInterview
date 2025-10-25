@@ -143,16 +143,16 @@ export default class UserEditPage extends Component<{}, State> {
     try {
       // 调用更新API，直接返回更新后的用户信息
       const updatedUserInfo = await updateUserInfo(this.state.formData);
-      
+
       if (updatedUserInfo) {
         this.setState({
           userInfo: updatedUserInfo,
           hasChanges: false // 重置更改状态
         });
-        
+
         // 通知用户中心更新数据
         EventBus.emit('userUpdate', updatedUserInfo);
-        
+
         this.showToast('保存成功');
 
         // 延迟返回
@@ -162,7 +162,7 @@ export default class UserEditPage extends Component<{}, State> {
       }
     } catch (error) {
       console.error('保存失败', error);
-      
+
       // 根据错误类型提供更详细的错误信息
       let errorMessage = '保存失败，请重试';
       if (error instanceof Error) {
@@ -176,7 +176,7 @@ export default class UserEditPage extends Component<{}, State> {
           errorMessage = error.message;
         }
       }
-      
+
       this.showToast(errorMessage);
     } finally {
       this.setState({isSaving: false});
@@ -186,13 +186,12 @@ export default class UserEditPage extends Component<{}, State> {
   handleChooseAvatar = async () => {
     try {
       this.setState({isUploadingAvatar: true});
-      
+
       const avatarUrl = await chooseAndUploadAvatar();
-      
+
       if (avatarUrl) {
         // 更新表单数据中的头像URL
         this.handleInputChange('userAvatar', avatarUrl);
-        this.showToast('头像上传成功');
       } else {
         this.showToast('头像上传失败，请重试');
       }
@@ -206,7 +205,7 @@ export default class UserEditPage extends Component<{}, State> {
 
   handleBack = async () => {
     const {hasChanges} = this.state;
-    
+
     if (hasChanges) {
       try {
         const result = await Taro.showModal({
@@ -215,7 +214,7 @@ export default class UserEditPage extends Component<{}, State> {
           confirmText: '离开',
           cancelText: '取消'
         });
-        
+
         if (result.confirm) {
           Taro.navigateBack();
         }
@@ -259,8 +258,8 @@ export default class UserEditPage extends Component<{}, State> {
 
         {/* 头像编辑区 */}
         <View className="avatar-section">
-          <View 
-            className={`avatar-container ${isUploadingAvatar ? 'uploading' : ''}`} 
+          <View
+            className={`avatar-container ${isUploadingAvatar ? 'uploading' : ''}`}
             onClick={isUploadingAvatar ? undefined : this.handleChooseAvatar}
           >
             {displayAvatar ? (
@@ -277,7 +276,7 @@ export default class UserEditPage extends Component<{}, State> {
             </View>
           </View>
           <Text className="avatar-hint">
-            {isUploadingAvatar ? '正在上传头像，请稍候...' : '点击头像更换'}
+            {isUploadingAvatar ? '正在上传头像' : '点击头像更换'}
           </Text>
         </View>
 

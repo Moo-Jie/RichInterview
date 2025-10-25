@@ -9,6 +9,8 @@ export default defineAppConfig({
     'pages/index/index',
     // 题目详情
     'pages/question/index',
+    // 回答本题
+    'pages/answer/index',
     // 题库详情
     'pages/questionBank/index',
     // 全部题目

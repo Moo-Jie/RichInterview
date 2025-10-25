@@ -2,7 +2,7 @@
 
 .question-detail-page {
 
-  background: linear-gradient(to bottom, #f0f7ff, #e6f0fa);
+  background: linear-gradient(to bottom, #f8fafc, #f1f5f9);
   min-height: 100vh;
   padding: 20rpx;
   box-sizing: border-box;
@@ -29,10 +29,10 @@
         transform: scale(0.9);
         background: linear-gradient(135deg, #2563eb, #1d4ed8);
       }
-      
+
       &.starred {
-        background: linear-gradient(135deg, #fde047, #f59e0b);
-        box-shadow: 0 8rpx 24rpx rgba(245, 158, 11, 0.3);
+        background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        box-shadow: 0 8rpx 24rpx rgb(152, 208, 255);
       }
     }
   }
@@ -45,7 +45,7 @@
     margin-bottom: 30rpx;
     position: relative;
     overflow: hidden;
-    
+
     // 启用文本选择
     user-select: text;
     -webkit-user-select: text;
@@ -80,6 +80,57 @@
       }
     }
 
+    // 回答本题按钮样式
+    .answer-entry-container {
+      padding: 20rpx;
+      margin-top: 20rpx;
+
+      .answer-entry-button {
+        background: linear-gradient(135deg, #3b82f6, #2563eb);
+        border-radius: 50rpx;
+        color: white;
+        border: none;
+        box-shadow: 0 4rpx 16rpx rgba(59, 130, 246, 0.2);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+
+        &::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(135deg, #2563eb, #1d4ed8);
+          opacity: 0;
+          transition: opacity 0.3s ease;
+        }
+
+        &:active {
+          transform: translateY(2rpx);
+          box-shadow: 0 3rpx 12rpx rgba(59, 130, 246, 0.25);
+
+          &::before {
+            opacity: 1;
+          }
+        }
+
+        Text {
+          font-size: 34rpx;
+          font-weight: 500;
+          position: relative;
+          z-index: 1;
+        }
+
+        .at-icon {
+          position: relative;
+          z-index: 1;
+          margin-right: 8rpx;
+        }
+      }
+    }
+
     .at-article {
       margin-top: 30rpx;
 
@@ -100,7 +151,7 @@
         &::before {
           content: '➤     ';
           margin-right: 12rpx;
-          color: #f472b6;
+          color: #98d0ff;
         }
       }
     }

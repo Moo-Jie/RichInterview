@@ -505,7 +505,7 @@ const QuestionMsgComponent = (props: Props) => {
         className="ask-ai-card"
         title={
           <div className="comment-header">
-            <span>用户回答</span>
+            <span>回答本题</span>
             <div className="comment-sort">
               <Button
                 type={sortType === "latest" ? "primary" : "default"}

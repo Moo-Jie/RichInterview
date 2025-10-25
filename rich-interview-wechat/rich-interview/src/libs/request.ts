@@ -1,11 +1,5 @@
 import Taro from '@tarojs/taro';
-
-// 环境配置
-const DEV_BASE_URL = 'http://localhost:8101';
-const PROD_BASE_URL = 'https://richdu.cn';
-
-void PROD_BASE_URL;
-void DEV_BASE_URL;
+import { getApiBaseUrl } from './config';
 
 // 解析Set-Cookie获取satoken
 const extractSatoken = (headers: any): string | null => {
@@ -30,8 +24,7 @@ const extractSatoken = (headers: any): string | null => {
 };
 
 const request = <T, >(options: Taro.request.Option): Promise<T> => {
-  // const baseURL = DEV_BASE_URL;
-  const baseURL = PROD_BASE_URL;
+  const baseURL = getApiBaseUrl();
 
   // 获取设备唯一标识（优先使用缓存）
   const getDeviceId = () => {

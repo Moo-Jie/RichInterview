@@ -1,0 +1,429 @@
+.answer-page {
+  background: linear-gradient(to bottom, #f8fafc, #f1f5f9);
+  min-height: 100vh;
+  padding: 20rpx;
+  box-sizing: border-box;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 30rpx;
+  padding: 0 20rpx;
+
+  .title {
+    font-size: 44rpx;
+    font-weight: bold;
+    color: #1e293b;
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .sort-tabs {
+    display: flex;
+    gap: 20rpx;
+
+    .at-tag {
+      border-radius: 50rpx;
+      padding: 2rpx 32rpx;
+      font-size: 28rpx;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      box-shadow: 0 2rpx 8rpx rgba(59, 130, 246, 0.1);
+
+      &.at-tag--primary {
+        background: linear-gradient(135deg, #3b82f6, #2563eb);
+        color: white;
+        border: none;
+
+        &:active {
+          transform: scale(0.95);
+          box-shadow: 0 2rpx 6rpx rgba(59, 130, 246, 0.2);
+        }
+      }
+
+      &:not(.at-tag--primary) {
+        background: #ffffff;
+        color: #64748b;
+        border: 2rpx solid #e2e8f0;
+
+        &:active {
+          background: #f8fafc;
+          transform: scale(0.95);
+        }
+      }
+    }
+  }
+}
+
+.editor-card {
+  background: #ffffff;
+  border-radius: 20rpx;
+  padding: 40rpx;
+  margin-bottom: 30rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.04);
+  position: relative;
+  overflow: hidden;
+  border: 1rpx solid #e2e8f0;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4rpx;
+    background: linear-gradient(90deg, #3b82f6, #1d4ed8);
+  }
+
+  .section-title {
+    font-size: 36rpx;
+    font-weight: bold;
+    color: #1e293b;
+    margin-bottom: 24rpx;
+    display: flex;
+    align-items: center;
+
+    &::before {
+      content: '✏️';
+      margin-right: 16rpx;
+      font-size: 32rpx;
+    }
+  }
+
+  .textarea {
+    min-height: 240rpx;
+    padding: 24rpx;
+    border: 2rpx solid #e2e8f0;
+    border-radius: 12rpx;
+    background: #f8fafc;
+    font-size: 32rpx;
+    line-height: 1.6;
+    color: #334155;
+    transition: all 0.3s ease;
+
+    &:focus {
+      border-color: #3b82f6;
+      background: #ffffff;
+      box-shadow: 0 0 0 4rpx rgba(59, 130, 246, 0.08);
+    }
+  }
+
+  .submit-btn {
+    margin-top: 24rpx;
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    border-radius: 50rpx;
+    color: white;
+    border: none;
+    box-shadow: 0 4rpx 16rpx rgba(59, 130, 246, 0.2);
+    transition: all 0.3s ease;
+    font-size: 34rpx;
+    font-weight: 500;
+
+    &:active {
+      transform: translateY(2rpx);
+      box-shadow: 0 3rpx 12rpx rgba(59, 130, 246, 0.25);
+    }
+
+    &.at-button--loading {
+      background: linear-gradient(135deg, #60a5fa, #3b82f6);
+    }
+  }
+}
+
+.list-header {
+  margin: 20rpx 0 24rpx;
+  padding: 0 20rpx;
+
+  .section-title {
+    font-size: 36rpx;
+    font-weight: bold;
+    color: #1e293b;
+    display: flex;
+    align-items: center;
+
+    &::before {
+      content: '💬';
+      margin-right: 16rpx;
+      font-size: 32rpx;
+    }
+  }
+
+  .section-desc-container {
+    display: flex;
+    align-items: center;
+    gap: 12rpx;
+    margin-bottom: 16rpx;
+
+    .section-desc {
+      font-size: 28rpx;
+      font-weight: 500;
+      color: #64748b;
+    }
+
+    .help-icon {
+      padding: 8rpx;
+      border-radius: 50%;
+      background: #f1f5f9;
+      border: 1rpx solid #e2e8f0;
+      transition: all 0.3s ease;
+      cursor: pointer;
+
+      &:active {
+        background: #dbeafe;
+        border-color: #3b82f6;
+        transform: scale(0.95);
+      }
+    }
+  }
+}
+
+.comment-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.comment-card {
+  background: #ffffff;
+  border-radius: 20rpx;
+  padding: 32rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.04);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  border: 1rpx solid #e2e8f0;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3rpx;
+    background: linear-gradient(90deg, #3b82f6, #1d4ed8);
+  }
+
+  &:active {
+    transform: translateY(1rpx);
+    box-shadow: 0 3rpx 15rpx rgba(0, 0, 0, 0.06);
+  }
+
+  .comment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20rpx;
+
+    .comment-user {
+      font-size: 28rpx;
+      font-weight: 500;
+      color: #475569;
+      display: flex;
+      align-items: center;
+
+      &::before {
+        content: '👤';
+        margin-right: 12rpx;
+        font-size: 24rpx;
+      }
+    }
+
+    .comment-time {
+      font-size: 24rpx;
+      color: #94a3b8;
+    }
+  }
+
+  .comment-content {
+    margin-bottom: 20rpx;
+    color: #334155;
+    font-size: 32rpx;
+    line-height: 1.7;
+    word-break: break-all;
+    white-space: pre-wrap;
+  }
+
+  .comment-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    .action {
+      display: flex;
+      align-items: center;
+      gap: 12rpx;
+      padding: 12rpx 24rpx;
+      border-radius: 50rpx;
+      background: #f1f5f9;
+      transition: all 0.3s ease;
+      border: 1rpx solid #e2e8f0;
+
+      &:active {
+        background: #dbeafe;
+        border-color: #3b82f6;
+        transform: scale(0.95);
+      }
+
+      .at-icon {
+        transition: all 0.3s ease;
+      }
+
+      .action-text {
+        color: #64748b;
+        font-size: 26rpx;
+        font-weight: 500;
+      }
+
+      &:active .action-text {
+        color: #3b82f6;
+      }
+
+      &:active .at-icon {
+        transform: scale(1.1);
+      }
+    }
+  }
+}
+
+.load-more {
+  text-align: center;
+  margin: 30rpx 0;
+
+  .at-button {
+    background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+    color: #64748b;
+    border: 2rpx solid #e2e8f0;
+    border-radius: 50rpx;
+    font-size: 28rpx;
+    transition: all 0.3s ease;
+
+    &:active {
+      background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+      transform: scale(0.98);
+    }
+  }
+}
+
+.loading {
+  text-align: center;
+  color: #64748b;
+  padding: 40rpx;
+  font-size: 28rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16rpx;
+
+  &::before {
+    content: '⏳';
+    font-size: 32rpx;
+    animation: spin 2s linear infinite;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// 空状态样式
+.empty-state {
+  text-align: center;
+  padding: 80rpx 40rpx;
+  color: #94a3b8;
+
+  .empty-icon {
+    font-size: 120rpx;
+    margin-bottom: 32rpx;
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .empty-title {
+    font-size: 36rpx;
+    font-weight: 500;
+    margin-bottom: 16rpx;
+    color: #64748b;
+  }
+
+  .empty-desc {
+    font-size: 28rpx;
+    color: #94a3b8;
+  }
+}
+
+// Markdown帮助弹窗样式
+.markdown-help-modal {
+  .at-modal__header {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    color: white;
+    font-weight: bold;
+    border-radius: 20rpx 20rpx 0 0;
+  }
+
+  .at-modal__content {
+    padding: 32rpx;
+    background: #ffffff;
+    max-height: 600rpx;
+    overflow-y: auto;
+  }
+
+  .markdown-tutorial {
+    .tutorial-item {
+      margin-bottom: 24rpx;
+      padding: 20rpx;
+      background: #f8fafc;
+      border-radius: 12rpx;
+      border: 1rpx solid #e2e8f0;
+
+      .tutorial-label {
+        font-size: 28rpx;
+        font-weight: bold;
+        color: #1e293b;
+        margin-bottom: 8rpx;
+        display: block;
+      }
+
+      .tutorial-example {
+        font-size: 26rpx;
+        color: #475569;
+        font-family: 'Courier New', monospace;
+        background: #ffffff;
+        padding: 12rpx 16rpx;
+        border-radius: 8rpx;
+        border: 1rpx solid #e2e8f0;
+        white-space: pre-wrap;
+        word-break: break-all;
+      }
+    }
+  }
+
+  .at-modal__action {
+    padding: 24rpx 32rpx;
+    background: #f8fafc;
+    border-radius: 0 0 20rpx 20rpx;
+
+    .at-button {
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      color: white;
+      border: none;
+      border-radius: 50rpx;
+      font-weight: 500;
+      box-shadow: 0 4rpx 16rpx rgba(59, 130, 246, 0.2);
+      transition: all 0.3s ease;
+
+      &:active {
+        transform: translateY(2rpx);
+        box-shadow: 0 3rpx 12rpx rgba(59, 130, 246, 0.25);
+      }
+    }
+  }
+}

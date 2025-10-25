@@ -478,6 +478,16 @@ export default class QuestionDetailPage extends Component<{}, State> {
     Taro.navigateBack();
   };
 
+  // 进入回答页面
+  handleGoAnswer = () => {
+    const { question } = this.state;
+    if (!question?.id) {
+      Taro.showToast({ title: '题目未加载', icon: 'none' });
+      return;
+    }
+    Taro.navigateTo({ url: `/pages/answer/index?id=${question.id}` });
+  };
+
   // 复制题目内容
   handleCopyContent = () => {
     const { question } = this.state;
@@ -487,7 +497,7 @@ export default class QuestionDetailPage extends Component<{}, State> {
     }
 
     const contentToCopy = `题目：${question.title}\n\n题目内容：\n${question.content.replace(/^#\s*/, '')}\n\n参考答案：\n${question.answer}`;
-    
+
     Taro.setClipboardData({
       data: contentToCopy,
       success: () => {
@@ -643,6 +653,16 @@ export default class QuestionDetailPage extends Component<{}, State> {
                 ) : (
                   <Text>双击签到</Text>
                 )}
+              </AtButton>
+            </View>
+            <View className="answer-entry-container">
+              <AtButton
+                type="primary"
+                className="answer-entry-button"
+                onClick={this.handleGoAnswer}
+              >
+                <AtIcon value="edit" size="16" color="#ffffff"/>
+                <Text>回答本题</Text>
               </AtButton>
             </View>
           </View>
