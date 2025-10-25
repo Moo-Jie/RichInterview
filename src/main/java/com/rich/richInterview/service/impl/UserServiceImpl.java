@@ -75,7 +75,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         String workExperience = userRegisterRequest.getWorkExperience();
         String expertiseDirection = userRegisterRequest.getExpertiseDirection();
 
-        // 非空校验
+        // 非空校验 （用户账号、密码、确认密码、用户名、手机号不能为空，其他补充默认值）
         if (StringUtils.isAnyBlank(userAccount, userPassword, checkPassword, userName, phoneNumber)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }

@@ -307,6 +307,18 @@
     }
   }
 
+  .input-label {
+    display: block;
+    margin: 0 0 12rpx 4rpx;
+    font-size: 26rpx;
+    color: #475569;
+  }
+
+  .required {
+    color: #ef4444;
+    margin-left: 6rpx;
+  }
+
   .login-input, .form-input {
     height: 90rpx;
     padding: 0 72rpx;

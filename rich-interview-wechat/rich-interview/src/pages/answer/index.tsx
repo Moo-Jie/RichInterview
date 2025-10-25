@@ -2,7 +2,7 @@ import {Component} from 'react';
 import {ScrollView, View, Text, Textarea} from '@tarojs/components';
 import Taro from '@tarojs/taro';
 import {AtButton, AtIcon, AtTag, AtModal, AtModalHeader, AtModalContent, AtModalAction} from 'taro-ui';
-import {addComment, listCommentVoByPage, likeComment, CommentVO} from '../../api/comment';
+import {addComment, listCommentVoByPage, likeComment, deleteComment, CommentVO} from '../../api/comment';
 import dayjs from 'dayjs';
 import './index.scss';
 import MarkdownRenderer from "../../components/MarkdownRenderer";
@@ -128,6 +128,29 @@ export default class AnswerPage extends Component<{}, State> {
     this.setState({showMarkdownHelp: false});
   };
 
+  handleDelete = async (commentId: number, index: number) => {
+    try {
+      const res = await Taro.showModal({
+        title: '确认删除',
+        content: '删除后不可恢复，确定要删除该回答吗？',
+        confirmText: '删除',
+        cancelText: '取消'
+      });
+      if (!res.confirm) return;
+      const ok = await deleteComment(commentId);
+      if (ok) {
+        this.setState(prev => {
+          const next = [...prev.comments];
+          next.splice(index, 1);
+          return {comments: next, total: Math.max(0, prev.total - 1)} as State;
+        });
+        Taro.showToast({title: '删除成功', icon: 'success'});
+      }
+    } catch (error) {
+      Taro.showToast({title: '删除失败，请重试', icon: 'none'});
+    }
+  };
+
   render() {
     const {comments, loading, total, newContent, submitting, sortField, showMarkdownHelp} = this.state;
 
@@ -171,6 +194,7 @@ export default class AnswerPage extends Component<{}, State> {
           <View className='empty-state'>
             <Text className='empty-icon'>💭</Text>
             <Text className='empty-title'>暂无回答</Text>
+            <View/><View/><View/><View/>
             <Text className='empty-desc'>成为第一个回答这个问题的人吧！</Text>
           </View>
         ) : (
@@ -183,12 +207,16 @@ export default class AnswerPage extends Component<{}, State> {
                     className='comment-time'>{item.createTime ? dayjs(item.createTime).format('YYYY-MM-DD HH:mm') : ''}</Text>
                 </View>
                 <View className='comment-content'>
-                  <MarkdownRenderer content={item.content} />
+                  <MarkdownRenderer content={item.content}/>
                 </View>
                 <View className='comment-actions'>
                   <View className='action' onClick={() => this.handleLike(item.id, idx)}>
                     <AtIcon value='heart' size='16' color='#e94848'/>
                     <Text className='action-text'>{item.thumbNum || 0}</Text>
+                  </View>
+                  <View className='action' onClick={() => this.handleDelete(item.id, idx)}>
+                    <AtIcon value='trash' size='16' color='#ef4444'/>
+                    <Text className='action-text'>删除</Text>
                   </View>
                 </View>
               </View>

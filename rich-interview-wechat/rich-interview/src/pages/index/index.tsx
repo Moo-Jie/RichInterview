@@ -255,9 +255,25 @@ export default class Index extends Component<{}, State> {
       userProfile,
     } = registerForm;
 
-    // 核心字段非空校验
-    if (!userAccount || !userPassword || !checkPassword || !userName || !phoneNumber) {
-      Taro.showToast({title: '请填写必填信息', icon: 'none'});
+    // 必填项逐项校验与提示（账号、密码、确认密码、用户名、手机号）
+    if (!String(userAccount || '').trim()) {
+      Taro.showToast({title: '账号不能为空，请输入账号', icon: 'none'});
+      return;
+    }
+    if (!String(userPassword || '').trim()) {
+      Taro.showToast({title: '密码不能为空，请输入密码', icon: 'none'});
+      return;
+    }
+    if (!String(checkPassword || '').trim()) {
+      Taro.showToast({title: '确认密码不能为空，请再次输入密码', icon: 'none'});
+      return;
+    }
+    if (!String(userName || '').trim()) {
+      Taro.showToast({title: '用户名不能为空，请输入用户名', icon: 'none'});
+      return;
+    }
+    if (!String(phoneNumber || '').trim()) {
+      Taro.showToast({title: '手机号不能为空，请输入手机号', icon: 'none'});
       return;
     }
 
@@ -268,7 +284,7 @@ export default class Index extends Component<{}, State> {
 
     // 手机号格式校验
     const phoneRegex = /^1[3-9]\d{9}$/;
-    if (!phoneRegex.test(phoneNumber)) {
+    if (!phoneRegex.test(phoneNumber.trim())) {
       Taro.showToast({title: '请输入有效的手机号码', icon: 'none'});
       return;
     }
@@ -276,13 +292,13 @@ export default class Index extends Component<{}, State> {
     this.setState({registerLoading: true});
 
     try {
-      // 构造完整的注册数据
+      // 构造完整的注册数据（非必填项允许为空）
       const registerData = {
-        userAccount,
+        userAccount: String(userAccount).trim(),
         userPassword,
         checkPassword,
-        userName,
-        phoneNumber,
+        userName: String(userName).trim(),
+        phoneNumber: String(phoneNumber).trim(),
         email: email,
         grade: grade,
         workExperience: workExperience,
@@ -297,11 +313,13 @@ export default class Index extends Component<{}, State> {
         // 自动登录
         await this.handleLoginSubmit();
       } else {
-        Taro.showToast({title: '注册失败，请重试', icon: 'none'});
+        // 交由 userRegister 内部的 handleApiError 显示后端具体错误信息
+        // 这里不再重复弹出通用失败提示，避免覆盖具体原因
+        return;
       }
     } catch (error) {
       console.error('注册出错', error);
-      Taro.showToast({title: '注册失败，请重试', icon: 'none'});
+      Taro.showToast({title: `注册失败: ${error.message}`, icon: 'none'});
     } finally {
       this.setState({registerLoading: false});
     }
@@ -395,32 +413,32 @@ export default class Index extends Component<{}, State> {
         <View className="form-section">
           <View className="input-group">
             <AtIcon prefixClass='fa' value='user' size={18} className='input-icon'/>
+            <Text className="input-label">账号<Text className="required">*</Text></Text>
             <Input
               className="form-input"
               value={registerForm.userAccount}
-              placeholder="请输入账号*"
               onInput={(e) => this.handleRegisterInputChange('userAccount', e.detail.value)}
             />
           </View>
 
           <View className="input-group">
             <AtIcon prefixClass='fa' value='lock' size={18} className='input-icon'/>
+            <Text className="input-label">密码<Text className="required">*</Text></Text>
             <Input
               className="form-input"
               value={registerForm.userPassword}
               password
-              placeholder="请输入密码*"
               onInput={(e) => this.handleRegisterInputChange('userPassword', e.detail.value)}
             />
           </View>
 
           <View className="input-group">
             <AtIcon prefixClass='fa' value='lock' size={18} className='input-icon'/>
+            <Text className="input-label">确认密码<Text className="required">*</Text></Text>
             <Input
               className="form-input"
               value={registerForm.checkPassword}
               password
-              placeholder="请确认密码*"
               onInput={(e) => this.handleRegisterInputChange('checkPassword', e.detail.value)}
             />
           </View>
@@ -430,21 +448,21 @@ export default class Index extends Component<{}, State> {
         <View className="form-section">
           <View className="input-group">
             <AtIcon prefixClass='fa' value='id-card' size={16} className='input-icon'/>
+            <Text className="input-label">用户名<Text className="required">*</Text></Text>
             <Input
               className="form-input"
               value={registerForm.userName}
-              placeholder="请输入用户名*"
               onInput={(e) => this.handleRegisterInputChange('userName', e.detail.value)}
             />
           </View>
 
           <View className="input-group">
             <AtIcon prefixClass='fa' value='phone' size={18} className='input-icon'/>
+            <Text className="input-label">手机号<Text className="required">*</Text></Text>
             <Input
               className="form-input"
               value={registerForm.phoneNumber}
               type="number"
-              placeholder="请输入手机号*"
               maxlength={11}
               onInput={(e) => this.handleRegisterInputChange('phoneNumber', e.detail.value)}
             />
@@ -452,10 +470,10 @@ export default class Index extends Component<{}, State> {
 
           <View className="input-group">
             <AtIcon prefixClass='fa' value='envelope' size={16} className='input-icon'/>
+            <Text className="input-label">邮箱</Text>
             <Input
               className="form-input"
               value={registerForm.email}
-              placeholder="请输入邮箱"
               onInput={(e) => this.handleRegisterInputChange('email', e.detail.value)}
             />
           </View>
@@ -465,30 +483,30 @@ export default class Index extends Component<{}, State> {
         <View className="form-section">
           <View className="input-group">
             <AtIcon prefixClass='fa' value='graduation-cap' size={16} className='input-icon'/>
+            <Text className="input-label">年级/学位</Text>
             <Input
               className="form-input"
               value={registerForm.grade}
-              placeholder="年级/学位"
               onInput={(e) => this.handleRegisterInputChange('grade', e.detail.value)}
             />
           </View>
 
           <View className="input-group">
             <AtIcon prefixClass='fa' value='briefcase' size={16} className='input-icon'/>
+            <Text className="input-label">工作经验</Text>
             <Input
               className="form-input"
               value={registerForm.workExperience}
-              placeholder="工作经验"
               onInput={(e) => this.handleRegisterInputChange('workExperience', e.detail.value)}
             />
           </View>
 
           <View className="input-group">
             <AtIcon prefixClass='fa' value='star' size={16} className='input-icon'/>
+            <Text className="input-label">擅长方向</Text>
             <Input
               className="form-input"
               value={registerForm.expertiseDirection}
-              placeholder="擅长方向"
               onInput={(e) => this.handleRegisterInputChange('expertiseDirection', e.detail.value)}
             />
           </View>
@@ -499,7 +517,6 @@ export default class Index extends Component<{}, State> {
           <Textarea
             className="form-textarea"
             value={registerForm.userProfile}
-            placeholder="请简单介绍一下自己..."
             onInput={(e) => this.handleRegisterInputChange('userProfile', e.detail.value)}
           />
         </View>

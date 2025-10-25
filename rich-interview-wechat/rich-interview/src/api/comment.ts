@@ -122,3 +122,22 @@ export const likeComment = async (commentId: number): Promise<boolean> => {
     throw error;
   }
 };
+
+/** 删除评论 */
+export const deleteComment = async (commentId: number): Promise<boolean> => {
+  try {
+    const res = await request<ApiResponse<boolean>>({
+      url: '/api/comment/delete',
+      method: 'POST',
+      data: { id: commentId },
+    });
+    if (res.code === 0) {
+      return !!res.data;
+    }
+    throw new Error(res.message || '删除评论失败');
+  } catch (error) {
+    const err = error as Error;
+    console.error('删除评论失败', err.message);
+    throw error;
+  }
+};
