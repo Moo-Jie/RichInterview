@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.rich.richInterview.common.ErrorCode;
 import com.rich.richInterview.constant.CommonConstant;
 import com.rich.richInterview.exception.ThrowUtils;
+import com.rich.richInterview.manager.CounterManager;
 import com.rich.richInterview.mapper.QuestionBankHotspotMapper;
 import com.rich.richInterview.model.dto.questionBankHotspot.QuestionBankHotspotQueryRequest;
 import com.rich.richInterview.model.entity.QuestionBank;
@@ -16,6 +17,9 @@ import com.rich.richInterview.model.enums.IncrementFieldEnum;
 import com.rich.richInterview.model.vo.QuestionBankHotspotVO;
 import com.rich.richInterview.service.QuestionBankHotspotService;
 import com.rich.richInterview.service.QuestionBankService;
+import com.rich.richInterview.utils.CacheUtils;
+import com.rich.richInterview.utils.ResultUtils;
+import com.rich.richInterview.utils.SentinelUtils;
 import com.rich.richInterview.utils.SqlUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
@@ -27,6 +31,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.rich.richInterview.model.enums.IncrementFieldEnum.COMMENT_NUM;
+
 /**
  * 题库热点服务实现
  */
@@ -36,6 +42,19 @@ public class QuestionBankHotspotServiceImpl extends ServiceImpl<QuestionBankHots
 
     @Resource
     private QuestionBankService questionBankService;
+
+    @Resource
+    private CacheUtils cacheUtils;
+
+    @Resource
+    private CounterManager counterManager;
+
+    // 缓存前缀常量
+    private static final String HOTSPOT_CACHE_PREFIX = "question_bank_hotspot";
+
+    // 缓存过期时间（秒）
+    private static final long FIELD_CACHE_EXPIRE_TIME = 1200; // 20 分钟
+    private static final long RANDOM_EXPIRE_RANGE = 60;      // 随机范围 1 分钟
 
     /**
      * 校验数据
@@ -209,4 +228,191 @@ public class QuestionBankHotspotServiceImpl extends ServiceImpl<QuestionBankHots
         return hotspot;
     }
 
+    /**
+     * 设定限流与熔断规则
+     */
+    @Override
+    public void initFlowAndDegradeRules(String resourceName) {
+        SentinelUtils.initFlowAndDegradeRules(resourceName);
+    }
+
+    /**
+     * 构建字段缓存键
+     */
+    @Override
+    public String buildFieldCacheKey(Long questionBankId, IncrementFieldEnum field) {
+        return HOTSPOT_CACHE_PREFIX + ":" + questionBankId + ":" + field.getFieldName();
+    }
+
+    /**
+     * 从缓存获取题库热点数据
+     * 适配新的数值存储格式（非JSON格式）
+     */
+    @Override
+    public QuestionBankHotspotVO getQuestionBankHotspotFromCache(Long questionBankId) {
+        try {
+            QuestionBankHotspotVO hotspotVO = new QuestionBankHotspotVO();
+            hotspotVO.setQuestionBankId(questionBankId);
+
+            // 尝试从缓存获取各个字段
+            boolean hasAnyCache = false;
+
+            for (IncrementFieldEnum field : IncrementFieldEnum.values()) {
+                // 跳过 COMMENT_NUM 字段，题库热点数据不包含评论数
+                if (field == COMMENT_NUM) {
+                    continue;
+                }
+                String cacheKey = buildFieldCacheKey(questionBankId, field);
+
+                // 直接从 Redis 获取字符串值，然后转换为整数
+                Object rawValue = cacheUtils.getCache(cacheKey, Object.class);
+                Integer value = null;
+
+                if (rawValue != null) {
+                    try {
+                        // 尝试将值转换为整数
+                        if (rawValue instanceof Number) {
+                            value = ((Number) rawValue).intValue();
+                        } else if (rawValue instanceof String) {
+                            // 处理纯数值字符串（如 "123"）
+                            String strValue = (String) rawValue;
+                            if (strValue.matches("^\\d+$")) {
+                                value = Integer.parseInt(strValue);
+                            } else {
+                                // 如果是JSON格式的字符串，尝试解析
+                                try {
+                                    value = Integer.parseInt(strValue.replaceAll("\"", ""));
+                                } catch (NumberFormatException e) {
+                                    log.warn("无法解析缓存值为整数，key: {}, value: {}", cacheKey, strValue);
+                                    return null;
+                                }
+                            }
+                        }
+                    } catch (Exception e) {
+                        log.warn("解析缓存值失败，key: {}, rawValue: {}", cacheKey, rawValue, e);
+                        return null;
+                    }
+                }
+
+                // 只要存在没有缓存的热点数据，就返回 null，走数据库查询
+                if (value != null) {
+                    log.debug("从缓存获取字段 {} 的值: {}", field.getFieldName(), value);
+                    hasAnyCache = true;
+                    switch (field) {
+                        case VIEW_NUM:
+                            hotspotVO.setViewNum(value);
+                            break;
+                        case STAR_NUM:
+                            hotspotVO.setStarNum(value);
+                            break;
+//                        case FORWARD_NUM:
+//                            hotspotVO.setForwardNum(value);
+//                            break;
+//                        case COLLECT_NUM:
+//                            hotspotVO.setCollectNum(value);
+//                            break;
+//                        case COMMENT_NUM:
+//                            hotspotVO.setCommentNum(value);
+//                            break;
+                    }
+                } else {
+                    return null;
+                }
+            }
+            return hasAnyCache ? hotspotVO : null;
+        } catch (Exception e) {
+            log.error("从缓存获取题库热点数据失败，questionBankId: {}", questionBankId, e);
+            return null;
+        }
+    }
+
+    /**
+     * 将题库热点数据缓存到Redis
+     * 使用 CounterManager 初始化计数器，确保数据类型兼容性
+     */
+    @Override
+    public void cacheQuestionBankHotspotFields(QuestionBankHotspot questionBankHotspot) {
+        try {
+            Long questionBankId = questionBankHotspot.getQuestionBankId();
+
+            // 计算实际过期时间（包含随机范围）
+            long actualExpireTime = FIELD_CACHE_EXPIRE_TIME + (long) (Math.random() * RANDOM_EXPIRE_RANGE);
+
+            // 使用 CounterManager 初始化各个字段的计数器，确保存储的是纯数值格式
+            boolean viewNumSuccess = counterManager.initCounter(buildFieldCacheKey(questionBankId, IncrementFieldEnum.VIEW_NUM), questionBankHotspot.getViewNum(), actualExpireTime);
+
+            boolean starNumSuccess = counterManager.initCounter(buildFieldCacheKey(questionBankId, IncrementFieldEnum.STAR_NUM), questionBankHotspot.getStarNum(), actualExpireTime);
+
+//            boolean forwardNumSuccess = counterManager.initCounter(
+//                    buildFieldCacheKey(questionBankId, IncrementFieldEnum.FORWARD_NUM),
+//                    questionBankHotspot.getForwardNum(), actualExpireTime);
+//
+//            boolean collectNumSuccess = counterManager.initCounter(
+//                    buildFieldCacheKey(questionBankId, IncrementFieldEnum.COLLECT_NUM),
+//                    questionBankHotspot.getCollectNum(), actualExpireTime);
+//
+            if (viewNumSuccess && starNumSuccess) {
+                log.info("缓存题库热点字段成功，questionBankId: {}", questionBankId);
+            } else {
+                log.warn("部分题库热点字段缓存失败，questionBankId: {}, viewNum: {}, starNum: {}", questionBankId, viewNumSuccess, starNumSuccess);
+            }
+        } catch (Exception e) {
+            log.error("缓存题库热点字段失败，questionBankId: {}", questionBankHotspot.getQuestionBankId(), e);
+        }
+    }
+
+    /**
+     * 执行字段增量
+     *
+     * @param questionBankId     题库 id
+     * @param field              字段枚举
+     * @param cacheKey           缓存键
+     * @return java.lang.Boolean
+     **/
+    @Override
+    public Boolean doIncrementField(Long questionBankId, IncrementFieldEnum field, String cacheKey) {
+        // 使用 CounterManager 进行原子性递增，最多重试3次
+        int maxRetries = 3;
+        boolean success = false;
+
+        for (int i = 0; i < maxRetries; i++) {
+            try {
+                // 使用Lua脚本进行原子性递增
+                long newValue = counterManager.incrCount(cacheKey);
+                if (newValue == -1) {
+                    // key不存在，说明缓存还未初始化，等待后重试
+                    log.info("题库热点缓存key不存在，等待缓存初始化... questionBankId: {}, field: {}, attempt: {}", questionBankId, field.getFieldName(), i + 1);
+                } else if (newValue > 0) {
+                    // 递增成功
+                    success = true;
+                    log.debug("字段递增成功，questionBankId: {}, field: {}, newValue: {}", questionBankId, field.getFieldName(), newValue);
+                    break;
+                } else {
+                    // 其他异常情况
+                    log.warn("字段递增返回异常值: {}, questionBankId: {}, field: {}", newValue, questionBankId, field.getFieldName());
+                }
+            } catch (Exception e) {
+                log.warn("字段递增失败，重试中... questionBankId: {}, field: {}, attempt: {}", questionBankId, field.getFieldName(), i + 1, e);
+            }
+
+            // 如果失败，短暂等待后重试
+            // 此操作是为了防止 热点增量请求 比 热点查询请求 早一步到达，导致增量时，仍未创建热点缓存
+            if (i < maxRetries - 1) {
+                try {
+                    Thread.sleep(50); // 等待 50ms
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    break;
+                }
+            }
+        }
+
+        if (!success) {
+            log.warn("字段递增最终失败，可能是缓存未初始化，questionBankId: {}, field: {}", questionBankId, field.getFieldName());
+            // 不抛出异常，避免影响用户体验
+            return false;
+        }
+
+        return success;
+    }
 }

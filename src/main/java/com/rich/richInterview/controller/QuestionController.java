@@ -113,7 +113,7 @@ public class QuestionController {
         Entry entry = null;
         initFlowAndDegradeRules("getQuestionVOById");
         try {
-            // SphU.entry() 方法用于创建一个流控入口，该方法接受三个参数：【资源名称：用于标识流控规则的资源名称。】【入口数量：表示流控入口的数量，设置为 1。】【额外参数：用于传递额外的参数，此处传入用户 IP 地址等。】
+            // 开启限流入口，设定资源名、限流入口类型、参数个数、参数值
             entry = SphU.entry("getQuestionVOById", EntryType.IN, 1, remoteAddr);
             // 核心业务
             // 最近刷题记录
@@ -180,7 +180,7 @@ public class QuestionController {
         Entry entry = null;
         initFlowAndDegradeRules("listQuestionVOByPage");
         try {
-            // SphU.entry() 方法用于创建一个流控入口，该方法接受三个参数：【资源名称：用于标识流控规则的资源名称。】【入口数量：表示流控入口的数量，设置为 1。】【额外参数：用于传递额外的参数，此处传入用户 IP 地址等。】
+            // 开启限流入口，设定资源名、限流入口类型、参数个数、参数值
             entry = SphU.entry("listQuestionVOByPage", EntryType.IN, 1, remoteAddr);
             // 查询数据库
             Page<Question> questionPage = questionService.getQuestionPage(questionQueryRequest);

@@ -78,4 +78,46 @@ public interface QuestionHotspotService extends IService<QuestionHotspot> {
      * @create 2025/5/22
      **/
     boolean decrementField(Long questionId, IncrementFieldEnum field);
+
+    /**
+     * 初始化限流与熔断规则
+     *
+     * @param resourceName 资源名称
+     */
+    void initFlowAndDegradeRules(String resourceName);
+
+    /**
+     * 构建字段缓存键
+     *
+     * @param questionId 题目ID
+     * @param field      字段枚举
+     * @return 缓存键
+     */
+    String buildFieldCacheKey(Long questionId, IncrementFieldEnum field);
+
+    /**
+     * 从缓存获取题目热点数据
+     * 适配新的数值存储格式（非JSON格式）
+     *
+     * @param questionId 题目ID
+     * @return 题目热点VO
+     */
+    QuestionHotspotVO getQuestionHotspotFromCache(Long questionId);
+
+    /**
+     * 将题目热点数据缓存到Redis
+     * 使用 CounterManager 初始化计数器，确保数据类型兼容性
+     *
+     * @param questionHotspot 题目热点实体
+     */
+    void cacheQuestionHotspotFields(QuestionHotspot questionHotspot);
+
+    /**
+     * 热点字段递增接口（自动初始化）
+     * @param questionId 题目ID
+     * @param field      字段枚举
+     * @param cacheKey   缓存键
+     * @return boolean
+     **/
+    Boolean doIncrementField(Long questionId, IncrementFieldEnum field, String cacheKey);
 }

@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * 题库热点服务
- *
  */
 public interface QuestionBankHotspotService extends IService<QuestionBankHotspot> {
 
@@ -20,7 +19,7 @@ public interface QuestionBankHotspotService extends IService<QuestionBankHotspot
      * 校验数据
      *
      * @param questionBankHotspot
-     * @param add 对创建的数据进行校验
+     * @param add                 对创建的数据进行校验
      */
     void validQuestionBankHotspot(QuestionBankHotspot questionBankHotspot, boolean add);
 
@@ -31,7 +30,7 @@ public interface QuestionBankHotspotService extends IService<QuestionBankHotspot
      * @return
      */
     QueryWrapper<QuestionBankHotspot> getQueryWrapper(QuestionBankHotspotQueryRequest questionBankHotspotQueryRequest);
-    
+
     /**
      * 获取题库热点封装
      *
@@ -66,4 +65,46 @@ public interface QuestionBankHotspotService extends IService<QuestionBankHotspot
      * @return
      */
     QuestionBankHotspot getByQuestionBankId(Long questionBankId);
+
+    /**
+     * 设定限流与熔断规则
+     *
+     * @param resourceName
+     * @author DuRuiChi
+     * @create 2025/5/27
+     **/
+    void initFlowAndDegradeRules(String resourceName);
+
+    /**
+     * 构建字段缓存键
+     *
+     * @param questionBankId
+     * @param field
+     * @return
+     * @author DuRuiChi
+     * @create 2025/5/27
+     **/
+    String buildFieldCacheKey(Long questionBankId, IncrementFieldEnum field);
+
+    /**
+     * 从缓存获取题库热点数据
+     * 适配新的数值存储格式（非JSON格式）
+     */
+    QuestionBankHotspotVO getQuestionBankHotspotFromCache(Long questionBankId);
+
+    /**
+     * 将题库热点数据缓存到Redis
+     * 使用 CounterManager 初始化计数器，确保数据类型兼容性
+     */
+    void cacheQuestionBankHotspotFields(QuestionBankHotspot questionBankHotspot);
+
+    /**
+     * 执行字段增量
+     *
+     * @param questionBankId     题库 id
+     * @param field              字段枚举
+     * @param cacheKey           缓存键
+     * @return java.lang.Boolean
+     **/
+    Boolean doIncrementField(Long questionBankId, IncrementFieldEnum field, String cacheKey);
 }
