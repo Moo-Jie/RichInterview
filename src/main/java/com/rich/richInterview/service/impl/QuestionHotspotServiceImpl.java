@@ -19,7 +19,6 @@ import com.rich.richInterview.model.vo.QuestionHotspotVO;
 import com.rich.richInterview.service.QuestionHotspotService;
 import com.rich.richInterview.service.QuestionService;
 import com.rich.richInterview.utils.CacheUtils;
-import com.rich.richInterview.utils.ResultUtils;
 import com.rich.richInterview.utils.SentinelUtils;
 import com.rich.richInterview.utils.SqlUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -280,14 +279,6 @@ public class QuestionHotspotServiceImpl extends ServiceImpl<QuestionHotspotMappe
         });
         questionHotspotVOPage.setRecords(questionHotspotVOList);
         return questionHotspotVOPage;
-    }
-
-    /**
-     * 设定限流与熔断规则
-     */
-    @Override
-    public void initFlowAndDegradeRules(String resourceName) {
-        SentinelUtils.initFlowAndDegradeRules(resourceName);
     }
 
     /**

@@ -124,7 +124,7 @@ public class LearnPathServiceImpl extends ServiceImpl<LearnPathMapper, LearnPath
 
         // todo 根据需要为封装对象补充值
 
-        // 1. 关联查询用户信息
+        // 关联查询用户信息
         Long userId = learnPath.getUserId();
         User user = null;
         if (userId != null && userId > 0) {
@@ -132,25 +132,6 @@ public class LearnPathServiceImpl extends ServiceImpl<LearnPathMapper, LearnPath
         }
         UserVO userVO = userService.getUserVO(user);
         learnPathVO.setUser(userVO);
-        // 2. 已登录，获取用户点赞、收藏状态
-//        long learnPathId = learnPath.getId();
-//        User loginUser = userService.getLoginUserPermitNull(request);
-//        if (loginUser != null) {
-//            // 获取点赞
-//            QueryWrapper<LearnPathThumb> learnPathThumbQueryWrapper = new QueryWrapper<>();
-//            learnPathThumbQueryWrapper.in("learnPathId", learnPathId);
-//            learnPathThumbQueryWrapper.eq("userId", loginUser.getId());
-//            LearnPathThumb learnPathThumb = learnPathThumbMapper.selectOne(learnPathThumbQueryWrapper);
-//            learnPathVO.setHasThumb(learnPathThumb != null);
-//            // 获取收藏
-//            QueryWrapper<LearnPathFavour> learnPathFavourQueryWrapper = new QueryWrapper<>();
-//            learnPathFavourQueryWrapper.in("learnPathId", learnPathId);
-//            learnPathFavourQueryWrapper.eq("userId", loginUser.getId());
-//            LearnPathFavour learnPathFavour = learnPathFavourMapper.selectOne(learnPathFavourQueryWrapper);
-//            learnPathVO.setHasFavour(learnPathFavour != null);
-//        }
-
-
         return learnPathVO;
     }
 
@@ -169,36 +150,14 @@ public class LearnPathServiceImpl extends ServiceImpl<LearnPathMapper, LearnPath
             return learnPathVOPage;
         }
         // 对象列表 => 封装对象列表
-        List<LearnPathVO> learnPathVOList = learnPathList.stream().map(learnPath -> {
-            return LearnPathVO.objToVo(learnPath);
-        }).collect(Collectors.toList());
+        List<LearnPathVO> learnPathVOList = learnPathList.stream().map(learnPath -> LearnPathVO.objToVo(learnPath)).collect(Collectors.toList());
 
         // todo 根据需要为封装对象补充值
 
-        // 1. 关联查询用户信息
+        // 关联查询用户信息
         Set<Long> userIdSet = learnPathList.stream().map(LearnPath::getUserId).collect(Collectors.toSet());
         Map<Long, List<User>> userIdUserListMap = userService.listByIds(userIdSet).stream()
                 .collect(Collectors.groupingBy(User::getId));
-        // 2. 已登录，获取用户点赞、收藏状态
-//        Map<Long, Boolean> learnPathIdHasThumbMap = new HashMap<>();
-//        Map<Long, Boolean> learnPathIdHasFavourMap = new HashMap<>();
-//        User loginUser = userService.getLoginUserPermitNull(request);
-//        if (loginUser != null) {
-//            Set<Long> learnPathIdSet = learnPathList.stream().map(LearnPath::getId).collect(Collectors.toSet());
-//            loginUser = userService.getLoginUser(request);
-//            // 获取点赞
-//            QueryWrapper<LearnPathThumb> learnPathThumbQueryWrapper = new QueryWrapper<>();
-//            learnPathThumbQueryWrapper.in("learnPathId", learnPathIdSet);
-//            learnPathThumbQueryWrapper.eq("userId", loginUser.getId());
-//            List<LearnPathThumb> learnPathLearnPathThumbList = learnPathThumbMapper.selectList(learnPathThumbQueryWrapper);
-//            learnPathLearnPathThumbList.forEach(learnPathLearnPathThumb -> learnPathIdHasThumbMap.put(learnPathLearnPathThumb.getLearnPathId(), true));
-//            // 获取收藏
-//            QueryWrapper<LearnPathFavour> learnPathFavourQueryWrapper = new QueryWrapper<>();
-//            learnPathFavourQueryWrapper.in("learnPathId", learnPathIdSet);
-//            learnPathFavourQueryWrapper.eq("userId", loginUser.getId());
-//            List<LearnPathFavour> learnPathFavourList = learnPathFavourMapper.selectList(learnPathFavourQueryWrapper);
-//            learnPathFavourList.forEach(learnPathFavour -> learnPathIdHasFavourMap.put(learnPathFavour.getLearnPathId(), true));
-//        }
         // 填充信息
         learnPathVOList.forEach(learnPathVO -> {
             Long userId = learnPathVO.getUserId();
@@ -207,8 +166,6 @@ public class LearnPathServiceImpl extends ServiceImpl<LearnPathMapper, LearnPath
                 user = userIdUserListMap.get(userId).get(0);
             }
             learnPathVO.setUser(userService.getUserVO(user));
-//            learnPathVO.setHasThumb(learnPathIdHasThumbMap.getOrDefault(learnPathVO.getId(), false));
-//            learnPathVO.setHasFavour(learnPathIdHasFavourMap.getOrDefault(learnPathVO.getId(), false));
         });
 
 

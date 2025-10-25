@@ -2,22 +2,15 @@ package com.rich.richInterview.controller;
 
 import cn.dev33.satoken.annotation.SaCheckRole;
 import cn.dev33.satoken.annotation.SaMode;
-import com.alibaba.csp.sentinel.Entry;
-import com.alibaba.csp.sentinel.EntryType;
-import com.alibaba.csp.sentinel.SphU;
-import com.alibaba.csp.sentinel.Tracer;
-import com.alibaba.csp.sentinel.annotation.SentinelResource;
-import com.alibaba.csp.sentinel.slots.block.BlockException;
-import com.alibaba.csp.sentinel.slots.block.degrade.DegradeException;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.rich.richInterview.annotation.AutoCache;
 import com.rich.richInterview.annotation.AutoClearCache;
+import com.rich.richInterview.annotation.SentinelResourceByIP;
 import com.rich.richInterview.common.BaseResponse;
 import com.rich.richInterview.common.ErrorCode;
 import com.rich.richInterview.constant.UserConstant;
 import com.rich.richInterview.exception.BusinessException;
 import com.rich.richInterview.exception.ThrowUtils;
-import com.rich.richInterview.manager.CounterManager;
 import com.rich.richInterview.model.dto.questionBankHotspot.QuestionBankHotspotQueryRequest;
 import com.rich.richInterview.model.dto.questionBankHotspot.QuestionBankHotspotUpdateRequest;
 import com.rich.richInterview.model.entity.QuestionBankHotspot;
@@ -26,19 +19,14 @@ import com.rich.richInterview.model.enums.IncrementFieldEnum;
 import com.rich.richInterview.model.vo.QuestionBankHotspotVO;
 import com.rich.richInterview.service.QuestionBankHotspotService;
 import com.rich.richInterview.service.UserService;
-import com.rich.richInterview.utils.CacheUtils;
 import com.rich.richInterview.utils.DetectCrawlersUtils;
 import com.rich.richInterview.utils.ResultUtils;
-import com.rich.richInterview.utils.SentinelUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-
-import static com.rich.richInterview.model.enums.IncrementFieldEnum.COMMENT_NUM;
 
 /**
  * 题库热点接口
@@ -83,6 +71,10 @@ public class QuestionBankHotspotController {
      */
     @GetMapping("/get/vo/byQuestionBankId")
     @SaCheckRole(value = {UserConstant.ADMIN_ROLE, UserConstant.DEFAULT_ROLE}, mode = SaMode.OR)
+    @SentinelResourceByIP(
+            resourceName = "getQuestionBankHotspotVOByQuestionBankId",
+            fallbackType = QuestionBankHotspotVO.class
+    )
     public BaseResponse<QuestionBankHotspotVO> getQuestionBankHotspotVOByQuestionBankId(@RequestParam Long questionBankId, HttpServletRequest request) {
         ThrowUtils.throwIf(questionBankId == null || questionBankId <= 0, ErrorCode.PARAMS_ERROR);
 
@@ -92,51 +84,27 @@ public class QuestionBankHotspotController {
             detectCrawlersUtils.detectCrawler(loginUser.getId());
         }
 
-        // 获取用户 IP
-        String remoteAddr = request.getRemoteAddr();
-        Entry entry = null;
-        questionBankHotspotService.initFlowAndDegradeRules("getQuestionBankHotspotVOByQuestionBankId");
+        // 2.核心业务
+        userService.updateById(loginUser);
 
-        try {
-            // 开启限流入口，设定资源名、限流入口类型、参数个数、参数值
-            entry = SphU.entry("getQuestionBankHotspotVOByQuestionBankId", EntryType.IN, 1, remoteAddr);
+        // 尝试从缓存获取各个字段的值
+        QuestionBankHotspotVO hotspotVO = questionBankHotspotService.getQuestionBankHotspotFromCache(questionBankId);
 
-            // 2.核心业务
-            userService.updateById(loginUser);
-
-            // 尝试从缓存获取各个字段的值
-            QuestionBankHotspotVO hotspotVO = questionBankHotspotService.getQuestionBankHotspotFromCache(questionBankId);
-
-            if (hotspotVO != null) {
-                // 从缓存获取热点数据成功
-                return ResultUtils.success(hotspotVO);
-            } else {
-                log.info("缓存未命中，查询数据库，questionBankId: {}", questionBankId);
-            }
-
-            // 缓存未命中，查询数据库
-            QuestionBankHotspot questionBankHotspot = questionBankHotspotService.getByQuestionBankId(questionBankId);
-            ThrowUtils.throwIf(questionBankHotspot == null, ErrorCode.NOT_FOUND_ERROR);
-
-            // 将数据库数据写入缓存
-            questionBankHotspotService.cacheQuestionBankHotspotFields(questionBankHotspot);
-
-            return ResultUtils.success(questionBankHotspotService.getQuestionBankHotspotVO(questionBankHotspot, request));
-
-        } catch (Throwable ex) {
-            if (!BlockException.isBlockException(ex)) {
-                Tracer.trace(ex);
-                return ResultUtils.error(ErrorCode.SYSTEM_ERROR, ex.getMessage());
-            }
-            if (ex instanceof DegradeException) {
-                return SentinelUtils.handleFallback(QuestionBankHotspotVO.class);
-            }
-            return ResultUtils.error(ErrorCode.SYSTEM_ERROR, "您访问过于频繁，系统压力稍大，请耐心等待哟~");
-        } finally {
-            if (entry != null) {
-                entry.exit(1, remoteAddr);
-            }
+        if (hotspotVO != null) {
+            // 从缓存获取热点数据成功
+            return ResultUtils.success(hotspotVO);
+        } else {
+            log.info("缓存未命中，查询数据库，questionBankId: {}", questionBankId);
         }
+
+        // 缓存未命中，查询数据库
+        QuestionBankHotspot questionBankHotspot = questionBankHotspotService.getByQuestionBankId(questionBankId);
+        ThrowUtils.throwIf(questionBankHotspot == null, ErrorCode.NOT_FOUND_ERROR);
+
+        // 将数据库数据写入缓存
+        questionBankHotspotService.cacheQuestionBankHotspotFields(questionBankHotspot);
+
+        return ResultUtils.success(questionBankHotspotService.getQuestionBankHotspotVO(questionBankHotspot, request));
     }
 
     /**
@@ -190,7 +158,11 @@ public class QuestionBankHotspotController {
      * @create 2025/5/27
      **/
     @PostMapping("/list/page/vo")
-    @SentinelResource(value = "listQuestionBankHotspotVOByPage", blockHandler = "handleBlockException", fallback = "handleFallback")
+    @SaCheckRole(value = {UserConstant.ADMIN_ROLE, UserConstant.DEFAULT_ROLE}, mode = SaMode.OR)
+    @SentinelResourceByIP(
+            resourceName = "listQuestionBankHotspotVOByPage",
+            fallbackType = Page.class
+    )
     @AutoCache(keyPrefix = "question_bank_hotspot_page")
     public BaseResponse<Page<QuestionBankHotspotVO>> listQuestionBankHotspotVOByPage(@RequestBody QuestionBankHotspotQueryRequest questionBankHotspotQueryRequest, HttpServletRequest request) {
 
@@ -204,44 +176,5 @@ public class QuestionBankHotspotController {
         return ResultUtils.success(questionBankHotspotService.getQuestionBankHotspotVOPage(questionBankHotspotPage, request));
     }
 
-    /**
-     * Sintel 流控：触发异常熔断后的降级服务
-     *
-     * @return com.rich.richInterview.common.BaseResponse<com.baomidou.mybatisplus.extension.plugins.pagination.Page < com.rich.richInterview.model.vo.QuestionBankHotspotVO>>
-     * @author DuRuiChi
-     * @create 2025/5/27
-     **/
-    public BaseResponse<Page<QuestionBankHotspotVO>> handleFallback() {
-        return SentinelUtils.handleFallbackPage(QuestionBankHotspotVO.class);
-    }
 
-    /**
-     * 限流规则
-     *
-     * @return void
-     * @author DuRuiChi
-     * @create 2025/5/27
-     **/
-    @PostConstruct
-    private void initFlowRules() {
-        SentinelUtils.initFlowAndDegradeRules("listQuestionBankHotspotVOByPage");
-        SentinelUtils.initFlowAndDegradeRules("getQuestionBankHotspotVOByQuestionBankId");
-    }
-
-    /**
-     * Sintel 流控： 触发流量过大阻塞后响应的服务
-     *
-     * @param ex
-     * @return com.rich.richInterview.common.BaseResponse<com.baomidou.mybatisplus.extension.plugins.pagination.Page < com.rich.richInterview.model.vo.QuestionBankHotspotVO>>
-     * @author DuRuiChi
-     * @create 2025/5/27
-     **/
-    public BaseResponse<Page<QuestionBankHotspotVO>> handleBlockException(BlockException ex) {
-        // 过滤普通降级操作
-        if (ex instanceof DegradeException) {
-            return handleFallback();
-        }
-        // 系统高压限流降级操作
-        return ResultUtils.error(ErrorCode.SYSTEM_ERROR, "系统压力稍大，请耐心等待哟~");
-    }
 }

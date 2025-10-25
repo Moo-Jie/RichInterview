@@ -50,30 +50,12 @@ public interface QuestionBankHotspotService extends IService<QuestionBankHotspot
     Page<QuestionBankHotspotVO> getQuestionBankHotspotVOPage(Page<QuestionBankHotspot> questionBankHotspotPage, HttpServletRequest request);
 
     /**
-     * 热点字段递增接口（自动初始化）
-     *
-     * @param questionBankId
-     * @param field
-     * @return
-     */
-    boolean incrementField(Long questionBankId, IncrementFieldEnum field);
-
-    /**
      * 根据题库 id 获取题库热点信息，不存在时初始化
      *
      * @param questionBankId
      * @return
      */
     QuestionBankHotspot getByQuestionBankId(Long questionBankId);
-
-    /**
-     * 设定限流与熔断规则
-     *
-     * @param resourceName
-     * @author DuRuiChi
-     * @create 2025/5/27
-     **/
-    void initFlowAndDegradeRules(String resourceName);
 
     /**
      * 构建字段缓存键

@@ -80,13 +80,6 @@ public interface QuestionHotspotService extends IService<QuestionHotspot> {
     boolean decrementField(Long questionId, IncrementFieldEnum field);
 
     /**
-     * 初始化限流与熔断规则
-     *
-     * @param resourceName 资源名称
-     */
-    void initFlowAndDegradeRules(String resourceName);
-
-    /**
      * 构建字段缓存键
      *
      * @param questionId 题目ID

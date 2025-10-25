@@ -1,15 +1,10 @@
 package com.rich.richInterview.controller;
 
 import cn.dev33.satoken.annotation.SaCheckRole;
-import com.alibaba.csp.sentinel.Entry;
-import com.alibaba.csp.sentinel.EntryType;
-import com.alibaba.csp.sentinel.SphU;
-import com.alibaba.csp.sentinel.Tracer;
-import com.alibaba.csp.sentinel.slots.block.BlockException;
-import com.alibaba.csp.sentinel.slots.block.degrade.DegradeException;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.rich.richInterview.annotation.AutoCache;
 import com.rich.richInterview.annotation.AutoClearCache;
+import com.rich.richInterview.annotation.SentinelResourceByIP;
 import com.rich.richInterview.common.BaseResponse;
 import com.rich.richInterview.common.DeleteRequest;
 import com.rich.richInterview.common.ErrorCode;
@@ -25,7 +20,6 @@ import com.rich.richInterview.model.vo.QuestionVO;
 import com.rich.richInterview.service.QuestionService;
 import com.rich.richInterview.service.impl.UserServiceImpl;
 import com.rich.richInterview.utils.ResultUtils;
-import com.rich.richInterview.utils.SentinelUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -101,47 +95,20 @@ public class QuestionController {
             nullCacheTime = 60,  // 设置空缓存过期时间为 1 分钟
             randomExpireRange = 30  // 设置随机过期范围为 0.5 分钟
     )
+    @SentinelResourceByIP(
+            resourceName = "getQuestionVOById",
+            fallbackType = QuestionVO.class
+    )
     public BaseResponse<QuestionVO> getQuestionVOById(Long id, HttpServletRequest request) {
         ThrowUtils.throwIf(id == null || id <= 0, ErrorCode.PARAMS_ERROR);
-        // 获取用户 IP
-        String remoteAddr = request.getRemoteAddr();
-        if (remoteAddr == null || remoteAddr.isEmpty()) {
-            remoteAddr = "unknown";
-        }
-        // 非注解方式，手动针对用户 IP 进行流控
-        // 源：https://sentinelguard.io/zh-cn/docs/parameter-flow-control.html
-        Entry entry = null;
-        initFlowAndDegradeRules("getQuestionVOById");
-        try {
-            // 开启限流入口，设定资源名、限流入口类型、参数个数、参数值
-            entry = SphU.entry("getQuestionVOById", EntryType.IN, 1, remoteAddr);
-            // 核心业务
-            // 最近刷题记录
-            User loginUser = userService.getLoginUser(request);
-            loginUser.setPreviousQuestionID(id);
-            userService.updateById(loginUser);
-            // 题目详情
-            return ResultUtils.success(questionService.getQuestionVOById(id, request));
-        } catch (Throwable ex) {
-            // 当限流时，抛出 BlockException
-            // 普通业务异常后逻辑
-            if (!BlockException.isBlockException(ex)) {
-                // 记录日志
-                Tracer.trace(ex);
-                return ResultUtils.error(ErrorCode.SYSTEM_ERROR, ex.getMessage());
-            }
-            // 降级后逻辑
-            if (ex instanceof DegradeException) {
-                return SentinelUtils.handleFallback(QuestionVO.class);
-            }
-            // 限流后逻辑
-            return ResultUtils.error(ErrorCode.SYSTEM_ERROR, "您访问过于频繁，系统压力稍大，请耐心等待哟~");
-        } finally {
-            if (entry != null) {
-                // 退出流控
-                entry.exit(1, remoteAddr);
-            }
-        }
+        
+        // 核心业务
+        // 最近刷题记录
+        User loginUser = userService.getLoginUser(request);
+        loginUser.setPreviousQuestionID(id);
+        userService.updateById(loginUser);
+        // 题目详情
+        return ResultUtils.success(questionService.getQuestionVOById(id, request));
     }
 
     /**
@@ -168,67 +135,23 @@ public class QuestionController {
      */
     @PostMapping("/list/page/vo")
     @AutoCache(keyPrefix = "question_page")
+    @SentinelResourceByIP(
+            resourceName = "listQuestionVOByPage",
+            fallbackType = QuestionVO.class
+    )
     public BaseResponse<Page<QuestionVO>> listQuestionVOByPage(@RequestBody QuestionQueryRequest questionQueryRequest, HttpServletRequest request) {
         long size = questionQueryRequest.getPageSize();
         // TODO 安全性配置
         // 限制爬虫
         ThrowUtils.throwIf(size > 20, ErrorCode.PARAMS_ERROR);
-        // 获取用户 IP
-        String remoteAddr = request.getRemoteAddr();
-        // 非注解方式，手动针对用户 IP 进行流控
-        // 源：https://sentinelguard.io/zh-cn/docs/parameter-flow-control.html
-        Entry entry = null;
-        initFlowAndDegradeRules("listQuestionVOByPage");
-        try {
-            // 开启限流入口，设定资源名、限流入口类型、参数个数、参数值
-            entry = SphU.entry("listQuestionVOByPage", EntryType.IN, 1, remoteAddr);
-            // 查询数据库
-            Page<Question> questionPage = questionService.getQuestionPage(questionQueryRequest);
-            // 获取封装类
-            return ResultUtils.success(questionService.getQuestionVOPage(questionPage));
-        } catch (Throwable ex) {
-            // 当限流时，抛出 BlockException
-            // 普通业务异常后逻辑
-            if (!BlockException.isBlockException(ex)) {
-                // 记录日志
-                Tracer.trace(ex);
-                return ResultUtils.error(ErrorCode.SYSTEM_ERROR, ex.getMessage());
-            }
-            // 降级后逻辑
-            if (ex instanceof DegradeException) {
-                return handleFallback();
-            }
-            // 限流后逻辑
-            return ResultUtils.error(ErrorCode.SYSTEM_ERROR, "您访问过于频繁，系统压力稍大，请耐心等待哟~");
-        } finally {
-            if (entry != null) {
-                // 退出流控
-                entry.exit(1, remoteAddr);
-            }
-        }
+        
+        // 查询数据库
+        Page<Question> questionPage = questionService.getQuestionPage(questionQueryRequest);
+        // 获取封装类
+        return ResultUtils.success(questionService.getQuestionVOPage(questionPage));
     }
 
-    /**
-     * Sintel 熔断：触发异常熔断后的降级服务
-     *
-     * @author DuRuiChi
-     * @create 2025/5/27
-     **/
-    public BaseResponse<Page<QuestionVO>> handleFallback() {
-        return SentinelUtils.handleFallbackPage(QuestionVO.class);
-    }
 
-    /**
-     * 设定限流与熔断规则
-     *
-     * @return void
-     * @author DuRuiChi
-     * @PostConstruct 依赖注入后自动执行
-     * @create 2025/5/27
-     **/
-    private void initFlowAndDegradeRules(String resourceName) {
-        SentinelUtils.initFlowAndDegradeRules(resourceName);
-    }
 
     /**
      * 分页获取当前登录用户创建的题目列表

@@ -33,7 +33,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -152,7 +151,7 @@ public class QuestionBankServiceImpl extends ServiceImpl<QuestionBankMapper, Que
 
         // todo 根据需要为封装对象补充值
 
-        // 1. 关联查询用户信息
+        // 关联查询用户信息
         Long userId = questionBank.getUserId();
         User user = null;
         if (userId != null && userId > 0) {
@@ -160,9 +159,6 @@ public class QuestionBankServiceImpl extends ServiceImpl<QuestionBankMapper, Que
         }
         UserVO userVO = userService.getUserVO(user);
         questionBankVO.setUser(userVO);
-        // 2. 已登录，获取用户点赞、收藏状态
-        long questionBankId = questionBank.getId();
-        User loginUser = userService.getLoginUserPermitNull(request);
 
         return questionBankVO;
     }
@@ -182,24 +178,14 @@ public class QuestionBankServiceImpl extends ServiceImpl<QuestionBankMapper, Que
             return questionBankVOPage;
         }
         // 对象列表 => 封装对象列表
-        List<QuestionBankVO> questionBankVOList = questionBankList.stream().map(questionBank -> {
-            return QuestionBankVO.objToVo(questionBank);
-        }).collect(Collectors.toList());
+        List<QuestionBankVO> questionBankVOList = questionBankList.stream().map(questionBank -> QuestionBankVO.objToVo(questionBank)).collect(Collectors.toList());
 
         // todo 根据需要为封装对象补充值
 
-        // 1. 关联查询用户信息
+        // 1关联查询用户信息
         Set<Long> userIdSet = questionBankList.stream().map(QuestionBank::getUserId).collect(Collectors.toSet());
         Map<Long, List<User>> userIdUserListMap = userService.listByIds(userIdSet).stream()
                 .collect(Collectors.groupingBy(User::getId));
-        // 2. 已登录，获取用户点赞、收藏状态
-        Map<Long, Boolean> questionBankIdHasThumbMap = new HashMap<>();
-        Map<Long, Boolean> questionBankIdHasFavourMap = new HashMap<>();
-        User loginUser = userService.getLoginUserPermitNull(request);
-        if (loginUser != null) {
-            Set<Long> questionBankIdSet = questionBankList.stream().map(QuestionBank::getId).collect(Collectors.toSet());
-            loginUser = userService.getLoginUser(request);
-        }
         // 填充信息
         questionBankVOList.forEach(questionBankVO -> {
             Long userId = questionBankVO.getUserId();

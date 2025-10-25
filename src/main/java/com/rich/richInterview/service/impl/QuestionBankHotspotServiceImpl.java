@@ -18,7 +18,6 @@ import com.rich.richInterview.model.vo.QuestionBankHotspotVO;
 import com.rich.richInterview.service.QuestionBankHotspotService;
 import com.rich.richInterview.service.QuestionBankService;
 import com.rich.richInterview.utils.CacheUtils;
-import com.rich.richInterview.utils.ResultUtils;
 import com.rich.richInterview.utils.SentinelUtils;
 import com.rich.richInterview.utils.SqlUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -154,49 +153,6 @@ public class QuestionBankHotspotServiceImpl extends ServiceImpl<QuestionBankHots
     }
 
     /**
-     * 热点字段递增接口（自动初始化）
-     *
-     * @param questionBankId
-     * @param field
-     * @return boolean
-     * @author DuRuiChi
-     * @create 2025/5/25
-     **/
-    @Override
-    public boolean incrementField(Long questionBankId, IncrementFieldEnum field) {
-        // 参数校验
-        ThrowUtils.throwIf(questionBankId == null || field == null, ErrorCode.PARAMS_ERROR);
-        // 题库合法
-        QuestionBank q = questionBankService.getById(questionBankId);
-        ThrowUtils.throwIf(q == null, ErrorCode.NOT_FOUND_ERROR);
-        // 题库是否已被记录在热点表
-        QueryWrapper<QuestionBankHotspot> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq(ObjectUtils.isNotEmpty(q.getId()), "questionBankId", questionBankId);
-        QuestionBankHotspot questionBankHotspot = this.getOne(queryWrapper);
-
-        // 原子操作
-        if (questionBankHotspot == null) {
-            // 若不存在则插入
-            try {
-                QuestionBankHotspot newRecord = new QuestionBankHotspot();
-                newRecord.setQuestionBankId(questionBankId);
-                newRecord.setViewNum(0);
-                newRecord.setStarNum(0);
-                newRecord.setForwardNum(0);
-                newRecord.setCollectNum(0);
-                newRecord.setCommentNum(0);
-                this.save(newRecord);
-            } catch (DuplicateKeyException ignored) {
-                // 忽略重复键异常，并停止本次保存，防止前端因 SSR 和 CSR 渲染差异而并发插入
-            }
-        }
-        UpdateWrapper<QuestionBankHotspot> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.eq("questionBankId", questionBankId)
-                .setSql(field.getFieldName() + " = " + field.getFieldName() + " + 1");
-        return this.update(updateWrapper);
-    }
-
-    /**
      * 根据题库 id 获取题库热点信息，不存在时初始化
      *
      * @param questionBankId
@@ -226,14 +182,6 @@ public class QuestionBankHotspotServiceImpl extends ServiceImpl<QuestionBankHots
             }
         }
         return hotspot;
-    }
-
-    /**
-     * 设定限流与熔断规则
-     */
-    @Override
-    public void initFlowAndDegradeRules(String resourceName) {
-        SentinelUtils.initFlowAndDegradeRules(resourceName);
     }
 
     /**
