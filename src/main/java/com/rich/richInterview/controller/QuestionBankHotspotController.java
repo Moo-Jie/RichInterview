@@ -2,6 +2,9 @@ package com.rich.richInterview.controller;
 
 import cn.dev33.satoken.annotation.SaCheckRole;
 import cn.dev33.satoken.annotation.SaMode;
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
+import com.alibaba.csp.sentinel.slots.block.BlockException;
+import com.alibaba.csp.sentinel.slots.block.degrade.DegradeException;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.rich.richInterview.annotation.AutoCache;
 import com.rich.richInterview.annotation.AutoClearCache;
@@ -17,10 +20,12 @@ import com.rich.richInterview.model.entity.QuestionBankHotspot;
 import com.rich.richInterview.model.entity.User;
 import com.rich.richInterview.model.enums.IncrementFieldEnum;
 import com.rich.richInterview.model.vo.QuestionBankHotspotVO;
+import com.rich.richInterview.model.vo.QuestionBankVO;
 import com.rich.richInterview.service.QuestionBankHotspotService;
 import com.rich.richInterview.service.UserService;
 import com.rich.richInterview.utils.DetectCrawlersUtils;
 import com.rich.richInterview.utils.ResultUtils;
+import com.rich.richInterview.utils.SentinelUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
@@ -152,19 +157,16 @@ public class QuestionBankHotspotController {
      * 源： https://sentinelguard.io/zh-cn/docs/annotation-support.html
      *
      * @param questionBankHotspotQueryRequest
-     * @param request
      * @return com.rich.richInterview.common.BaseResponse<com.baomidou.mybatisplus.extension.plugins.pagination.Page < com.rich.richInterview.model.vo.QuestionBankHotspotVO>>
      * @author DuRuiChi
      * @create 2025/5/27
      **/
     @PostMapping("/list/page/vo")
-    @SaCheckRole(value = {UserConstant.ADMIN_ROLE, UserConstant.DEFAULT_ROLE}, mode = SaMode.OR)
-    @SentinelResourceByIP(
-            resourceName = "listQuestionBankHotspotVOByPage",
-            fallbackType = Page.class
-    )
+    @SentinelResource(value = "listQuestionBankHotspotVOByPage",
+            blockHandler = "handleBlockException",
+            fallback = "handleFallback")
     @AutoCache(keyPrefix = "question_bank_hotspot_page")
-    public BaseResponse<Page<QuestionBankHotspotVO>> listQuestionBankHotspotVOByPage(@RequestBody QuestionBankHotspotQueryRequest questionBankHotspotQueryRequest, HttpServletRequest request) {
+    public BaseResponse<Page<QuestionBankHotspotVO>> listQuestionBankHotspotVOByPage(@RequestBody QuestionBankHotspotQueryRequest questionBankHotspotQueryRequest) {
 
         long current = questionBankHotspotQueryRequest.getCurrent();
         long size = questionBankHotspotQueryRequest.getPageSize();
@@ -173,8 +175,33 @@ public class QuestionBankHotspotController {
         // 查询数据库
         Page<QuestionBankHotspot> questionBankHotspotPage = questionBankHotspotService.page(new Page<>(current, size), questionBankHotspotService.getQueryWrapper(questionBankHotspotQueryRequest));
         // 获取封装类
-        return ResultUtils.success(questionBankHotspotService.getQuestionBankHotspotVOPage(questionBankHotspotPage, request));
+        return ResultUtils.success(questionBankHotspotService.getQuestionBankHotspotVOPage(questionBankHotspotPage));
     }
 
+    /**
+     * Sintel 流控： 触发流量过大阻塞后响应的服务
+     *
+     * @param ex
+     * @author DuRuiChi
+     * @create 2025/5/27
+     **/
+    public BaseResponse<Page<QuestionBankHotspotVO>> handleBlockException(BlockException ex) {
+        // 过滤普通降级操作
+        if (ex instanceof DegradeException) {
+            return handleFallback();
+        }
+        // 系统高压限流降级操作
+        return ResultUtils.error(ErrorCode.SYSTEM_ERROR, "系统压力稍大，请耐心等待哟~");
+    }
 
+    /**
+     * Sintel 流控：触发异常熔断后的降级服务
+     *
+     * @return com.rich.richInterview.common.BaseResponse<com.baomidou.mybatisplus.extension.plugins.pagination.Page < com.rich.richInterview.model.vo.QuestionBankVO>>
+     * @author DuRuiChi
+     * @create 2025/5/27
+     **/
+    public BaseResponse<Page<QuestionBankHotspotVO>> handleFallback() {
+        return SentinelUtils.handleFallbackPage(QuestionBankHotspotVO.class);
+    }
 }

@@ -23,7 +23,7 @@ export default async function QuestionBankPage() {
     // @ts-ignore
     questionBankListVo = res.data.records ?? [];
   } catch (e: any) {
-    message.error("无法获取题库信息");
+    console.log("无法获取题库信息");
   }
 
   // 热点题库列表
@@ -39,7 +39,7 @@ export default async function QuestionBankPage() {
     // @ts-ignore
     questionBankHotspotListVo = res.data.records ?? [];
   } catch (e: any) {
-    message.error("无法获取热门题库信息，因为" + e.message);
+    console.log("无法获取热门题库信息，因为" + e.message);
   }
 
   return (

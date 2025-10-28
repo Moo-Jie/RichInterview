@@ -28,7 +28,7 @@ export default async function QuestionsPage({searchParams}) {
         // @ts-ignore
         questionHotspotList = hotspotRes.data?.records ?? [];
     } catch (e: any) {
-        message.error("获取热点数据失败，" + e.message);
+        console.log("获取热点数据失败，" + e.message);
     }
 
     // 题目列表和总数
@@ -49,7 +49,7 @@ export default async function QuestionsPage({searchParams}) {
         // @ts-ignore
         total = res.data.total ?? 0;
     } catch (e: any) {
-        message.error("获取题目列表失败，" + e.message);
+        console.log("获取题目列表失败，" + e.message);
     }
 
     return (

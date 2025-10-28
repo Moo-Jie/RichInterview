@@ -101,7 +101,7 @@ public class QuestionController {
     )
     public BaseResponse<QuestionVO> getQuestionVOById(Long id, HttpServletRequest request) {
         ThrowUtils.throwIf(id == null || id <= 0, ErrorCode.PARAMS_ERROR);
-        
+
         // 核心业务
         // 最近刷题记录
         User loginUser = userService.getLoginUser(request);
@@ -144,13 +144,12 @@ public class QuestionController {
         // TODO 安全性配置
         // 限制爬虫
         ThrowUtils.throwIf(size > 20, ErrorCode.PARAMS_ERROR);
-        
+
         // 查询数据库
         Page<Question> questionPage = questionService.getQuestionPage(questionQueryRequest);
         // 获取封装类
         return ResultUtils.success(questionService.getQuestionVOPage(questionPage));
     }
-
 
 
     /**
@@ -202,6 +201,10 @@ public class QuestionController {
      **/
     @AutoCache(keyPrefix = "question_page")
     @PostMapping("/search/page/vo")
+    @SentinelResourceByIP(
+            resourceName = "listQuestionVOByPage",
+            fallbackType = QuestionVO.class
+    )
     public BaseResponse<Page<QuestionVO>> searchQuestionVOByPage(@RequestBody QuestionQueryRequest questionQueryRequest) {
         long size = questionQueryRequest.getPageSize();
         // 限制爬虫

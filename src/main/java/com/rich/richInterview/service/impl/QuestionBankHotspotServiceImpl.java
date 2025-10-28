@@ -129,7 +129,7 @@ public class QuestionBankHotspotServiceImpl extends ServiceImpl<QuestionBankHots
      * @return
      */
     @Override
-    public Page<QuestionBankHotspotVO> getQuestionBankHotspotVOPage(Page<QuestionBankHotspot> questionBankHotspotPage, HttpServletRequest request) {
+    public Page<QuestionBankHotspotVO> getQuestionBankHotspotVOPage(Page<QuestionBankHotspot> questionBankHotspotPage) {
         List<QuestionBankHotspot> questionBankHotspotList = questionBankHotspotPage.getRecords();
         Page<QuestionBankHotspotVO> questionBankHotspotVOPage = new Page<>(questionBankHotspotPage.getCurrent(), questionBankHotspotPage.getSize(), questionBankHotspotPage.getTotal());
         if (CollUtil.isEmpty(questionBankHotspotList)) {

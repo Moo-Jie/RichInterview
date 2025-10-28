@@ -44,10 +44,9 @@ public interface QuestionBankHotspotService extends IService<QuestionBankHotspot
      * 分页获取题库热点封装
      *
      * @param questionBankHotspotPage
-     * @param request
      * @return
      */
-    Page<QuestionBankHotspotVO> getQuestionBankHotspotVOPage(Page<QuestionBankHotspot> questionBankHotspotPage, HttpServletRequest request);
+    Page<QuestionBankHotspotVO> getQuestionBankHotspotVOPage(Page<QuestionBankHotspot> questionBankHotspotPage);
 
     /**
      * 根据题库 id 获取题库热点信息，不存在时初始化

@@ -22,7 +22,7 @@ export default async function BankPage({ params }) {
     });
     bank = res.data;
   } catch (e: any) {
-    message.error("获取题库详情失败，" + e.message);
+    console.log("获取题库详情失败，" + e.message);
   }
 
   if (!bank) {

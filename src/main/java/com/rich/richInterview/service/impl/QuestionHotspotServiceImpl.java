@@ -256,11 +256,10 @@ public class QuestionHotspotServiceImpl extends ServiceImpl<QuestionHotspotMappe
      * 分页获取题目热点封装
      *
      * @param questionHotspotPage
-     * @param request
      * @return
      */
     @Override
-    public Page<QuestionHotspotVO> getQuestionHotspotVOPage(Page<QuestionHotspot> questionHotspotPage, HttpServletRequest request) {
+    public Page<QuestionHotspotVO> getQuestionHotspotVOPage(Page<QuestionHotspot> questionHotspotPage) {
         List<QuestionHotspot> questionHotspotList = questionHotspotPage.getRecords();
         Page<QuestionHotspotVO> questionHotspotVOPage = new Page<>(questionHotspotPage.getCurrent(), questionHotspotPage.getSize(), questionHotspotPage.getTotal());
         if (CollUtil.isEmpty(questionHotspotList)) {
