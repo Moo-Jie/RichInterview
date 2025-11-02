@@ -73,8 +73,8 @@ const carouselItems = [
     href: "/communityCoConstruction/hotComments",
     // imgSrc: "/assets/pictures/carousel/carousel03.png",
     backgroundColor: "#eee0ff", // 浅紫色
-    alt: "刷友热评",
-    title: "刷友热评",
+    alt: "刷友热门回答",
+    title: "刷友热门回答",
     description: "积极讨论百家争鸣",
     icon: <MessageFilled />,
   },

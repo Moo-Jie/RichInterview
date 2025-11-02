@@ -142,7 +142,7 @@ const QuestionMsgComponent = (props: Props) => {
       } as API.CommentAddRequest);
 
       if (res != null) {
-        message.success("回答成功，期待成为热评哦~");
+        message.success("回答成功，期待成为热门回答哦~");
         setCommentContent("");
         // 发布后回到第一页
         setCurrentPage(1);

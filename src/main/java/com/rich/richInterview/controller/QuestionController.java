@@ -212,5 +212,4 @@ public class QuestionController {
         Page<Question> questionPage = questionService.searchFromEs(questionQueryRequest);
         return ResultUtils.success(questionService.getQuestionVOPage(questionPage));
     }
-
 }

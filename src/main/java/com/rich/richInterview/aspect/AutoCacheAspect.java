@@ -57,13 +57,13 @@ public class AutoCacheAspect {
 
         // 第一次检查缓存是否命中
         if (cachedResult != null) {
-            log.info("缓存命中，直接返回，缓存键: {}", cacheKey);
+            log.info("缓存命中，缓存键: {}", cacheKey);
             return cachedResult;
         }
 
         // 2. 缓存未命中，检查是否启用分布式锁（防止缓存击穿）
         if (autoCache.enableLock()) {
-            return handleWithLock(joinPoint, autoCache, cacheKey, returnType);
+            return CacheWithLock(joinPoint, autoCache, cacheKey, returnType);
         } else {
             return handleWithoutLock(joinPoint, autoCache, cacheKey);
         }
@@ -78,7 +78,7 @@ public class AutoCacheAspect {
      * @param returnType 方法的返回值类型，用于指定缓存数据的反序列化类型
      * @return java.lang.Object  原方法的执行结果
      */
-    private Object handleWithLock(ProceedingJoinPoint joinPoint, AutoCache autoCache,
+    private Object CacheWithLock(ProceedingJoinPoint joinPoint, AutoCache autoCache,
                                   String cacheKey, Class<?> returnType) throws Throwable {
         String lockKey = cacheUtils.generateLockKey(cacheKey);
         RLock lock = null;
@@ -92,7 +92,7 @@ public class AutoCacheAspect {
                 // 第二次检查缓存是否命中，防止有其他线程已经在锁创建之前缓存了结果
                 Object cachedResult = cacheUtils.getCache(cacheKey, returnType);
                 if (cachedResult != null) {
-                    log.info("双重检查缓存命中，缓存键: {}", cacheKey);
+                    log.info("缓存命中，缓存键: {}", cacheKey);
                     return cachedResult;
                 }
                 // 执行后续方法并缓存结果

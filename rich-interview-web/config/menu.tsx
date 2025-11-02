@@ -81,7 +81,7 @@ export const sysMenus = [
     children: [
       {
         path: "/communityCoConstruction/hotComments",
-        name: "刷友热评",
+        name: "刷友热门回答",
         access: AccessEnumeration.USER,
       },
       {

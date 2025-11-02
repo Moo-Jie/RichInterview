@@ -125,7 +125,6 @@ public class QuestionBankHotspotServiceImpl extends ServiceImpl<QuestionBankHots
      * 分页获取题库热点封装
      *
      * @param questionBankHotspotPage
-     * @param request
      * @return
      */
     @Override

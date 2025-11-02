@@ -65,20 +65,15 @@ public class CacheUtils {
      * @param randomExpireRange  随机过期时间范围（秒）
      */
     public void setCache(String key, Object value, long expireTime, boolean enableRandomExpire, long randomExpireRange) {
-        try {
-            String jsonValue = objectMapper.writeValueAsString(value);
-
-            // 计算实际过期时间
-            long actualExpireTime = expireTime;
-            if (enableRandomExpire && randomExpireRange > 0) {
-                actualExpireTime += random.nextInt((int) randomExpireRange);
-            }
-
-            redisTemplate.opsForValue().set(key, jsonValue, actualExpireTime, TimeUnit.SECONDS);
-            log.info("设置缓存成功，key: {}, expireTime: {}秒", key, actualExpireTime);
-        } catch (JsonProcessingException e) {
-            log.error("缓存序列化失败，key: {}", key, e);
+        // 计算实际过期时间
+        long actualExpireTime = expireTime;
+        if (enableRandomExpire && randomExpireRange > 0) {
+            actualExpireTime += random.nextInt((int) randomExpireRange);
         }
+
+        // 直接使用 RedisTemplate 配置的 Jackson 序列化器存储对象，保留类型信息
+        redisTemplate.opsForValue().set(key, value, actualExpireTime, TimeUnit.SECONDS);
+        log.info("设置缓存成功，key: {}, expireTime: {}秒", key, actualExpireTime);
     }
 
     /**
@@ -106,19 +101,22 @@ public class CacheUtils {
                 return null;
             }
 
-            String jsonValue = value.toString();
-
-            // 检查是否是空值缓存
-            if (NULL_VALUE.equals(jsonValue)) {
+            // 空值缓存标识处理
+            if (value instanceof String && NULL_VALUE.equals(value)) {
                 return null;
             }
 
-            T result = objectMapper.readValue(jsonValue, clazz);
+            // 依赖 RedisTemplate 的 Jackson 反序列化返回已反序列化对象，保留嵌套类型信息
+            T result = clazz.cast(value);
             ThrowUtils.throwIf(result == null, ErrorCode.NOT_FOUND_ERROR, "缓存结果为空");
             return result;
+        } catch (ClassCastException e) {
+            // 类型不匹配时删除损坏的缓存，避免后续错误
+            log.error("缓存类型转换失败，key: {}, 期望类型: {}", key, clazz.getName(), e);
+            deleteCache(key);
+            return null;
         } catch (Exception e) {
-            log.error("缓存反序列化失败，key: {}", key, e);
-            // 删除损坏的缓存
+            log.error("获取缓存失败，key: {}", key, e);
             deleteCache(key);
             return null;
         }

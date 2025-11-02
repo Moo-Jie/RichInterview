@@ -85,10 +85,23 @@ public interface CommentService extends IService<Comment> {
     /**
      * 点赞回答
      * @param id
-     * @param request
      * @return java.lang.Boolean
      * @author DuRuiChi
      * @create 2025/6/13
      **/
-    Boolean starComment(Long id, HttpServletRequest request);
+    Long starComment(Long id);
+
+    /**
+     * 根据 题目ID 生成缓存键
+     * @param questionId
+     * @return java.lang.String
+     * @author DuRuiChi
+     * @create 2025/6/13
+     **/
+    String generateCacheKeyByQuestionId(long questionId);
+
+     /**
+      * 根据 用户ID 生成缓存键
+      */
+     String generateCacheKeyByUserId(long userId);
 }

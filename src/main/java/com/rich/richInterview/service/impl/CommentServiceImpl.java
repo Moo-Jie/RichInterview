@@ -37,7 +37,6 @@ import java.util.stream.Collectors;
 
 /**
  * 回答服务实现
- *
  */
 @Service
 @Slf4j
@@ -50,7 +49,18 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     private QuestionHotspotService questionHotspotService;
 
     /**
+     * 缓存前缀
+     */
+    private static final String KEY_PREFIX_QUESTION_ID = "comment_vo_question_id_";
+
+    /**
+     * 缓存前缀（根据用户ID）
+     */
+    private static final String KEY_PREFIX_USER_ID = "comment_vo_user_id_";
+
+    /**
      * 校验数据
+     *
      * @param comment
      * @param add
      * @return void
@@ -75,14 +85,14 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
 
     /**
      * 点赞回答
+     *
      * @param id      回答ID
-     * @param request 用户登录态
      * @return java.lang.Boolean
      * @author DuRuiChi
      * @create 2025/6/13
      **/
     @Override
-    public Boolean starComment(Long id, HttpServletRequest request) {
+    public Long starComment(Long id) {
         // 校验回答存在性
         Comment comment = this.getById(id);
         ThrowUtils.throwIf(comment == null, ErrorCode.NOT_FOUND_ERROR);
@@ -91,8 +101,29 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         UpdateWrapper<Comment> updateWrapper = new UpdateWrapper<>();
         updateWrapper.eq("id", id)
                 .setSql("thumbNum = thumbNum + 1");
-        return this.update(updateWrapper);
+        boolean result = this.update(updateWrapper);
+        ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
+
+        // 返回questionId
+        return comment.getQuestionId();
     }
+
+    /**
+     * 生成缓存键（根据题目ID）
+     */
+    @Override
+    public String generateCacheKeyByQuestionId(long questionId) {
+        return KEY_PREFIX_QUESTION_ID + questionId;
+    }
+
+    /**
+     * 生成缓存键（根据用户ID）
+     */
+    @Override
+    public String generateCacheKeyByUserId(long userId) {
+        return KEY_PREFIX_USER_ID + userId;
+    }
+
 
     /**
      * 获取查询条件
@@ -129,6 +160,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
 
     /**
      * 获取回答封装
+     *
      * @param comment
      * @param request
      * @return com.rich.richInterview.model.vo.CommentVO
@@ -156,6 +188,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
 
     /**
      * 分页获取回答封装
+     *
      * @param commentPage
      * @param request
      * @return com.baomidou.mybatisplus.extension.plugins.pagination.Page<com.rich.richInterview.model.vo.CommentVO>
@@ -193,6 +226,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
 
     /**
      * 创建回答
+     *
      * @param commentAddRequest
      * @param request
      * @return java.lang.Long
@@ -220,6 +254,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
 
     /**
      * 删除回答
+     *
      * @param id
      * @param request
      * @return java.lang.Boolean
@@ -241,15 +276,13 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
         // 同步减少题目的回答数
         questionHotspotService.decrementField(oldComment.getQuestionId(), IncrementFieldEnum.COMMENT_NUM);
-
         return true;
     }
 
 
-
     /**
-     *
      * 根据 题目ID 获取回答列表（封装类）
+     *
      * @param questionId
      * @param request
      * @return java.util.List<com.rich.richInterview.model.vo.CommentVO>
