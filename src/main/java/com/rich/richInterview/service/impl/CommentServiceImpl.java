@@ -301,5 +301,4 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         // 批量转为 VO
         return commentList.stream().map(CommentVO::objToVo).toList();
     }
-
 }

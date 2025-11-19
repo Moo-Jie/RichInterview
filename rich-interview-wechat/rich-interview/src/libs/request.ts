@@ -65,8 +65,6 @@ const request = <T, >(options: Taro.request.Option): Promise<T> => {
             Taro.setStorageSync('token', satoken);
           }
 
-          console.log('token为：', Taro.getStorageSync('token'));
-
           // 业务逻辑处理（40100未登录）
           if (res.data?.code === 40100) {
             // 检查是否已经是登录页面

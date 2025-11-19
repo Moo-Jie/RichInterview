@@ -1,7 +1,7 @@
 import {Component} from 'react';
 import {Canvas, Image, ScrollView, Text, View} from '@tarojs/components';
 import Taro from '@tarojs/taro';
-import {AtButton, AtIcon, AtModal, AtModalContent, AtTag} from 'taro-ui';
+import {AtButton, AtFab, AtIcon, AtModal, AtModalContent, AtTag} from 'taro-ui';
 import {getQuestionDetail, getQuestionHotspotDetail, incrementStarCount, incrementViewCount} from '../../api/question';
 import TagParser from '../../components/TagParserComponent';
 import MarkdownRenderer from '../../components/MarkdownRenderer';
@@ -57,6 +57,11 @@ type State = {
   signInRecords: number[];
   currentYear: number;
   todayIndex: number;
+  scrollIntoView: string;
+  scrollTop: number;
+  showTopBtn: boolean;
+  showBottomBtn: boolean;
+  viewportHeight: number;
 };
 
 export default class QuestionDetailPage extends Component<{}, State> {
@@ -72,6 +77,11 @@ export default class QuestionDetailPage extends Component<{}, State> {
     signInRecords: [],
     currentYear: new Date().getFullYear(),
     todayIndex: this.getDayOfYear(new Date()),
+    scrollIntoView: ''
+    , scrollTop: 0,
+    showTopBtn: false,
+    showBottomBtn: true,
+    viewportHeight: Taro.getSystemInfoSync().windowHeight || 0
   };
 
   componentDidMount() {
@@ -218,30 +228,6 @@ export default class QuestionDetailPage extends Component<{}, State> {
     return lines * lineHeight;
   }
 
-  private truncateTextByHeight(ctx: any, text: string, maxWidth: number, lineHeight: number, maxHeight: number) {
-    const maxLines = Math.floor(maxHeight / lineHeight);
-    let currentLine = '';
-    let lines = 0;
-    let result = '';
-
-    for (const char of text) {
-      const testLine = currentLine + char;
-      const metrics = ctx.measureText(testLine);
-
-      if (metrics.width > maxWidth) {
-        lines++;
-        if (lines >= maxLines) {
-          return result + '...';
-        }
-        result += currentLine + '\n';
-        currentLine = char;
-      } else {
-        currentLine = testLine;
-      }
-    }
-    return result;
-  }
-
   // 生成分享卡片
   handleShare = async () => {
     const {question, questionHotspotDetail} = this.state;
@@ -252,132 +238,108 @@ export default class QuestionDetailPage extends Component<{}, State> {
     }
 
     try {
-      // 获取设备信息计算合适的画布尺寸
       const systemInfo = await Taro.getSystemInfo();
       const pixelRatio = systemInfo.pixelRatio || 2;
       const canvasWidth = 750;
 
-      // 创建离屏Canvas
       await new Promise(resolve => Taro.nextTick(resolve));
       const ctx = Taro.createCanvasContext('shareCanvas');
 
-      // 设置测量文本
       ctx.setFontSize(28);
+      const lineHeight = 42;
 
-      // 计算内容高度
-      const maxContentWidth = canvasWidth - 120;
-      const lineHeight = 40;
+      const headerHeight = 130;
+      const margin = 40;
+      const titleX = margin + 28;
+      const contentWidth = canvasWidth - margin * 2 - 28;
+      const qrSize = 240;
 
-      // 内容截断
-      let contentToShow = question.answer
-        .replace(/(\d+\.)|-/g, '\n$&')  // 在序号前强制换行
-        .replace(/\n+/g, '\n')         // 合并多个换行
-        .trim();
+      const canvasHeight = 900;
 
-      let needTruncate = contentToShow.length > 1000;
-      if (needTruncate) {
-        contentToShow = contentToShow.substring(0, 1000) + '...';
-      }
+      const tipText = '答案请前往小程序或官网查看';
 
-      let contentHeight = this.calculateTextHeight(ctx, contentToShow, maxContentWidth, lineHeight);
+      const qrInfo = await Taro.getImageInfo({
+        src: 'https://rich-tams.oss-cn-beijing.aliyuncs.com/weChatMiniProgramQRCode.jpg'
+      });
 
-      // 添加提示信息高度
-      if (needTruncate) {
-        const tipHeight = this.calculateTextHeight(ctx, '字数过多，请前往小程序或官网进行学习', maxContentWidth, lineHeight);
-        contentHeight += tipHeight + 20; // 增加提示信息和间距
-      }
-
-      // 内容区域背景高度 = 文本高度 + 上下内边距
-      const contentBgHeight = contentHeight + 100;
-
-      // 计算卡片总高度
-      const minCanvasHeight = 1100;
-      const canvasHeight = Math.max(
-        minCanvasHeight,
-        // 基础布局高度 + 内容区域高度
-        380 + contentBgHeight + 180
-      );
-
-      const maxContentHeight = canvasHeight - 500;
-
-      if (contentHeight > maxContentHeight) {
-        needTruncate = true;
-        contentHeight = maxContentHeight;
-        contentToShow = this.truncateTextByHeight(ctx, contentToShow, maxContentWidth, lineHeight, maxContentHeight);
-      }
-
-      // 2. 开始绘制
-
-      // 绘制卡片背景
       ctx.setFillStyle('#ffffff');
       this.drawRoundRect(ctx, 20, 20, canvasWidth - 40, canvasHeight - 40, 20);
 
-      // 标题栏
-      const headerHeight = 140;
       const gradient = ctx.createLinearGradient(0, 0, canvasWidth, 0);
-      gradient.addColorStop(0, '#4A6EFF');
-      gradient.addColorStop(1, '#8B5CF6');
+      gradient.addColorStop(0, '#111827');
+      gradient.addColorStop(1, '#374151');
       ctx.setFillStyle(gradient);
       ctx.fillRect(0, 0, canvasWidth, headerHeight);
 
-      // 标题文字
-      ctx.setFontSize(44);
+      ctx.setFontSize(46);
       ctx.setFillStyle('#ffffff');
       ctx.setTextAlign('center');
-      ctx.fillText('题目分享卡', canvasWidth / 2, headerHeight - 20);
+      ctx.fillText('RICH 面试刷题平台', canvasWidth / 2, headerHeight - 30);
 
-      // 用户信息
-      ctx.setFontSize(28);
-      ctx.setFillStyle('rgba(255,255,255,0.8)');
+      let currentY = headerHeight + 30;
+
+      ctx.setFillStyle('#f5f5f5');
+      this.drawRoundRect(ctx, margin, currentY, 96, 44, 22);
+      ctx.setFillStyle('#111827');
+      ctx.setFontSize(45);
+      ctx.fillText('提问', margin + 18, currentY + 30);
+
+      ctx.setFontSize(26);
+      ctx.setFillStyle('#6b7280');
       ctx.setTextAlign('left');
-      ctx.fillText(`   分享者：${question.user?.userName || 'RICH 面试刷题平台用户'}` + '              分享自: RICH 面试刷题平台', 40, headerHeight - 90);
 
-      // 题目标题
-      let currentY = 220;
-      ctx.setFontSize(36);
-      ctx.setFillStyle('#333333');
-      currentY = this.drawWrappedText(ctx, question.title, 40, currentY, canvasWidth - 80, 40);
+      currentY += 72;
+      ctx.setFontSize(38);
+      ctx.setFillStyle('#111827');
+      currentY = this.drawWrappedText(ctx, question.title, titleX, currentY, contentWidth, lineHeight);
 
-      // 热度信息
-      const statsY = currentY + 14;
-      ctx.setFontSize(28);
-      ctx.setFillStyle('#666666');
-      ctx.fillText('🔥', 60, statsY);
-      ctx.fillText(`${questionHotspotDetail.viewNum || 0} 浏览`, 100, statsY);
-      ctx.fillText('❤️', 260, statsY);
-      ctx.fillText(`${questionHotspotDetail.starNum || 0} 收藏`, 300, statsY);
+      currentY += 40;
 
-      // 标签区域
-      let tagX = 40;
-      const tagY = currentY + 30; // 标题后留出间距
-      question.tagList.slice(0, Math.min(4, question.tagList.length)).forEach(tag => {
-        ctx.setFillStyle('#4A6EFF');
+      let tagY = currentY + 10;
+      let tagX = titleX;
+      const tags = (question.tagList || []).slice(0, Math.min(8, (question.tagList || []).length));
+      tags.forEach(tag => {
+        ctx.setFontSize(24);
         const tagWidth = ctx.measureText(tag).width + 40;
-        this.drawRoundRect(ctx, tagX, tagY, tagWidth, 50, 25);
-        ctx.setFillStyle('#ffffff');
-        ctx.fillText(tag, tagX + 20, tagY + 34);
-        tagX += tagWidth + 20;
+        if (tagX + tagWidth > titleX + contentWidth) {
+          tagX = titleX;
+          tagY += 56;
+        }
+        ctx.setFillStyle('#e5e7eb');
+        this.drawRoundRect(ctx, tagX, tagY, tagWidth, 46, 23);
+        ctx.setFillStyle('#374151');
+        ctx.fillText(tag, tagX + 20, tagY + 30);
+        tagX += tagWidth + 16;
       });
+      currentY = tagY + 80;
 
-      // 内容区域
-      const contentBoxY = tagY + 80; // 标签下方留出空间
-      ctx.setFillStyle('#f8fafc');
-      this.drawRoundRect(ctx, 40, contentBoxY, canvasWidth - 80, contentBgHeight, 20);
+      const qrX = (canvasWidth - qrSize) / 2;
+      const qrY = currentY;
+      ctx.setFillStyle('#f9fafb');
+      this.drawRoundRect(ctx, qrX - 16, qrY - 16, qrSize + 32, qrSize + 96, 16);
+      ctx.drawImage(qrInfo.path, qrX, qrY, qrSize, qrSize);
+      ctx.setFontSize(24);
+      ctx.setFillStyle('#6b7280');
+      ctx.setTextAlign('center');
+      ctx.fillText('微信小程序扫码查看答案', canvasWidth / 2, qrY + qrSize + 42);
+      currentY = qrY + qrSize + 96;
 
-      // 题目答案内容
-      ctx.setFillStyle('#222222');
-      ctx.setFontSize(28);
+      ctx.setFontSize(26);
+      ctx.setFillStyle('#374151');
+      ctx.setTextAlign('center');
+      ctx.fillText(`分享人：${question.user?.userName || 'RICH 用户'}`, canvasWidth / 2, canvasHeight - 120);
 
-      let lastY = this.drawWrappedText(ctx, contentToShow, 60, contentBoxY + 50, canvasWidth - 120, 40);
+      ctx.setFontSize(26);
+      ctx.setFillStyle('#111827');
+      ctx.setTextAlign('center');
+      ctx.fillText('官网 richdu.cn', canvasWidth / 2, canvasHeight - 80);
 
-      if (needTruncate) {
-        lastY = this.drawWrappedText(ctx, '字数过多，请前往小程序或官网进行学习', 60, lastY + 20, canvasWidth - 120, 36);
-      }
-      this.drawWrappedText(ctx, contentToShow, 60, contentBoxY + 50, canvasWidth - 120, 40);
+      ctx.setFontSize(26);
+      ctx.setFillStyle('#6b7280');
+      ctx.setTextAlign('center');
+      ctx.fillText(tipText, canvasWidth / 2, canvasHeight - 40);
 
-      // 绘制内容
       ctx.draw(false, async () => {
-        // 生成图片
         const res = await Taro.canvasToTempFilePath({
           canvasId: 'shareCanvas',
           x: 0,
@@ -387,7 +349,7 @@ export default class QuestionDetailPage extends Component<{}, State> {
           destWidth: canvasWidth * pixelRatio,
           destHeight: canvasHeight * pixelRatio,
           fileType: 'jpg',
-          quality: 0.9
+          quality: 0.85
         });
 
         this.setState({
@@ -480,19 +442,39 @@ export default class QuestionDetailPage extends Component<{}, State> {
 
   // 进入回答页面
   handleGoAnswer = () => {
-    const { question } = this.state;
+    const {question} = this.state;
     if (!question?.id) {
-      Taro.showToast({ title: '题目未加载', icon: 'none' });
+      Taro.showToast({title: '题目未加载', icon: 'none'});
       return;
     }
-    Taro.navigateTo({ url: `/pages/answer/index?id=${question.id}` });
+    Taro.navigateTo({url: `/pages/answer/index?id=${question.id}`});
+  };
+
+  scrollToBottom = () => {
+    this.setState({scrollIntoView: 'page-bottom'});
+    setTimeout(() => this.setState({scrollIntoView: ''}), 50);
+  };
+
+  scrollToTop = () => {
+    this.setState({scrollIntoView: 'page-top'});
+    setTimeout(() => this.setState({scrollIntoView: ''}), 50);
+  };
+
+  handleScroll = (e: any) => {
+    const detail = e?.detail || {};
+    const scrollTop = detail.scrollTop || 0;
+    const scrollHeight = detail.scrollHeight || 0;
+    const h = this.state.viewportHeight || 0;
+    const atTop = scrollTop <= 10;
+    const atBottom = scrollTop + h >= scrollHeight - 10;
+    this.setState({showTopBtn: !atTop, showBottomBtn: !atBottom});
   };
 
   // 复制题目内容
   handleCopyContent = () => {
-    const { question } = this.state;
+    const {question} = this.state;
     if (!question) {
-      Taro.showToast({ title: '题目内容尚未加载', icon: 'none' });
+      Taro.showToast({title: '题目内容尚未加载', icon: 'none'});
       return;
     }
 
@@ -501,10 +483,10 @@ export default class QuestionDetailPage extends Component<{}, State> {
     Taro.setClipboardData({
       data: contentToCopy,
       success: () => {
-        Taro.showToast({ title: '题目内容已复制', icon: 'success' });
+        Taro.showToast({title: '题目内容已复制', icon: 'success'});
       },
       fail: () => {
-        Taro.showToast({ title: '复制失败，请重试', icon: 'none' });
+        Taro.showToast({title: '复制失败，请重试', icon: 'none'});
       }
     });
   };
@@ -576,7 +558,9 @@ export default class QuestionDetailPage extends Component<{}, State> {
           </AtModalContent>
         </AtModal>
 
-        <ScrollView className='question-detail-page' scrollY>
+        <ScrollView className='question-detail-page' scrollY scrollWithAnimation
+                    scrollIntoView={this.state.scrollIntoView} style={{height: '100vh'}} onScroll={this.handleScroll}>
+          <View id='page-top' style={{height: '1px'}}/>
           {/* 顶部操作栏 */}
           <View className='action-bar'>
             <View className='action-btn' onClick={this.handleGoBack}>
@@ -634,7 +618,7 @@ export default class QuestionDetailPage extends Component<{}, State> {
               <View className='at-article__h3'>参考答案</View>
               <View className='at-article__content'>
                 <View className='at-article__section'>
-                  <MarkdownRenderer content={question.answer} />
+                  <MarkdownRenderer content={question.answer}/>
                 </View>
               </View>
             </View>
@@ -666,7 +650,23 @@ export default class QuestionDetailPage extends Component<{}, State> {
               </AtButton>
             </View>
           </View>
+          <View id='page-bottom' style={{height: '1px'}}/>
         </ScrollView>
+        <View className='floating-actions'>
+          {this.state.showTopBtn && (
+            <AtFab onClick={this.scrollToTop}>
+              <AtIcon value='chevron-up' size='16' color='#fff'/>
+            </AtFab>
+          )}
+          {this.state.showBottomBtn && (
+            <AtFab onClick={this.scrollToBottom}>
+              <AtIcon value='chevron-down' size='16' color='#fff'/>
+            </AtFab>
+          )}
+          <AtFab onClick={this.handleGoAnswer}>
+            <AtIcon value='edit' size='16' color='#fff'/>
+          </AtFab>
+        </View>
       </View>
     );
   }

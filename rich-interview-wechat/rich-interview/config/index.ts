@@ -12,7 +12,9 @@ const config = {
   plugins: [],
   defineConstants: {},
   copy: {
-    patterns: [],
+    patterns: [
+      { from: 'src/assets', to: 'assets' }
+    ],
     options: {}
   },
   framework: 'react',

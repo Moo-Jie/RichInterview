@@ -80,9 +80,11 @@ public class CommentController {
         if (deleteRequest == null || deleteRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        boolean result = commentService.deleteComment(deleteRequest.getId(), request);
+        Comment comment = commentService.getById(deleteRequest.getId());
+        ThrowUtils.throwIf(comment == null, ErrorCode.NOT_FOUND_ERROR);
+        boolean result = commentService.deleteComment(comment.getId(), request);
         // 删除指定题目 ID 的缓存键
-        cacheUtils.deleteCacheByPrefixes(new String[]{commentService.generateCacheKeyByQuestionId(commentService.getById(deleteRequest.getId()).getQuestionId())});
+        cacheUtils.deleteCacheByPrefixes(new String[]{commentService.generateCacheKeyByQuestionId(comment.getQuestionId())});
         // 删除指定用户ID的缓存键（暂未使用用户回答列表相关接口）
 //        cacheUtils.deleteCacheByPrefixes(new String[]{commentService.generateCacheKeyByUserId(userService.getLoginUser(request).getId())});
         return ResultUtils.success(result);
@@ -127,7 +129,7 @@ public class CommentController {
         String cacheKey;
         if (commentQueryRequest.getQuestionId() != null && commentQueryRequest.getQuestionId() > 0) {
             // 若为指定题目ID查询，按题目ID缓存，当删除、更新时删除缓存键
-            cacheKey = commentService.generateCacheKeyByQuestionId(commentQueryRequest.getQuestionId()) + "page";
+            cacheKey = commentService.generateCacheKeyByQuestionId(commentQueryRequest.getQuestionId());
         } else {
             // 若为普通分页查询，按参数缓存，自然过期防止频繁更新缓存
             cacheKey = "comment_page" + "_" + commentQueryRequest;

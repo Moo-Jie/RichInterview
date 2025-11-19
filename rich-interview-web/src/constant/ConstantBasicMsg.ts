@@ -48,5 +48,7 @@ export const ConstantBasicMsg = {
     "memory": "内存 - 2GB",
     "disk": "SSD云硬盘 40GB",
     "bandwidth": " 200GB/月（带宽 3Mbps）",
-  }
+  },
+  // ICP备案号
+  ICP_RECORD_NO: "鲁ICP备2024125764号",
 } as const;

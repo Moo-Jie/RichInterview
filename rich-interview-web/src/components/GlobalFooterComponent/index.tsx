@@ -7,19 +7,18 @@ import "./index.css";
  * @constructor
  */
 export default function GlobalFooter() {
-  const currentYear = new Date().getFullYear();
+    const currentYear = new Date().getFullYear();
 
-  return (
-    <div className="footer-container">
-      <div className="global-footer">
-        © {currentYear}
-        <div className="font-fm">
-          {ConstantBasicMsg.PROJECT_CHINESE_NAME}&nbsp;v
-          {ConstantBasicMsg.PROJECT_VERSION}
+    return (
+        <div className="footer-container">
+            <div className="global-footer">
+
+                <div className="font-fm">
+                    © {currentYear}&nbsp;&nbsp;{ConstantBasicMsg.PROJECT_CHINESE_NAME}&nbsp;&nbsp;v
+                    {ConstantBasicMsg.PROJECT_VERSION}
+                </div>
+                {ConstantBasicMsg.ICP_RECORD_NO}
+            </div>
         </div>
-      </div>
-
-      <div></div>
-    </div>
-  );
+    );
 }
