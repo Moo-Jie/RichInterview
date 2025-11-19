@@ -159,36 +159,6 @@ $transition-base: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
           margin-left: 8rpx;
         }
       }
-
-      // 调整Taro UI输入组件样式
-      .at-input, .at-textarea {
-        background: #fafbfd;
-        border-radius: 12rpx;
-        transition: $transition-base;
-        padding: 0;
-        margin: 0;
-
-        &::after {
-          display: none;
-          box-shadow: 0 0 0 2rpx rgba($color-brand, 0.2);
-        }
-      }
-
-      .at-input__input {
-        font-size: $font-size-base;
-      }
-
-      .at-textarea {
-        border: 1rpx solid #eee;
-        border-radius: $border-radius-sm;
-        padding: 20rpx;
-        min-height: 240rpx;
-        line-height: 1.6;
-
-        &__textarea {
-          font-size: $font-size-base;
-        }
-      }
     }
   }
 

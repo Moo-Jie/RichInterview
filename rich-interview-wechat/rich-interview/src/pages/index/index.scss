@@ -310,7 +310,7 @@
   .input-label {
     display: block;
     margin: 0 0 12rpx 4rpx;
-    font-size: 26rpx;
+    font-size: 35rpx;
     color: #475569;
   }
 
@@ -319,22 +319,7 @@
     margin-left: 6rpx;
   }
 
-  .login-input, .form-input {
-    height: 90rpx;
-    padding: 0 72rpx;
-    border: 1rpx solid #e0e7ff;
-    border-radius: 16rpx;
-    font-size: 30rpx;
-    background-color: #f8faff;
-    transition: all 0.3s;
-    box-sizing: border-box;
-    width: 100%;
 
-    &:focus {
-      border-color: #2563EB;
-      box-shadow: 0 0 0 4rpx rgba(37, 99, 235, 0.2);
-    }
-  }
 
   .login-button, .register-button {
     height: 100rpx;
@@ -462,16 +447,7 @@
     padding: 20rpx;
   }
 
-  .form-textarea {
-    height: 180rpx;
-    width: 100%;
-    padding: 24rpx;
-    border: 1rpx solid #e0e7ff;
-    border-radius: 16rpx;
-    font-size: 30rpx;
-    background-color: #f8faff;
-    box-sizing: border-box;
-  }
+
 
   .form-note {
     font-size: 24rpx;
@@ -492,4 +468,8 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.login-input, .form-input {
+  border: 1rpx solid #e2e8f0;
 }

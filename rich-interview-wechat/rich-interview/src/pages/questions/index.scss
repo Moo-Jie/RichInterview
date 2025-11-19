@@ -31,13 +31,6 @@ $shadow-color: rgba(0, 0, 0, 0.05);
   .tag-section {
     margin-top: 24rpx;
 
-    .at-input {
-      border-radius: 40rpx;
-      padding: 12rpx 20rpx;
-      background: $light-gray;
-      box-shadow: inset 0 2rpx 6rpx $shadow-color;
-    }
-
     .tag-list {
       display: flex;
       flex-wrap: wrap;

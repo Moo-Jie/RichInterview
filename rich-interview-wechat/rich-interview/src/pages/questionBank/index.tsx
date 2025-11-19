@@ -1,7 +1,7 @@
 import {Component, JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal} from 'react';
 import {Button, Image, ScrollView, Text, View} from '@tarojs/components';
 import Taro from '@tarojs/taro';
-import {AtCard, AtIcon, AtTag} from 'taro-ui';
+import {AtCard, AtIcon, AtTag, AtFab, AtSearchBar} from 'taro-ui';
 import {
   getQuestionBankHotspotVOByQuestionBankId,
   getQuestionBankVOById,
@@ -58,6 +58,11 @@ type State = {
   shareCardPath: string;
   canvasRendered: boolean;
   starred: boolean;
+  scrollIntoView: string;
+  showTopBtn: boolean;
+  showBottomBtn: boolean;
+  viewportHeight: number;
+  searchQuery: string;
 };
 
 export default class QuestionBankDetailPage extends Component<{}, State> {
@@ -71,6 +76,11 @@ export default class QuestionBankDetailPage extends Component<{}, State> {
     shareCardPath: '',
     canvasRendered: false,
     starred: false,
+    scrollIntoView: '',
+    showTopBtn: false,
+    showBottomBtn: true,
+    viewportHeight: Taro.getSystemInfoSync().windowHeight || 0,
+    searchQuery: ''
   };
 
   componentDidMount() {
@@ -106,6 +116,30 @@ export default class QuestionBankDetailPage extends Component<{}, State> {
     } catch (error) {
       Taro.showToast({title: '操作失败，请重试', icon: 'none'});
     }
+  };
+
+  scrollToBottom = () => {
+    this.setState({scrollIntoView: 'page-bottom'});
+    setTimeout(() => this.setState({scrollIntoView: ''}), 50);
+  };
+
+  scrollToTop = () => {
+    this.setState({scrollIntoView: 'page-top'});
+    setTimeout(() => this.setState({scrollIntoView: ''}), 50);
+  };
+
+  handleScroll = (e: any) => {
+    const detail = e?.detail || {};
+    const scrollTop = detail.scrollTop || 0;
+    const scrollHeight = detail.scrollHeight || 0;
+    const h = this.state.viewportHeight || 0;
+    const atTop = scrollTop <= 10;
+    const atBottom = scrollTop + h >= scrollHeight - 10;
+    this.setState({showTopBtn: !atTop, showBottomBtn: !atBottom});
+  };
+
+  handleSearchChange = (value: string) => {
+    this.setState({searchQuery: value});
   };
 
   async loadData(questionBankId: number) {
@@ -200,9 +234,25 @@ export default class QuestionBankDetailPage extends Component<{}, State> {
       );
     }
 
+    const records = bankDetail?.questionsPage?.records || [];
+    const q = (this.state.searchQuery || '').trim().toLowerCase();
+    const filteredRecords = q
+      ? records.filter((question: any) => {
+          const title = (question?.title || '').toLowerCase();
+          let tagsArr: string[] = [];
+          try {
+            const parsed = JSON.parse(question?.tags || '[]');
+            if (Array.isArray(parsed)) tagsArr = parsed.map((t: any) => String(t || '').toLowerCase());
+          } catch {}
+          const tagsHit = tagsArr.some(t => t.includes(q));
+          return title.includes(q) || tagsHit;
+        })
+      : records;
+
     return (
       <View className='question-bank-detail'>
-        <ScrollView scrollY className='detail-container'>
+        <ScrollView scrollY scrollWithAnimation scrollIntoView={this.state.scrollIntoView} style={{height: '100vh'}} onScroll={this.handleScroll} className='detail-container'>
+          <View id='page-top' style={{height: '1px'}}/>
           {/* 顶部操作栏 */}
           <View className='action-bar'>
             <View className='action-btn' onClick={this.handleGoBack}>
@@ -253,10 +303,18 @@ export default class QuestionBankDetailPage extends Component<{}, State> {
             </View>
           </AtCard>
 
+          <AtCard title='题目搜索' className='info-card'>
+            <AtSearchBar
+              value={this.state.searchQuery}
+              onChange={this.handleSearchChange}
+              placeholder='输入关键词，搜索题目'
+            />
+          </AtCard>
+
           {/* 题库中的题目列表 */}
-          <AtCard title={`题目列表 (${bankDetail.questionsPage?.total || 0})`} className='questions-card'>
-            {(bankDetail.questionsPage?.records?.length ?? 0) > 0 ? (
-              (bankDetail.questionsPage?.records || []).map((question, index) => (
+          <AtCard title={`题目列表 (${filteredRecords.length})`} className='questions-card'>
+            {(filteredRecords.length ?? 0) > 0 ? (
+              (filteredRecords || []).map((question, index) => (
                 <View
                   key={index}
                   className='question-item'
@@ -281,7 +339,7 @@ export default class QuestionBankDetailPage extends Component<{}, State> {
                 </View>
               ))
             ) : (
-              <Text className='no-data'>此题库暂无题目</Text>
+              <Text className='no-data'>{q ? '暂无匹配题目' : '此题库暂无题目'}</Text>
             )}
           </AtCard>
 
@@ -304,7 +362,20 @@ export default class QuestionBankDetailPage extends Component<{}, State> {
             </View>
             <Text className='update-time'>最近维护于：{bankDetail.updateTime}</Text>
           </AtCard>
+          <View id='page-bottom' style={{height: '1px'}}/>
         </ScrollView>
+        <View className='floating-actions'>
+          {this.state.showTopBtn && (
+            <AtFab onClick={this.scrollToTop}>
+              <AtIcon value='chevron-up' size='16' color='#fff'/>
+            </AtFab>
+          )}
+          {this.state.showBottomBtn && (
+            <AtFab onClick={this.scrollToBottom}>
+              <AtIcon value='chevron-down' size='16' color='#fff'/>
+            </AtFab>
+          )}
+        </View>
       </View>
     );
   }

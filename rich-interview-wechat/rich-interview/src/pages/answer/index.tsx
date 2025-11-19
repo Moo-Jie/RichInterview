@@ -19,6 +19,8 @@ interface State {
   newContent: string;
   submitting: boolean;
   showMarkdownHelp: boolean;
+  showDraftModal: boolean;
+  draftContent: string;
 }
 
 export default class AnswerPage extends Component<{}, State> {
@@ -34,7 +36,11 @@ export default class AnswerPage extends Component<{}, State> {
     newContent: '',
     submitting: false,
     showMarkdownHelp: false,
+    showDraftModal: false,
+    draftContent: '',
   };
+
+  saveDraftTimer: any = null;
 
   componentDidMount() {
     const {id} = Taro.getCurrentInstance().router?.params || {};
@@ -45,6 +51,57 @@ export default class AnswerPage extends Component<{}, State> {
     }
     this.setState({questionId: String(id)}, () => this.fetchComments(true));
   }
+
+  componentDidShow() {
+    this.loadDraft();
+  }
+
+  componentDidHide() {
+    this.saveDraft();
+  }
+
+  getDraftKey = () => `answerDraft:${this.state.questionId || ''}`;
+
+  saveDraft = () => {
+    const {newContent, questionId} = this.state;
+    if (!questionId) return;
+    const data = (newContent || '').trim();
+    if (data) {
+      try {
+        Taro.setStorageSync(this.getDraftKey(), data);
+        this.setState({draftContent: data});
+      } catch (e) {}
+    } else {
+      try {
+        Taro.removeStorageSync(this.getDraftKey());
+      } catch (e) {}
+    }
+  };
+
+  loadDraft = () => {
+    const {questionId, newContent} = this.state;
+    if (!questionId) return;
+    let draft = '';
+    try {
+      const s = Taro.getStorageSync(this.getDraftKey());
+      draft = s ? String(s) : '';
+    } catch (e) {}
+    if (draft && draft.length > 0) {
+      if (!newContent || newContent.trim().length === 0) {
+        this.setState({newContent: draft, draftContent: draft, showDraftModal: true});
+      } else if (newContent !== draft) {
+        this.setState({draftContent: draft, showDraftModal: true});
+      }
+    }
+  };
+
+  handleTextareaInput = (e: any) => {
+    const val = e?.detail?.value || '';
+    this.setState({newContent: val}, () => {
+      if (this.saveDraftTimer) clearTimeout(this.saveDraftTimer);
+      this.saveDraftTimer = setTimeout(() => this.saveDraft(), 300);
+    });
+  };
 
   fetchComments = async (reset = false) => {
     const {questionId, current, pageSize, sortField, sortOrder, comments} = this.state;
@@ -104,7 +161,8 @@ export default class AnswerPage extends Component<{}, State> {
       this.setState({submitting: true});
       await addComment({content: newContent.trim(), questionId});
       Taro.showToast({title: '提交成功', icon: 'success'});
-      this.setState({newContent: '', current: 1}, () => this.fetchComments(true));
+      try { Taro.removeStorageSync(this.getDraftKey()); } catch (e) {}
+      this.setState({newContent: '', current: 1, draftContent: '', showDraftModal: false}, () => this.fetchComments(true));
     } catch (error) {
       Taro.showToast({title: '提交失败，请重试', icon: 'none'});
     } finally {
@@ -167,19 +225,21 @@ export default class AnswerPage extends Component<{}, State> {
         </View>
 
         <View className='editor-card'>
-          <Text className='section-title'>写下你的回答</Text>
+          <Text className='section-title'>写下你的回答（退出可自动保存）</Text>
           <View className='section-desc-container'>
             <View className='help-icon'>
               <AtIcon value='help' size={20} color='#3b82f6' onClick={this.handleShowMarkdownHelp}/>
               <Text className='section-desc'>【支持 Markdown 格式】</Text>
             </View>
           </View>
+          <View/><p/><View/>
           <Textarea
             value={newContent}
-            onInput={e => this.setState({newContent: e.detail.value})}
+            onInput={this.handleTextareaInput}
             maxlength={2000}
             placeholder='请输入你的回答...'
             className='textarea'
+            style={{ minHeight: '240rpx' }}
             autoHeight
           />
           <AtButton type='primary' loading={submitting} onClick={this.handleSubmit}
@@ -262,6 +322,26 @@ export default class AnswerPage extends Component<{}, State> {
           </AtModalContent>
           <AtModalAction>
             <AtButton onClick={this.handleCloseMarkdownHelp}>确定</AtButton>
+          </AtModalAction>
+        </AtModal>
+
+        <AtModal isOpened={this.state.showDraftModal} onClose={() => this.setState({showDraftModal: false})} className='draft-tip-modal'>
+          <AtModalHeader>您还没有提交</AtModalHeader>
+          <AtModalContent>
+            <View className='draft-content'>
+              <Text>检测到未提交的内容，可以复制或继续编辑。</Text>
+            </View>
+          </AtModalContent>
+          <AtModalAction>
+            <AtButton onClick={() => {
+              const data = this.state.draftContent || this.state.newContent || '';
+              if (!data) { this.setState({showDraftModal: false}); return; }
+              Taro.setClipboardData({
+                data,
+                success: () => { Taro.showToast({title: '草稿已复制', icon: 'none'}); }
+              });
+            }}>复制</AtButton>
+            <AtButton onClick={() => this.setState({showDraftModal: false})}>继续编辑</AtButton>
           </AtModalAction>
         </AtModal>
       </ScrollView>

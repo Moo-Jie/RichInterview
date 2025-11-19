@@ -352,6 +352,7 @@ export default class Index extends Component<{}, State> {
     return (
       <ScrollView scrollY className="login-drawer">
         <View className="login-form">
+          <Text className="input-label">账号<Text className="required">*</Text></Text>
           <View className="input-group">
             <AtIcon prefixClass='fa' value='user' size={18} className='input-icon'/>
             <Input
@@ -361,7 +362,7 @@ export default class Index extends Component<{}, State> {
               onInput={(e) => this.handleLoginInputChange('userAccount', e.detail.value)}
             />
           </View>
-
+          <Text className="input-label">密码<Text className="required">*</Text></Text>
           <View className="input-group">
             <AtIcon prefixClass='fa' value='lock' size={18} className='input-icon'/>
             <Input

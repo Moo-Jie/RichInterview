@@ -282,7 +282,7 @@ export default class QuestionDetailPage extends Component<{}, State> {
       this.drawRoundRect(ctx, margin, currentY, 96, 44, 22);
       ctx.setFillStyle('#111827');
       ctx.setFontSize(45);
-      ctx.fillText('提问', margin + 18, currentY + 30);
+      ctx.fillText('【问】', margin + 18, currentY + 30);
 
       ctx.setFontSize(26);
       ctx.setFillStyle('#6b7280');
